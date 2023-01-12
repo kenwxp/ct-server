@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cloudtimes.device.mapper.CtDeviceMapper">
+    
+    <resultMap type="CtDevice" id="CtDeviceResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="storeCode"    column="store_code"    />
+        <result property="deviceCode"    column="device_code"    />
+        <result property="deviceType"    column="device_type"    />
+        <result property="deviceModel"    column="device_model"    />
+        <result property="brandName"    column="brand_name"    />
+        <result property="deviceSerial"    column="device_serial"    />
+        <result property="devicePosition"    column="device_position"    />
+        <result property="validateCode"    column="validate_code"    />
+        <result property="deviceAscription"    column="device_ascription"    />
+        <result property="state"    column="state"    />
+        <result property="lastOnlineTime"    column="last_online_time"    />
+        <result property="lastOffineTime"    column="last_offine_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectCtDeviceVo">
+        select id, name, store_code, device_code, device_type, device_model, brand_name, device_serial, device_position, validate_code, device_ascription, state, last_online_time, last_offine_time, remark, create_time, update_time, del_flag from ct_device
+    </sql>
+
+    <select id="selectCtDeviceList" parameterType="CtDevice" resultMap="CtDeviceResult">
+        <include refid="selectCtDeviceVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="storeCode != null  and storeCode != ''"> and store_code = #{storeCode}</if>
+            <if test="deviceCode != null  and deviceCode != ''"> and device_code = #{deviceCode}</if>
+            <if test="deviceType != null "> and device_type = #{deviceType}</if>
+            <if test="deviceModel != null  and deviceModel != ''"> and device_model = #{deviceModel}</if>
+            <if test="brandName != null  and brandName != ''"> and brand_name like concat('%', #{brandName}, '%')</if>
+            <if test="deviceSerial != null  and deviceSerial != ''"> and device_serial = #{deviceSerial}</if>
+            <if test="devicePosition != null "> and device_position = #{devicePosition}</if>
+            <if test="validateCode != null  and validateCode != ''"> and validate_code = #{validateCode}</if>
+            <if test="deviceAscription != null "> and device_ascription = #{deviceAscription}</if>
+            <if test="state != null "> and state = #{state}</if>
+        </where>
+    </select>
+    
+    <select id="selectCtDeviceById" parameterType="Long" resultMap="CtDeviceResult">
+        <include refid="selectCtDeviceVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertCtDevice" parameterType="CtDevice" useGeneratedKeys="true" keyProperty="id">
+        insert into ct_device
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="storeCode != null">store_code,</if>
+            <if test="deviceCode != null">device_code,</if>
+            <if test="deviceType != null">device_type,</if>
+            <if test="deviceModel != null">device_model,</if>
+            <if test="brandName != null">brand_name,</if>
+            <if test="deviceSerial != null">device_serial,</if>
+            <if test="devicePosition != null">device_position,</if>
+            <if test="validateCode != null">validate_code,</if>
+            <if test="deviceAscription != null">device_ascription,</if>
+            <if test="state != null">state,</if>
+            <if test="lastOnlineTime != null">last_online_time,</if>
+            <if test="lastOffineTime != null">last_offine_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="storeCode != null">#{storeCode},</if>
+            <if test="deviceCode != null">#{deviceCode},</if>
+            <if test="deviceType != null">#{deviceType},</if>
+            <if test="deviceModel != null">#{deviceModel},</if>
+            <if test="brandName != null">#{brandName},</if>
+            <if test="deviceSerial != null">#{deviceSerial},</if>
+            <if test="devicePosition != null">#{devicePosition},</if>
+            <if test="validateCode != null">#{validateCode},</if>
+            <if test="deviceAscription != null">#{deviceAscription},</if>
+            <if test="state != null">#{state},</if>
+            <if test="lastOnlineTime != null">#{lastOnlineTime},</if>
+            <if test="lastOffineTime != null">#{lastOffineTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCtDevice" parameterType="CtDevice">
+        update ct_device
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="storeCode != null">store_code = #{storeCode},</if>
+            <if test="deviceCode != null">device_code = #{deviceCode},</if>
+            <if test="deviceType != null">device_type = #{deviceType},</if>
+            <if test="deviceModel != null">device_model = #{deviceModel},</if>
+            <if test="brandName != null">brand_name = #{brandName},</if>
+            <if test="deviceSerial != null">device_serial = #{deviceSerial},</if>
+            <if test="devicePosition != null">device_position = #{devicePosition},</if>
+            <if test="validateCode != null">validate_code = #{validateCode},</if>
+            <if test="deviceAscription != null">device_ascription = #{deviceAscription},</if>
+            <if test="state != null">state = #{state},</if>
+            <if test="lastOnlineTime != null">last_online_time = #{lastOnlineTime},</if>
+            <if test="lastOffineTime != null">last_offine_time = #{lastOffineTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCtDeviceById" parameterType="Long">
+        delete from ct_device where id = #{id}
+    </delete>
+
+    <delete id="deleteCtDeviceByIds" parameterType="String">
+        delete from ct_device where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
