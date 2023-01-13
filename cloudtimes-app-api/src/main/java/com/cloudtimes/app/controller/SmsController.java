@@ -11,14 +11,12 @@ import com.cloudtimes.common.utils.uuid.IdUtils;
 import com.cloudtimes.common.utils.uuid.Seq;
 import com.cloudtimes.sms.cdcxcloud.api.CdcxcloundSMSUtil;
 import com.cloudtimes.system.service.ISysConfigService;
-import com.cloudtimes.ybf.service.IYbfMemberService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
@@ -36,8 +34,6 @@ public class SmsController extends BaseController {
     @Autowired
     private ISysConfigService configService;
 
-    @Autowired
-    private IYbfMemberService ybfMemberService;
 
     /**
      * 生成短信验证码
@@ -47,12 +43,6 @@ public class SmsController extends BaseController {
     @GetMapping("/sms/{ok}/{mobile}")
     public AjaxResult getCode(@PathVariable(value = "ok", required = true) String ok, @PathVariable(value = "mobile", required = true) String mobile) throws IOException {
 
-        if (ok.equals("y")) {
-            int count = ybfMemberService.checkUserNameUnique(mobile);
-            if (count <= 0) {
-                return AjaxResult.error("该手机号未注册!");
-            }
-        }
 
         AjaxResult ajax = AjaxResult.success("短信已发送");
 
@@ -71,10 +61,10 @@ public class SmsController extends BaseController {
         }
 
         logger.info("生成短信认证码：" + code);
-        int count = ybfMemberService.checkUserNameUnique(mobile);
+
 
         ajax.put("uuid", uuid);
-        ajax.put("isExists", count > 0);
+
         ajax.put("data", code);
         return ajax;
     }

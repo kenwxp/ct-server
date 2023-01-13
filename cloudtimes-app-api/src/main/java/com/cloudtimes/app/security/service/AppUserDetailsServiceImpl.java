@@ -4,7 +4,6 @@ import com.cloudtimes.common.core.domain.entity.YbfMember;
 import com.cloudtimes.common.core.domain.model.AppLoginUser;
 import com.cloudtimes.common.exception.ServiceException;
 import com.cloudtimes.common.utils.StringUtils;
-import com.cloudtimes.ybf.service.IYbfMemberService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,13 +24,11 @@ public class AppUserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     private AppPasswordService passwordService;
 
-    @Autowired
-    IYbfMemberService iYbfMemberService;
 
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        YbfMember user = iYbfMemberService.selectYbfMemberByUsername(username);
+        YbfMember user = null;//iYbfMemberService.selectYbfMemberByUsername(username);
         if (StringUtils.isNull(user)) {
             log.info("登录用户：{} 不存在.", username);
             throw new ServiceException("登录用户：" + username + " 不存在");

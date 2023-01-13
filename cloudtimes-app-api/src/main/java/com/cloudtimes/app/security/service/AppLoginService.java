@@ -16,7 +16,6 @@ import com.cloudtimes.common.utils.StringUtils;
 import com.cloudtimes.common.utils.ip.IpUtils;
 import com.cloudtimes.system.service.ISysConfigService;
 import com.cloudtimes.system.service.ISysUserService;
-import com.cloudtimes.ybf.service.IYbfMemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -42,9 +41,6 @@ public class AppLoginService
 
     @Autowired
     private RedisCache redisCache;
-    
-    @Autowired
-    private IYbfMemberService ybfMemberService;
 
     @Autowired
     private ISysConfigService configService;
@@ -131,9 +127,9 @@ public class AppLoginService
      */
     public void recordLoginInfo(Long userId)
     {
-        YbfMember ybfMember = ybfMemberService.selectYbfMemberById(userId);
-        ybfMember.setLoginIp(IpUtils.getIpAddr(ServletUtils.getRequest()));
-        ybfMember.setLoginDate(DateUtils.getNowDate());
-        ybfMemberService.updateYbfMember(ybfMember);
+       // YbfMember ybfMember = ybfMemberService.selectYbfMemberById(userId);
+        //ybfMember.setLoginIp(IpUtils.getIpAddr(ServletUtils.getRequest()));
+      //  ybfMember.setLoginDate(DateUtils.getNowDate());
+    //    ybfMemberService.updateYbfMember(ybfMember);
     }
 }
