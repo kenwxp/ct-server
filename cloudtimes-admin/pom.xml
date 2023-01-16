@@ -124,7 +124,7 @@
                     </excludes>
                     <archive>
                         <manifest>
-                            <mainClass>cloudtimes.AdminApplication</mainClass>
+                            <mainClass>com.cloudtimes.AdminApplication</mainClass>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
                         </manifest>
