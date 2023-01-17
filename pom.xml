@@ -178,6 +178,13 @@
                 <version>${cloudtimes.version}</version>
             </dependency>
 
+            <!-- 云时代模块-->
+            <dependency>
+                <groupId>cloudtimes</groupId>
+                <artifactId>cloudtimes-ct</artifactId>
+                <version>${cloudtimes.version}</version>
+            </dependency>
+
             <!-- 通用工具-->
             <dependency>
                 <groupId>cloudtimes</groupId>
@@ -197,6 +204,7 @@
         <module>cloudtimes-quartz</module>
         <module>cloudtimes-generator</module>
         <module>cloudtimes-common</module>
+        <module>cloudtimes-ct</module>
     </modules>
     <packaging>pom</packaging>
 

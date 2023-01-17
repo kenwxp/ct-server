@@ -1,23 +1,20 @@
-package com.cloudtimes.device.service.impl;
+package com.cloudtimes.hardwaredevice.service.impl;
 
 import java.util.List;
-
-import com.cloudtimes.common.annotation.DataSource;
-import com.cloudtimes.common.enums.DataSourceType;
 import com.cloudtimes.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.annotation.Transient;
 import org.springframework.stereotype.Service;
-import com.cloudtimes.device.mapper.CtDeviceMapper;
-import com.cloudtimes.device.domain.CtDevice;
-import com.cloudtimes.device.service.ICtDeviceService;
-import org.springframework.transaction.annotation.Transactional;
+import com.cloudtimes.common.annotation.DataSource;
+import com.cloudtimes.common.enums.DataSourceType;
+import com.cloudtimes.hardwaredevice.mapper.CtDeviceMapper;
+import com.cloudtimes.hardwaredevice.domain.CtDevice;
+import com.cloudtimes.hardwaredevice.service.ICtDeviceService;
 
 /**
- * 电子设备管理Service业务层处理
+ * 电子设备Service业务层处理
  * 
  * @author tank
- * @date 2023-01-12
+ * @date 2023-01-17
  */
 @DataSource(DataSourceType.CT)
 @Service
@@ -27,10 +24,10 @@ public class CtDeviceServiceImpl implements ICtDeviceService
     private CtDeviceMapper ctDeviceMapper;
 
     /**
-     * 查询电子设备管理
+     * 查询电子设备
      * 
-     * @param id 电子设备管理主键
-     * @return 电子设备管理
+     * @param id 电子设备主键
+     * @return 电子设备
      */
     @Override
     public CtDevice selectCtDeviceById(Long id)
@@ -39,10 +36,10 @@ public class CtDeviceServiceImpl implements ICtDeviceService
     }
 
     /**
-     * 查询电子设备管理列表
+     * 查询电子设备列表
      * 
-     * @param ctDevice 电子设备管理
-     * @return 电子设备管理
+     * @param ctDevice 电子设备
+     * @return 电子设备
      */
     @Override
     public List<CtDevice> selectCtDeviceList(CtDevice ctDevice)
@@ -51,9 +48,9 @@ public class CtDeviceServiceImpl implements ICtDeviceService
     }
 
     /**
-     * 新增电子设备管理
+     * 新增电子设备
      * 
-     * @param ctDevice 电子设备管理
+     * @param ctDevice 电子设备
      * @return 结果
      */
     @Override
@@ -64,9 +61,9 @@ public class CtDeviceServiceImpl implements ICtDeviceService
     }
 
     /**
-     * 修改电子设备管理
+     * 修改电子设备
      * 
-     * @param ctDevice 电子设备管理
+     * @param ctDevice 电子设备
      * @return 结果
      */
     @Override
@@ -77,9 +74,9 @@ public class CtDeviceServiceImpl implements ICtDeviceService
     }
 
     /**
-     * 批量删除电子设备管理
+     * 批量删除电子设备
      * 
-     * @param ids 需要删除的电子设备管理主键
+     * @param ids 需要删除的电子设备主键
      * @return 结果
      */
     @Override
@@ -89,9 +86,9 @@ public class CtDeviceServiceImpl implements ICtDeviceService
     }
 
     /**
-     * 删除电子设备管理信息
+     * 删除电子设备信息
      * 
-     * @param id 电子设备管理主键
+     * @param id 电子设备主键
      * @return 结果
      */
     @Override

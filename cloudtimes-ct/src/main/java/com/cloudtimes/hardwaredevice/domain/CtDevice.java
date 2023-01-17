@@ -1,4 +1,4 @@
-package com.cloudtimes.device.domain;
+package com.cloudtimes.hardwaredevice.domain;
 
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -8,16 +8,16 @@ import com.cloudtimes.common.annotation.Excel;
 import com.cloudtimes.common.core.domain.BaseEntity;
 
 /**
- * 电子设备管理对象 ct_device
+ * 电子设备对象 ct_device
  * 
  * @author tank
- * @date 2023-01-12
+ * @date 2023-01-17
  */
 public class CtDevice extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
-    /** 序号 */
+    /** 序列号 */
     private Long id;
 
     /** 设备名称 */
@@ -34,7 +34,7 @@ public class CtDevice extends BaseEntity
 
     /** 设备类型 */
     @Excel(name = "设备类型")
-    private Long deviceType;
+    private String deviceType;
 
     /** 设备型号 */
     @Excel(name = "设备型号")
@@ -50,7 +50,7 @@ public class CtDevice extends BaseEntity
 
     /** 设备位置 */
     @Excel(name = "设备位置")
-    private Long devicePosition;
+    private String deviceArea;
 
     /** 设备验证码 */
     @Excel(name = "设备验证码")
@@ -58,11 +58,11 @@ public class CtDevice extends BaseEntity
 
     /** 设备归属 */
     @Excel(name = "设备归属")
-    private Long deviceAscription;
+    private String deviceAscription;
 
     /** 状态 */
     @Excel(name = "状态")
-    private Long state;
+    private String state;
 
     /** 最近上云时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -113,12 +113,12 @@ public class CtDevice extends BaseEntity
     {
         return deviceCode;
     }
-    public void setDeviceType(Long deviceType) 
+    public void setDeviceType(String deviceType) 
     {
         this.deviceType = deviceType;
     }
 
-    public Long getDeviceType() 
+    public String getDeviceType() 
     {
         return deviceType;
     }
@@ -149,14 +149,14 @@ public class CtDevice extends BaseEntity
     {
         return deviceSerial;
     }
-    public void setDevicePosition(Long devicePosition) 
+    public void setDeviceArea(String deviceArea) 
     {
-        this.devicePosition = devicePosition;
+        this.deviceArea = deviceArea;
     }
 
-    public Long getDevicePosition() 
+    public String getDeviceArea() 
     {
-        return devicePosition;
+        return deviceArea;
     }
     public void setValidateCode(String validateCode) 
     {
@@ -167,21 +167,21 @@ public class CtDevice extends BaseEntity
     {
         return validateCode;
     }
-    public void setDeviceAscription(Long deviceAscription) 
+    public void setDeviceAscription(String deviceAscription) 
     {
         this.deviceAscription = deviceAscription;
     }
 
-    public Long getDeviceAscription() 
+    public String getDeviceAscription() 
     {
         return deviceAscription;
     }
-    public void setState(Long state) 
+    public void setState(String state) 
     {
         this.state = state;
     }
 
-    public Long getState() 
+    public String getState() 
     {
         return state;
     }
@@ -224,7 +224,7 @@ public class CtDevice extends BaseEntity
             .append("deviceModel", getDeviceModel())
             .append("brandName", getBrandName())
             .append("deviceSerial", getDeviceSerial())
-            .append("devicePosition", getDevicePosition())
+            .append("deviceArea", getDeviceArea())
             .append("validateCode", getValidateCode())
             .append("deviceAscription", getDeviceAscription())
             .append("state", getState())

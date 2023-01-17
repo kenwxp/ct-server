@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.cloudtimes.device.mapper.CtDeviceMapper">
+<mapper namespace="com.cloudtimes.hardwaredevice.mapper.CtDeviceMapper">
     
     <resultMap type="CtDevice" id="CtDeviceResult">
         <result property="id"    column="id"    />
@@ -13,7 +13,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="deviceModel"    column="device_model"    />
         <result property="brandName"    column="brand_name"    />
         <result property="deviceSerial"    column="device_serial"    />
-        <result property="devicePosition"    column="device_position"    />
+        <result property="deviceArea"    column="device_area"    />
         <result property="validateCode"    column="validate_code"    />
         <result property="deviceAscription"    column="device_ascription"    />
         <result property="state"    column="state"    />
@@ -26,7 +26,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectCtDeviceVo">
-        select id, name, store_code, device_code, device_type, device_model, brand_name, device_serial, device_position, validate_code, device_ascription, state, last_online_time, last_offine_time, remark, create_time, update_time, del_flag from ct_device
+        select id, name, store_code, device_code, device_type, device_model, brand_name, device_serial, device_area, validate_code, device_ascription, state, last_online_time, last_offine_time, remark, create_time, update_time, del_flag from ct_device
     </sql>
 
     <select id="selectCtDeviceList" parameterType="CtDevice" resultMap="CtDeviceResult">
@@ -35,14 +35,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="storeCode != null  and storeCode != ''"> and store_code = #{storeCode}</if>
             <if test="deviceCode != null  and deviceCode != ''"> and device_code = #{deviceCode}</if>
-            <if test="deviceType != null "> and device_type = #{deviceType}</if>
-            <if test="deviceModel != null  and deviceModel != ''"> and device_model = #{deviceModel}</if>
+            <if test="deviceType != null  and deviceType != ''"> and device_type = #{deviceType}</if>
             <if test="brandName != null  and brandName != ''"> and brand_name like concat('%', #{brandName}, '%')</if>
-            <if test="deviceSerial != null  and deviceSerial != ''"> and device_serial = #{deviceSerial}</if>
-            <if test="devicePosition != null "> and device_position = #{devicePosition}</if>
-            <if test="validateCode != null  and validateCode != ''"> and validate_code = #{validateCode}</if>
-            <if test="deviceAscription != null "> and device_ascription = #{deviceAscription}</if>
-            <if test="state != null "> and state = #{state}</if>
+            <if test="deviceArea != null  and deviceArea != ''"> and device_area = #{deviceArea}</if>
+            <if test="deviceAscription != null  and deviceAscription != ''"> and device_ascription = #{deviceAscription}</if>
+            <if test="state != null  and state != ''"> and state = #{state}</if>
         </where>
     </select>
     
@@ -61,7 +58,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="deviceModel != null">device_model,</if>
             <if test="brandName != null">brand_name,</if>
             <if test="deviceSerial != null">device_serial,</if>
-            <if test="devicePosition != null">device_position,</if>
+            <if test="deviceArea != null">device_area,</if>
             <if test="validateCode != null">validate_code,</if>
             <if test="deviceAscription != null">device_ascription,</if>
             <if test="state != null">state,</if>
@@ -80,7 +77,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="deviceModel != null">#{deviceModel},</if>
             <if test="brandName != null">#{brandName},</if>
             <if test="deviceSerial != null">#{deviceSerial},</if>
-            <if test="devicePosition != null">#{devicePosition},</if>
+            <if test="deviceArea != null">#{deviceArea},</if>
             <if test="validateCode != null">#{validateCode},</if>
             <if test="deviceAscription != null">#{deviceAscription},</if>
             <if test="state != null">#{state},</if>
@@ -103,7 +100,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="deviceModel != null">device_model = #{deviceModel},</if>
             <if test="brandName != null">brand_name = #{brandName},</if>
             <if test="deviceSerial != null">device_serial = #{deviceSerial},</if>
-            <if test="devicePosition != null">device_position = #{devicePosition},</if>
+            <if test="deviceArea != null">device_area = #{deviceArea},</if>
             <if test="validateCode != null">validate_code = #{validateCode},</if>
             <if test="deviceAscription != null">device_ascription = #{deviceAscription},</if>
             <if test="state != null">state = #{state},</if>
