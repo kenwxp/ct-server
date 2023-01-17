@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cloudtimes.hardwaredevice.mapper.CtDeviceDoorMapper">
+    
+    <resultMap type="CtDeviceDoor" id="CtDeviceDoorResult">
+        <result property="id"    column="id"    />
+        <result property="deviceCode"    column="device_code"    />
+        <result property="doorNo"    column="door_no"    />
+        <result property="accessPassword"    column="access_password"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectCtDeviceDoorVo">
+        select id, device_code, door_no, access_password, create_time, update_time, del_flag from ct_device_door
+    </sql>
+
+    <select id="selectCtDeviceDoorList" parameterType="CtDeviceDoor" resultMap="CtDeviceDoorResult">
+        <include refid="selectCtDeviceDoorVo"/>
+        <where>  
+            <if test="deviceCode != null  and deviceCode != ''"> and device_code = #{deviceCode}</if>
+            <if test="doorNo != null "> and door_no = #{doorNo}</if>
+            <if test="accessPassword != null  and accessPassword != ''"> and access_password = #{accessPassword}</if>
+        </where>
+    </select>
+    
+    <select id="selectCtDeviceDoorById" parameterType="Long" resultMap="CtDeviceDoorResult">
+        <include refid="selectCtDeviceDoorVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertCtDeviceDoor" parameterType="CtDeviceDoor" useGeneratedKeys="true" keyProperty="id">
+        insert into ct_device_door
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="deviceCode != null">device_code,</if>
+            <if test="doorNo != null">door_no,</if>
+            <if test="accessPassword != null">access_password,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="deviceCode != null">#{deviceCode},</if>
+            <if test="doorNo != null">#{doorNo},</if>
+            <if test="accessPassword != null">#{accessPassword},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCtDeviceDoor" parameterType="CtDeviceDoor">
+        update ct_device_door
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deviceCode != null">device_code = #{deviceCode},</if>
+            <if test="doorNo != null">door_no = #{doorNo},</if>
+            <if test="accessPassword != null">access_password = #{accessPassword},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCtDeviceDoorById" parameterType="Long">
+        delete from ct_device_door where id = #{id}
+    </delete>
+
+    <delete id="deleteCtDeviceDoorByIds" parameterType="String">
+        delete from ct_device_door where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
