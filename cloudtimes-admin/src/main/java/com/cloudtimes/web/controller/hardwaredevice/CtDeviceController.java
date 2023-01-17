@@ -1,19 +1,25 @@
 package com.cloudtimes.web.controller.hardwaredevice;
 
+import java.util.List;
+import javax.servlet.http.HttpServletResponse;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import com.cloudtimes.common.annotation.Log;
 import com.cloudtimes.common.core.controller.BaseController;
 import com.cloudtimes.common.core.domain.AjaxResult;
-import com.cloudtimes.common.core.page.TableDataInfo;
 import com.cloudtimes.common.enums.BusinessType;
-import com.cloudtimes.common.utils.poi.ExcelUtil;
 import com.cloudtimes.hardwaredevice.domain.CtDevice;
 import com.cloudtimes.hardwaredevice.service.ICtDeviceService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletResponse;
-import java.util.List;
+import com.cloudtimes.common.utils.poi.ExcelUtil;
+import com.cloudtimes.common.core.page.TableDataInfo;
 
 /**
  * 电子设备Controller
@@ -22,7 +28,7 @@ import java.util.List;
  * @date 2023-01-17
  */
 @RestController
-@RequestMapping("/hardwaredevice/hardwaredevice")
+@RequestMapping("/hardwaredevice/ctdevice")
 public class CtDeviceController extends BaseController
 {
     @Autowired
@@ -31,7 +37,7 @@ public class CtDeviceController extends BaseController
     /**
      * 查询电子设备列表
      */
-    @PreAuthorize("@ss.hasPermi('hardwaredevice:hardwaredevice:list')")
+    @PreAuthorize("@ss.hasPermi('hardwaredevice:ctdevice:list')")
     @GetMapping("/list")
     public TableDataInfo list(CtDevice ctDevice)
     {
@@ -43,7 +49,7 @@ public class CtDeviceController extends BaseController
     /**
      * 导出电子设备列表
      */
-    @PreAuthorize("@ss.hasPermi('hardwaredevice:hardwaredevice:export')")
+    @PreAuthorize("@ss.hasPermi('hardwaredevice:ctdevice:export')")
     @Log(title = "电子设备", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, CtDevice ctDevice)
@@ -56,7 +62,7 @@ public class CtDeviceController extends BaseController
     /**
      * 获取电子设备详细信息
      */
-    @PreAuthorize("@ss.hasPermi('hardwaredevice:hardwaredevice:query')")
+    @PreAuthorize("@ss.hasPermi('hardwaredevice:ctdevice:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
@@ -66,7 +72,7 @@ public class CtDeviceController extends BaseController
     /**
      * 新增电子设备
      */
-    @PreAuthorize("@ss.hasPermi('hardwaredevice:hardwaredevice:add')")
+    @PreAuthorize("@ss.hasPermi('hardwaredevice:ctdevice:add')")
     @Log(title = "电子设备", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody CtDevice ctDevice)
@@ -77,7 +83,7 @@ public class CtDeviceController extends BaseController
     /**
      * 修改电子设备
      */
-    @PreAuthorize("@ss.hasPermi('hardwaredevice:hardwaredevice:edit')")
+    @PreAuthorize("@ss.hasPermi('hardwaredevice:ctdevice:edit')")
     @Log(title = "电子设备", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody CtDevice ctDevice)
@@ -88,7 +94,7 @@ public class CtDeviceController extends BaseController
     /**
      * 删除电子设备
      */
-    @PreAuthorize("@ss.hasPermi('hardwaredevice:hardwaredevice:remove')")
+    @PreAuthorize("@ss.hasPermi('hardwaredevice:ctdevice:remove')")
     @Log(title = "电子设备", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)
