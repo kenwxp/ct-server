@@ -192,6 +192,12 @@
                 <version>${cloudtimes.version}</version>
             </dependency>
 
+            <!-- 第三方api封装-->
+            <dependency>
+                <groupId>cloudtimes</groupId>
+                <artifactId>cloudtimes-partner</artifactId>
+                <version>${cloudtimes.version}</version>
+            </dependency>
 
         </dependencies>
     </dependencyManagement>
@@ -205,6 +211,7 @@
         <module>cloudtimes-generator</module>
         <module>cloudtimes-common</module>
         <module>cloudtimes-ct</module>
+        <module>cloudtimes-partner</module>
     </modules>
     <packaging>pom</packaging>
 

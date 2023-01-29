@@ -1,0 +1,25 @@
+hik:
+  key: "392b99f5d3084816829393369cde9de2"
+  secret: "7f578e0863bcd258975fd0e6795a362e"
+wx:
+  appid: "wxdee2b19db3be8517"
+  secret: "99887628a67e7d8a23d4d8410bcf47a1"
+#agora:
+#  appid: "c672899cc9874cc6982f50ecb94a812c"
+#  app_certificate: "6364d15307534fb592eeffd0afe7b02a"
+agora:
+  appid: bdd64154db414a1c8abc9778c86ad905
+  app_certificate: af46f6d63c4e413d91f88c5a6ce4ce2f
+shouqianba:
+  api_domain: "https://vsi-api.shouqianba.com"
+  vendor_sn: "91801644"
+  vendor_key: "039624f6b802829dc908669a07247535"
+  bc_app_id: "2022101900005102"
+  cis_api_domain: "https://vapi.shouqianba.com"
+  cis_app_id: "28cis46221027"
+  cis_client_id: "47105a951745453c9fe027f75cdf33db"
+wiegand:
+  http_host: 127.0.0.1:61080
+  ws_host: 127.0.0.1:61081
+#  http_host: 10.1.65.231:61080
+#  ws_host: 10.1.65.231:61081
