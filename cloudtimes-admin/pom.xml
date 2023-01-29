@@ -60,6 +60,11 @@
             <groupId>cloudtimes</groupId>
             <artifactId>cloudtimes-generator</artifactId>
         </dependency>
+        <dependency>
+            <groupId>cloudtimes</groupId>
+            <artifactId>cloudtimes-ct</artifactId>
+        </dependency>
+
 
     </dependencies>
 
@@ -124,7 +129,7 @@
                     </excludes>
                     <archive>
                         <manifest>
-                            <mainClass>cloudtimes.AdminApplication</mainClass>
+                            <mainClass>com.cloudtimes.AdminApplication</mainClass>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
                         </manifest>

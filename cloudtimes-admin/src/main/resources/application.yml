@@ -54,7 +54,7 @@ spring:
     # 国际化资源文件路径
     basename: i18n/messages
   profiles: 
-    active: druid,kuaidi100,adapay
+    active: druid
   # 文件上传
   servlet:
      multipart:
@@ -71,7 +71,7 @@ spring:
   redis:
     # 地址
     #  host: 132.232.93.169
-    host: 10.1.65.234
+    host: 10.1.65.233
     # 端口，默认为6379
     port: 6379
     # 数据库索引

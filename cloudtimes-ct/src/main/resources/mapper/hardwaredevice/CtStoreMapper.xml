@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cloudtimes.hardwaredevice.mapper.CtStoreMapper">
+    
+    <resultMap type="CtStore" id="CtStoreResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="storeCode"    column="store_code"    />
+        <result property="merchantCode"    column="merchant_code"    />
+        <result property="address"    column="address"    />
+        <result property="shortAddress"    column="short_address"    />
+        <result property="storeNo"    column="store_no"    />
+        <result property="regionCode"    column="region_code"    />
+        <result property="longitude"    column="longitude"    />
+        <result property="latitude"    column="latitude"    />
+        <result property="photoUrl"    column="photo_url"    />
+        <result property="area"    column="area"    />
+        <result property="contactName"    column="contact_name"    />
+        <result property="contactPhone"    column="contact_phone"    />
+        <result property="isSupervise"    column="is_supervise"    />
+        <result property="maxBuyPerson"    column="max_buy_person"    />
+        <result property="state"    column="state"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectCtStoreVo">
+        select id, name, store_code, merchant_code, address, short_address, store_no, region_code, longitude, latitude, photo_url, area, contact_name, contact_phone, is_supervise, max_buy_person, state, create_time, update_time, del_flag from ct_store
+    </sql>
+
+    <select id="selectCtStoreList" parameterType="CtStore" resultMap="CtStoreResult">
+        <include refid="selectCtStoreVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="storeCode != null  and storeCode != ''"> and store_code = #{storeCode}</if>
+            <if test="merchantCode != null  and merchantCode != ''"> and merchant_code = #{merchantCode}</if>
+            <if test="shortAddress != null  and shortAddress != ''"> and short_address = #{shortAddress}</if>
+            <if test="storeNo != null  and storeNo != ''"> and store_no = #{storeNo}</if>
+            <if test="isSupervise != null "> and is_supervise = #{isSupervise}</if>
+            <if test="state != null  and state != ''"> and state = #{state}</if>
+        </where>
+    </select>
+    
+    <select id="selectCtStoreById" parameterType="Long" resultMap="CtStoreResult">
+        <include refid="selectCtStoreVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertCtStore" parameterType="CtStore" useGeneratedKeys="true" keyProperty="id">
+        insert into ct_store
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="storeCode != null">store_code,</if>
+            <if test="merchantCode != null">merchant_code,</if>
+            <if test="address != null">address,</if>
+            <if test="shortAddress != null">short_address,</if>
+            <if test="storeNo != null">store_no,</if>
+            <if test="regionCode != null">region_code,</if>
+            <if test="longitude != null">longitude,</if>
+            <if test="latitude != null">latitude,</if>
+            <if test="photoUrl != null">photo_url,</if>
+            <if test="area != null">area,</if>
+            <if test="contactName != null">contact_name,</if>
+            <if test="contactPhone != null">contact_phone,</if>
+            <if test="isSupervise != null">is_supervise,</if>
+            <if test="maxBuyPerson != null">max_buy_person,</if>
+            <if test="state != null">state,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="storeCode != null">#{storeCode},</if>
+            <if test="merchantCode != null">#{merchantCode},</if>
+            <if test="address != null">#{address},</if>
+            <if test="shortAddress != null">#{shortAddress},</if>
+            <if test="storeNo != null">#{storeNo},</if>
+            <if test="regionCode != null">#{regionCode},</if>
+            <if test="longitude != null">#{longitude},</if>
+            <if test="latitude != null">#{latitude},</if>
+            <if test="photoUrl != null">#{photoUrl},</if>
+            <if test="area != null">#{area},</if>
+            <if test="contactName != null">#{contactName},</if>
+            <if test="contactPhone != null">#{contactPhone},</if>
+            <if test="isSupervise != null">#{isSupervise},</if>
+            <if test="maxBuyPerson != null">#{maxBuyPerson},</if>
+            <if test="state != null">#{state},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCtStore" parameterType="CtStore">
+        update ct_store
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="storeCode != null">store_code = #{storeCode},</if>
+            <if test="merchantCode != null">merchant_code = #{merchantCode},</if>
+            <if test="address != null">address = #{address},</if>
+            <if test="shortAddress != null">short_address = #{shortAddress},</if>
+            <if test="storeNo != null">store_no = #{storeNo},</if>
+            <if test="regionCode != null">region_code = #{regionCode},</if>
+            <if test="longitude != null">longitude = #{longitude},</if>
+            <if test="latitude != null">latitude = #{latitude},</if>
+            <if test="photoUrl != null">photo_url = #{photoUrl},</if>
+            <if test="area != null">area = #{area},</if>
+            <if test="contactName != null">contact_name = #{contactName},</if>
+            <if test="contactPhone != null">contact_phone = #{contactPhone},</if>
+            <if test="isSupervise != null">is_supervise = #{isSupervise},</if>
+            <if test="maxBuyPerson != null">max_buy_person = #{maxBuyPerson},</if>
+            <if test="state != null">state = #{state},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCtStoreById" parameterType="Long">
+        delete from ct_store where id = #{id}
+    </delete>
+
+    <delete id="deleteCtStoreByIds" parameterType="String">
+        delete from ct_store where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

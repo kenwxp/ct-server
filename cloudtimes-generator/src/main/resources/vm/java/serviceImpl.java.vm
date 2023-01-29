@@ -9,6 +9,8 @@ import com.cloudtimes.common.utils.DateUtils;
 #end
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.cloudtimes.common.annotation.DataSource;
+import com.cloudtimes.common.enums.DataSourceType;
 #if($table.sub)
 import java.util.ArrayList;
 import com.cloudtimes.common.utils.StringUtils;
@@ -25,6 +27,7 @@ import ${packageName}.service.I${ClassName}Service;
  * @author ${author}
  * @date ${datetime}
  */
+@DataSource(DataSourceType.CT)
 @Service
 public class ${ClassName}ServiceImpl implements I${ClassName}Service 
 {
