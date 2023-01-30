@@ -221,6 +221,8 @@ public class HttpUtils {
             conn.setDoOutput(true);
             conn.setDoInput(true);
             conn.setUseCaches(false);
+            conn.setConnectTimeout(30000);
+            conn.setReadTimeout(5000);
             //设置请求头
             if (header != null) {
                 for (Map.Entry<String, String> e : params.entrySet()) {

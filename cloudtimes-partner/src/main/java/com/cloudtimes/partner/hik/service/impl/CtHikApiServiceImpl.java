@@ -52,6 +52,7 @@ public class CtHikApiServiceImpl implements ICtHikApiService {
         }
         return "";
     }
+
     @Override
     public String addDevice(String deviceSerial, String validateCode) {
         Map<String, String> params = new HashMap<>();
@@ -59,17 +60,77 @@ public class CtHikApiServiceImpl implements ICtHikApiService {
         params.put("validateCode", validateCode);
         return sendHikHttp(HikConstant.addDeviceUri, params);
     }
+
     @Override
     public String deleteDevice(String deviceSerial) {
         Map<String, String> params = new HashMap<>();
         params.put("deviceSerial", deviceSerial);
         return sendHikHttp(HikConstant.deleteDeviceUri, params);
     }
+
     @Override
     public String getDeviceInfo(String deviceSerial) {
         Map<String, String> params = new HashMap<>();
         params.put("deviceSerial", deviceSerial);
         return sendHikHttp(HikConstant.getDeviceInfoUri, params);
+    }
+
+    @Override
+    public Map<String, String> getLiveAddress(String deviceSerial, String protocol, String quality) {
+        Map<String, String> params = new HashMap<>();
+        params.put("deviceSerial", deviceSerial);
+        params.put("channelNo", "1");
+        params.put("expireTime", "3600");
+        params.put("protocol", protocol);
+        params.put("quality", quality);
+        params.put("supportH265", "1");
+        params.put("gbchannel", "");
+        params.put("type", "1");
+        return getAddressUrl(params);
+    }
+
+    @Override
+    public Map<String, String> getPlaybackAddress(String deviceSerial, String quality, String startTime, String stopTime) {
+        Map<String, String> params = new HashMap<>();
+        params.put("deviceSerial", deviceSerial);
+        params.put("channelNo", "1");
+        params.put("expireTime", "3600");
+        params.put("protocol", "1");
+        params.put("quality", quality);
+        params.put("supportH265", "1");
+        params.put("gbchannel", "");
+        params.put("type", "2");
+        params.put("startTime", startTime);
+        params.put("stopTime", stopTime);
+        return getAddressUrl(params);
+    }
+
+    /**
+     * 设备加密
+     *
+     * @param deviceSerial 设备序列号
+     * @param validateCode 设备验证码
+     * @param enable       是否加密 0-不加密 1-加密
+     * @return
+     */
+    @Override
+    public String setDeviceEncrypt(String deviceSerial, String validateCode, boolean enable) {
+        Map<String, String> params = new HashMap<>();
+        params.put("deviceSerial", deviceSerial);
+        params.put("validateCode", validateCode);
+        if (enable) {
+            return sendHikHttp(HikConstant.setDeviceEncryptOnUri, params);
+        } else {
+            return sendHikHttp(HikConstant.setDeviceEncryptOffUri, params);
+        }
+    }
+
+    @Override
+    public String getDeviceCapture(String deviceSerial) {
+        Map<String, String> params = new HashMap<>();
+        params.put("deviceSerial", deviceSerial);
+        params.put("channelNo", "1");
+        return sendHikHttp(HikConstant.getDeviceCaptureUri, params);
     }
 
     private String sendHikHttp(String path, Map<String, String> params) {
@@ -88,6 +149,21 @@ public class CtHikApiServiceImpl implements ICtHikApiService {
         }
         System.out.println("sendHikHttp response " + result);
         return result;
+    }
+
+    private Map<String, String> getAddressUrl(Map<String, String> params) {
+        String retStr = sendHikHttp(HikConstant.getLiveAddressUri, params);
+        Map<String, String> retMap = new HashMap<>();
+        retMap.put("accessToken", getAccessToken());
+        retMap.put("url", "");
+        JSONObject retObj = JSON.parseObject(retStr);
+        if (HikConstant.CODE200.equals(retObj.getString("code"))) {
+            JSONObject dataObj = retObj.getJSONObject("data");
+            if (dataObj != null) {
+                retMap.put("url", dataObj.getString("url"));
+            }
+        }
+        return retMap;
     }
 
     private Map<String, String> getHikHeader() {

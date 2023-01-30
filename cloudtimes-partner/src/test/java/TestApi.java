@@ -9,7 +9,7 @@ public class TestApi {
     @Test
     public void test1() {
         ICtHikApiService service = new CtHikApiServiceImpl();
-        String result = service.getDeviceInfo("");
+        String result = service.getDeviceInfo("J58092487");
         System.out.println(result);
     }
 
@@ -27,4 +27,21 @@ public class TestApi {
         System.out.println(result);
     }
 
+    @Test
+    public void test4() {
+        ICtHikApiService service = new CtHikApiServiceImpl();
+        Map result = service.getLiveAddress("J58092487","1","2");
+        System.out.println(result.get("url"));
+    }
+    @Test
+    public void test5() {
+        ICtHikApiService service = new CtHikApiServiceImpl();
+        String result = service.setDeviceEncrypt("J58092487","CVBSQS",false);
+        System.out.println(result);
+    }    @Test
+    public void test6() {
+        ICtHikApiService service = new CtHikApiServiceImpl();
+        String result = service.getDeviceCapture("J58092487");
+        System.out.println(result);
+    }
 }
