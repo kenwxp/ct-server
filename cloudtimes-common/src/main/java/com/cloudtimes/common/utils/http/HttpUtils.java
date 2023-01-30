@@ -12,6 +12,7 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import com.alibaba.fastjson2.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.cloudtimes.common.constant.Constants;
@@ -193,7 +194,8 @@ public class HttpUtils {
      * 向指定 URL 发送POST方法的请求
      *
      * @param url    发送请求的 URL
-     * @param params 请求参数，请求参数应该是 map key value形式。
+     * @param params 请求体参数，请求参数应该是 map key value形式。
+     * @param header 请求头参数，请求参数应该是 map key value形式。
      * @return 所代表远程资源的响应结果
      */
     public static String sendFormPost(String url, Map<String, String> params, Map<String, String> header) {
@@ -225,7 +227,7 @@ public class HttpUtils {
             conn.setReadTimeout(5000);
             //设置请求头
             if (header != null) {
-                for (Map.Entry<String, String> e : params.entrySet()) {
+                for (Map.Entry<String, String> e : header.entrySet()) {
                     conn.setRequestProperty(e.getKey(), e.getValue());
                 }
             }
@@ -247,6 +249,76 @@ public class HttpUtils {
             log.error("调用HttpUtils.sendPost IOException, url=" + url + ",param=" + params, e);
         } catch (Exception e) {
             log.error("调用HttpsUtil.sendPost Exception, url=" + url + ",param=" + params, e);
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.disconnect();
+                }
+                if (out != null) {
+                    out.close();
+                }
+                if (in != null) {
+                    in.close();
+                }
+            } catch (IOException ex) {
+                log.error("调用in.close Exception, url=" + url + ",param=" + params, ex);
+            }
+        }
+        return result.toString();
+    }
+
+    /**
+     * 向指定 URL 发送POST方法的请求
+     *
+     * @param url    发送请求的 URL
+     * @param params 请求体参数，请求参数应该是 map key value形式。
+     * @param header 请求头参数，请求参数应该是 map key value形式。
+     * @return 所代表远程资源的响应结果
+     */
+    public static String sendJsonPost(String url, String params, Map<String, String> header) throws Exception {
+        PrintWriter out = null;
+        BufferedReader in = null;
+        StringBuilder result = new StringBuilder();
+        HttpURLConnection conn = null;
+        try {
+            System.out.println("send_url:" + url);
+            System.out.println("send_data:" + params);
+            URL realUrl = new URL(url);
+            conn = (HttpURLConnection) realUrl.openConnection();
+            conn.setRequestMethod("POST");
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
+            conn.setUseCaches(false);
+            conn.setConnectTimeout(30000);
+            conn.setReadTimeout(5000);
+            //设置请求头
+            if (header != null) {
+                for (Map.Entry<String, String> e : header.entrySet()) {
+                    conn.setRequestProperty(e.getKey(), e.getValue());
+                }
+            }
+            OutputStreamWriter osw = new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8);
+            osw.write(params);
+            osw.flush();
+            osw.close();
+            in = new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8));
+            String line;
+            while ((line = in.readLine()) != null) {
+                result.append(line);
+            }
+            log.info("recv - {}", result);
+        } catch (ConnectException e) {
+            log.error("调用HttpUtils.sendPost ConnectException, url=" + url + ",param=" + params, e);
+            throw e;
+        } catch (SocketTimeoutException e) {
+            log.error("调用HttpUtils.sendPost SocketTimeoutException, url=" + url + ",param=" + params, e);
+            throw e;
+        } catch (IOException e) {
+            log.error("调用HttpUtils.sendPost IOException, url=" + url + ",param=" + params, e);
+            throw e;
+        } catch (Exception e) {
+            log.error("调用HttpsUtil.sendPost Exception, url=" + url + ",param=" + params, e);
+            throw e;
         } finally {
             try {
                 if (conn != null) {

@@ -24,6 +24,20 @@ public class PartnerConfig {
         return configs.get("wx");
     }
 
+    public static Map<String, String> getWiegandConfig() {
+        if (configs == null) {
+            readFromFile();
+        }
+        return configs.get("wiegand");
+    }
+
+    public static Map<String, String> getShouqianbaConfig() {
+        if (configs == null) {
+            readFromFile();
+        }
+        return configs.get("shouqianba");
+    }
+
     private static void readFromFile() {
 //        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("partner_conf.yaml");
         InputStream inputStream = null;

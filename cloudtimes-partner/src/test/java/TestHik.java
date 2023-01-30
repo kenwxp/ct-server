@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import java.util.Map;
 
-public class TestApi {
+public class TestHik {
     @Test
     public void test1() {
         ICtHikApiService service = new CtHikApiServiceImpl();

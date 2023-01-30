@@ -20,7 +20,7 @@ shouqianba:
   cis_app_id: "28cis46221027"
   cis_client_id: "47105a951745453c9fe027f75cdf33db"
 wiegand:
-  http_host: 127.0.0.1:61080
-  ws_host: 127.0.0.1:61081
-#  http_host: 10.1.65.231:61080
-#  ws_host: 10.1.65.231:61081
+#  http_host: 127.0.0.1:61080
+#  ws_host: 127.0.0.1:61081
+  http_host: 10.1.65.231:61080
+  ws_host: 10.1.65.231:61081
