@@ -12,11 +12,9 @@ agora:
   appid: bdd64154db414a1c8abc9778c86ad905
   app_certificate: af46f6d63c4e413d91f88c5a6ce4ce2f
 shouqianba:
-  api_domain: "https://vsi-api.shouqianba.com"
+  app_id: "2022101900005102"
   vendor_sn: "91801644"
   vendor_key: "039624f6b802829dc908669a07247535"
-  bc_app_id: "2022101900005102"
-  cis_api_domain: "https://vapi.shouqianba.com"
   cis_app_id: "28cis46221027"
   cis_client_id: "47105a951745453c9fe027f75cdf33db"
 wiegand:

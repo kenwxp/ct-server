@@ -276,6 +276,20 @@ public class HttpUtils {
      * @return 所代表远程资源的响应结果
      */
     public static String sendJsonPost(String url, String params, Map<String, String> header) throws Exception {
+        return sendJsonPost(url, params, header, 5000, 30000);
+    }
+
+    /**
+     * 向指定 URL 发送POST方法的请求
+     *
+     * @param url            发送请求的 URL
+     * @param params         请求体参数，请求参数应该是 map key value形式。
+     * @param header         请求头参数，请求参数应该是 map key value形式。
+     * @param readTimeout    读超时 单位毫秒
+     * @param connectTimeout 连接超时 单位毫秒
+     * @return 所代表远程资源的响应结果
+     */
+    public static String sendJsonPost(String url, String params, Map<String, String> header, int readTimeout, int connectTimeout) throws Exception {
         PrintWriter out = null;
         BufferedReader in = null;
         StringBuilder result = new StringBuilder();
@@ -289,8 +303,8 @@ public class HttpUtils {
             conn.setDoOutput(true);
             conn.setDoInput(true);
             conn.setUseCaches(false);
-            conn.setConnectTimeout(30000);
-            conn.setReadTimeout(5000);
+            conn.setConnectTimeout(connectTimeout);
+            conn.setReadTimeout(readTimeout);
             //设置请求头
             if (header != null) {
                 for (Map.Entry<String, String> e : header.entrySet()) {
