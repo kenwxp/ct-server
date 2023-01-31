@@ -6,7 +6,6 @@ import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.cloudtimes.common.core.domain.entity.AuthUser;
 import com.cloudtimes.common.exception.ServiceException;
 import com.cloudtimes.common.utils.AuthUtils;
-import com.cloudtimes.framework.manager.JWTManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerInterceptor;
 
