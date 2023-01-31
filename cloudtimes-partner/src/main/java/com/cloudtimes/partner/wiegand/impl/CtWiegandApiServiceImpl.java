@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class CtWiegandApiService implements ICtWiegandApiService {
+public class CtWiegandApiServiceImpl implements ICtWiegandApiService {
 
     /**
      * 远程开门

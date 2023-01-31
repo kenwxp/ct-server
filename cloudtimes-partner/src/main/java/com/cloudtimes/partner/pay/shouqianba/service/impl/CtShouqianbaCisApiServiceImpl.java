@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class CtShouqianbaCisApiService implements ICtShouqianbaCisApiService {
+public class CtShouqianbaCisApiServiceImpl implements ICtShouqianbaCisApiService {
     /**
      * 查询商户申请记录
      *
@@ -62,7 +62,10 @@ public class CtShouqianbaCisApiService implements ICtShouqianbaCisApiService {
         requestObj.put("body", reqBody);
         reqObj.put("request", requestObj);
         // 签名
-        byte[] signRaw = SHA1withRSAUtil.sign(PartnerConfig.getShouqianbaConfig().get("ct_priv_key"), SHA1withRSAUtil.PriKeyType.PKCS1, requestObj.toString());
+        byte[] signRaw = SHA1withRSAUtil.sign(
+                PartnerConfig.getShouqianbaConfig().get("ct_priv_key"),
+                SHA1withRSAUtil.PKCS1,
+                requestObj.toString());
         String signature = Base64.encode(signRaw);
         reqObj.put("signature", signature);
         HashMap<String, String> header = new HashMap<>();

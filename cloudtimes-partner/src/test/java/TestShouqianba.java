@@ -1,28 +1,17 @@
-import com.cloudtimes.common.utils.SHA1withRSAUtil;
-import com.cloudtimes.common.utils.sign.Base64;
 import com.cloudtimes.partner.pay.shouqianba.service.ICtShouqianbaApiService;
 import com.cloudtimes.partner.pay.shouqianba.service.ICtShouqianbaCisApiService;
-import com.cloudtimes.partner.pay.shouqianba.service.impl.CtShouqianbaApiService;
-import com.cloudtimes.partner.pay.shouqianba.service.impl.CtShouqianbaCisApiService;
+import com.cloudtimes.partner.pay.shouqianba.service.impl.CtShouqianbaApiServiceImpl;
+import com.cloudtimes.partner.pay.shouqianba.service.impl.CtShouqianbaCisApiServiceImpl;
 import org.junit.Test;
 
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.security.*;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.PKCS8EncodedKeySpec;
-import java.security.spec.X509EncodedKeySpec;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 public class TestShouqianba {
 
 
-    @Test
     public void test1() {
-        ICtShouqianbaApiService service = new CtShouqianbaApiService();
+        ICtShouqianbaApiService service = new CtShouqianbaApiServiceImpl();
         Map<String, Object> result = service.activateTerminal("test002", "61359037");
         Map<String, String> response = (Map<String, String>) result.get("biz_response");
         System.out.println(response.get("terminal_sn"));
@@ -40,18 +29,16 @@ public class TestShouqianba {
         //}
     }
 
-    @Test
     public void test2() {
-        ICtShouqianbaApiService service = new CtShouqianbaApiService();
+        ICtShouqianbaApiService service = new CtShouqianbaApiServiceImpl();
         Map<String, Object> result = service.checkinTerminal("test003", "100051020027440980", "759ac9b16958129d3ee5707991114d8a");
         Map<String, String> response = (Map<String, String>) result.get("biz_response");
         System.out.println(response.get("terminal_sn"));    //100051020027440980
         System.out.println(response.get("terminal_key")); //aeee41ee3f908d9d1f9bb5a0dcae03e7
     }
 
-    @Test
     public void test3() {
-        ICtShouqianbaApiService service = new CtShouqianbaApiService();
+        ICtShouqianbaApiService service = new CtShouqianbaApiServiceImpl();
         Map<String, String> paramMap = new HashMap<>();
         paramMap.put("terminal_sn", "100051020027440980"); //收钱吧终端ID	收钱吧终端ID，不超过32位的纯数字
         paramMap.put("client_sn", "testorder0000004"); //商户系统订单号	必须在商户系统内唯一；且长度不超过32字节
@@ -66,9 +53,8 @@ public class TestShouqianba {
         //testorder0000004
     }
 
-    @Test
     public void test4() {
-        ICtShouqianbaApiService service = new CtShouqianbaApiService();
+        ICtShouqianbaApiService service = new CtShouqianbaApiServiceImpl();
         Map<String, Object> result = service.queryPayOrder("7895282218633583", "", "100051020027440980", "aeee41ee3f908d9d1f9bb5a0dcae03e7");
         Map<String, Object> response = (Map<String, Object>) result.get("biz_response");
         System.out.println(response);
@@ -78,9 +64,8 @@ public class TestShouqianba {
         //7895282218633583
     }
 
-    @Test
     public void test5() {
-        ICtShouqianbaApiService service = new CtShouqianbaApiService();
+        ICtShouqianbaApiService service = new CtShouqianbaApiServiceImpl();
         Map<String, Object> result = service.cancelPayOrder("7895282218633583", "", "100051020027440980", "aeee41ee3f908d9d1f9bb5a0dcae03e7");
         Map<String, Object> response = (Map<String, Object>) result.get("biz_response");
         System.out.println(response);
@@ -89,9 +74,8 @@ public class TestShouqianba {
         //7895282218633583
     }
 
-    @Test
     public void test6() {
-        ICtShouqianbaCisApiService service = new CtShouqianbaCisApiService();
+        ICtShouqianbaCisApiService service = new CtShouqianbaCisApiServiceImpl();
         service.queryMerchantsApply("ZSEJIP78812769");
     }
 

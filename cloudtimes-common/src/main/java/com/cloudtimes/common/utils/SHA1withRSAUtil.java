@@ -13,10 +13,9 @@ import java.security.spec.RSAPrivateKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 
 public class SHA1withRSAUtil {
-    public enum PriKeyType {
-        //定义一个枚举类型
-        PKCS1, PKCS8
-    }
+    public static final int PKCS1 = 1;
+    public static final int PKCS8 = 8;
+
 
     /**
      * 解析PKCS8格式私钥
@@ -63,7 +62,7 @@ public class SHA1withRSAUtil {
      * @param data          需签名的内容
      * @return
      */
-    public static byte[] sign(String privateKeyStr, PriKeyType type, String data) {
+    public static byte[] sign(String privateKeyStr, int type, String data) {
         byte[] arr = new byte[0];
         try {
             PrivateKey privateKey = null;
@@ -114,7 +113,7 @@ public class SHA1withRSAUtil {
         String data = "你好";
         String rawPrivKey = "MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCRh7G9TbUTuW0O3hhjp3dGjNHFX1KFBaEMVxFt2LWenCL82V/G0NuAmfSjl99liaJUqX6sfNUsDjoIeUFNCQGs8GisgBWYIFeq3zTfc11k3qpNnD0WxGwKwv5dzYCT4+yw5THW5sRgnvMrW/ckd88mHgAAevPDFegMyzS/iSZnUuK8zxnXY45ukdCA1C6spCgM5U+1iXbDgdmqdnWe+QO10sAF28tg56VO0/OWpNVblSxAehyafUu5bUkqrlBLsyssWeme+mmZ0Xfy7Iu7KwudSC1th7ONHkumTKkL/NMYcz1Vfxjt1gWAN+sbvMvj8kuu1Q5NEjAmmWMG2d2Te0OFAgMBAAECggEAEz7pv4o2Rzx/crbmbM9p07etyjdX92WOLc6Z7Hf7VNV7PwsUQnu+e5xgoP3lukzgXefoa7E6k8/x1ssKWsC1KwTEIwPxVyP31A4etOpR0JQt24OtBITHcQjmkMsrlONQmvhEhhIQqGJ88CACaB08FONkxqt77zHHdWGuQSJHJOS5h9mpvg/Pu03w/lyaITfnG7W8w9M4di9reFJN75TjobVty/zWZUr3TKh2bPZ9MhVJyiF12odroTkyoYNr0aYYezTlnO2nHlriysi9zfgT2qUvYAJ4MYI84TT7PAHrTcjWSf7p7GP82d8litlFLW5N45IWB/nnB0baOINU2XC5pQKBgQD43kQLT6VFkxxm0t7HUsHz1Utx4A1bDjGK33Zel6Aen8O2CATgz1l6Ms0eBoQgdX6xlZDyvWyykw/o7DT+L8VRtgcSVRHaJ10SujJPlvUPiYkBXX/5mOfrqXTR10xImAD4YSkTihKCrTWShL+409tTGYUn+2Y4LbVXXVx4/k/3dwKBgQCVs1MJVv2HtZJo34Ewed8fWIKbTJv4dU9QTpiGRQa+ycMVaQMBEnmfWZbqMnAZKT3MD2OvUECXegyQ7hnvVY8XAlHA4AJf5EqYghUamHkoZCz9xZnIT0rzdFNh2rbh4cSHVGo6Gta0Ag/rxkD64W+h9DddrXI5GMPdXcTzfbMT4wKBgQDfKfC6c+EwUorVaaJ7+qoRjOLqao+PZ1rlvRzYFf9vdrR5NxeowEbsXUGx+wXgVXwWopgoE9S1DUrnA2lBxnSaoTAWMFKh3UqI0I7s7+Ew3ZQNtVpc59CQcpRe10GAl03HbNj4vId8xvWTPZbulovGKMxO3hD7r4E9pmqV1PbAYQKBgAdSvG8qiECJS15CAMnkTFv2Mn1yY/blljmxfpii68+NgzOa7YCx7K007sMKMJ2qfNFst02uOVqvp8m3PCGPJ+7SODmdO8CBJH0NcAbbCqJFNEY90mYQKvR57lJNJsEqEDkmkgPBqFsp9qlsC2W6fYGItuSoRXwxj/NWUPowXgBNAoGAXOaz+qLVaFLGFt+MiLf3yWSBAaKuHIiMcHSUB7nhGFKx4wyyOqrp8nVBwIkzj+VPOvXaTZ3pIcLUZkyaqQHAThhEFKMorwDL0tHS+VPEBhdKFXGSiWUBecHp2g5B41kMz/239zFbzZTahIzlwcl1b4HC8qgqs4J8Q+taKcwdMlU=";
         String rawPubKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkYexvU21E7ltDt4YY6d3RozRxV9ShQWhDFcRbdi1npwi/NlfxtDbgJn0o5ffZYmiVKl+rHzVLA46CHlBTQkBrPBorIAVmCBXqt8033NdZN6qTZw9FsRsCsL+Xc2Ak+PssOUx1ubEYJ7zK1v3JHfPJh4AAHrzwxXoDMs0v4kmZ1LivM8Z12OObpHQgNQurKQoDOVPtYl2w4HZqnZ1nvkDtdLABdvLYOelTtPzlqTVW5UsQHocmn1LuW1JKq5QS7MrLFnpnvppmdF38uyLuysLnUgtbYezjR5LpkypC/zTGHM9VX8Y7dYFgDfrG7zL4/JLrtUOTRIwJpljBtndk3tDhQIDAQAB";
-        byte[] sign = SHA1withRSAUtil.sign(rawPrivKey,PriKeyType.PKCS8, data);
+        byte[] sign = SHA1withRSAUtil.sign(rawPrivKey, PKCS8, data);
         boolean ok = SHA1withRSAUtil.verify(rawPubKey, data, Base64.encode(sign));
         System.out.println(ok);
     }

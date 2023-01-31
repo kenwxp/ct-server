@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class CtShouqianbaApiService implements ICtShouqianbaApiService {
+public class CtShouqianbaApiServiceImpl implements ICtShouqianbaApiService {
     /**
      * 设备终端激活
      *
