@@ -6,10 +6,12 @@ import com.cloudtimes.common.utils.sign.Md5Utils;
 import com.cloudtimes.partner.config.PartnerConfig;
 import com.cloudtimes.partner.pay.shouqianba.domain.ShouqianbaConstant;
 import com.cloudtimes.partner.pay.shouqianba.service.ICtShouqianbaApiService;
+import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@Service
 public class CtShouqianbaApiService implements ICtShouqianbaApiService {
     /**
      * 设备终端激活

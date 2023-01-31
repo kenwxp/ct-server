@@ -8,13 +8,14 @@ import com.cloudtimes.common.utils.sign.Base64;
 import com.cloudtimes.partner.config.PartnerConfig;
 import com.cloudtimes.partner.pay.shouqianba.domain.ShouqianbaConstant;
 import com.cloudtimes.partner.pay.shouqianba.service.ICtShouqianbaCisApiService;
+import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-
+@Service
 public class CtShouqianbaCisApiService implements ICtShouqianbaCisApiService {
     /**
      * 查询商户申请记录

@@ -1,8 +1,5 @@
 package com.cloudtimes.partner.pay.shouqianba.domain;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class ShouqianbaConstant {
     public static final String apiHost = "https://vsi-api.shouqianba.com"; //支付接口相关
 
