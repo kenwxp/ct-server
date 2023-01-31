@@ -1,13 +1,25 @@
+import com.cloudtimes.common.utils.SHA1withRSAUtil;
+import com.cloudtimes.common.utils.sign.Base64;
 import com.cloudtimes.partner.pay.shouqianba.service.ICtShouqianbaApiService;
+import com.cloudtimes.partner.pay.shouqianba.service.ICtShouqianbaCisApiService;
 import com.cloudtimes.partner.pay.shouqianba.service.impl.CtShouqianbaApiService;
-import com.cloudtimes.partner.wiegand.ICtWiegandApiService;
-import com.cloudtimes.partner.wiegand.impl.CtWiegandApiService;
+import com.cloudtimes.partner.pay.shouqianba.service.impl.CtShouqianbaCisApiService;
 import org.junit.Test;
 
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.security.*;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 public class TestShouqianba {
+
+
     @Test
     public void test1() {
         ICtShouqianbaApiService service = new CtShouqianbaApiService();
@@ -75,6 +87,12 @@ public class TestShouqianba {
         Map<String, String> data = (Map<String, String>) response.get("data");
         System.out.println(data);
         //7895282218633583
+    }
+
+    @Test
+    public void test6() {
+        ICtShouqianbaCisApiService service = new CtShouqianbaCisApiService();
+        service.queryMerchantsApply("ZSEJIP78812769");
     }
 
 

@@ -2,6 +2,10 @@ package com.cloudtimes.partner.pay.shouqianba.service;
 
 import java.util.Map;
 
+/**
+ * 收钱吧支付端接口
+ *
+ */
 public interface ICtShouqianbaApiService {
     /**
      * 设备终端激活
