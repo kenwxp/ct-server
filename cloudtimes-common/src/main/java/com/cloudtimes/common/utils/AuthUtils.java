@@ -10,7 +10,7 @@ public class AuthUtils {
         authObject.set(object);
     }
 
-    public static T getObject() {
+    public static <T> T getObject() {
         return (T) authObject.get();
     }
 

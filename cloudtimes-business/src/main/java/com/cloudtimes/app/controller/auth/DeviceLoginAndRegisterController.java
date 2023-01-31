@@ -3,6 +3,8 @@ package com.cloudtimes.app.controller.auth;
 
 import com.cloudtimes.common.core.controller.BaseController;
 import com.cloudtimes.common.core.domain.AjaxResult;
+import com.cloudtimes.common.core.domain.entity.AuthUser;
+import com.cloudtimes.common.utils.AuthUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -29,8 +31,6 @@ public class DeviceLoginAndRegisterController extends BaseController {
     @ApiOperation("设备登录")
     @PostMapping("/login")
     public AjaxResult login() {
-
-
         return AjaxResult.success();
     }
 
