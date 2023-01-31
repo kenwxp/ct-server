@@ -199,12 +199,32 @@
                 <version>${cloudtimes.version}</version>
             </dependency>
 
+            <!-- sharding-jdbc分库分表 -->
+            <dependency>
+                <groupId>org.apache.shardingsphere</groupId>
+                <artifactId>sharding-jdbc-core</artifactId>
+                <version>4.1.1</version>
+            </dependency>
+
+            <!-- mybatis-plus 增强CRUD -->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>3.4.2</version>
+            </dependency>
+
+            <!--jwt-->
+            <dependency>
+                <groupId>com.auth0</groupId>
+                <artifactId>java-jwt</artifactId>
+                <version>4.2.2</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
     <modules>
         <module>cloudtimes-admin</module>
-        <module>cloudtimes-app-api</module>
         <module>cloudtimes-framework</module>
         <module>cloudtimes-system</module>
         <module>cloudtimes-quartz</module>
@@ -212,6 +232,7 @@
         <module>cloudtimes-common</module>
         <module>cloudtimes-ct</module>
         <module>cloudtimes-partner</module>
+        <module>cloudtimes-business</module>
     </modules>
     <packaging>pom</packaging>
 

@@ -1,76 +1,118 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.cloudtimes.account.mapper.CtUserMapper">
-    
-    <resultMap type="CtUser" id="CtUserResult">
-        <result property="id"    column="id"    />
-        <result property="userCode"    column="user_code"    />
-        <result property="account"    column="account"    />
-        <result property="password"    column="password"    />
-        <result property="wxOpenId"    column="wx_open_id"    />
-        <result property="mobile"    column="mobile"    />
-        <result property="moneyAmount"    column="money_amount"    />
-        <result property="scoreAmount"    column="score_amount"    />
-        <result property="creditScore"    column="credit_score"    />
-        <result property="nickName"    column="nick_name"    />
-        <result property="realName"    column="real_name"    />
-        <result property="sex"    column="sex"    />
-        <result property="birthday"    column="birthday"    />
-        <result property="isReal"    column="is_real"    />
-        <result property="violationCount"    column="violation_count"    />
-        <result property="idNo"    column="id_no"    />
-        <result property="isAgent"    column="is_agent"    />
-        <result property="isShopBoss"    column="is_shop_boss"    />
-        <result property="lastLoginIp"    column="last_login_ip"    />
-        <result property="lastLoginTime"    column="last_login_time"    />
-        <result property="createBossTime"    column="create_boss_time"    />
-        <result property="createAgentTime"    column="create_agent_time"    />
-        <result property="agentState"    column="agent_state"    />
-        <result property="agentType"    column="agent_type"    />
-        <result property="bossState"    column="boss_state"    />
-        <result property="customerState"    column="customer_state"    />
-        <result property="operator"    column="operator"    />
-        <result property="createDate"    column="create_date"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateTime"    column="update_time"    />
-        <result property="delFlag"    column="del_flag"    />
+
+    <resultMap type="com.cloudtimes.account.domain.CtUser" id="CtUserResult">
+        <result property="id" column="id"/>
+        <result property="userCode" column="user_code"/>
+        <result property="account" column="account"/>
+        <result property="password" column="password"/>
+        <result property="wxOpenId" column="wx_open_id"/>
+        <result property="mobile" column="mobile"/>
+        <result property="moneyAmount" column="money_amount"/>
+        <result property="scoreAmount" column="score_amount"/>
+        <result property="creditScore" column="credit_score"/>
+        <result property="nickName" column="nick_name"/>
+        <result property="realName" column="real_name"/>
+        <result property="sex" column="sex"/>
+        <result property="birthday" column="birthday"/>
+        <result property="isReal" column="is_real"/>
+        <result property="violationCount" column="violation_count"/>
+        <result property="idNo" column="id_no"/>
+        <result property="isAgent" column="is_agent"/>
+        <result property="isShopBoss" column="is_shop_boss"/>
+        <result property="lastLoginIp" column="last_login_ip"/>
+        <result property="lastLoginTime" column="last_login_time"/>
+        <result property="createBossTime" column="create_boss_time"/>
+        <result property="createAgentTime" column="create_agent_time"/>
+        <result property="agentState" column="agent_state"/>
+        <result property="agentType" column="agent_type"/>
+        <result property="bossState" column="boss_state"/>
+        <result property="customerState" column="customer_state"/>
+        <result property="operator" column="operator"/>
+        <result property="createDate" column="create_date"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="delFlag" column="del_flag"/>
     </resultMap>
 
     <sql id="selectCtUserVo">
-        select id, user_code, account, password, wx_open_id, mobile, money_amount, score_amount, credit_score, nick_name, real_name, sex, birthday, is_real, violation_count, id_no, is_agent, is_shop_boss, last_login_ip, last_login_time, create_boss_time, create_agent_time, agent_state, agent_type, boss_state, customer_state, operator, create_date, create_time, update_time, del_flag from ct_user
+        select id,
+               user_code,
+               account,
+               password,
+               wx_open_id,
+               mobile,
+               money_amount,
+               score_amount,
+               credit_score,
+               nick_name,
+               real_name,
+               sex,
+               birthday,
+               is_real,
+               violation_count,
+               id_no,
+               is_agent,
+               is_shop_boss,
+               last_login_ip,
+               last_login_time,
+               create_boss_time,
+               create_agent_time,
+               agent_state,
+               agent_type,
+               boss_state,
+               customer_state,
+               operator,
+               create_date,
+               create_time,
+               update_time,
+               del_flag
+        from ct_user
     </sql>
 
     <select id="selectCtUserList" parameterType="CtUser" resultMap="CtUserResult">
         <include refid="selectCtUserVo"/>
-        <where>  
-            <if test="userCode != null  and userCode != ''"> and user_code = #{userCode}</if>
-            <if test="account != null  and account != ''"> and account = #{account}</if>
-            <if test="password != null  and password != ''"> and password = #{password}</if>
-            <if test="wxOpenId != null  and wxOpenId != ''"> and wx_open_id = #{wxOpenId}</if>
-            <if test="mobile != null  and mobile != ''"> and mobile = #{mobile}</if>
-            <if test="realName != null  and realName != ''"> and real_name like concat('%', #{realName}, '%')</if>
-            <if test="sex != null  and sex != ''"> and sex = #{sex}</if>
-            <if test="birthday != null "> and birthday = #{birthday}</if>
-            <if test="isReal != null  and isReal != ''"> and is_real = #{isReal}</if>
-            <if test="violationCount != null "> and violation_count = #{violationCount}</if>
-            <if test="isAgent != null  and isAgent != ''"> and is_agent = #{isAgent}</if>
-            <if test="isShopBoss != null  and isShopBoss != ''"> and is_shop_boss = #{isShopBoss}</if>
-            <if test="agentState != null  and agentState != ''"> and agent_state = #{agentState}</if>
-            <if test="agentType != null  and agentType != ''"> and agent_type = #{agentType}</if>
-            <if test="bossState != null  and bossState != ''"> and boss_state = #{bossState}</if>
-            <if test="customerState != null  and customerState != ''"> and customer_state = #{customerState}</if>
-            <if test="operator != null  and operator != ''"> and operator = #{operator}</if>
-            <if test="createDate != null "> and create_date = #{createDate}</if>
+        <where>
+            <if test="userCode != null  and userCode != ''">and user_code = #{userCode}</if>
+            <if test="account != null  and account != ''">and account = #{account}</if>
+            <if test="password != null  and password != ''">and password = #{password}</if>
+            <if test="wxOpenId != null  and wxOpenId != ''">and wx_open_id = #{wxOpenId}</if>
+            <if test="mobile != null  and mobile != ''">and mobile = #{mobile}</if>
+            <if test="realName != null  and realName != ''">and real_name like concat('%', #{realName}, '%')</if>
+            <if test="sex != null  and sex != ''">and sex = #{sex}</if>
+            <if test="birthday != null ">and birthday = #{birthday}</if>
+            <if test="isReal != null  and isReal != ''">and is_real = #{isReal}</if>
+            <if test="violationCount != null ">and violation_count = #{violationCount}</if>
+            <if test="isAgent != null  and isAgent != ''">and is_agent = #{isAgent}</if>
+            <if test="isShopBoss != null  and isShopBoss != ''">and is_shop_boss = #{isShopBoss}</if>
+            <if test="agentState != null  and agentState != ''">and agent_state = #{agentState}</if>
+            <if test="agentType != null  and agentType != ''">and agent_type = #{agentType}</if>
+            <if test="bossState != null  and bossState != ''">and boss_state = #{bossState}</if>
+            <if test="customerState != null  and customerState != ''">and customer_state = #{customerState}</if>
+            <if test="operator != null  and operator != ''">and operator = #{operator}</if>
+            <if test="createDate != null ">and create_date = #{createDate}</if>
         </where>
     </select>
-    
+
     <select id="selectCtUserById" parameterType="Long" resultMap="CtUserResult">
         <include refid="selectCtUserVo"/>
         where id = #{id}
     </select>
-        
+
+    <select id="selectCtUserByAccount" parameterType="String" resultMap="CtUserResult">
+        <include refid="selectCtUserVo"/>
+        where account = #{account}
+    </select>
+
+    <select id="selectCtUserByUserCode" parameterType="String" resultMap="CtUserResult">
+        <include refid="selectCtUserVo"/>
+        where user_code = #{userCode}
+    </select>
+
+
     <insert id="insertCtUser" parameterType="CtUser" useGeneratedKeys="true" keyProperty="id">
         insert into ct_user
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -104,7 +146,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="delFlag != null">del_flag,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="userCode != null">#{userCode},</if>
             <if test="account != null">#{account},</if>
@@ -136,7 +178,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">#{createTime},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="delFlag != null">#{delFlag},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateCtUser" parameterType="CtUser">
@@ -177,11 +219,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteCtUserById" parameterType="Long">
-        delete from ct_user where id = #{id}
+        delete
+        from ct_user
+        where id = #{id}
     </delete>
 
     <delete id="deleteCtUserByIds" parameterType="String">
-        delete from ct_user where id in 
+        delete from ct_user where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

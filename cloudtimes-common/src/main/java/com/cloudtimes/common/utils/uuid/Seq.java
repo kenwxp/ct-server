@@ -156,7 +156,7 @@ public class Seq {
 
     public static void main(String[] args) {
         for (int i = 0; i < 100; i++) {
-            System.out.println(createOrderNo("ND", 0));
+            System.out.println(UUID.randomUUID().hashCode());
         }
 
     }

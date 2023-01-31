@@ -9,13 +9,18 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <packaging>jar</packaging>
-    <artifactId>cloudtimes-admin</artifactId>
+    <artifactId>cloudtimes-business</artifactId>
 
     <description>
-        云时代-管理平台-API服务
+        云时代管理-业务应用端服务
     </description>
 
+    <properties>
+        <cloudtimes.version>3.8.3</cloudtimes.version>
+    </properties>
+
     <dependencies>
+
 
         <!-- spring-boot-devtools -->
         <dependency>
@@ -23,6 +28,7 @@
             <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional> <!-- 表示依赖不会传递 -->
         </dependency>
+
 
         <!-- swagger3-->
         <dependency>
@@ -43,41 +49,115 @@
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
 
-        <!-- 核心模块-->
+
+        <!-- SpringBoot Web容器 -->
         <dependency>
-            <groupId>cloudtimes</groupId>
-            <artifactId>cloudtimes-framework</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <!-- 定时任务-->
+        <!-- SpringBoot 拦截器 -->
         <dependency>
-            <groupId>cloudtimes</groupId>
-            <artifactId>cloudtimes-quartz</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
 
-        <!-- 代码生成-->
+        <!-- 阿里数据库连接池 -->
         <dependency>
-            <groupId>cloudtimes</groupId>
-            <artifactId>cloudtimes-generator</artifactId>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
         </dependency>
+
+        <!-- 验证码 -->
         <dependency>
-            <groupId>cloudtimes</groupId>
-            <artifactId>cloudtimes-ct</artifactId>
+            <groupId>com.github.penggle</groupId>
+            <artifactId>kaptcha</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>javax.servlet-api</artifactId>
+                    <groupId>javax.servlet</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- 测试单元 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-test</artifactId>
+            <version>2.2.2.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-test</artifactId>
+            <version>5.2.2.RELEASE</version>
         </dependency>
 
+
+        <dependency>
+            <groupId>cloudtimes</groupId>
+            <artifactId>cloudtimes-common</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>cloudtimes</groupId>
+            <artifactId>cloudtimes-ct</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>cloudtimes</groupId>
+            <artifactId>cloudtimes-system</artifactId>
+        </dependency>
+
+        <!-- sharding-jdbc分库分表 -->
+        <dependency>
+            <groupId>org.apache.shardingsphere</groupId>
+            <artifactId>sharding-jdbc-core</artifactId>
+            <version>4.1.1</version>
+        </dependency>
+
+        <!-- mybatis-plus 增强CRUD -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>3.4.2</version>
+        </dependency>
+
+        <!--jwt-->
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>4.2.2</version>
+        </dependency>
 
     </dependencies>
 
     <build>
         <plugins>
+<!--            <plugin>-->
+<!--                <groupId>org.springframework.boot</groupId>-->
+<!--                <artifactId>spring-boot-maven-plugin</artifactId>-->
+<!--                <version>2.1.1.RELEASE</version>-->
+<!--                <configuration>-->
+<!--                    <fork>true</fork> &lt;!&ndash; 如果没有该配置，devtools不会生效 &ndash;&gt;-->
+<!--                </configuration>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <goals>-->
+<!--                            <goal>repackage</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-war-plugin</artifactId>-->
+<!--                <version>3.1.0</version>-->
+<!--                <configuration>-->
+<!--                    <failOnMissingWebXml>false</failOnMissingWebXml>-->
+<!--                    <warName>${project.artifactId}</warName>-->
+<!--                </configuration>-->
+<!--            </plugin>-->
+            <!-- 分离lib -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
@@ -115,7 +195,7 @@
                             <resources>
                                 <resource>
                                     <directory>src/main/resources</directory>
-                                    <!--                                    <includes>**/*.properties,**/*.xml,**/*.db, **/*.p12</includes>-->
+<!--                                    <includes>**/*.properties,**/*.xml,**/*.db, **/*.p12</includes>-->
                                 </resource>
                             </resources>
                             <outputDirectory>${project.build.directory}/resources</outputDirectory>
@@ -137,7 +217,7 @@
                     </excludes>
                     <archive>
                         <manifest>
-                            <mainClass>com.cloudtimes.AdminApplication</mainClass>
+                            <mainClass>com.cloudtimes.ApiApplication</mainClass>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
                         </manifest>
@@ -154,18 +234,19 @@
         <resources>
             <resource>
                 <directory>src/main/java</directory>
-                <!--                <includes>-->
-                <!--                    <include>**/*.properties</include>-->
-                <!--                    <include>**/*.xml</include>-->
-                <!--                    <include>**/*.dat</include>-->
-                <!--                    <include>**/*.p12</include>-->
-                <!--                </includes>-->
+<!--                <includes>-->
+<!--                    <include>**/*.properties</include>-->
+<!--                    <include>**/*.xml</include>-->
+<!--                    <include>**/*.dat</include>-->
+<!--                    <include>**/*.p12</include>-->
+<!--                </includes>-->
                 <filtering>false</filtering>
             </resource>
             <resource>
                 <directory>src/main/resources</directory>
             </resource>
         </resources>
+
     </build>
 
 </project>

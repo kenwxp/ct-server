@@ -29,7 +29,7 @@ import com.cloudtimes.common.utils.StringUtils;
  * 
  * @author tank
  */
-@Configuration
+//@Configuration
 public class MyBatisConfig
 {
     @Autowired

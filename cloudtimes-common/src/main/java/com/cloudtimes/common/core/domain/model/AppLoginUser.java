@@ -1,14 +1,14 @@
 package com.cloudtimes.common.core.domain.model;
 
 import com.alibaba.fastjson2.annotation.JSONField;
-import com.cloudtimes.common.core.domain.entity.YbfMember;
+import com.cloudtimes.common.core.domain.entity.AuthUser;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
 /**
- * APP登录用户身份权限
+ * 用户登录用户身份权限
  *
  * @author tank
  */
@@ -19,6 +19,11 @@ public class AppLoginUser implements UserDetails {
      * 用户ID
      */
     private Long userId;
+
+    /**
+     * 用户编码
+     */
+    private String userCode;
 
     /**
      * 用户唯一标识
@@ -58,7 +63,9 @@ public class AppLoginUser implements UserDetails {
     /**
      * 用户信息
      */
-    private YbfMember user;
+    private AuthUser user;
+
+    private String authIdentity;
 
     public Long getUserId() {
         return userId;
@@ -79,11 +86,11 @@ public class AppLoginUser implements UserDetails {
     public AppLoginUser() {
     }
 
-    public AppLoginUser(YbfMember user) {
+    public AppLoginUser(AuthUser user) {
         this.user = user;
     }
 
-    public AppLoginUser(Long userId, YbfMember user) {
+    public AppLoginUser(Long userId, AuthUser user) {
         this.userId = userId;
         this.user = user;
     }
@@ -91,12 +98,12 @@ public class AppLoginUser implements UserDetails {
     @JSONField(serialize = false)
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return "";
     }
 
     @Override
     public String getUsername() {
-        return user.getUsername();
+        return user.getAccount();
     }
 
     /**
@@ -130,6 +137,11 @@ public class AppLoginUser implements UserDetails {
         return true;
     }
 
+    @JSONField(serialize = false)
+    public boolean isAuthIdentitySame(String value) {
+        return this.authIdentity.equals(value);
+    }
+
     /**
      * 是否可用 ,禁用的用户不能身份验证
      *
@@ -138,7 +150,7 @@ public class AppLoginUser implements UserDetails {
     @JSONField(serialize = false)
     @Override
     public boolean isEnabled() {
-        return user.getEnabled().equals(0);
+        return !user.getCustomerState().equals("0");
     }
 
     public Long getLoginTime() {
@@ -190,16 +202,32 @@ public class AppLoginUser implements UserDetails {
     }
 
 
-    public YbfMember getUser() {
+    public AuthUser getUser() {
         return user;
     }
 
-    public void setUser(YbfMember user) {
+    public void setUser(AuthUser user) {
         this.user = user;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;
+    }
+
+    public String getAuthIdentity() {
+        return authIdentity;
+    }
+
+    public void setAuthIdentity(String authIdentity) {
+        this.authIdentity = authIdentity;
+    }
+
+    public String getUserCode() {
+        return userCode;
+    }
+
+    public void setUserCode(String userCode) {
+        this.userCode = userCode;
     }
 }

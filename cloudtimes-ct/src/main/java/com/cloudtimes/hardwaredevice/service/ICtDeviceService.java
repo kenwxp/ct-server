@@ -9,7 +9,7 @@ import com.cloudtimes.hardwaredevice.domain.CtDevice;
  * @author tank
  * @date 2023-01-17
  */
-public interface ICtDeviceService 
+public interface ICtDeviceService
 {
     /**
      * 查询电子设备

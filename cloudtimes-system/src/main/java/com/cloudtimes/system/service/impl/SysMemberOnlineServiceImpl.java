@@ -1,12 +1,9 @@
 package com.cloudtimes.system.service.impl;
 
 import com.cloudtimes.common.core.domain.model.AppLoginUser;
-import com.cloudtimes.common.core.domain.model.LoginUser;
 import com.cloudtimes.common.utils.StringUtils;
 import com.cloudtimes.system.domain.SysMemberOnline;
-import com.cloudtimes.system.domain.SysUserOnline;
 import com.cloudtimes.system.service.ISysMemberOnlineService;
-import com.cloudtimes.system.service.ISysUserOnlineService;
 import org.springframework.stereotype.Service;
 
 /**
@@ -90,7 +87,7 @@ public class SysMemberOnlineServiceImpl implements ISysMemberOnlineService
         sysMemberOnline.setBrowser(user.getBrowser());
         sysMemberOnline.setOs(user.getOs());
         sysMemberOnline.setLoginTime(user.getLoginTime());
-        sysMemberOnline.setNickName(user.getUser().getNickName());
+        sysMemberOnline.setNickName(user.getUser().getAccount());
         return sysMemberOnline;
     }
 }

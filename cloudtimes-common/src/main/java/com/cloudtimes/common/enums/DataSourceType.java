@@ -2,11 +2,10 @@ package com.cloudtimes.common.enums;
 
 /**
  * 数据源
- * 
+ *
  * @author tank
  */
-public enum DataSourceType
-{
+public enum DataSourceType {
     /**
      * 主库
      */
@@ -27,6 +26,11 @@ public enum DataSourceType
     /**
      * 业务
      */
-    CT
+    CT,
+
+    /**
+     * 分库分表
+     */
+    SHARDING
 
 }
