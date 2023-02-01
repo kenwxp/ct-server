@@ -1,8 +1,8 @@
 package com.cloudtimes.app.config;
 
 import com.cloudtimes.common.config.CloudTimesConfig;
+import com.github.xiaoymin.knife4j.spring.annotations.EnableKnife4j;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.oas.annotations.EnableOpenApi;
 import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
@@ -20,21 +21,28 @@ import java.util.List;
 
 /**
  * Swagger2的接口配置
- * 
+ *
  * @author tank
  */
 @Configuration
-public class SwaggerConfig
-{
-    /** 系统基础配置 */
+@EnableOpenApi
+@EnableKnife4j
+public class SwaggerConfig {
+    /**
+     * 系统基础配置
+     */
     @Autowired
     private CloudTimesConfig cloudTimesConfig;
 
-    /** 是否开启swagger */
+    /**
+     * 是否开启swagger
+     */
     @Value("${swagger.enabled}")
     private boolean enabled;
 
-    /** 设置请求的统一前缀 */
+    /**
+     * 设置请求的统一前缀
+     */
     @Value("${swagger.pathMapping}")
     private String pathMapping;
 
@@ -42,8 +50,7 @@ public class SwaggerConfig
      * 创建API
      */
     @Bean
-    public Docket createRestApi()
-    {
+    public Docket createRestApi() {
         return new Docket(DocumentationType.OAS_30)
                 // 是否启用Swagger
                 .enable(enabled)
@@ -54,7 +61,7 @@ public class SwaggerConfig
                 // 扫描所有有注解的api，用这种方式更灵活
                 .apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
                 // 扫描指定包中的swagger注解
-                 .apis(RequestHandlerSelectors.basePackage("com.cloudtimes.app.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.cloudtimes.app.controller"))
                 // 扫描所有 .apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.any())
                 .build()
@@ -67,18 +74,16 @@ public class SwaggerConfig
     /**
      * 安全模式，这里指定token通过Authorization头请求头传递
      */
-    private List<SecurityScheme> securitySchemes()
-    {
+    private List<SecurityScheme> securitySchemes() {
         List<SecurityScheme> apiKeyList = new ArrayList<SecurityScheme>();
-        apiKeyList.add(new ApiKey("Authorization", "Authorization", In.HEADER.toValue()));
+        apiKeyList.add(new ApiKey("Authorization", "Authorization", io.swagger.v3.oas.models.security.SecurityScheme.In.HEADER.name()));
         return apiKeyList;
     }
 
     /**
      * 安全上下文
      */
-    private List<SecurityContext> securityContexts()
-    {
+    private List<SecurityContext> securityContexts() {
         List<SecurityContext> securityContexts = new ArrayList<>();
         securityContexts.add(
                 SecurityContext.builder()
@@ -91,8 +96,7 @@ public class SwaggerConfig
     /**
      * 默认的安全上引用
      */
-    private List<SecurityReference> defaultAuth()
-    {
+    private List<SecurityReference> defaultAuth() {
         AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
         AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
         authorizationScopes[0] = authorizationScope;
@@ -104,8 +108,7 @@ public class SwaggerConfig
     /**
      * 添加摘要信息
      */
-    private ApiInfo apiInfo()
-    {
+    private ApiInfo apiInfo() {
         // 用ApiInfoBuilder进行定制
         return new ApiInfoBuilder()
                 // 设置标题

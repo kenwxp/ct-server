@@ -15,14 +15,14 @@ import javax.servlet.http.HttpServletResponse;
 
 public class TokenInterceptor implements HandlerInterceptor {
 
+    private static final String HEADER = "Authorization";
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         //获取请求头中的令牌
-        String token = request.getHeader(JWTManager.AUTH_USER);
+        String token = request.getHeader(HEADER);
         //验证令牌
         try {
-            token = "dsfasfasdf";
             //验证令牌
             AuthUser user = JWTManager.getInstance().getAuthUser(token);
             AuthUtils.setObject(user);

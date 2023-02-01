@@ -37,7 +37,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author polo
  * @date 2022-1-30
  */
-@Api("用户登录和注册接口")
+@Api(tags = "用户登录和注册接口")
 @RestController
 @RequestMapping("/auth/user")
 public class UserLoginAndRegisterController extends BaseController {

@@ -4,6 +4,7 @@ import com.cloudtimes.common.core.controller.BaseController;
 import com.cloudtimes.common.core.domain.AjaxResult;
 import com.cloudtimes.system.domain.SysConfig;
 import com.cloudtimes.system.service.ISysConfigService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +18,7 @@ import java.util.List;
  *
  * @author tank
  */
+@Api(tags = "系统参数")
 @RestController
 @RequestMapping("/system")
 public class AppConfigController extends BaseController {

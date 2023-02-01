@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author polo
  * @date 2023-1-30
  */
-@Api("设备登录和注册接口")
+@Api(tags = "设备登录和注册接口")
 @RestController
 @RequestMapping("/auth/device")
 public class DeviceLoginAndRegisterController extends BaseController {
