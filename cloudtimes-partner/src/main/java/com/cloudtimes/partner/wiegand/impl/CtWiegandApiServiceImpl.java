@@ -5,13 +5,14 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.cloudtimes.common.utils.http.HttpUtils;
 import com.cloudtimes.partner.config.PartnerConfig;
-import com.cloudtimes.partner.hik.domain.HikConstant;
 import com.cloudtimes.partner.wiegand.ICtWiegandApiService;
+import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class CtWiegandApiService implements ICtWiegandApiService {
+@Service
+public class CtWiegandApiServiceImpl implements ICtWiegandApiService {
 
     /**
      * 远程开门

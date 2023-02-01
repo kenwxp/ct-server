@@ -6,11 +6,13 @@ import com.cloudtimes.common.utils.sign.Md5Utils;
 import com.cloudtimes.partner.config.PartnerConfig;
 import com.cloudtimes.partner.pay.shouqianba.domain.ShouqianbaConstant;
 import com.cloudtimes.partner.pay.shouqianba.service.ICtShouqianbaApiService;
+import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class CtShouqianbaApiService implements ICtShouqianbaApiService {
+@Service
+public class CtShouqianbaApiServiceImpl implements ICtShouqianbaApiService {
     /**
      * 设备终端激活
      *
@@ -33,7 +35,7 @@ public class CtShouqianbaApiService implements ICtShouqianbaApiService {
         reqObj.put("app_id", appId);
         reqObj.put("device_id", deviceNo);
         reqObj.put("code", code);
-        String resultStr = sendShouqianba(ShouqianbaConstant.activateTerminal, reqObj, sn, key);
+        String resultStr = sendShouqianbaHttp(ShouqianbaConstant.activateTerminal, reqObj, sn, key);
         Map<String, Object> resultMap = JSONObject.parseObject(resultStr, Map.class);
         return resultMap;
     }
@@ -51,7 +53,7 @@ public class CtShouqianbaApiService implements ICtShouqianbaApiService {
         JSONObject reqObj = new JSONObject();
         reqObj.put("terminal_sn", terminalSN);
         reqObj.put("device_id", deviceNo);
-        String resultStr = sendShouqianba(ShouqianbaConstant.checkinTerminal, reqObj, terminalSN, terminalKey);
+        String resultStr = sendShouqianbaHttp(ShouqianbaConstant.checkinTerminal, reqObj, terminalSN, terminalKey);
         Map<String, Object> resultMap = JSONObject.parseObject(resultStr, Map.class);
         return resultMap;
     }
@@ -103,7 +105,7 @@ public class CtShouqianbaApiService implements ICtShouqianbaApiService {
         if ("".equals(terminalSN)) {
             throw new RuntimeException("终端sn不能为空");
         }
-        String resultStr = sendShouqianba(ShouqianbaConstant.b2CPay, reqObj, terminalSN, terminalKey);
+        String resultStr = sendShouqianbaHttp(ShouqianbaConstant.b2CPay, reqObj, terminalSN, terminalKey);
         Map<String, Object> resultMap = JSONObject.parseObject(resultStr, Map.class);
         return resultMap;
     }
@@ -132,7 +134,7 @@ public class CtShouqianbaApiService implements ICtShouqianbaApiService {
         reqObj.put("terminal_sn", terminalSN);
         reqObj.put("sn", paySn);
         reqObj.put("client_sn", billSerial);
-        String resultStr = sendShouqianba(ShouqianbaConstant.queryPayOrder, reqObj, terminalSN, terminalKey);
+        String resultStr = sendShouqianbaHttp(ShouqianbaConstant.queryPayOrder, reqObj, terminalSN, terminalKey);
         Map<String, Object> resultMap = JSONObject.parseObject(resultStr, Map.class);
         return resultMap;
     }
@@ -161,12 +163,12 @@ public class CtShouqianbaApiService implements ICtShouqianbaApiService {
         reqObj.put("terminal_sn", terminalSN);
         reqObj.put("sn", paySn);
         reqObj.put("client_sn", billSerial);
-        String resultStr = sendShouqianba(ShouqianbaConstant.cancelPayOrder, reqObj, terminalSN, terminalKey);
+        String resultStr = sendShouqianbaHttp(ShouqianbaConstant.cancelPayOrder, reqObj, terminalSN, terminalKey);
         Map<String, Object> resultMap = JSONObject.parseObject(resultStr, Map.class);
         return resultMap;
     }
 
-    private String sendShouqianba(String path, JSONObject bodyJson, String sn, String key) {
+    private String sendShouqianbaHttp(String path, JSONObject bodyJson, String sn, String key) {
         String bodyStr = bodyJson.toString();
         String sign = Md5Utils.hash(bodyStr + key);
         Map<String, String> header = new HashMap<>();
