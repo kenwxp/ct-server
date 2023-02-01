@@ -59,16 +59,27 @@ public class CtShouqianbaApiServiceImpl implements ICtShouqianbaApiService {
     }
 
     /**
-     * 支付接口
+     * 支付接口(支持分账)
      *
-     * @param params map     输入参数
-     *               "terminal_sn"  //收钱吧终端ID	收钱吧终端ID，不超过32位的纯数字
-     *               "client_sn"    //商户系统订单号	必须在商户系统内唯一；且长度不超过32字节
-     *               "total_amount" //交易总金额	以分为单位,不超过10位纯数字字符串,超过1亿元的收款请使用银行转账
-     *               "dynamic_id"   //条码内容	不超过32字节
-     *               "subject"      //交易简介	本次交易的简要介绍
-     *               "operator"     //门店操作员	发起本次交易的操作员
-     *               "notify_url"   //回调	支付回调的地址
+     * @param params      map     输入参数
+     *                    * "terminal_sn"  String //收钱吧终端ID	收钱吧终端ID，不超过32位的纯数字
+     *                    * "client_sn"    String //商户系统订单号	必须在商户系统内唯一；且长度不超过32字节
+     *                    * "total_amount" String //交易总金额	以分为单位,不超过10位纯数字字符串,超过1亿元的收款请使用银行转账
+     *                    * "dynamic_id"   String //条码内容	不超过32字节
+     *                    * "subject"      String //交易简介	本次交易的简要介绍
+     *                    * "operator"     String //门店操作员	发起本次交易的操作员
+     *                    * "notify_url"   String //回调	支付回调的地址
+     *                    * "profit_sharing" Map   分账信息
+     *                    * * "sharing_flag" String  //分账标识 0: 不分账 1：分账
+     *                    * * "sharing_type" String  // 1: 按比例分 3: 按金额分
+     *                    * * "model_id"     String  //分账模型编号
+     *                    * * "sharing_notify_url"   String  //分账回调地址
+     *                    * * "receivers" List Map   分账收款方
+     *                    * * * id	String              // 收款方编号	string	N	id和client_sn二选一，不能同时为空
+     *                    * * * client_sn   String      // 自定义收款方编号	string	N	id和client_sn二选一，不能同时为空
+     *                    * * * ratio   String          // 分账比例%。最小 0.001%，最大100%	string	条件必填	sharing_type为1时必填。例：0.003%
+     *                    * * * sharing_amount  String  // 分账金额，单位为分	string	条件必填	sharing_type为3时必填。例：20（即0.2元）
+     * @param terminalKey
      * @return map
      * * result_code String  返回码
      * * error_code  String  错误码
@@ -99,7 +110,7 @@ public class CtShouqianbaApiServiceImpl implements ICtShouqianbaApiService {
      * * * * "reflect"             // N 透传参数    {"tips": "200"}
      */
     @Override
-    public Map<String, Object> b2cPay(Map<String, String> params, String terminalKey) {
+    public Map<String, Object> b2cPay(Map<String, Object> params, String terminalKey) {
         JSONObject reqObj = new JSONObject(params);
         String terminalSN = reqObj.getString("terminal_sn");
         if ("".equals(terminalSN)) {

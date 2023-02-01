@@ -39,7 +39,7 @@ public class TestShouqianba {
 
     public void test3() {
         ICtShouqianbaApiService service = new CtShouqianbaApiServiceImpl();
-        Map<String, String> paramMap = new HashMap<>();
+        Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("terminal_sn", "100051020027440980"); //收钱吧终端ID	收钱吧终端ID，不超过32位的纯数字
         paramMap.put("client_sn", "testorder0000004"); //商户系统订单号	必须在商户系统内唯一；且长度不超过32字节
         paramMap.put("total_amount", "2"); //交易总金额	以分为单位,不超过10位纯数字字符串,超过1亿元的收款请使用银行转账
