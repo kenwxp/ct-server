@@ -5,6 +5,7 @@ import com.alibaba.fastjson2.JSONObject;
 import com.cloudtimes.common.utils.http.HttpUtils;
 import com.cloudtimes.partner.config.PartnerConfig;
 import com.cloudtimes.partner.weixin.ICtWeixinApiService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
@@ -16,6 +17,8 @@ import java.util.Map;
 public class CtWeixinApiServiceImpl implements ICtWeixinApiService {
     private static String accessToken;
     private static Date expireTime;
+    @Autowired
+    private PartnerConfig config;
 
     /**
      * 获取微信access token
@@ -36,9 +39,7 @@ public class CtWeixinApiServiceImpl implements ICtWeixinApiService {
     }
 
     private synchronized String fetchAccessToken() {
-        String appId = PartnerConfig.getWeiXinConfig().get("appid");
-        String secret = PartnerConfig.getWeiXinConfig().get("secret");
-        String url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" + appId + "&secret=" + secret;
+        String url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" + config.getWxAppId() + "&secret=" + config.getWxAppSecret();
         String responseStr = HttpUtils.sendGet(url);
         Map<String, Object> map = JSON.parseObject(responseStr, Map.class);
         String newToken = (String) map.get("access_token");
@@ -64,10 +65,8 @@ public class CtWeixinApiServiceImpl implements ICtWeixinApiService {
      */
     @Override
     public Map<String, String> getUserSession(String jsCode) {
-        String appId = PartnerConfig.getWeiXinConfig().get("appid");
-        String secret = PartnerConfig.getWeiXinConfig().get("secret");
-        String getUserSessionUrl = "https://api.weixin.qq.com/sns/jscode2session?appid=" + appId +
-                "&secret=" + secret + "&js_code=" + jsCode + "&grant_type=authorization_code";
+        String getUserSessionUrl = "https://api.weixin.qq.com/sns/jscode2session?appid=" + config.getWxAppId() +
+                "&secret=" + config.getWxAppSecret() + "&js_code=" + jsCode + "&grant_type=authorization_code";
         String responseStr = HttpUtils.sendGet(getUserSessionUrl);
         Map<String, String> map = JSON.parseObject(responseStr, Map.class);
         return map;

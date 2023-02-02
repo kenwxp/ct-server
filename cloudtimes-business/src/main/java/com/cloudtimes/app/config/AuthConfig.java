@@ -20,7 +20,8 @@ public class AuthConfig implements WebMvcConfigurer {
                         "/auth/device/test",
                         "/auth/device/login",
                         "/auth/user/**",
-                        "/system/**"
+                        "/system/**",
+                        "/test/**"
                 )
                 .excludePathPatterns("/js/**", "/css/**", "/images/**", "/lib/**",
                         "/fonts/**")

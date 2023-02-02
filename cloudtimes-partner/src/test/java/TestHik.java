@@ -1,4 +1,3 @@
-import com.cloudtimes.partner.config.PartnerConfig;
 import com.cloudtimes.partner.hik.service.ICtHikApiService;
 import com.cloudtimes.partner.hik.service.impl.CtHikApiServiceImpl;
 import org.junit.Test;
@@ -12,10 +11,9 @@ public class TestHik {
         System.out.println(result);
     }
 
-
     public void test2() {
-        Map<String, String> config = new PartnerConfig().getWeiXinConfig();
-        System.out.println(config.toString());
+//        Map<String, String> config = new PartnerConfig().getWeiXinConfig();
+//        System.out.println(config.toString());
     }
 
     public void test3() {

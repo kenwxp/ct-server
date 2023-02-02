@@ -6,6 +6,7 @@ import com.cloudtimes.common.utils.sign.Md5Utils;
 import com.cloudtimes.partner.config.PartnerConfig;
 import com.cloudtimes.partner.pay.shouqianba.domain.ShouqianbaConstant;
 import com.cloudtimes.partner.pay.shouqianba.service.ICtShouqianbaApiService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -13,6 +14,9 @@ import java.util.Map;
 
 @Service
 public class CtShouqianbaApiServiceImpl implements ICtShouqianbaApiService {
+    @Autowired
+    private PartnerConfig config;
+
     /**
      * 设备终端激活
      *
@@ -28,9 +32,9 @@ public class CtShouqianbaApiServiceImpl implements ICtShouqianbaApiService {
      */
     @Override
     public Map<String, Object> activateTerminal(String deviceNo, String code) {
-        String appId = PartnerConfig.getShouqianbaConfig().get("app_id");
-        String sn = PartnerConfig.getShouqianbaConfig().get("vendor_sn");
-        String key = PartnerConfig.getShouqianbaConfig().get("vendor_key");
+        String appId = config.getShouqianbaAppId();
+        String sn = config.getShouqianbaVendorSn();
+        String key = config.getShouqianbaVendorKey();
         JSONObject reqObj = new JSONObject();
         reqObj.put("app_id", appId);
         reqObj.put("device_id", deviceNo);

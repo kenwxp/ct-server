@@ -8,6 +8,7 @@ import com.cloudtimes.partner.hik.domain.HikConstant;
 import com.cloudtimes.partner.hik.service.ICtHikApiService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
@@ -20,6 +21,8 @@ public class CtHikApiServiceImpl implements ICtHikApiService {
     private static String accessToken;
     private static Date expireTime;
     static Logger log = LoggerFactory.getLogger(CtHikApiServiceImpl.class);
+    @Autowired
+    private PartnerConfig config;
 
     @Override
     public String getAccessToken() {
@@ -37,8 +40,8 @@ public class CtHikApiServiceImpl implements ICtHikApiService {
     private synchronized String fetchAccessToken() {
         // 重新http获取新的token
         Map<String, String> params = new HashMap<>();
-        params.put("appKey", PartnerConfig.getHikConfig().get("key"));
-        params.put("appSecret", PartnerConfig.getHikConfig().get("secret"));
+        params.put("appKey", config.getHikAppKey());
+        params.put("appSecret", config.getHikAppSecret());
         String result = HttpUtils.sendFormPost("https://" + HikConstant.hikHost + HikConstant.getAccessTokenUri, params, getHikHeader());
         JSONObject retObj = JSON.parseObject(result);
         String code = retObj.getString("code");

@@ -8,6 +8,7 @@ import com.cloudtimes.common.utils.sign.Base64;
 import com.cloudtimes.partner.config.PartnerConfig;
 import com.cloudtimes.partner.pay.shouqianba.domain.ShouqianbaConstant;
 import com.cloudtimes.partner.pay.shouqianba.service.ICtShouqianbaCisApiService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
@@ -17,6 +18,9 @@ import java.util.Map;
 
 @Service
 public class CtShouqianbaCisApiServiceImpl implements ICtShouqianbaCisApiService {
+    @Autowired
+    private PartnerConfig config;
+
     /**
      * 查询商户申请记录
      *
@@ -37,23 +41,20 @@ public class CtShouqianbaCisApiServiceImpl implements ICtShouqianbaCisApiService
      */
     @Override
     public Map<String, Object> queryMerchantsApply(String merchantsNo) {
-        String cisClientId = PartnerConfig.getShouqianbaConfig().get("cis_client_id");
-        String vendorSn = PartnerConfig.getShouqianbaConfig().get("vendor_sn");
         JSONObject reqBody = new JSONObject();
         reqBody.put("client_merchant_sn", merchantsNo);
-        reqBody.put("client_id", cisClientId);
-        reqBody.put("vendor_sn", vendorSn);
+        reqBody.put("client_id", config.getShouqianbaCisClientId());
+        reqBody.put("vendor_sn", config.getShouqianbaVendorSn());
         return sendCisHttp(ShouqianbaConstant.queryMerchantsApply, reqBody);
     }
 
     private Map<String, Object> sendCisHttp(String path, JSONObject reqBody) {
-        String cisAppId = PartnerConfig.getShouqianbaConfig().get("cis_app_id");
         JSONObject reqObj = new JSONObject();
         JSONObject requestObj = new JSONObject();
         // 封装并设置header
         JSONObject reqHeader = new JSONObject();
         reqHeader.put("version", "1.0.0");
-        reqHeader.put("appid", cisAppId);
+        reqHeader.put("appid", config.getShouqianbaCisAppId());
         reqHeader.put("sign_type", "SHA1");
         reqHeader.put("request_time", new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()));
         reqHeader.put("reserve", "{}");
@@ -63,7 +64,7 @@ public class CtShouqianbaCisApiServiceImpl implements ICtShouqianbaCisApiService
         reqObj.put("request", requestObj);
         // 签名
         byte[] signRaw = SHA1withRSAUtil.sign(
-                PartnerConfig.getShouqianbaConfig().get("ct_priv_key"),
+                config.getShouqianbaCtPrivKey(),
                 SHA1withRSAUtil.PKCS1,
                 requestObj.toString());
         String signature = Base64.encode(signRaw);
@@ -75,7 +76,7 @@ public class CtShouqianbaCisApiServiceImpl implements ICtShouqianbaCisApiService
             Map<String, Object> responseObj = JSON.parseObject(responseStr, Map.class);
             String retSign = (String) responseObj.get("signature");
             // 验签
-            if (SHA1withRSAUtil.verify(PartnerConfig.getShouqianbaConfig().get("shouqb_cis_pub_key"), getResponseStr(responseStr), retSign)) {
+            if (SHA1withRSAUtil.verify(config.getShouqianbaShouqbCisPubKey(), getResponseStr(responseStr), retSign)) {
                 return responseObj;
             } else {
                 throw new RuntimeException(path + " 验签失败");

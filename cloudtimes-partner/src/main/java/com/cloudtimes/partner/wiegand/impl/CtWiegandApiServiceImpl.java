@@ -6,6 +6,7 @@ import com.alibaba.fastjson2.JSONObject;
 import com.cloudtimes.common.utils.http.HttpUtils;
 import com.cloudtimes.partner.config.PartnerConfig;
 import com.cloudtimes.partner.wiegand.ICtWiegandApiService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -13,6 +14,8 @@ import java.util.Map;
 
 @Service
 public class CtWiegandApiServiceImpl implements ICtWiegandApiService {
+    @Autowired
+    private PartnerConfig config;
 
     /**
      * 远程开门
@@ -166,7 +169,7 @@ public class CtWiegandApiServiceImpl implements ICtWiegandApiService {
         headerMap.put("Content-Type", "application/json");
         String result = "";
         try {
-            result = HttpUtils.sendJsonPost("http://" + PartnerConfig.getWiegandConfig().get("http_host"), params.toString(), headerMap);
+            result = HttpUtils.sendJsonPost("http://" + config.getWiegandHttpHost(), params.toString(), headerMap);
         } catch (Exception e) {
             e.printStackTrace();
         }
