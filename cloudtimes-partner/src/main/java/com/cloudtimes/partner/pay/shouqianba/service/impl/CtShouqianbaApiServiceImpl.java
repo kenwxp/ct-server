@@ -183,6 +183,25 @@ public class CtShouqianbaApiServiceImpl implements ICtShouqianbaApiService {
         return resultMap;
     }
 
+    /**
+     * 获取调用凭证接口
+     *
+     * @param rawData
+     * @param terminalSN
+     * @param terminalKey
+     * @return
+     */
+    @Override
+    public Map<String, Object> getWxPayFaceAuthInfo(String rawData, String terminalSN, String terminalKey) {
+        JSONObject reqObj = new JSONObject();
+        //sn与client_sn不能同时为空，优先按照sn查找订单，如果没有，再按照client_sn查询
+        reqObj.put("terminal_sn", terminalSN);
+        reqObj.put("rawdata", rawData);
+        String resultStr = sendShouqianbaHttp(ShouqianbaConstant.getWxpayFaceAuthinfo, reqObj, terminalSN, terminalKey);
+        Map<String, Object> resultMap = JSONObject.parseObject(resultStr, Map.class);
+        return resultMap;
+    }
+
     private String sendShouqianbaHttp(String path, JSONObject bodyJson, String sn, String key) {
         String bodyStr = bodyJson.toString();
         String sign = Md5Utils.hash(bodyStr + key);

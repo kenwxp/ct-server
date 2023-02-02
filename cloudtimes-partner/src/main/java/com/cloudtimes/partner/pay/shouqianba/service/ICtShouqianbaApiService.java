@@ -4,7 +4,6 @@ import java.util.Map;
 
 /**
  * 收钱吧支付端接口
- *
  */
 public interface ICtShouqianbaApiService {
     /**
@@ -128,6 +127,16 @@ public interface ICtShouqianbaApiService {
      * * * data   map  订单信息 同上
      */
     public Map<String, Object> cancelPayOrder(String paySn, String billSerial, String terminalSN, String terminalKey);
+
+    /**
+     * 获取调用凭证接口
+     *
+     * @param rawData
+     * @param terminalSN
+     * @param terminalKey
+     * @return
+     */
+    public Map<String, Object> getWxPayFaceAuthInfo(String rawData, String terminalSN, String terminalKey);
 
 
 }
