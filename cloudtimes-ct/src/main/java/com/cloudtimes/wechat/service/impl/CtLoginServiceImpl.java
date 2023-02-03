@@ -67,29 +67,43 @@ public class CtLoginServiceImpl implements ICtLoginService {
             String phoneInfoStr = StringUtils.getStringFromObjectMap(userPhoneInfo, "phone_info");
             Map<String, String> phoneInfo = JSONObject.parseObject(phoneInfoStr, Map.class);
             String phoneNumber = phoneInfo.get("purePhoneNumber");
-            CtUser newUser = new CtUser();
-            newUser.setWxOpenId(openId);
-            newUser.setWxUnionId(unionId);
-            newUser.setMobile(phoneNumber);
-            newUser.setMoneyAmount(new BigDecimal(0));
-            newUser.setScoreAmount(new BigDecimal(0));
-            newUser.setCreditScore(80L);
-            newUser.setViolationCount(0L);
-            newUser.setIsAgent("0");
-            newUser.setIsShopBoss("0");
-            newUser.setLastLoginIp(loginIp);
-            newUser.setLastLoginTime(new Date());
-            newUser.setCustomerState("0");
-            newUser.setCreateDate(new Date());
-            newUser.setDelFlag("0");
-            int rows = userMapper.insertCtUser(newUser);
-            if (rows < 1) {
-                throw new ServiceException("新增用户失败");
+
+            CtUser dbUser = userMapper.selectCtUserByMobile(phoneNumber);
+            if (dbUser == null) {
+                CtUser newUser = new CtUser();
+                newUser.setWxOpenId(openId);
+                newUser.setWxUnionId(unionId);
+                newUser.setMobile(phoneNumber);
+                newUser.setMoneyAmount(new BigDecimal(0));
+                newUser.setScoreAmount(new BigDecimal(0));
+                newUser.setCreditScore(80L);
+                newUser.setViolationCount(0L);
+                newUser.setIsAgent("0");
+                newUser.setIsShopBoss("0");
+                newUser.setLastLoginIp(loginIp);
+                newUser.setLastLoginTime(new Date());
+                newUser.setCustomerState("0");
+                newUser.setCreateDate(new Date());
+                newUser.setDelFlag("0");
+                if (userMapper.insertCtUser(newUser) < 1) {
+                    throw new ServiceException("新增用户失败");
+                }
+                retMap.put("id", newUser.getId());
+                retMap.put("moneyAmount", "0");
+                retMap.put("scoreAmount", "0");
+                retMap.put("creditScore", "80");
+            } else {
+                dbUser.setId(dbUser.getId());
+                dbUser.setWxOpenId(openId);
+                dbUser.setWxUnionId(unionId);
+                if (userMapper.updateCtUser(dbUser) < 1) {
+                    throw new ServiceException("更新用户失败");
+                }
+                retMap.put("id", dbUser.getId());
+                retMap.put("moneyAmount", dbUser.getMoneyAmount().toString());
+                retMap.put("scoreAmount", dbUser.getScoreAmount().toString());
+                retMap.put("creditScore", dbUser.getCreditScore().toString());
             }
-            retMap.put("id", newUser.getId());
-            retMap.put("moneyAmount", "0");
-            retMap.put("scoreAmount", "0");
-            retMap.put("creditScore", "80");
         } else {
             retMap.put("id", user.getId());
             retMap.put("moneyAmount", user.getMoneyAmount().toString());

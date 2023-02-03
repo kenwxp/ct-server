@@ -40,7 +40,8 @@
         from ct_user
     </sql>
 
-    <select id="selectCtUserList" parameterType="CtUser" resultType="com.cloudtimes.account.domain.CtUser">
+    <select id="selectCtUserList" parameterType="CtUser"
+            resultType="CtUser">
         <include refid="selectCtUserVo"/>
         <where>
             <if test="account != null  and account != ''">and account = #{account}</if>
@@ -64,24 +65,28 @@
         </where>
     </select>
 
-    <select id="selectCtUserById" parameterType="String" resultType="com.cloudtimes.account.domain.CtUser">
+    <select id="selectCtUserById" parameterType="String" resultType="CtUser">
         <include refid="selectCtUserVo"/>
         where id = #{id}
     </select>
 
-    <select id="selectCtUserByAccount" parameterType="String" resultType="com.cloudtimes.account.domain.CtUser">
+    <select id="selectCtUserByAccount" parameterType="String" resultType="CtUser">
         <include refid="selectCtUserVo"/>
         where account = #{account}
     </select>
 
-    <select id="selectCtUserByWxOpenId" parameterType="String" resultType="com.cloudtimes.account.domain.CtUser">
+    <select id="selectCtUserByWxOpenId" parameterType="String" resultType="CtUser">
         <include refid="selectCtUserVo"/>
         where wx_open_id = #{wxOpenId}
     </select>
 
-    <select id="selectCtUserByWxUnionId" parameterType="String" resultType="com.cloudtimes.account.domain.CtUser">
+    <select id="selectCtUserByWxUnionId" parameterType="String" resultType="CtUser">
         <include refid="selectCtUserVo"/>
         where wx_union_id = #{wxUnionId}
+    </select>
+    <select id="selectCtUserByMobile" parameterType="String" resultType="CtUser">
+        <include refid="selectCtUserVo"/>
+        where mobile = #{mobile}
     </select>
 
     <insert id="insertCtUser" parameterType="CtUser">
