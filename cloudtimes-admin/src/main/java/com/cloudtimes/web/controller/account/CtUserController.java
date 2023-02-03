@@ -64,7 +64,7 @@ public class CtUserController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('account:ctuser:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
+    public AjaxResult getInfo(@PathVariable("id") String id)
     {
         return AjaxResult.success(ctUserService.selectCtUserById(id));
     }

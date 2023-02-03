@@ -17,7 +17,7 @@ public interface CtUserMapper {
      * @param id 用户主键
      * @return 用户
      */
-    public CtUser selectCtUserById(Long id);
+    public CtUser selectCtUserById(String id);
 
     /**
      * 通过登录帐号查询用户
@@ -28,12 +28,20 @@ public interface CtUserMapper {
     public CtUser selectCtUserByAccount(String account);
 
     /**
-     * 通过用户编码查询用户
+     * 通过wxOpenId查询用户
      *
-     * @param userCode
+     * @param wxOpenId
      * @return
      */
-    public CtUser selectCtUserByUserCode(String userCode);
+    public CtUser selectCtUserByWxOpenId(String wxOpenId);
+
+    /**
+     * 通过wxUnionId查询用户
+     *
+     * @param wxUnionId
+     * @return
+     */
+    public CtUser selectCtUserByWxUnionId(String wxUnionId);
 
     /**
      * 查询用户列表

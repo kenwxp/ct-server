@@ -3,50 +3,16 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.cloudtimes.account.mapper.CtUserMapper">
-
-    <resultMap type="com.cloudtimes.account.domain.CtUser" id="CtUserResult">
-        <result property="id" column="id"/>
-        <result property="userCode" column="user_code"/>
-        <result property="account" column="account"/>
-        <result property="password" column="password"/>
-        <result property="wxOpenId" column="wx_open_id"/>
-        <result property="mobile" column="mobile"/>
-        <result property="moneyAmount" column="money_amount"/>
-        <result property="scoreAmount" column="score_amount"/>
-        <result property="creditScore" column="credit_score"/>
-        <result property="nickName" column="nick_name"/>
-        <result property="realName" column="real_name"/>
-        <result property="sex" column="sex"/>
-        <result property="birthday" column="birthday"/>
-        <result property="isReal" column="is_real"/>
-        <result property="violationCount" column="violation_count"/>
-        <result property="idNo" column="id_no"/>
-        <result property="isAgent" column="is_agent"/>
-        <result property="isShopBoss" column="is_shop_boss"/>
-        <result property="lastLoginIp" column="last_login_ip"/>
-        <result property="lastLoginTime" column="last_login_time"/>
-        <result property="createBossTime" column="create_boss_time"/>
-        <result property="createAgentTime" column="create_agent_time"/>
-        <result property="agentState" column="agent_state"/>
-        <result property="agentType" column="agent_type"/>
-        <result property="bossState" column="boss_state"/>
-        <result property="customerState" column="customer_state"/>
-        <result property="operator" column="operator"/>
-        <result property="createDate" column="create_date"/>
-        <result property="createTime" column="create_time"/>
-        <result property="updateTime" column="update_time"/>
-        <result property="delFlag" column="del_flag"/>
-    </resultMap>
-
     <sql id="selectCtUserVo">
         select id,
-               user_code,
                account,
                password,
                wx_open_id,
+               wx_union_id,
                mobile,
                money_amount,
                score_amount,
+               total_withdrawal,
                credit_score,
                nick_name,
                real_name,
@@ -55,6 +21,7 @@
                is_real,
                violation_count,
                id_no,
+               register_store_id,
                is_agent,
                is_shop_boss,
                last_login_ip,
@@ -73,13 +40,13 @@
         from ct_user
     </sql>
 
-    <select id="selectCtUserList" parameterType="CtUser" resultMap="CtUserResult">
+    <select id="selectCtUserList" parameterType="CtUser" resultType="com.cloudtimes.account.domain.CtUser">
         <include refid="selectCtUserVo"/>
         <where>
-            <if test="userCode != null  and userCode != ''">and user_code = #{userCode}</if>
             <if test="account != null  and account != ''">and account = #{account}</if>
             <if test="password != null  and password != ''">and password = #{password}</if>
             <if test="wxOpenId != null  and wxOpenId != ''">and wx_open_id = #{wxOpenId}</if>
+            <if test="wxUnionId != null  and wxUnionId != ''">and wx_union_id = #{wxUnionId}</if>
             <if test="mobile != null  and mobile != ''">and mobile = #{mobile}</if>
             <if test="realName != null  and realName != ''">and real_name like concat('%', #{realName}, '%')</if>
             <if test="sex != null  and sex != ''">and sex = #{sex}</if>
@@ -97,29 +64,37 @@
         </where>
     </select>
 
-    <select id="selectCtUserById" parameterType="Long" resultMap="CtUserResult">
+    <select id="selectCtUserById" parameterType="String" resultType="com.cloudtimes.account.domain.CtUser">
         <include refid="selectCtUserVo"/>
         where id = #{id}
     </select>
 
-    <select id="selectCtUserByAccount" parameterType="String" resultMap="CtUserResult">
+    <select id="selectCtUserByAccount" parameterType="String" resultType="com.cloudtimes.account.domain.CtUser">
         <include refid="selectCtUserVo"/>
         where account = #{account}
     </select>
 
-    <select id="selectCtUserByUserCode" parameterType="String" resultMap="CtUserResult">
+    <select id="selectCtUserByWxOpenId" parameterType="String" resultType="com.cloudtimes.account.domain.CtUser">
         <include refid="selectCtUserVo"/>
-        where user_code = #{userCode}
+        where wx_open_id = #{wxOpenId}
     </select>
 
+    <select id="selectCtUserByWxUnionId" parameterType="String" resultType="com.cloudtimes.account.domain.CtUser">
+        <include refid="selectCtUserVo"/>
+        where wx_union_id = #{wxUnionId}
+    </select>
 
-    <insert id="insertCtUser" parameterType="CtUser" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertCtUser" parameterType="CtUser">
+        <selectKey keyProperty="id" order="BEFORE" resultType="String">
+            select uuid() from dual
+        </selectKey>
         insert into ct_user
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="userCode != null">user_code,</if>
+            id,
             <if test="account != null">account,</if>
             <if test="password != null">password,</if>
             <if test="wxOpenId != null">wx_open_id,</if>
+            <if test="wxUnionId != null">wx_union_id,</if>
             <if test="mobile != null">mobile,</if>
             <if test="moneyAmount != null">money_amount,</if>
             <if test="scoreAmount != null">score_amount,</if>
@@ -148,10 +123,11 @@
             <if test="delFlag != null">del_flag,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="userCode != null">#{userCode},</if>
+            #{id},
             <if test="account != null">#{account},</if>
             <if test="password != null">#{password},</if>
             <if test="wxOpenId != null">#{wxOpenId},</if>
+            <if test="wxUnionId != null">#{wxUnionId},</if>
             <if test="mobile != null">#{mobile},</if>
             <if test="moneyAmount != null">#{moneyAmount},</if>
             <if test="scoreAmount != null">#{scoreAmount},</if>
@@ -179,15 +155,16 @@
             <if test="updateTime != null">#{updateTime},</if>
             <if test="delFlag != null">#{delFlag},</if>
         </trim>
+
     </insert>
 
     <update id="updateCtUser" parameterType="CtUser">
         update ct_user
         <trim prefix="SET" suffixOverrides=",">
-            <if test="userCode != null">user_code = #{userCode},</if>
             <if test="account != null">account = #{account},</if>
             <if test="password != null">password = #{password},</if>
             <if test="wxOpenId != null">wx_open_id = #{wxOpenId},</if>
+            <if test="wxUnionId != null">wx_open_id = #{wxUnionId},</if>
             <if test="mobile != null">mobile = #{mobile},</if>
             <if test="moneyAmount != null">money_amount = #{moneyAmount},</if>
             <if test="scoreAmount != null">score_amount = #{scoreAmount},</if>

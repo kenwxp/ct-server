@@ -2,6 +2,7 @@ package com.cloudtimes.account.service;
 
 import java.util.List;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.cloudtimes.account.domain.CtUser;
 
 /**
@@ -17,7 +18,7 @@ public interface ICtUserService {
      * @param id 用户主键
      * @return 用户
      */
-    public CtUser selectCtUserById(Long id);
+    public CtUser selectCtUserById(String id);
 
     /**
      * 通过用户登录帐号查询用户信息
@@ -27,13 +28,14 @@ public interface ICtUserService {
      */
     public CtUser selectCtUserByAccount(String account);
 
+
     /**
-     * 通过用户编码查询用户
+     * 通过openId查询用户
      *
-     * @param userCodes
+     * @param wxOpenId
      * @return
      */
-    public CtUser selectCtUserByUserCode(String userCode);
+    public CtUser selectCtUserByWxOpenId(String wxOpenId);
 
     /**
      * 查询用户列表

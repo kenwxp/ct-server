@@ -175,6 +175,4 @@ public class PartnerConfig {
     public void setWiegandWsHost(String wiegandWsHost) {
         this.wiegandWsHost = wiegandWsHost;
     }
-
-
 }

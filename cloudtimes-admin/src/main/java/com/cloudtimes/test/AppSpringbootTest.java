@@ -27,7 +27,7 @@ public class AppSpringbootTest {
       String key =  configService.selectConfigByKey("shouqianba_key");
         for (int i = 0; i < 10000; i++) {
             CtUser user = new CtUser();
-            user.setUserCode("U" + i);
+//            user.setUserCode("U" + i);
             user.setNickName("我是" + i);
             ctUserService.insertCtUser(user);
         }

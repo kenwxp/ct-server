@@ -6,20 +6,30 @@ import java.util.Date;
 
 public class AuthUser extends BaseEntity {
 
-    /** 序列号 */
-    private Long id;
+    /**
+     * 序列号
+     */
+    private String id;
 
-    /** 用户编码 */
-    private String userCode;
-
-    /** 登录账号 */
+    /**
+     * 登录账号
+     */
     private String account;
 
 
-    /** 微信openId */
+    /**
+     * 微信openId
+     */
     private String wxOpenId;
 
-    /** 电话号码 */
+    /**
+     * 微信unionId
+     */
+    private String wxUnionId;
+
+    /**
+     * 电话号码
+     */
     private String mobile;
 
     /**
@@ -62,21 +72,19 @@ public class AuthUser extends BaseEntity {
      */
     private String customerState;
 
-
-    public Long getId() {
-        return id;
+    public AuthUser() {
     }
 
-    public void setId(Long id) {
+    public AuthUser(String id) {
         this.id = id;
     }
 
-    public String getUserCode() {
-        return userCode;
+    public String getId() {
+        return id;
     }
 
-    public void setUserCode(String userCode) {
-        this.userCode = userCode;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getAccount() {
@@ -93,6 +101,14 @@ public class AuthUser extends BaseEntity {
 
     public void setWxOpenId(String wxOpenId) {
         this.wxOpenId = wxOpenId;
+    }
+
+    public String getWxUnionId() {
+        return wxUnionId;
+    }
+
+    public void setWxUnionId(String wxUnionId) {
+        this.wxUnionId = wxUnionId;
     }
 
     public String getMobile() {

@@ -1,7 +1,12 @@
 package com.cloudtimes.account.service.impl;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.cloudtimes.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,7 +35,7 @@ public class CtUserServiceImpl implements ICtUserService {
      * @return 用户
      */
     @Override
-    public CtUser selectCtUserById(Long id) {
+    public CtUser selectCtUserById(String id) {
         return ctUserMapper.selectCtUserById(id);
     }
 
@@ -40,8 +45,8 @@ public class CtUserServiceImpl implements ICtUserService {
     }
 
     @Override
-    public CtUser selectCtUserByUserCode(String userCode) {
-        return ctUserMapper.selectCtUserByUserCode(userCode);
+    public CtUser selectCtUserByWxOpenId(String wxOpenId) {
+        return ctUserMapper.selectCtUserByWxOpenId(wxOpenId);
     }
 
     /**
@@ -101,4 +106,5 @@ public class CtUserServiceImpl implements ICtUserService {
     public int deleteCtUserById(Long id) {
         return ctUserMapper.deleteCtUserById(id);
     }
+
 }
