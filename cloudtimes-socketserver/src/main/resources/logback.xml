@@ -74,9 +74,9 @@
 	<!-- 系统模块日志级别控制  -->
 	<logger name="com.cloudtimes" level="info" />
 	<!-- Spring日志级别控制  -->
-	<logger name="org.springframework" level="warn" />
+	<logger name="org.springframework" level="info" />
 
-	<root level="info">
+	<root level="all">
 		<appender-ref ref="console" />
 	</root>
 	

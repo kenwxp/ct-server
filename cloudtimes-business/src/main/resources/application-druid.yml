@@ -5,16 +5,16 @@ spring:
         driverClassName: com.mysql.cj.jdbc.Driver
         druid:
             master:
-                   db: sysDataSource
+                   db: ctDataSource
             # 主库数据源
             sys:
                 url: jdbc:mysql://10.1.65.233:3306/ct_sys?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
                 username: root
                 password: 123456
-                enabled: true
+                enabled: false
             # 业务库数据源
             ct:
-                url: jdbc:mysql://10.1.65.233:3306/ct_test?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+                url: jdbc:mysql://10.1.65.233:3306/ct?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
                 username: root
                 password: 123456
                 enabled: true
@@ -23,7 +23,7 @@ spring:
                 url: jdbc:mysql://10.1.65.233:3306/ct_quartz?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
                 username: root
                 password: 123456
-                enabled: true
+                enabled: false
             # 从库数据源
             slave:
                 # 从数据源开关/默认关闭

@@ -17,6 +17,8 @@ import com.cloudtimes.system.mapper.SysConfigMapper;
 import com.cloudtimes.system.service.ISysConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
@@ -158,6 +160,7 @@ public class SysConfigServiceImpl implements ISysConfigService {
     /**
      * 加载参数缓存数据
      */
+  //  @Transactional(propagation = Propagation.REQUIRES_NEW)
     @DataSource(value = DataSourceType.SYS)
     @Override
     public void loadingConfigCache() {

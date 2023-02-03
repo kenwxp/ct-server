@@ -234,6 +234,7 @@
         <module>cloudtimes-ct</module>
         <module>cloudtimes-partner</module>
         <module>cloudtimes-business</module>
+        <module>cloudtimes-socketserver</module>
     </modules>
     <packaging>pom</packaging>
 

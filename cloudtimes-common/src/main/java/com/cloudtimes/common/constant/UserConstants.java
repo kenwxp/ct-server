@@ -27,6 +27,11 @@ public class UserConstants {
     public static final String CUSTOMER_USER = "CUSTOMER_USER";
 
     /**
+     * 认证用户标识
+     */
+    public static final String AUTH_USER = "AUTH_USER";
+
+    /**
      * 硬件设备
      */
     public static final String DEVICE = "DEVICE";

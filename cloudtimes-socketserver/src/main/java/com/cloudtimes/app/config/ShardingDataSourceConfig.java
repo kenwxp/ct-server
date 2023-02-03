@@ -20,10 +20,10 @@ import java.util.Properties;
  *
  * @author ruoyi
  */
-//@Configuration
+@Configuration
 public class ShardingDataSourceConfig {
 
-  //  @Bean(name = "shardingDataSource")
+    @Bean(name = "shardingDataSource")
     public DataSource shardingDataSource(@Qualifier("ctDataSource") DataSource order1DataSource) throws SQLException {
         Map<String, DataSource> dataSourceMap = new HashMap<>();
         dataSourceMap.put("ct", order1DataSource);
