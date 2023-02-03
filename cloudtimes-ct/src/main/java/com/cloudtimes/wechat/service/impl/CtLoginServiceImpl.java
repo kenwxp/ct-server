@@ -82,11 +82,11 @@ public class CtLoginServiceImpl implements ICtLoginService {
             newUser.setCustomerState("0");
             newUser.setCreateDate(new Date());
             newUser.setDelFlag("0");
-            String id = userMapper.insertCtUser(newUser);
-            if ("".equals(id)) {
+            int rows = userMapper.insertCtUser(newUser);
+            if (rows < 1) {
                 throw new ServiceException("新增用户失败");
             }
-            retMap.put("id", id);
+            retMap.put("id", newUser.getId());
             retMap.put("moneyAmount", "0");
             retMap.put("scoreAmount", "0");
             retMap.put("creditScore", "80");

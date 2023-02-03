@@ -12,6 +12,7 @@
                mobile,
                money_amount,
                score_amount,
+               total_withdrawal,
                credit_score,
                nick_name,
                real_name,
@@ -20,6 +21,7 @@
                is_real,
                violation_count,
                id_no,
+               register_store_id,
                is_agent,
                is_shop_boss,
                last_login_ip,
@@ -44,6 +46,7 @@
             <if test="account != null  and account != ''">and account = #{account}</if>
             <if test="password != null  and password != ''">and password = #{password}</if>
             <if test="wxOpenId != null  and wxOpenId != ''">and wx_open_id = #{wxOpenId}</if>
+            <if test="wxUnionId != null  and wxUnionId != ''">and wx_union_id = #{wxUnionId}</if>
             <if test="mobile != null  and mobile != ''">and mobile = #{mobile}</if>
             <if test="realName != null  and realName != ''">and real_name like concat('%', #{realName}, '%')</if>
             <if test="sex != null  and sex != ''">and sex = #{sex}</if>
@@ -61,7 +64,7 @@
         </where>
     </select>
 
-    <select id="selectCtUserById" parameterType="Long" resultType="com.cloudtimes.account.domain.CtUser">
+    <select id="selectCtUserById" parameterType="String" resultType="com.cloudtimes.account.domain.CtUser">
         <include refid="selectCtUserVo"/>
         where id = #{id}
     </select>
@@ -76,9 +79,18 @@
         where wx_open_id = #{wxOpenId}
     </select>
 
-    <insert id="insertCtUser" parameterType="CtUser" useGeneratedKeys="true" keyProperty="id">
+    <select id="selectCtUserByWxUnionId" parameterType="String" resultType="com.cloudtimes.account.domain.CtUser">
+        <include refid="selectCtUserVo"/>
+        where wx_union_id = #{wxUnionId}
+    </select>
+
+    <insert id="insertCtUser" parameterType="CtUser">
+        <selectKey keyProperty="id" order="BEFORE" resultType="String">
+            select uuid() from dual
+        </selectKey>
         insert into ct_user
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            id,
             <if test="account != null">account,</if>
             <if test="password != null">password,</if>
             <if test="wxOpenId != null">wx_open_id,</if>
@@ -111,6 +123,7 @@
             <if test="delFlag != null">del_flag,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{id},
             <if test="account != null">#{account},</if>
             <if test="password != null">#{password},</if>
             <if test="wxOpenId != null">#{wxOpenId},</if>
@@ -142,6 +155,7 @@
             <if test="updateTime != null">#{updateTime},</if>
             <if test="delFlag != null">#{delFlag},</if>
         </trim>
+
     </insert>
 
     <update id="updateCtUser" parameterType="CtUser">

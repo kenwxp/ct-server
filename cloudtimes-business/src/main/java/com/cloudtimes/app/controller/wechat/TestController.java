@@ -1,6 +1,8 @@
 package com.cloudtimes.app.controller.wechat;
 
 
+import com.cloudtimes.account.domain.CtUser;
+import com.cloudtimes.account.service.ICtUserService;
 import com.cloudtimes.app.manager.JWTManager;
 import com.cloudtimes.common.core.controller.BaseController;
 import com.cloudtimes.common.core.domain.AjaxResult;
@@ -12,6 +14,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * 测试Controller
@@ -28,6 +33,10 @@ public class TestController extends BaseController {
     private ICtHikApiService hikApiService;
     @Autowired
     private JWTManager jwtManager;
+    @Autowired
+    private ICtUserService userService;
+
+
     private static Logger log = LoggerFactory.getLogger(TestController.class);
 
     @ApiOperation("查询设备信息")
@@ -45,6 +54,17 @@ public class TestController extends BaseController {
         return AjaxResult.success(token);
     }
 
+    @ApiOperation("新增用户测试")
+    @GetMapping(value = "/user/insert")
+    public AjaxResult insertUser() {
+        CtUser ctUser = new CtUser();
+        ctUser.setNickName("wxp");
+        ctUser.setCreateDate(new Date());
+        userService.insertCtUser(ctUser);
+        System.out.println(ctUser.getId());
+        CtUser ctUsers = userService.selectCtUserById(ctUser.getId());
+        return AjaxResult.success(ctUsers);
+    }
 }
 
 

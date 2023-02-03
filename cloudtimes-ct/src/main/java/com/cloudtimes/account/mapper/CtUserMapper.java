@@ -36,6 +36,14 @@ public interface CtUserMapper {
     public CtUser selectCtUserByWxOpenId(String wxOpenId);
 
     /**
+     * 通过wxUnionId查询用户
+     *
+     * @param wxUnionId
+     * @return
+     */
+    public CtUser selectCtUserByWxUnionId(String wxUnionId);
+
+    /**
      * 查询用户列表
      *
      * @param ctUser 用户
@@ -49,7 +57,7 @@ public interface CtUserMapper {
      * @param ctUser 用户
      * @return 结果
      */
-    public String insertCtUser(CtUser ctUser);
+    public int insertCtUser(CtUser ctUser);
 
     /**
      * 修改用户

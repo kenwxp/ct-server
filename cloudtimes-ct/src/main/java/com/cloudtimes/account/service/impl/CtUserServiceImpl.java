@@ -70,8 +70,7 @@ public class CtUserServiceImpl implements ICtUserService {
     @Override
     public int insertCtUser(CtUser ctUser) {
         ctUser.setCreateTime(DateUtils.getNowDate());
-        String id = ctUserMapper.insertCtUser(ctUser);
-        return "".equals(id) ? 0 : 1;
+        return ctUserMapper.insertCtUser(ctUser);
     }
 
     /**
