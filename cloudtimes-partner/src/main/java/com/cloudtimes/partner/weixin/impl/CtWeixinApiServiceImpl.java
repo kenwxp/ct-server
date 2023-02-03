@@ -64,11 +64,11 @@ public class CtWeixinApiServiceImpl implements ICtWeixinApiService {
      * unionid     string // 用户在开放平台的唯一标识符，若当前小程序已绑定到微信开放平台帐号下会返回，详见 UnionID 机制说明。
      */
     @Override
-    public Map<String, String> getUserSession(String jsCode) {
+    public Map<String, Object> getUserSession(String jsCode) {
         String getUserSessionUrl = "https://api.weixin.qq.com/sns/jscode2session?appid=" + config.getWxAppId() +
                 "&secret=" + config.getWxAppSecret() + "&js_code=" + jsCode + "&grant_type=authorization_code";
         String responseStr = HttpUtils.sendGet(getUserSessionUrl);
-        Map<String, String> map = JSON.parseObject(responseStr, Map.class);
+        Map<String, Object> map = JSON.parseObject(responseStr, Map.class);
         return map;
     }
 
@@ -85,7 +85,7 @@ public class CtWeixinApiServiceImpl implements ICtWeixinApiService {
      * * countryCode     string  // 区号
      */
     @Override
-    public Map<String, String> getUserPhoneInfo(String jsCode) {
+    public Map<String, Object> getUserPhoneInfo(String jsCode) {
         String accessToken = getAccessToken();
         String url = "https://api.weixin.qq.com/wxa/business/getuserphonenumber?access_token=" + accessToken;
         JSONObject reqObj = new JSONObject();
@@ -96,13 +96,13 @@ public class CtWeixinApiServiceImpl implements ICtWeixinApiService {
         try {
             String responseStr = HttpUtils.sendJsonPost(url, reqObj.toString(), header);
             Map<String, Object> respObj = JSON.parseObject(responseStr, Map.class);
-            if ((int) respObj.get("errcode") == 40001) {
+            if (respObj.get("errcode") != null && (int) respObj.get("errcode") == 40001) {
                 //token超时
                 fetchAccessToken();
                 return getUserPhoneInfo(jsCode);
             }
             Map<String, Object> respMap = JSON.parseObject(responseStr, Map.class);
-            return (Map<String, String>) respMap.get("phone_info");
+            return (Map<String, Object>) respMap.get("phone_info");
         } catch (Exception e) {
             e.printStackTrace();
         }

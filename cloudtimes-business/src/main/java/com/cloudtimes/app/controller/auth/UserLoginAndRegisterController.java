@@ -120,7 +120,6 @@ public class UserLoginAndRegisterController extends BaseController {
 
     private String login(String username, String password, String code, String uuid) {
         smsManager.checkCodeCaptcha(code, uuid);
-
         // 生成token
         return "";
     }
@@ -133,7 +132,6 @@ public class UserLoginAndRegisterController extends BaseController {
      */
     private void recordLoginInfo(String userCode) {
         CtUser ctUser = new CtUser();
-        ctUser.setUserCode(userCode);
         ctUser.setLastLoginIp(IpUtils.getIpAddr(ServletUtils.getRequest()));
         ctUser.setLastLoginTime(DateUtils.getNowDate());
         ctUserService.updateCtUser(ctUser);

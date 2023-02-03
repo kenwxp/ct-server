@@ -10,7 +10,7 @@ import com.cloudtimes.common.core.domain.BaseEntity;
 
 /**
  * 用户对象 ct_user
- * 
+ *
  * @author 沈兵
  * @date 2023-01-17
  */
@@ -19,11 +19,7 @@ public class CtUser extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /** 序列号 */
-    private Long id;
-
-    /** 用户编码 */
-    @Excel(name = "用户编码")
-    private String userCode;
+    private String id;
 
     /** 登录账号 */
     @Excel(name = "登录账号")
@@ -32,6 +28,10 @@ public class CtUser extends BaseEntity
     /** 登录密码 */
     @Excel(name = "登录密码")
     private String password;
+
+    /** 微信unionId */
+    @Excel(name = "微信unionId")
+    private String wxUnionId;
 
     /** 微信openId */
     @Excel(name = "微信openId")
@@ -136,273 +136,271 @@ public class CtUser extends BaseEntity
     /** 是否删除 */
     private String delFlag;
 
-    public void setId(Long id) 
+    public void setId(String id)
     {
         this.id = id;
     }
 
-    public Long getId() 
+    public String getId()
     {
         return id;
     }
-    public void setUserCode(String userCode) 
-    {
-        this.userCode = userCode;
-    }
-
-    public String getUserCode() 
-    {
-        return userCode;
-    }
-    public void setAccount(String account) 
+    public void setAccount(String account)
     {
         this.account = account;
     }
 
-    public String getAccount() 
+    public String getAccount()
     {
         return account;
     }
-    public void setPassword(String password) 
+    public void setPassword(String password)
     {
         this.password = password;
     }
 
-    public String getPassword() 
+    public String getPassword()
     {
         return password;
     }
-    public void setWxOpenId(String wxOpenId) 
+    public void setWxOpenId(String wxOpenId)
     {
         this.wxOpenId = wxOpenId;
     }
 
-    public String getWxOpenId() 
+    public String getWxOpenId()
     {
         return wxOpenId;
     }
-    public void setMobile(String mobile) 
+    public void setMobile(String mobile)
     {
         this.mobile = mobile;
     }
 
-    public String getMobile() 
+    public String getMobile()
     {
         return mobile;
     }
-    public void setMoneyAmount(BigDecimal moneyAmount) 
+    public void setMoneyAmount(BigDecimal moneyAmount)
     {
         this.moneyAmount = moneyAmount;
     }
 
-    public BigDecimal getMoneyAmount() 
+    public BigDecimal getMoneyAmount()
     {
         return moneyAmount;
     }
-    public void setScoreAmount(BigDecimal scoreAmount) 
+    public void setScoreAmount(BigDecimal scoreAmount)
     {
         this.scoreAmount = scoreAmount;
     }
 
-    public BigDecimal getScoreAmount() 
+    public BigDecimal getScoreAmount()
     {
         return scoreAmount;
     }
-    public void setCreditScore(Long creditScore) 
+    public void setCreditScore(Long creditScore)
     {
         this.creditScore = creditScore;
     }
 
-    public Long getCreditScore() 
+    public Long getCreditScore()
     {
         return creditScore;
     }
-    public void setNickName(String nickName) 
+    public void setNickName(String nickName)
     {
         this.nickName = nickName;
     }
 
-    public String getNickName() 
+    public String getNickName()
     {
         return nickName;
     }
-    public void setRealName(String realName) 
+    public void setRealName(String realName)
     {
         this.realName = realName;
     }
 
-    public String getRealName() 
+    public String getRealName()
     {
         return realName;
     }
-    public void setSex(String sex) 
+    public void setSex(String sex)
     {
         this.sex = sex;
     }
 
-    public String getSex() 
+    public String getSex()
     {
         return sex;
     }
-    public void setBirthday(Date birthday) 
+    public void setBirthday(Date birthday)
     {
         this.birthday = birthday;
     }
 
-    public Date getBirthday() 
+    public Date getBirthday()
     {
         return birthday;
     }
-    public void setIsReal(String isReal) 
+    public void setIsReal(String isReal)
     {
         this.isReal = isReal;
     }
 
-    public String getIsReal() 
+    public String getIsReal()
     {
         return isReal;
     }
-    public void setViolationCount(Long violationCount) 
+    public void setViolationCount(Long violationCount)
     {
         this.violationCount = violationCount;
     }
 
-    public Long getViolationCount() 
+    public Long getViolationCount()
     {
         return violationCount;
     }
-    public void setIdNo(String idNo) 
+    public void setIdNo(String idNo)
     {
         this.idNo = idNo;
     }
 
-    public String getIdNo() 
+    public String getIdNo()
     {
         return idNo;
     }
-    public void setIsAgent(String isAgent) 
+    public void setIsAgent(String isAgent)
     {
         this.isAgent = isAgent;
     }
 
-    public String getIsAgent() 
+    public String getIsAgent()
     {
         return isAgent;
     }
-    public void setIsShopBoss(String isShopBoss) 
+    public void setIsShopBoss(String isShopBoss)
     {
         this.isShopBoss = isShopBoss;
     }
 
-    public String getIsShopBoss() 
+    public String getIsShopBoss()
     {
         return isShopBoss;
     }
-    public void setLastLoginIp(String lastLoginIp) 
+    public void setLastLoginIp(String lastLoginIp)
     {
         this.lastLoginIp = lastLoginIp;
     }
 
-    public String getLastLoginIp() 
+    public String getLastLoginIp()
     {
         return lastLoginIp;
     }
-    public void setLastLoginTime(Date lastLoginTime) 
+    public void setLastLoginTime(Date lastLoginTime)
     {
         this.lastLoginTime = lastLoginTime;
     }
 
-    public Date getLastLoginTime() 
+    public Date getLastLoginTime()
     {
         return lastLoginTime;
     }
-    public void setCreateBossTime(Date createBossTime) 
+    public void setCreateBossTime(Date createBossTime)
     {
         this.createBossTime = createBossTime;
     }
 
-    public Date getCreateBossTime() 
+    public Date getCreateBossTime()
     {
         return createBossTime;
     }
-    public void setCreateAgentTime(Date createAgentTime) 
+    public void setCreateAgentTime(Date createAgentTime)
     {
         this.createAgentTime = createAgentTime;
     }
 
-    public Date getCreateAgentTime() 
+    public Date getCreateAgentTime()
     {
         return createAgentTime;
     }
-    public void setAgentState(String agentState) 
+    public void setAgentState(String agentState)
     {
         this.agentState = agentState;
     }
 
-    public String getAgentState() 
+    public String getAgentState()
     {
         return agentState;
     }
-    public void setAgentType(String agentType) 
+    public void setAgentType(String agentType)
     {
         this.agentType = agentType;
     }
 
-    public String getAgentType() 
+    public String getAgentType()
     {
         return agentType;
     }
-    public void setBossState(String bossState) 
+    public void setBossState(String bossState)
     {
         this.bossState = bossState;
     }
 
-    public String getBossState() 
+    public String getBossState()
     {
         return bossState;
     }
-    public void setCustomerState(String customerState) 
+    public void setCustomerState(String customerState)
     {
         this.customerState = customerState;
     }
 
-    public String getCustomerState() 
+    public String getCustomerState()
     {
         return customerState;
     }
-    public void setOperator(String operator) 
+    public void setOperator(String operator)
     {
         this.operator = operator;
     }
 
-    public String getOperator() 
+    public String getOperator()
     {
         return operator;
     }
-    public void setCreateDate(Date createDate) 
+    public void setCreateDate(Date createDate)
     {
         this.createDate = createDate;
     }
 
-    public Date getCreateDate() 
+    public Date getCreateDate()
     {
         return createDate;
     }
-    public void setDelFlag(String delFlag) 
+    public void setDelFlag(String delFlag)
     {
         this.delFlag = delFlag;
     }
 
-    public String getDelFlag() 
+    public String getDelFlag()
     {
         return delFlag;
+    }
+
+    public String getWxUnionId() {
+        return wxUnionId;
+    }
+
+    public void setWxUnionId(String wxUnionId) {
+        this.wxUnionId = wxUnionId;
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("id", getId())
-            .append("userCode", getUserCode())
             .append("account", getAccount())
             .append("password", getPassword())
             .append("wxOpenId", getWxOpenId())

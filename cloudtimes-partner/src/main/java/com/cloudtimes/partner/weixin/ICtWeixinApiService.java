@@ -21,7 +21,7 @@ public interface ICtWeixinApiService {
      * session_key string // 会话密钥
      * unionid     string // 用户在开放平台的唯一标识符，若当前小程序已绑定到微信开放平台帐号下会返回，详见 UnionID 机制说明。
      */
-    public Map<String, String> getUserSession(String jsCode);
+    public Map<String, Object> getUserSession(String jsCode);
 
     /**
      * 获取用户手机号
@@ -35,7 +35,7 @@ public interface ICtWeixinApiService {
      * * purePhoneNumber string  // 没有区号的手机号
      * * countryCode     string  // 区号
      */
-    public Map<String, String> getUserPhoneInfo(String jsCode);
+    public Map<String, Object> getUserPhoneInfo(String jsCode);
 
 
 }

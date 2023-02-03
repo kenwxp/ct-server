@@ -13,13 +13,13 @@ public class TestWeixin {
 
     public void test2() {
         ICtWeixinApiService service = new CtWeixinApiServiceImpl();
-        Map<String, String> session = service.getUserSession("aaadsd");
+        Map<String, Object> session = service.getUserSession("aaadsd");
         System.out.println(session);
     }
 
     public void test3() {
         ICtWeixinApiService service = new CtWeixinApiServiceImpl();
-        Map<String, String> session = service.getUserPhoneInfo("aaadsd");
+        Map<String, Object> session = service.getUserPhoneInfo("aaadsd");
         System.out.println(session);
     }
 

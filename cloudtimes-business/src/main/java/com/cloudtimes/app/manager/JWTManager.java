@@ -1,6 +1,7 @@
 package com.cloudtimes.app.manager;
 
 import com.alibaba.druid.support.json.JSONUtils;
+import com.alibaba.fastjson.JSONObject;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -41,7 +42,7 @@ public class JWTManager {
         instance.add(Calendar.MINUTE, jwtConfig.getExpireTime());
         //创建jwt builder
         JWTCreator.Builder builder = JWT.create();
-        builder.withClaim(AUTH_USER, JSONUtils.toJSONString(authUser));
+        builder.withClaim(AUTH_USER, JSONObject.toJSONString(authUser));
         String token = builder.withExpiresAt(instance.getTime())
                 .sign(Algorithm.HMAC256(jwtConfig.getSecret()));
         return token;
