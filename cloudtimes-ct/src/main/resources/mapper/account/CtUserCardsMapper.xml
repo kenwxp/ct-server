@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cloudtimes.account.mapper.CtUserCardsMapper">
+    
+    <resultMap type="CtUserCards" id="CtUserCardsResult">
+        <result property="id"    column="id"    />
+        <result property="activityId"    column="activity_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="cardNo"    column="card_no"    />
+        <result property="totalAmount"    column="total_amount"    />
+        <result property="balance"    column="balance"    />
+        <result property="discountRatio"    column="discount_ratio"    />
+        <result property="discountTimes"    column="discount_times"    />
+        <result property="storeCodes"    column="store_codes"    />
+        <result property="cardType"    column="card_type"    />
+        <result property="useType"    column="use_type"    />
+        <result property="assetsType"    column="assets_type"    />
+        <result property="sourceType"    column="source_type"    />
+        <result property="termType"    column="term_type"    />
+        <result property="hasTimeInterval"    column="has_time_interval"    />
+        <result property="cardState"    column="card_state"    />
+        <result property="timeInterval"    column="time_interval"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="endTime"    column="end_time"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="remark"    column="remark"    />
+        <result property="createDate"    column="create_date"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectCtUserCardsVo">
+        select id, activity_id, user_id, card_no, total_amount, balance, discount_ratio, discount_times, store_codes, card_type, use_type, assets_type, source_type, term_type, has_time_interval, card_state, time_interval, start_time, end_time, del_flag, remark, create_date, create_time, update_time from ct_user_cards
+    </sql>
+
+    <select id="selectCtUserCardsList" parameterType="CtUserCards" resultMap="CtUserCardsResult">
+        <include refid="selectCtUserCardsVo"/>
+        <where>  
+            <if test="activityId != null  and activityId != ''"> and activity_id = #{activityId}</if>
+            <if test="userId != null  and userId != ''"> and user_id = #{userId}</if>
+            <if test="cardNo != null  and cardNo != ''"> and card_no = #{cardNo}</if>
+            <if test="cardType != null  and cardType != ''"> and card_type = #{cardType}</if>
+            <if test="useType != null  and useType != ''"> and use_type = #{useType}</if>
+            <if test="assetsType != null  and assetsType != ''"> and assets_type = #{assetsType}</if>
+            <if test="sourceType != null  and sourceType != ''"> and source_type = #{sourceType}</if>
+            <if test="termType != null  and termType != ''"> and term_type = #{termType}</if>
+            <if test="hasTimeInterval != null  and hasTimeInterval != ''"> and has_time_interval = #{hasTimeInterval}</if>
+            <if test="cardState != null  and cardState != ''"> and card_state = #{cardState}</if>
+            <if test="timeInterval != null  and timeInterval != ''"> and time_interval = #{timeInterval}</if>
+            <if test="startTime != null "> and start_time = #{startTime}</if>
+            <if test="endTime != null "> and end_time = #{endTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectCtUserCardsById" parameterType="String" resultMap="CtUserCardsResult">
+        <include refid="selectCtUserCardsVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertCtUserCards" parameterType="CtUserCards">
+        insert into ct_user_cards
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="activityId != null and activityId != ''">activity_id,</if>
+            <if test="userId != null and userId != ''">user_id,</if>
+            <if test="cardNo != null and cardNo != ''">card_no,</if>
+            <if test="totalAmount != null">total_amount,</if>
+            <if test="balance != null">balance,</if>
+            <if test="discountRatio != null">discount_ratio,</if>
+            <if test="discountTimes != null">discount_times,</if>
+            <if test="storeCodes != null">store_codes,</if>
+            <if test="cardType != null">card_type,</if>
+            <if test="useType != null">use_type,</if>
+            <if test="assetsType != null and assetsType != ''">assets_type,</if>
+            <if test="sourceType != null and sourceType != ''">source_type,</if>
+            <if test="termType != null and termType != ''">term_type,</if>
+            <if test="hasTimeInterval != null and hasTimeInterval != ''">has_time_interval,</if>
+            <if test="cardState != null">card_state,</if>
+            <if test="timeInterval != null">time_interval,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createDate != null">create_date,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="activityId != null and activityId != ''">#{activityId},</if>
+            <if test="userId != null and userId != ''">#{userId},</if>
+            <if test="cardNo != null and cardNo != ''">#{cardNo},</if>
+            <if test="totalAmount != null">#{totalAmount},</if>
+            <if test="balance != null">#{balance},</if>
+            <if test="discountRatio != null">#{discountRatio},</if>
+            <if test="discountTimes != null">#{discountTimes},</if>
+            <if test="storeCodes != null">#{storeCodes},</if>
+            <if test="cardType != null">#{cardType},</if>
+            <if test="useType != null">#{useType},</if>
+            <if test="assetsType != null and assetsType != ''">#{assetsType},</if>
+            <if test="sourceType != null and sourceType != ''">#{sourceType},</if>
+            <if test="termType != null and termType != ''">#{termType},</if>
+            <if test="hasTimeInterval != null and hasTimeInterval != ''">#{hasTimeInterval},</if>
+            <if test="cardState != null">#{cardState},</if>
+            <if test="timeInterval != null">#{timeInterval},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createDate != null">#{createDate},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCtUserCards" parameterType="CtUserCards">
+        update ct_user_cards
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="activityId != null and activityId != ''">activity_id = #{activityId},</if>
+            <if test="userId != null and userId != ''">user_id = #{userId},</if>
+            <if test="cardNo != null and cardNo != ''">card_no = #{cardNo},</if>
+            <if test="totalAmount != null">total_amount = #{totalAmount},</if>
+            <if test="balance != null">balance = #{balance},</if>
+            <if test="discountRatio != null">discount_ratio = #{discountRatio},</if>
+            <if test="discountTimes != null">discount_times = #{discountTimes},</if>
+            <if test="storeCodes != null">store_codes = #{storeCodes},</if>
+            <if test="cardType != null">card_type = #{cardType},</if>
+            <if test="useType != null">use_type = #{useType},</if>
+            <if test="assetsType != null and assetsType != ''">assets_type = #{assetsType},</if>
+            <if test="sourceType != null and sourceType != ''">source_type = #{sourceType},</if>
+            <if test="termType != null and termType != ''">term_type = #{termType},</if>
+            <if test="hasTimeInterval != null and hasTimeInterval != ''">has_time_interval = #{hasTimeInterval},</if>
+            <if test="cardState != null">card_state = #{cardState},</if>
+            <if test="timeInterval != null">time_interval = #{timeInterval},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createDate != null">create_date = #{createDate},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCtUserCardsById" parameterType="String">
+        delete from ct_user_cards where id = #{id}
+    </delete>
+
+    <delete id="deleteCtUserCardsByIds" parameterType="String">
+        delete from ct_user_cards where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

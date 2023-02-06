@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cloudtimes.account.mapper.CtUserBankCardMapper">
+    
+    <resultMap type="CtUserBankCard" id="CtUserBankCardResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="userType"    column="user_type"    />
+        <result property="openBankName"    column="open_bank_name"    />
+        <result property="userName"    column="user_name"    />
+        <result property="mobile"    column="mobile"    />
+        <result property="cardNo"    column="card_no"    />
+        <result property="remark"    column="remark"    />
+        <result property="isUnbind"    column="is_unbind"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createDate"    column="create_date"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectCtUserBankCardVo">
+        select id, user_id, user_type, open_bank_name, user_name, mobile, card_no, remark, is_unbind, del_flag, create_date, create_time, update_time from ct_user_bank_card
+    </sql>
+
+    <select id="selectCtUserBankCardList" parameterType="CtUserBankCard" resultMap="CtUserBankCardResult">
+        <include refid="selectCtUserBankCardVo"/>
+        <where>  
+            <if test="userId != null  and userId != ''"> and user_id = #{userId}</if>
+            <if test="userType != null  and userType != ''"> and user_type = #{userType}</if>
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="mobile != null  and mobile != ''"> and mobile = #{mobile}</if>
+            and del_flag = '0'
+        </where>
+    </select>
+    
+    <select id="selectCtUserBankCardById" parameterType="String" resultMap="CtUserBankCardResult">
+        <include refid="selectCtUserBankCardVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertCtUserBankCard" parameterType="CtUserBankCard">
+        insert into ct_user_bank_card
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="userId != null and userId != ''">user_id,</if>
+            <if test="userType != null and userType != ''">user_type,</if>
+            <if test="openBankName != null and openBankName != ''">open_bank_name,</if>
+            <if test="userName != null and userName != ''">user_name,</if>
+            <if test="mobile != null and mobile != ''">mobile,</if>
+            <if test="cardNo != null and cardNo != ''">card_no,</if>
+            <if test="remark != null">remark,</if>
+            <if test="isUnbind != null">is_unbind,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createDate != null">create_date,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="userId != null and userId != ''">#{userId},</if>
+            <if test="userType != null and userType != ''">#{userType},</if>
+            <if test="openBankName != null and openBankName != ''">#{openBankName},</if>
+            <if test="userName != null and userName != ''">#{userName},</if>
+            <if test="mobile != null and mobile != ''">#{mobile},</if>
+            <if test="cardNo != null and cardNo != ''">#{cardNo},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="isUnbind != null">#{isUnbind},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createDate != null">#{createDate},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCtUserBankCard" parameterType="CtUserBankCard">
+        update ct_user_bank_card
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null and userId != ''">user_id = #{userId},</if>
+            <if test="userType != null and userType != ''">user_type = #{userType},</if>
+            <if test="openBankName != null and openBankName != ''">open_bank_name = #{openBankName},</if>
+            <if test="userName != null and userName != ''">user_name = #{userName},</if>
+            <if test="mobile != null and mobile != ''">mobile = #{mobile},</if>
+            <if test="cardNo != null and cardNo != ''">card_no = #{cardNo},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="isUnbind != null">is_unbind = #{isUnbind},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createDate != null">create_date = #{createDate},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCtUserBankCardById" parameterType="String">
+        update ct_user_bank_card
+        set del_flag = '1'
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteCtUserBankCardByIds" parameterType="String">
+        update ct_user_bank_card
+        set del_flag = '1'
+        where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
