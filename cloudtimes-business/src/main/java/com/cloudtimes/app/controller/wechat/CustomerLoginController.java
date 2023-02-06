@@ -1,17 +1,17 @@
 package com.cloudtimes.app.controller.wechat;
 
 
-import com.cloudtimes.app.controller.wechat.model.LoginCheckResp;
-import com.cloudtimes.app.controller.wechat.model.LoginResp;
+import com.cloudtimes.account.domain.CtUser;
 import com.cloudtimes.app.controller.wechat.model.LoginCheckReq;
+import com.cloudtimes.app.controller.wechat.model.LoginCheckResp;
 import com.cloudtimes.app.controller.wechat.model.LoginReq;
+import com.cloudtimes.app.controller.wechat.model.LoginResp;
 import com.cloudtimes.app.manager.JWTManager;
 import com.cloudtimes.common.constant.HttpCode;
 import com.cloudtimes.common.core.domain.AjaxResult;
 import com.cloudtimes.common.core.domain.entity.AuthUser;
-import com.cloudtimes.common.utils.StringUtils;
 import com.cloudtimes.common.utils.ip.IpUtils;
-import com.cloudtimes.wechat.service.ICtLoginService;
+import com.cloudtimes.serving.wechat.service.ICtCustomerLoginService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Map;
 
 @Api(tags = "小程序登录相关接口")
 @RestController
@@ -29,7 +28,7 @@ import java.util.Map;
 public class CustomerLoginController {
 
     @Autowired
-    private ICtLoginService loginService;
+    private ICtCustomerLoginService loginService;
     @Autowired
     private JWTManager jwtManager;
 
@@ -58,18 +57,12 @@ public class CustomerLoginController {
     @PostMapping("/login")
     public AjaxResult login(@RequestBody LoginReq param, HttpServletRequest request) {
         String loginIp = IpUtils.getIpAddr(request);
-        Map<String, Object> customerLoginInfo = loginService.customerLogin(param.getLoginCode(), param.getPhoneCode(), loginIp);
+        CtUser customerInfo = loginService.customerLogin(param.getLoginCode(), param.getPhoneCode(), loginIp);
         LoginResp loginResp = new LoginResp();
         // 封装返回参数
         //获取token
-        String userId = StringUtils.getStringFromObjectMap(customerLoginInfo, "id");
-        AuthUser authUser = new AuthUser();
-        authUser.setId(userId);
-        String token = jwtManager.createToken(authUser);
+        String token = jwtManager.createToken(new AuthUser(customerInfo.getId()));
         loginResp.setAccessToken(token);
-        loginResp.setMoneyAmount(StringUtils.getStringFromObjectMap(customerLoginInfo, "moneyAmount"));
-        loginResp.setScoreAmount(StringUtils.getStringFromObjectMap(customerLoginInfo, "scoreAmount"));
-        loginResp.setCreditScore(StringUtils.getStringFromObjectMap(customerLoginInfo, "creditScore"));
         return new AjaxResult(HttpCode.OK, "", loginResp);
     }
 

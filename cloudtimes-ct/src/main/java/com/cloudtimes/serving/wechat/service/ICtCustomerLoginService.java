@@ -1,6 +1,6 @@
-package com.cloudtimes.wechat.service;
+package com.cloudtimes.serving.wechat.service;
 
-import java.util.Map;
+import com.cloudtimes.account.domain.CtUser;
 
 /**
  * 小程序用户登录Service业务层处理
@@ -8,7 +8,7 @@ import java.util.Map;
  * @author wangxp
  * @date 2023-02-02
  */
-public interface ICtLoginService {
+public interface ICtCustomerLoginService {
     /**
      * 根据微信loginCode校验是否为新用户
      *
@@ -23,12 +23,8 @@ public interface ICtLoginService {
      * @param loginCode
      * @param phoneCode
      * @param loginIp   登录ip
-     * @return map
-     * id             用户id
-     * moneyAmount    现金余额
-     * scoreAmount    积分余额
-     * creditScore    信用分
+     * @return CtUser
      */
-    public Map<String, Object> customerLogin(String loginCode, String phoneCode, String loginIp);
+    public CtUser customerLogin(String loginCode, String phoneCode, String loginIp);
 
 }
