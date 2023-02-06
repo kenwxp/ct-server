@@ -8,9 +8,10 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * 小程序登录校验接口返回体
  */
-@ApiModel(value = "LoginCheckResp", description = "小程序登录校验接口返回体")
+
 @Data
 @Slf4j
+@ApiModel(value = "LoginCheckResp", description = "小程序登录校验接口返回体")
 public class LoginCheckResp {
     /**
      * 是否新用户 0-否 1-是

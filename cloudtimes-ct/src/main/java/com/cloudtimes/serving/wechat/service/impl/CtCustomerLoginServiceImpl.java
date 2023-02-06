@@ -1,6 +1,5 @@
 package com.cloudtimes.serving.wechat.service.impl;
 
-import com.alibaba.fastjson2.JSONObject;
 import com.cloudtimes.account.domain.CtUser;
 import com.cloudtimes.account.domain.CtUserAssets;
 import com.cloudtimes.account.mapper.CtUserAssetsMapper;
@@ -63,13 +62,12 @@ public class CtCustomerLoginServiceImpl implements ICtCustomerLoginService {
         if (user == null) {
             //新用户流程,获取手机号
             Map<String, Object> userPhoneInfo = weixinApiService.getUserPhoneInfo(phoneCode);
-            if (StringUtils.isNotEmpty(StringUtils.getStringFromObjectMap(userPhoneInfo, "errcode"))) {
+            String errCode = StringUtils.getStringFromObjectMap(userPhoneInfo, "errcode");
+            if (StringUtils.isNotEmpty(errCode) && !"0".equals(errCode)) {
                 throw new ServiceException(userPhoneInfo.get("errmsg").toString());
             }
-            String phoneInfoStr = StringUtils.getStringFromObjectMap(userPhoneInfo, "phone_info");
-            Map<String, String> phoneInfo = JSONObject.parseObject(phoneInfoStr, Map.class);
+            Map<String, String> phoneInfo = (Map<String, String>) userPhoneInfo.get("phone_info");
             String phoneNumber = phoneInfo.get("purePhoneNumber");
-
             CtUser dbUser = userMapper.selectCtUserByMobile(phoneNumber);
             if (dbUser == null) {
                 CtUser newUser = new CtUser();

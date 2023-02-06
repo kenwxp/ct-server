@@ -20,18 +20,18 @@
     <insert id="insertCtUserAssets" parameterType="CtUserAssets">
         insert into ct_user_assets
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="user_id != null">user_id,</if>
-            <if test="customer_cash_amount != null">customer_cash_amount,</if>
-            <if test="customer_total_withdrawal != null">customer_total_withdrawal,</if>
-            <if test="customer_score_points != null">customer_score_points,</if>
-            <if test="customer_credit_score != null">customer_credit_score,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="customerCashAmount != null">customer_cash_amount,</if>
+            <if test="customerTotalWithdrawal != null">customer_total_withdrawal,</if>
+            <if test="customerScorePoints != null">customer_score_points,</if>
+            <if test="customerCreditScore != null">customer_credit_score,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="user_id != null">#{userId},</if>
-            <if test="customer_cash_amount != null">#{customerCashAmount},</if>
-            <if test="customer_total_withdrawal != null">#{customerTotalWithdrawal},</if>
-            <if test="customer_score_points != null">#{customerScorePoints},</if>
-            <if test="customer_credit_score != null">#{customerCreditScore},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="customerCashAmount != null">#{customerCashAmount},</if>
+            <if test="customerTotalWithdrawal != null">#{customerTotalWithdrawal},</if>
+            <if test="customerScorePoints != null">#{customerScorePoints},</if>
+            <if test="customerCreditScore != null">#{customerCreditScore},</if>
         </trim>
 
     </insert>
@@ -39,10 +39,10 @@
     <update id="updateCtUserAssets" parameterType="CtUserAssets">
         update ct_user_assets
         <trim prefix="SET" suffixOverrides=",">
-            <if test="customer_cash_amount != null">customer_cash_amount = #{customerCashAmount},</if>
-            <if test="customer_total_withdrawal != null">customer_total_withdrawal = #{customerTotalWithdrawal},</if>
-            <if test="customer_score_points != null">customer_score_points = #{customerScorePoints},</if>
-            <if test="customer_credit_score != null">customer_credit_score = #{customerCreditScore},</if>
+            <if test="customerCashAmount != null">customer_cash_amount = #{customerCashAmount},</if>
+            <if test="customerTotalWithdrawal != null">customer_total_withdrawal = #{customerTotalWithdrawal},</if>
+            <if test="customerScorePoints != null">customer_score_points = #{customerScorePoints},</if>
+            <if test="customerCreditScore != null">customer_credit_score = #{customerCreditScore},</if>
         </trim>
         where user_id = #{userId}
     </update>

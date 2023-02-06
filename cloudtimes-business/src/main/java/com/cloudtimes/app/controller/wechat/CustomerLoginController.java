@@ -14,17 +14,16 @@ import com.cloudtimes.common.utils.ip.IpUtils;
 import com.cloudtimes.serving.wechat.service.ICtCustomerLoginService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
 @Api(tags = "小程序登录相关接口")
 @RestController
-@RequestMapping("/auth/customer")
+@RequestMapping("/mapp/login")
 public class CustomerLoginController {
 
     @Autowired
@@ -40,11 +39,14 @@ public class CustomerLoginController {
      */
     @ApiOperation("小程序用户登录校验")
     @PostMapping("/check")
+    @ApiResponses(
+            @ApiResponse(code = 200, message = "成功", response = AjaxResult.class)
+    )
     public AjaxResult loginCheck(@RequestBody LoginCheckReq param) {
         boolean isNewCustomer = loginService.checkCustomerNew(param.getLoginCode());
         LoginCheckResp loginCheckResp = new LoginCheckResp();
         loginCheckResp.setIsNew(isNewCustomer ? "1" : "0");
-        return new AjaxResult(HttpCode.OK, "", loginCheckResp);
+        return AjaxResult.success(loginCheckResp);
     }
 
     /**
@@ -54,7 +56,10 @@ public class CustomerLoginController {
      * @return
      */
     @ApiOperation("小程序用户登录接口")
-    @PostMapping("/login")
+    @PostMapping("")
+    @ApiResponses(
+            @ApiResponse(code = 200, message = "成功", response = AjaxResult.class)
+    )
     public AjaxResult login(@RequestBody LoginReq param, HttpServletRequest request) {
         String loginIp = IpUtils.getIpAddr(request);
         CtUser customerInfo = loginService.customerLogin(param.getLoginCode(), param.getPhoneCode(), loginIp);
@@ -63,7 +68,7 @@ public class CustomerLoginController {
         //获取token
         String token = jwtManager.createToken(new AuthUser(customerInfo.getId()));
         loginResp.setAccessToken(token);
-        return new AjaxResult(HttpCode.OK, "", loginResp);
+        return AjaxResult.success(loginResp);
     }
 
 }

@@ -23,18 +23,18 @@ public interface CtUserAssetsMapper {
     /**
      * 新增用户资产
      *
-     * @param CtUserAssets 用户资产
+     * @param ctUserAssets 用户资产
      * @return 结果
      */
-    public int insertCtUserAssets(CtUserAssets CtUserAssets);
+    public int insertCtUserAssets(CtUserAssets ctUserAssets);
 
     /**
      * 修改用户资产
      *
-     * @param CtUserAssets 用户资产
+     * @param ctUserAssets 用户资产
      * @return 结果
      */
-    public int updateCtUserAssets(CtUserAssets CtUserAssets);
+    public int updateCtUserAssets(CtUserAssets ctUserAssets);
 
     /**
      * 删除用户资产
