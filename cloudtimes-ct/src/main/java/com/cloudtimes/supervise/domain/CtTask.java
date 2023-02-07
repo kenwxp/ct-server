@@ -38,6 +38,8 @@ public class CtTask extends BaseEntity {
 
     /**
      * 任务状态
+     * 进行中	0
+     * 已结束	1
      */
     @Excel(name = "任务状态")
     private String taskType;
@@ -64,6 +66,8 @@ public class CtTask extends BaseEntity {
 
     /**
      * 是否异常
+     * 无异常	0
+     * 有异常	1
      */
     @Excel(name = "是否异常")
     private String isExceptional;
@@ -90,5 +94,15 @@ public class CtTask extends BaseEntity {
      * 是否删除
      */
     private String delFlag;
+    /**
+     * 创建日期
+     */
 
+    @Excel(name = "创建时间")
+    private Date createTime;
+    /**
+     * 创建日期
+     */
+    @Excel(name = "修改时间")
+    private Date updateTime;
 }

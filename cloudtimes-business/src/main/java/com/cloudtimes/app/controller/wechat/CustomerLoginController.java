@@ -7,9 +7,9 @@ import com.cloudtimes.app.controller.wechat.model.LoginCheckResp;
 import com.cloudtimes.app.controller.wechat.model.LoginReq;
 import com.cloudtimes.app.controller.wechat.model.LoginResp;
 import com.cloudtimes.app.manager.JWTManager;
-import com.cloudtimes.common.constant.HttpCode;
 import com.cloudtimes.common.core.domain.AjaxResult;
 import com.cloudtimes.common.core.domain.entity.AuthUser;
+import com.cloudtimes.common.enums.ChannelType;
 import com.cloudtimes.common.utils.ip.IpUtils;
 import com.cloudtimes.serving.wechat.service.ICtCustomerLoginService;
 import io.swagger.annotations.Api;
@@ -17,7 +17,10 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -66,7 +69,7 @@ public class CustomerLoginController {
         LoginResp loginResp = new LoginResp();
         // 封装返回参数
         //获取token
-        String token = jwtManager.createToken(new AuthUser(customerInfo.getId()));
+        String token = jwtManager.createToken(new AuthUser(customerInfo.getId(), ChannelType.WECHAT.getCode()));
         loginResp.setAccessToken(token);
         return AjaxResult.success(loginResp);
     }

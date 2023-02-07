@@ -32,6 +32,11 @@
             <groupId>cloudtimes</groupId>
             <artifactId>cloudtimes-partner</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>cloudtimes</groupId>
+            <artifactId>cloudtimes-system</artifactId>
+        </dependency>
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-extension</artifactId>

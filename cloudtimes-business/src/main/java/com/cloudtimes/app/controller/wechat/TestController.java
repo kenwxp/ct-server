@@ -50,7 +50,7 @@ public class TestController extends BaseController {
     @ApiOperation("获取jwt")
     @GetMapping(value = "/token/get/{id}")
     public AjaxResult getInfo(@PathVariable("id") String id) {
-        String token = jwtManager.createToken(new AuthUser(id));
+        String token = jwtManager.createToken(new AuthUser(id,"test"));
         return AjaxResult.success(token);
     }
 

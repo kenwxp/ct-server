@@ -7,6 +7,7 @@ import com.cloudtimes.app.controller.cash.model.CashLoginResp;
 import com.cloudtimes.app.manager.JWTManager;
 import com.cloudtimes.common.core.domain.AjaxResult;
 import com.cloudtimes.common.core.domain.entity.AuthUser;
+import com.cloudtimes.common.enums.ChannelType;
 import com.cloudtimes.common.utils.StringUtils;
 import com.cloudtimes.enums.DeviceType;
 import com.cloudtimes.hardwaredevice.domain.CtDevice;
@@ -63,7 +64,7 @@ public class CashLoginController {
         CashLoginResp loginResp = new CashLoginResp();
         // 封装返回参数
         //获取token,时效为永久
-        String token = jwtManager.createToken(new AuthUser(deviceInfo.getId()), 0);
+        String token = jwtManager.createToken(new AuthUser(deviceInfo.getId(), ChannelType.CASH.getCode()), 0);
         loginResp.setAccessToken(token);
         return AjaxResult.success(loginResp);
     }

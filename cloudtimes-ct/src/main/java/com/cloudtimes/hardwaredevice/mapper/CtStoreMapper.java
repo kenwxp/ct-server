@@ -55,7 +55,7 @@ public interface CtStoreMapper
      * @param id 门店主键
      * @return 结果
      */
-    public int deleteCtStoreById(Long id);
+    public int deleteCtStoreById(String id);
 
     /**
      * 批量删除门店
@@ -63,5 +63,5 @@ public interface CtStoreMapper
      * @param ids 需要删除的数据主键集合
      * @return 结果
      */
-    public int deleteCtStoreByIds(Long[] ids);
+    public int deleteCtStoreByIds(String[] ids);
 }

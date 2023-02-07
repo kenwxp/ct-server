@@ -1,6 +1,7 @@
 package com.cloudtimes.common.core.domain.entity;
 
 import com.cloudtimes.common.core.domain.BaseEntity;
+import com.cloudtimes.common.enums.ChannelType;
 
 import java.util.Date;
 
@@ -10,6 +11,11 @@ public class AuthUser extends BaseEntity {
      * 序列号
      */
     private String id;
+
+    /**
+     * 渠道
+     */
+    private String channelType;
 
     /**
      * 登录账号
@@ -75,8 +81,9 @@ public class AuthUser extends BaseEntity {
     public AuthUser() {
     }
 
-    public AuthUser(String id) {
+    public AuthUser(String id, String channelType) {
         this.id = id;
+        this.channelType = channelType;
     }
 
     public String getId() {
@@ -85,6 +92,14 @@ public class AuthUser extends BaseEntity {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getChannelType() {
+        return channelType;
+    }
+
+    public void setChannelType(String channelType) {
+        this.channelType = channelType;
     }
 
     public String getAccount() {

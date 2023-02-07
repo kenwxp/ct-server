@@ -23,7 +23,7 @@ import com.cloudtimes.common.core.page.TableDataInfo;
 
 /**
  * 门店Controller
- * 
+ *
  * @author tank
  * @date 2023-01-17
  */
@@ -97,7 +97,7 @@ public class CtStoreController extends BaseController
     @PreAuthorize("@ss.hasPermi('hardwaredevice:ctstore:remove')")
     @Log(title = "门店", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
+    public AjaxResult remove(@PathVariable String[] ids)
     {
         return toAjax(ctStoreService.deleteCtStoreByIds(ids));
     }

@@ -50,6 +50,9 @@ public class CtShopping extends BaseEntity {
 
     /**
      * 购物状态
+     * 购物中	0
+     * 无购物	1
+     * 购物结束	2
      */
     @Excel(name = "购物状态")
     private String shoppingType;
@@ -76,24 +79,36 @@ public class CtShopping extends BaseEntity {
 
     /**
      * 是否异常
+     * 无异常	0
+     * 偷盗异常	1
+     * 已追回	2
      */
     @Excel(name = "是否异常")
     private String exceptionalState;
 
     /**
      * 客服审核
+     * 无异常	0
+     * 偷盗异常	1
+     * 已追回	2
      */
     @Excel(name = "客服审核")
     private String isApprove;
 
     /**
      * 负责人审核
+     * 无异常	0
+     * 偷盗异常	1
+     * 已追回	2
      */
     @Excel(name = "负责人审核")
     private String isLeadApprove;
 
     /**
      * 店主审核
+     * 无异常	0
+     * 偷盗异常	1
+     * 已追回	2
      */
     @Excel(name = "店主审核")
     private String isBossApprove;
@@ -102,5 +117,15 @@ public class CtShopping extends BaseEntity {
      * 是否删除
      */
     private String delFlag;
+    /**
+     * 创建日期
+     */
 
+    @Excel(name = "创建时间")
+    private Date createTime;
+    /**
+     * 创建日期
+     */
+    @Excel(name = "修改时间")
+    private Date updateTime;
 }

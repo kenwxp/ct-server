@@ -140,12 +140,17 @@ public class CtOrder extends BaseEntity {
 
     /**
      * 支付方式
+     * 支付宝	0
+     * 微信	1
+     * 网银	2
      */
     @Excel(name = "支付方式")
     private String paymentMode;
 
     /**
      * 支付行为
+     * 扫码	0
+     * 刷脸	1
      */
     @Excel(name = "支付行为")
     private String paymentAction;
@@ -176,6 +181,11 @@ public class CtOrder extends BaseEntity {
 
     /**
      * 订单状态
+     * 未支付	0
+     * 支付中	1
+     * 支付完成	2
+     * 支付失败	3
+     * 已撤销	4
      */
     @Excel(name = "订单状态")
     private String state;
@@ -189,5 +199,15 @@ public class CtOrder extends BaseEntity {
      * 创建日期
      */
     private Date createDate;
+    /**
+     * 创建日期
+     */
 
+    @Excel(name = "创建时间")
+    private Date createTime;
+    /**
+     * 创建日期
+     */
+    @Excel(name = "修改时间")
+    private Date updateTime;
 }

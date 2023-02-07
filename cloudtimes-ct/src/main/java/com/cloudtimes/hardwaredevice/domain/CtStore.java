@@ -2,9 +2,11 @@ package com.cloudtimes.hardwaredevice.domain;
 
 import com.cloudtimes.common.annotation.Excel;
 import com.cloudtimes.common.core.domain.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -29,15 +31,7 @@ public class CtStore extends BaseEntity {
     @Excel(name = "店铺名称")
     private String name;
 
-    /**
-     * 商户ID
-     */
-    @Excel(name = "商户ID")
-    private String merchantId;
-
-    /**
-     * 详细地址
-     */
+    /** 详细地址 */
     @Excel(name = "详细地址")
     private String address;
 
@@ -63,13 +57,13 @@ public class CtStore extends BaseEntity {
      * 经度
      */
     @Excel(name = "经度")
-    private Long longitude;
+    private BigDecimal longitude;
 
     /**
      * 纬度
      */
     @Excel(name = "纬度")
-    private Long latitude;
+    private BigDecimal latitude;
 
     /**
      * 门头照片
@@ -99,7 +93,7 @@ public class CtStore extends BaseEntity {
      * 开店费用
      */
     @Excel(name = "开店费用")
-    private Long saleAmount;
+    private BigDecimal saleAmount;
 
     /**
      * 最大购物人数
@@ -109,51 +103,64 @@ public class CtStore extends BaseEntity {
 
     /**
      * 是否值守
+     * 0-否 1-是
      */
     @Excel(name = "是否值守")
-    private Long isSupervise;
+    private String isSupervise;
 
     /**
      * 开设状态
+     * 申请中	0
+     * 签约中	1
+     * 已上线	2
+     * 已下级	3
      */
     @Excel(name = "开设状态")
     private String buildState;
 
     /**
      * 门店状态
+     * 正常	0
+     * 异常	1
+     * 维护	2
      */
     @Excel(name = "门店状态")
     private String state;
 
-    /**
-     * 代理用户Id
-     */
-    @Excel(name = "代理用户Id")
+    /** 店老板用户编号 */
+    @Excel(name = "店老板用户编号")
+    private String bossId;
+
+    /** 代理用户编号 */
+    @Excel(name = "代理用户编号")
     private String agentId;
 
-    /**
-     * 门店上线日期
-     */
-    @Excel(name = "门店上线日期")
+    /** 门店上线日期 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "门店上线日期", width = 30, dateFormat = "yyyy-MM-dd")
     private Date storeOnlineDate;
 
-    /**
-     * 门店上线时间
-     */
-    @Excel(name = "门店上线时间")
+    /** 门店上线时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "门店上线时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date storeOnlineTime;
 
-    /**
-     * 是否删除
-     */
-    @Excel(name = "是否删除")
-    private Long delFlag;
+    /** 收钱吧商户编号 */
+    @Excel(name = "收钱吧商户编号")
+    private String merchantSn;
 
-    /**
-     * 创建日期
-     */
-    @Excel(name = "创建日期")
+    /** 收钱吧门店编号 */
+    @Excel(name = "收钱吧门店编号")
+    private String storeSn;
+
+    /** 是否删除 */
+    private String delFlag;
+
+   /** 创建日期 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "创建日期", width = 30, dateFormat = "yyyy-MM-dd")
     private Date createDate;
+
     /**
      * 创建日期
      */

@@ -5,14 +5,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="com.cloudtimes.hardwaredevice.mapper.CtStoreMapper">
     
     <sql id="selectCtStoreVo">
-        select id, name, merchant_id, address, short_address, store_no, region_code, longitude, latitude, photo_url, area, contact_name, contact_phone, sale_amount, max_buy_person, is_supervise, build_state, state, agent_id, store_online_date, store_online_time, del_flag, create_date, create_time, update_time from ct_store
+        select id, name, address, short_address, store_no, region_code, longitude, latitude, photo_url, area, contact_name, contact_phone, sale_amount, max_buy_person, is_supervise, build_state, state, boss_id, agent_id, store_online_date, store_online_time, merchant_sn, store_sn, del_flag, create_date, create_time, update_time from ct_store
     </sql>
 
     <select id="selectCtStoreList" parameterType="CtStore" resultType="CtStore">
         <include refid="selectCtStoreVo"/>
         <where>  
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
-            <if test="merchantId != null  and merchantId != ''"> and merchant_id = #{merchantId}</if>
             <if test="address != null  and address != ''"> and address = #{address}</if>
             <if test="shortAddress != null  and shortAddress != ''"> and short_address = #{shortAddress}</if>
             <if test="storeNo != null  and storeNo != ''"> and store_no = #{storeNo}</if>
@@ -28,9 +27,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="isSupervise != null  and isSupervise != ''"> and is_supervise = #{isSupervise}</if>
             <if test="buildState != null  and buildState != ''"> and build_state = #{buildState}</if>
             <if test="state != null  and state != ''"> and state = #{state}</if>
+            <if test="bossId != null  and bossId != ''"> and boss_id = #{bossId}</if>
             <if test="agentId != null  and agentId != ''"> and agent_id = #{agentId}</if>
             <if test="storeOnlineDate != null "> and store_online_date = #{storeOnlineDate}</if>
             <if test="storeOnlineTime != null "> and store_online_time = #{storeOnlineTime}</if>
+            <if test="merchantSn != null  and merchantSn != ''"> and merchant_sn = #{merchantSn}</if>
+            <if test="storeSn != null  and storeSn != ''"> and store_sn = #{storeSn}</if>
             <if test="createDate != null "> and create_date = #{createDate}</if>
         </where>
     </select>
@@ -53,7 +55,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="(" suffix=")" suffixOverrides=",">
             id,
             <if test="name != null">name,</if>
-            <if test="merchantId != null">merchant_id,</if>
             <if test="address != null">address,</if>
             <if test="shortAddress != null">short_address,</if>
             <if test="storeNo != null and storeNo != ''">store_no,</if>
@@ -69,9 +70,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="isSupervise != null">is_supervise,</if>
             <if test="buildState != null and buildState != ''">build_state,</if>
             <if test="state != null and state != ''">state,</if>
+            <if test="bossId != null">boss_id,</if>
             <if test="agentId != null">agent_id,</if>
             <if test="storeOnlineDate != null">store_online_date,</if>
             <if test="storeOnlineTime != null">store_online_time,</if>
+            <if test="merchantSn != null">merchant_sn,</if>
+            <if test="storeSn != null">store_sn,</if>
             <if test="delFlag != null and delFlag != ''">del_flag,</if>
             <if test="createDate != null">create_date,</if>
             <if test="createTime != null">create_time,</if>
@@ -80,7 +84,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             #{id}
             <if test="name != null">#{name},</if>
-            <if test="merchantId != null">#{merchantId},</if>
             <if test="address != null">#{address},</if>
             <if test="shortAddress != null">#{shortAddress},</if>
             <if test="storeNo != null and storeNo != ''">#{storeNo},</if>
@@ -96,9 +99,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="isSupervise != null">#{isSupervise},</if>
             <if test="buildState != null and buildState != ''">#{buildState},</if>
             <if test="state != null and state != ''">#{state},</if>
+            <if test="bossId != null">#{bossId},</if>
             <if test="agentId != null">#{agentId},</if>
             <if test="storeOnlineDate != null">#{storeOnlineDate},</if>
             <if test="storeOnlineTime != null">#{storeOnlineTime},</if>
+            <if test="merchantSn != null">#{merchantSn},</if>
+            <if test="storeSn != null">#{storeSn},</if>
             <if test="delFlag != null and delFlag != ''">#{delFlag},</if>
             <if test="createDate != null">#{createDate},</if>
             <if test="createTime != null">#{createTime},</if>
@@ -110,7 +116,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update ct_store
         <trim prefix="SET" suffixOverrides=",">
             <if test="name != null">name = #{name},</if>
-            <if test="merchantId != null">merchant_id = #{merchantId},</if>
             <if test="address != null">address = #{address},</if>
             <if test="shortAddress != null">short_address = #{shortAddress},</if>
             <if test="storeNo != null and storeNo != ''">store_no = #{storeNo},</if>
@@ -126,9 +131,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="isSupervise != null">is_supervise = #{isSupervise},</if>
             <if test="buildState != null and buildState != ''">build_state = #{buildState},</if>
             <if test="state != null and state != ''">state = #{state},</if>
+            <if test="bossId != null">boss_id = #{bossId},</if>
             <if test="agentId != null">agent_id = #{agentId},</if>
             <if test="storeOnlineDate != null">store_online_date = #{storeOnlineDate},</if>
             <if test="storeOnlineTime != null">store_online_time = #{storeOnlineTime},</if>
+            <if test="merchantSn != null">merchant_sn = #{merchantSn},</if>
+            <if test="storeSn != null">store_sn = #{storeSn},</if>
             <if test="delFlag != null and delFlag != ''">del_flag = #{delFlag},</if>
             <if test="createDate != null">create_date = #{createDate},</if>
             <if test="createTime != null">create_time = #{createTime},</if>

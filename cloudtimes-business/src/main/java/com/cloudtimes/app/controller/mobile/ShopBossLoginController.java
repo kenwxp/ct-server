@@ -8,6 +8,7 @@ import com.cloudtimes.app.manager.JWTManager;
 import com.cloudtimes.common.constant.HttpCode;
 import com.cloudtimes.common.core.domain.AjaxResult;
 import com.cloudtimes.common.core.domain.entity.AuthUser;
+import com.cloudtimes.common.enums.ChannelType;
 import com.cloudtimes.common.utils.ip.IpUtils;
 import com.cloudtimes.serving.mobile.service.ICtShopBossLoginService;
 import io.swagger.annotations.Api;
@@ -44,7 +45,7 @@ public class ShopBossLoginController {
     @PostMapping("/login")
     public AjaxResult login(@RequestBody LoginReq param, HttpServletRequest request) {
         CtUser ctUser = loginService.shopBossLogin(param.getPhone(), param.getPassword(), IpUtils.getIpAddr(request));
-        String token = jwtManager.createToken(new AuthUser(ctUser.getId()));
+        String token = jwtManager.createToken(new AuthUser(ctUser.getId(), ChannelType.MOBILE.getCode()));
         LoginResp loginResp = new LoginResp();
         loginResp.setToken(token);
         return new AjaxResult(HttpCode.OK, "登录成功", loginResp);

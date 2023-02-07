@@ -80,7 +80,7 @@ public class CtStoreServiceImpl implements ICtStoreService
      * @return 结果
      */
     @Override
-    public int deleteCtStoreByIds(Long[] ids)
+    public int deleteCtStoreByIds(String[] ids)
     {
         return ctStoreMapper.deleteCtStoreByIds(ids);
     }
@@ -92,7 +92,7 @@ public class CtStoreServiceImpl implements ICtStoreService
      * @return 结果
      */
     @Override
-    public int deleteCtStoreById(Long id)
+    public int deleteCtStoreById(String id)
     {
         return ctStoreMapper.deleteCtStoreById(id);
     }
