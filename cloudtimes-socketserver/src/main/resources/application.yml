@@ -18,7 +18,7 @@ cloudtimes:
 # 开发环境配置
 server:
   # 服务器的HTTP端口，默认为80
-  port: 9091
+  port: 9092
   servlet:
     # 应用的访问路径
     context-path: /
