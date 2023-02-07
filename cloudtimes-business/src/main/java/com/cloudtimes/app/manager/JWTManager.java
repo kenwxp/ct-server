@@ -33,19 +33,33 @@ public class JWTManager {
         instance = this;
     }
 
+
+    /**
+     * 生产jwt token
+     * @param authUser
+     * @param expire   失效时间 单位分钟，设置为0时为永久
+     * @return
+     */
+    public String createToken(AuthUser authUser, int expire) {
+        //创建jwt builder
+        JWTCreator.Builder builder = JWT.create();
+        builder.withClaim(AUTH_USER, JSONObject.toJSONString(authUser));
+        if (expire != 0) {
+            Calendar instance = Calendar.getInstance();
+            instance.add(Calendar.MINUTE, expire);
+            return builder.withExpiresAt(instance.getTime())
+                    .sign(Algorithm.HMAC256(jwtConfig.getSecret()));
+        } else {
+            return builder.sign(Algorithm.HMAC256(jwtConfig.getSecret()));
+        }
+    }
+
     /**
      * 生成token
      */
     public String createToken(AuthUser authUser) {
-        Calendar instance = Calendar.getInstance();
-        //默认7天过期
-        instance.add(Calendar.MINUTE, jwtConfig.getExpireTime());
-        //创建jwt builder
-        JWTCreator.Builder builder = JWT.create();
-        builder.withClaim(AUTH_USER, JSONObject.toJSONString(authUser));
-        String token = builder.withExpiresAt(instance.getTime())
-                .sign(Algorithm.HMAC256(jwtConfig.getSecret()));
-        return token;
+        // 默认有效时间，从配置中读取
+        return createToken(authUser, jwtConfig.getExpireTime());
     }
 
     /**

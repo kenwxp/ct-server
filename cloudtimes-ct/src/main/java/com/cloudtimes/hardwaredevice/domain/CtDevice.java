@@ -2,6 +2,8 @@ package com.cloudtimes.hardwaredevice.domain;
 
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.cloudtimes.common.annotation.Excel;
@@ -11,28 +13,35 @@ import com.cloudtimes.common.core.domain.BaseEntity;
  * 电子设备对象 ct_device
  * 
  * @author tank
- * @date 2023-01-17
+ * @date 2023-02-07
  */
+@Slf4j
+@Data
 public class CtDevice extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
-    /** 序列号 */
-    private Long id;
+    /** 编号 */
+    private String id;
 
     /** 设备名称 */
     @Excel(name = "设备名称")
     private String name;
 
-    /** 门店编码 */
-    @Excel(name = "门店编码")
-    private String storeCode;
+    /** 门店编号 */
+    @Excel(name = "门店编号")
+    private String storeId;
 
-    /** 设备编码 */
-    @Excel(name = "设备编码")
+    /** 设备编号 */
+    @Excel(name = "设备编号")
     private String deviceCode;
 
-    /** 设备类型 */
+    /** 设备类型
+     * 摄像头	0
+     * 收银机套件	1
+     * 门禁	    2
+     * 门禁刷脸   3
+     * */
     @Excel(name = "设备类型")
     private String deviceType;
 
@@ -48,7 +57,17 @@ public class CtDevice extends BaseEntity
     @Excel(name = "设备序列号")
     private String deviceSerial;
 
-    /** 设备位置 */
+    /** 设备位置
+     * 门店1区	0
+     * 门店2区	1
+     * 主监控区	2
+     * 监控区1	3
+     * 监控区2	4
+     * 监控区3	5
+     * 监控区4	6
+     * 监控区5	7
+     * 监控区6	8
+     * */
     @Excel(name = "设备位置")
     private String deviceArea;
 
@@ -56,11 +75,21 @@ public class CtDevice extends BaseEntity
     @Excel(name = "设备验证码")
     private String validateCode;
 
-    /** 设备归属 */
+    /** 设备归属
+     * 平台	0
+     * 商户	1
+     * 租用	2
+     * */
     @Excel(name = "设备归属")
     private String deviceAscription;
 
-    /** 状态 */
+    /** 状态
+     * 在线	0
+     * 异常	1
+     * 维护	2
+     * 下线	3
+     * 停用	4
+     * */
     @Excel(name = "状态")
     private String state;
 
@@ -72,168 +101,9 @@ public class CtDevice extends BaseEntity
     /** 最近下云时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "最近下云时间", width = 30, dateFormat = "yyyy-MM-dd")
-    private Date lastOffineTime;
+    private Date lastOfflineTime;
 
     /** 是否删除 */
-    private Long delFlag;
+    private String delFlag;
 
-    public void setId(Long id) 
-    {
-        this.id = id;
-    }
-
-    public Long getId() 
-    {
-        return id;
-    }
-    public void setName(String name) 
-    {
-        this.name = name;
-    }
-
-    public String getName() 
-    {
-        return name;
-    }
-    public void setStoreCode(String storeCode) 
-    {
-        this.storeCode = storeCode;
-    }
-
-    public String getStoreCode() 
-    {
-        return storeCode;
-    }
-    public void setDeviceCode(String deviceCode) 
-    {
-        this.deviceCode = deviceCode;
-    }
-
-    public String getDeviceCode() 
-    {
-        return deviceCode;
-    }
-    public void setDeviceType(String deviceType) 
-    {
-        this.deviceType = deviceType;
-    }
-
-    public String getDeviceType() 
-    {
-        return deviceType;
-    }
-    public void setDeviceModel(String deviceModel) 
-    {
-        this.deviceModel = deviceModel;
-    }
-
-    public String getDeviceModel() 
-    {
-        return deviceModel;
-    }
-    public void setBrandName(String brandName) 
-    {
-        this.brandName = brandName;
-    }
-
-    public String getBrandName() 
-    {
-        return brandName;
-    }
-    public void setDeviceSerial(String deviceSerial) 
-    {
-        this.deviceSerial = deviceSerial;
-    }
-
-    public String getDeviceSerial() 
-    {
-        return deviceSerial;
-    }
-    public void setDeviceArea(String deviceArea) 
-    {
-        this.deviceArea = deviceArea;
-    }
-
-    public String getDeviceArea() 
-    {
-        return deviceArea;
-    }
-    public void setValidateCode(String validateCode) 
-    {
-        this.validateCode = validateCode;
-    }
-
-    public String getValidateCode() 
-    {
-        return validateCode;
-    }
-    public void setDeviceAscription(String deviceAscription) 
-    {
-        this.deviceAscription = deviceAscription;
-    }
-
-    public String getDeviceAscription() 
-    {
-        return deviceAscription;
-    }
-    public void setState(String state) 
-    {
-        this.state = state;
-    }
-
-    public String getState() 
-    {
-        return state;
-    }
-    public void setLastOnlineTime(Date lastOnlineTime) 
-    {
-        this.lastOnlineTime = lastOnlineTime;
-    }
-
-    public Date getLastOnlineTime() 
-    {
-        return lastOnlineTime;
-    }
-    public void setLastOffineTime(Date lastOffineTime) 
-    {
-        this.lastOffineTime = lastOffineTime;
-    }
-
-    public Date getLastOffineTime() 
-    {
-        return lastOffineTime;
-    }
-    public void setDelFlag(Long delFlag) 
-    {
-        this.delFlag = delFlag;
-    }
-
-    public Long getDelFlag() 
-    {
-        return delFlag;
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("name", getName())
-            .append("storeCode", getStoreCode())
-            .append("deviceCode", getDeviceCode())
-            .append("deviceType", getDeviceType())
-            .append("deviceModel", getDeviceModel())
-            .append("brandName", getBrandName())
-            .append("deviceSerial", getDeviceSerial())
-            .append("deviceArea", getDeviceArea())
-            .append("validateCode", getValidateCode())
-            .append("deviceAscription", getDeviceAscription())
-            .append("state", getState())
-            .append("lastOnlineTime", getLastOnlineTime())
-            .append("lastOffineTime", getLastOffineTime())
-            .append("remark", getRemark())
-            .append("createTime", getCreateTime())
-            .append("updateTime", getUpdateTime())
-            .append("delFlag", getDelFlag())
-            .toString();
-    }
 }

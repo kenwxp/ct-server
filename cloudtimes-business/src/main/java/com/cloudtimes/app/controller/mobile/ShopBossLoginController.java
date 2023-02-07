@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @Api(tags = "店家app登录相关接口")
 @RestController
-@RequestMapping("/auth/shopBoss")
+@RequestMapping("/mobile")
 public class ShopBossLoginController {
     @Autowired
     private ICtShopBossLoginService loginService;

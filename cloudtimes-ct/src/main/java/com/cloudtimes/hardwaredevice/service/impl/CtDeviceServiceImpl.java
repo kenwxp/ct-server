@@ -30,7 +30,7 @@ public class CtDeviceServiceImpl implements ICtDeviceService
      * @return 电子设备
      */
     @Override
-    public CtDevice selectCtDeviceById(Long id)
+    public CtDevice selectCtDeviceById(String id)
     {
         return ctDeviceMapper.selectCtDeviceById(id);
     }

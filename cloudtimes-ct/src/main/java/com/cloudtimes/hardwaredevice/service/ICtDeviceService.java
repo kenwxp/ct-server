@@ -1,7 +1,8 @@
 package com.cloudtimes.hardwaredevice.service;
 
-import java.util.List;
 import com.cloudtimes.hardwaredevice.domain.CtDevice;
+
+import java.util.List;
 
 /**
  * 电子设备Service接口
@@ -17,7 +18,7 @@ public interface ICtDeviceService
      * @param id 电子设备主键
      * @return 电子设备
      */
-    public CtDevice selectCtDeviceById(Long id);
+    public CtDevice selectCtDeviceById(String id);
 
     /**
      * 查询电子设备列表

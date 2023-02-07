@@ -64,7 +64,7 @@ public class CtStoreController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('hardwaredevice:ctstore:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
+    public AjaxResult getInfo(@PathVariable("id") String id)
     {
         return AjaxResult.success(ctStoreService.selectCtStoreById(id));
     }

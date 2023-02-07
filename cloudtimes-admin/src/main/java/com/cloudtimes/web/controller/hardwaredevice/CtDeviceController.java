@@ -64,7 +64,7 @@ public class CtDeviceController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('hardwaredevice:ctdevice:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
+    public AjaxResult getInfo(@PathVariable("id") String id)
     {
         return AjaxResult.success(ctDeviceService.selectCtDeviceById(id));
     }
