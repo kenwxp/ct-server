@@ -5,8 +5,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="com.cloudtimes.supervise.mapper.CtTaskMapper">
     <sql id="selectCtTaskVo">
         select id, 
-               task_id,
-               store_no, 
+               store_no,
                staff_code, 
                task_type, 
                desc_text, 
@@ -25,7 +24,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectCtTaskList" parameterType="CtTask" resultType="CtTask">
         <include refid="selectCtTaskVo"/>
         <where>  
-            <if test="taskId != null  and taskId != ''"> and task_id = #{taskId}</if>
             <if test="storeNo != null  and storeNo != ''"> and store_no = #{storeNo}</if>
             <if test="staffCode != null  and staffCode != ''"> and staff_code = #{staffCode}</if>
             <if test="taskType != null  and taskType != ''"> and task_type = #{taskType}</if>
@@ -51,7 +49,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         insert into ct_task
         <trim prefix="(" suffix=")" suffixOverrides=",">
             id,
-            <if test="taskId != null">task_id,</if>
             <if test="storeNo != null">store_no,</if>
             <if test="staffCode != null">staff_code,</if>
             <if test="taskType != null">task_type,</if>
@@ -68,7 +65,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             #{id},
-            <if test="taskId != null">#{taskId},</if>
             <if test="storeNo != null">#{storeNo},</if>
             <if test="staffCode != null">#{staffCode},</if>
             <if test="taskType != null">#{taskType},</if>
@@ -88,7 +84,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updateCtTask" parameterType="CtTask">
         update ct_task
         <trim prefix="SET" suffixOverrides=",">
-            <if test="taskId != null">task_id = #{taskId},</if>
             <if test="storeNo != null">store_no = #{storeNo},</if>
             <if test="staffCode != null">staff_code = #{staffCode},</if>
             <if test="taskType != null">task_type = #{taskType},</if>

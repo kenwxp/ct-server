@@ -25,12 +25,6 @@ public class CtTask extends BaseEntity {
     private String id;
 
     /**
-     * 任务流水号
-     */
-    @Excel(name = "任务流水号")
-    private String taskId;
-
-    /**
      * 门店号
      */
     @Excel(name = "门店号")
