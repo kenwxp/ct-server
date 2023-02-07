@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cloudtimes.supervise.mapper.CtOrderDetailMapper">
+    <sql id="selectCtOrderDetailVo">
+        select id,
+               order_id,
+               store_no,
+               item_type_id,
+               item_type_name,
+               item_name,
+               item_count,
+               item_price,
+               create_time,
+               del_flag,
+               create_date
+        from ct_order_detail
+    </sql>
+
+    <select id="selectCtOrderDetailList" parameterType="CtOrderDetail" resultType="CtOrderDetail">
+        <include refid="selectCtOrderDetailVo"/>
+        <where>
+            <if test="orderId != null  and orderId != ''">and order_id = #{orderId}</if>
+            <if test="storeNo != null  and storeNo != ''">and store_no = #{storeNo}</if>
+            <if test="itemTypeId != null  and itemTypeId != ''">and item_type_id = #{itemTypeId}</if>
+            <if test="itemTypeName != null  and itemTypeName != ''">and item_type_name like concat('%', #{itemTypeName},
+                '%')
+            </if>
+            <if test="itemName != null  and itemName != ''">and item_name like concat('%', #{itemName}, '%')</if>
+            <if test="itemCount != null  and itemCount != ''">and item_count = #{itemCount}</if>
+            <if test="itemPrice != null ">and item_price = #{itemPrice}</if>
+        </where>
+    </select>
+
+    <select id="selectCtOrderDetailById" parameterType="String" resultType="CtOrderDetail">
+        <include refid="selectCtOrderDetailVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertCtOrderDetail" parameterType="CtOrderDetail">
+        <selectKey keyProperty="id" order="BEFORE" resultType="String">
+            select uuid() from dual
+        </selectKey>
+        insert into ct_order_detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            id,
+            <if test="orderId != null">order_id,</if>
+            <if test="storeNo != null">store_no,</if>
+            <if test="itemTypeId != null">item_type_id,</if>
+            <if test="itemTypeName != null">item_type_name,</if>
+            <if test="itemName != null">item_name,</if>
+            <if test="itemCount != null">item_count,</if>
+            <if test="itemPrice != null">item_price,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createDate != null">create_date,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{id},
+            <if test="orderId != null">#{orderId},</if>
+            <if test="storeNo != null">#{storeNo},</if>
+            <if test="itemTypeId != null">#{itemTypeId},</if>
+            <if test="itemTypeName != null">#{itemTypeName},</if>
+            <if test="itemName != null">#{itemName},</if>
+            <if test="itemCount != null">#{itemCount},</if>
+            <if test="itemPrice != null">#{itemPrice},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createDate != null">#{createDate},</if>
+        </trim>
+    </insert>
+
+    <update id="updateCtOrderDetail" parameterType="CtOrderDetail">
+        update ct_order_detail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderId != null">order_id = #{orderId},</if>
+            <if test="storeNo != null">store_no = #{storeNo},</if>
+            <if test="itemTypeId != null">item_type_id = #{itemTypeId},</if>
+            <if test="itemTypeName != null">item_type_name = #{itemTypeName},</if>
+            <if test="itemName != null">item_name = #{itemName},</if>
+            <if test="itemCount != null">item_count = #{itemCount},</if>
+            <if test="itemPrice != null">item_price = #{itemPrice},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createDate != null">create_date = #{createDate},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCtOrderDetailById" parameterType="String">
+        delete
+        from ct_order_detail
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteCtOrderDetailByIds" parameterType="String">
+        delete from ct_order_detail where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

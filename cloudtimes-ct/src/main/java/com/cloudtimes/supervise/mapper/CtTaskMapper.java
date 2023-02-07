@@ -1,27 +1,27 @@
 package com.cloudtimes.supervise.mapper;
 
 import java.util.List;
+
 import com.cloudtimes.supervise.domain.CtTask;
 
 /**
  * 值守任务Mapper接口
- * 
- * @author tank
- * @date 2023-01-18
+ *
+ * @author wangxp
+ * @date 2023-02-07
  */
-public interface CtTaskMapper 
-{
+public interface CtTaskMapper {
     /**
      * 查询值守任务
-     * 
+     *
      * @param id 值守任务主键
      * @return 值守任务
      */
-    public CtTask selectCtTaskById(Long id);
+    public CtTask selectCtTaskById(String id);
 
     /**
      * 查询值守任务列表
-     * 
+     *
      * @param ctTask 值守任务
      * @return 值守任务集合
      */
@@ -29,7 +29,7 @@ public interface CtTaskMapper
 
     /**
      * 新增值守任务
-     * 
+     *
      * @param ctTask 值守任务
      * @return 结果
      */
@@ -37,7 +37,7 @@ public interface CtTaskMapper
 
     /**
      * 修改值守任务
-     * 
+     *
      * @param ctTask 值守任务
      * @return 结果
      */
@@ -45,17 +45,17 @@ public interface CtTaskMapper
 
     /**
      * 删除值守任务
-     * 
+     *
      * @param id 值守任务主键
      * @return 结果
      */
-    public int deleteCtTaskById(Long id);
+    public int deleteCtTaskById(String id);
 
     /**
      * 批量删除值守任务
-     * 
+     *
      * @param ids 需要删除的数据主键集合
      * @return 结果
      */
-    public int deleteCtTaskByIds(Long[] ids);
+    public int deleteCtTaskByIds(String[] ids);
 }

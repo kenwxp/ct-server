@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cloudtimes.supervise.mapper.CtOrderMapper">
+
+    <sql id="selectCtOrderVo">
+        select id,
+               task_id,
+               store_no,
+               store_name,
+               store_province,
+               store_city,
+               agent_id,
+               boss_user_id,
+               shopping_id,
+               staff_code,
+               user_id,
+               is_compose,
+               money_amount,
+               total_amount,
+               discount_amount,
+               deduction_amount,
+               actual_amount,
+               item_count,
+               payment_code,
+               payment_name,
+               payment_mode,
+               payment_action,
+               payment_id,
+               device_cash_id,
+               desc_text,
+               is_exceptional,
+               state,
+               create_time,
+               update_time,
+               del_flag,
+               create_date
+        from ct_order
+    </sql>
+
+    <select id="selectCtOrderList" parameterType="CtOrder" resultType="CtOrder">
+        <include refid="selectCtOrderVo"/>
+        <where>
+            <if test="taskId != null  and taskId != ''">and task_id = #{taskId}</if>
+            <if test="storeNo != null  and storeNo != ''">and store_no = #{storeNo}</if>
+            <if test="storeName != null  and storeName != ''">and store_name like concat('%', #{storeName}, '%')</if>
+            <if test="storeProvince != null  and storeProvince != ''">and store_province = #{storeProvince}</if>
+            <if test="storeCity != null  and storeCity != ''">and store_city = #{storeCity}</if>
+            <if test="agentId != null  and agentId != ''">and agent_id = #{agentId}</if>
+            <if test="bossUserId != null  and bossUserId != ''">and boss_user_id = #{bossUserId}</if>
+            <if test="shoppingId != null  and shoppingId != ''">and shopping_id = #{shoppingId}</if>
+            <if test="staffCode != null  and staffCode != ''">and staff_code = #{staffCode}</if>
+            <if test="userId != null  and userId != ''">and user_id = #{userId}</if>
+            <if test="isCompose != null  and isCompose != ''">and is_compose = #{isCompose}</if>
+            <if test="moneyAmount != null ">and money_amount = #{moneyAmount}</if>
+            <if test="totalAmount != null ">and total_amount = #{totalAmount}</if>
+            <if test="discountAmount != null ">and discount_amount = #{discountAmount}</if>
+            <if test="deductionAmount != null ">and deduction_amount = #{deductionAmount}</if>
+            <if test="actualAmount != null ">and actual_amount = #{actualAmount}</if>
+            <if test="itemCount != null ">and item_count = #{itemCount}</if>
+            <if test="paymentCode != null  and paymentCode != ''">and payment_code = #{paymentCode}</if>
+            <if test="paymentName != null  and paymentName != ''">and payment_name like concat('%', #{paymentName},
+                '%')
+            </if>
+            <if test="paymentMode != null  and paymentMode != ''">and payment_mode = #{paymentMode}</if>
+            <if test="paymentAction != null  and paymentAction != ''">and payment_action = #{paymentAction}</if>
+            <if test="paymentId != null  and paymentId != ''">and payment_id = #{paymentId}</if>
+            <if test="deviceCashId != null  and deviceCashId != ''">and device_cash_id = #{deviceCashId}</if>
+            <if test="descText != null  and descText != ''">and desc_text = #{descText}</if>
+            <if test="isExceptional != null  and isExceptional != ''">and is_exceptional = #{isExceptional}</if>
+            <if test="state != null  and state != ''">and state = #{state}</if>
+        </where>
+    </select>
+
+    <select id="selectCtOrderById" parameterType="String" resultType="CtOrder">
+        <include refid="selectCtOrderVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertCtOrder" parameterType="CtOrder">
+        <selectKey keyProperty="id" order="BEFORE" resultType="String">
+            select uuid() from dual
+        </selectKey>
+        insert into ct_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            id,
+            <if test="taskId != null">task_id,</if>
+            <if test="storeNo != null">store_no,</if>
+            <if test="storeName != null">store_name,</if>
+            <if test="storeProvince != null">store_province,</if>
+            <if test="storeCity != null">store_city,</if>
+            <if test="agentId != null">agent_id,</if>
+            <if test="bossUserId != null">boss_user_id,</if>
+            <if test="shoppingId != null">shopping_id,</if>
+            <if test="staffCode != null">staff_code,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="isCompose != null">is_compose,</if>
+            <if test="moneyAmount != null">money_amount,</if>
+            <if test="totalAmount != null">total_amount,</if>
+            <if test="discountAmount != null">discount_amount,</if>
+            <if test="deductionAmount != null">deduction_amount,</if>
+            <if test="actualAmount != null">actual_amount,</if>
+            <if test="itemCount != null">item_count,</if>
+            <if test="paymentCode != null">payment_code,</if>
+            <if test="paymentName != null">payment_name,</if>
+            <if test="paymentMode != null">payment_mode,</if>
+            <if test="paymentAction != null">payment_action,</if>
+            <if test="paymentId != null">payment_id,</if>
+            <if test="deviceCashId != null">device_cash_id,</if>
+            <if test="descText != null">desc_text,</if>
+            <if test="isExceptional != null">is_exceptional,</if>
+            <if test="state != null">state,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createDate != null">create_date,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{id},
+            <if test="taskId != null">#{taskId},</if>
+            <if test="storeNo != null">#{storeNo},</if>
+            <if test="storeName != null">#{storeName},</if>
+            <if test="storeProvince != null">#{storeProvince},</if>
+            <if test="storeCity != null">#{storeCity},</if>
+            <if test="agentId != null">#{agentId},</if>
+            <if test="bossUserId != null">#{bossUserId},</if>
+            <if test="shoppingId != null">#{shoppingId},</if>
+            <if test="staffCode != null">#{staffCode},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="isCompose != null">#{isCompose},</if>
+            <if test="moneyAmount != null">#{moneyAmount},</if>
+            <if test="totalAmount != null">#{totalAmount},</if>
+            <if test="discountAmount != null">#{discountAmount},</if>
+            <if test="deductionAmount != null">#{deductionAmount},</if>
+            <if test="actualAmount != null">#{actualAmount},</if>
+            <if test="itemCount != null">#{itemCount},</if>
+            <if test="paymentCode != null">#{paymentCode},</if>
+            <if test="paymentName != null">#{paymentName},</if>
+            <if test="paymentMode != null">#{paymentMode},</if>
+            <if test="paymentAction != null">#{paymentAction},</if>
+            <if test="paymentId != null">#{paymentId},</if>
+            <if test="deviceCashId != null">#{deviceCashId},</if>
+            <if test="descText != null">#{descText},</if>
+            <if test="isExceptional != null">#{isExceptional},</if>
+            <if test="state != null">#{state},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createDate != null">#{createDate},</if>
+        </trim>
+    </insert>
+
+    <update id="updateCtOrder" parameterType="CtOrder">
+        update ct_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="taskId != null">task_id = #{taskId},</if>
+            <if test="storeNo != null">store_no = #{storeNo},</if>
+            <if test="storeName != null">store_name = #{storeName},</if>
+            <if test="storeProvince != null">store_province = #{storeProvince},</if>
+            <if test="storeCity != null">store_city = #{storeCity},</if>
+            <if test="agentId != null">agent_id = #{agentId},</if>
+            <if test="bossUserId != null">boss_user_id = #{bossUserId},</if>
+            <if test="shoppingId != null">shopping_id = #{shoppingId},</if>
+            <if test="staffCode != null">staff_code = #{staffCode},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="isCompose != null">is_compose = #{isCompose},</if>
+            <if test="moneyAmount != null">money_amount = #{moneyAmount},</if>
+            <if test="totalAmount != null">total_amount = #{totalAmount},</if>
+            <if test="discountAmount != null">discount_amount = #{discountAmount},</if>
+            <if test="deductionAmount != null">deduction_amount = #{deductionAmount},</if>
+            <if test="actualAmount != null">actual_amount = #{actualAmount},</if>
+            <if test="itemCount != null">item_count = #{itemCount},</if>
+            <if test="paymentCode != null">payment_code = #{paymentCode},</if>
+            <if test="paymentName != null">payment_name = #{paymentName},</if>
+            <if test="paymentMode != null">payment_mode = #{paymentMode},</if>
+            <if test="paymentAction != null">payment_action = #{paymentAction},</if>
+            <if test="paymentId != null">payment_id = #{paymentId},</if>
+            <if test="deviceCashId != null">device_cash_id = #{deviceCashId},</if>
+            <if test="descText != null">desc_text = #{descText},</if>
+            <if test="isExceptional != null">is_exceptional = #{isExceptional},</if>
+            <if test="state != null">state = #{state},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createDate != null">create_date = #{createDate},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCtOrderById" parameterType="String">
+        delete
+        from ct_order
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteCtOrderByIds" parameterType="String">
+        delete from ct_order where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

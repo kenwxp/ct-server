@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cloudtimes.supervise.mapper.CtPaymentMapper">
+
+
+    <sql id="selectCtPaymentVo">
+        select id,
+               payment_code,
+               store_no,
+               merchant_id,
+               params_json,
+               photo_url,
+               payment_type,
+               enabled,
+               create_time,
+               update_time,
+               del_flag
+        from ct_payment
+    </sql>
+
+    <select id="selectCtPaymentList" parameterType="CtPayment" resultType="CtPayment">
+        <include refid="selectCtPaymentVo"/>
+        <where>
+            <if test="paymentCode != null  and paymentCode != ''">and payment_code = #{paymentCode}</if>
+            <if test="storeNo != null  and storeNo != ''">and store_no = #{storeNo}</if>
+            <if test="merchantId != null  and merchantId != ''">and merchant_id = #{merchantId}</if>
+            <if test="paramsJson != null  and paramsJson != ''">and params_json = #{paramsJson}</if>
+            <if test="photoUrl != null  and photoUrl != ''">and photo_url = #{photoUrl}</if>
+            <if test="paymentType != null  and paymentType != ''">and payment_type = #{paymentType}</if>
+            <if test="enabled != null  and enabled != ''">and enabled = #{enabled}</if>
+        </where>
+    </select>
+
+    <select id="selectCtPaymentById" parameterType="String" resultType="CtPayment">
+        <include refid="selectCtPaymentVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertCtPayment" parameterType="CtPayment">
+        <selectKey keyProperty="id" order="BEFORE" resultType="String">
+            select uuid() from dual
+        </selectKey>
+        insert into ct_payment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            id,
+            <if test="paymentCode != null">payment_code,</if>
+            <if test="storeNo != null">store_no,</if>
+            <if test="merchantId != null">merchant_id,</if>
+            <if test="paramsJson != null">params_json,</if>
+            <if test="photoUrl != null">photo_url,</if>
+            <if test="paymentType != null">payment_type,</if>
+            <if test="enabled != null">enabled,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{id},
+            <if test="paymentCode != null">#{paymentCode},</if>
+            <if test="storeNo != null">#{storeNo},</if>
+            <if test="merchantId != null">#{merchantId},</if>
+            <if test="paramsJson != null">#{paramsJson},</if>
+            <if test="photoUrl != null">#{photoUrl},</if>
+            <if test="paymentType != null">#{paymentType},</if>
+            <if test="enabled != null">#{enabled},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+        </trim>
+    </insert>
+
+    <update id="updateCtPayment" parameterType="CtPayment">
+        update ct_payment
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="paymentCode != null">payment_code = #{paymentCode},</if>
+            <if test="storeNo != null">store_no = #{storeNo},</if>
+            <if test="merchantId != null">merchant_id = #{merchantId},</if>
+            <if test="paramsJson != null">params_json = #{paramsJson},</if>
+            <if test="photoUrl != null">photo_url = #{photoUrl},</if>
+            <if test="paymentType != null">payment_type = #{paymentType},</if>
+            <if test="enabled != null">enabled = #{enabled},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCtPaymentById" parameterType="String">
+        delete
+        from ct_payment
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteCtPaymentByIds" parameterType="String">
+        delete from ct_payment where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

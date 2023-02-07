@@ -3,56 +3,63 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.cloudtimes.supervise.mapper.CtTaskMapper">
-    
-    <resultMap type="CtTask" id="CtTaskResult">
-        <result property="id"    column="id"    />
-        <result property="taskCode"    column="task_code"    />
-        <result property="storeNo"    column="store_no"    />
-        <result property="staffCode"    column="staff_code"    />
-        <result property="remark"    column="remark"    />
-        <result property="startTime"    column="start_time"    />
-        <result property="endTime"    column="end_time"    />
-        <result property="isExceptional"    column="is_exceptional"    />
-        <result property="doorLogCode"    column="door_log_code"    />
-        <result property="supeviseArea"    column="supevise_area"    />
-        <result property="state"    column="state"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateTime"    column="update_time"    />
-        <result property="delFlag"    column="del_flag"    />
-    </resultMap>
-
     <sql id="selectCtTaskVo">
-        select id, task_code, store_no, staff_code, remark, start_time, end_time, is_exceptional, door_log_code, supevise_area, state, create_time, update_time, del_flag from ct_task
+        select id, 
+               task_id,
+               store_no, 
+               staff_code, 
+               task_type, 
+               desc_text, 
+               start_time, 
+               end_time, 
+               is_exceptional, 
+               door_log_id, 
+               supevise_area, 
+               state, 
+               create_time, 
+               update_time, 
+               del_flag 
+        from ct_task
     </sql>
 
-    <select id="selectCtTaskList" parameterType="CtTask" resultMap="CtTaskResult">
+    <select id="selectCtTaskList" parameterType="CtTask" resultType="CtTask">
         <include refid="selectCtTaskVo"/>
         <where>  
-            <if test="taskCode != null  and taskCode != ''"> and task_code = #{taskCode}</if>
+            <if test="taskId != null  and taskId != ''"> and task_id = #{taskId}</if>
             <if test="storeNo != null  and storeNo != ''"> and store_no = #{storeNo}</if>
             <if test="staffCode != null  and staffCode != ''"> and staff_code = #{staffCode}</if>
+            <if test="taskType != null  and taskType != ''"> and task_type = #{taskType}</if>
+            <if test="descText != null  and descText != ''"> and desc_text = #{descText}</if>
+            <if test="startTime != null "> and start_time = #{startTime}</if>
+            <if test="endTime != null "> and end_time = #{endTime}</if>
             <if test="isExceptional != null  and isExceptional != ''"> and is_exceptional = #{isExceptional}</if>
+            <if test="doorLogId != null  and doorLogId != ''"> and door_log_id = #{doorLogId}</if>
             <if test="supeviseArea != null  and supeviseArea != ''"> and supevise_area = #{supeviseArea}</if>
             <if test="state != null  and state != ''"> and state = #{state}</if>
         </where>
     </select>
     
-    <select id="selectCtTaskById" parameterType="Long" resultMap="CtTaskResult">
+    <select id="selectCtTaskById" parameterType="String" resultType="CtTask">
         <include refid="selectCtTaskVo"/>
         where id = #{id}
     </select>
         
     <insert id="insertCtTask" parameterType="CtTask" useGeneratedKeys="true" keyProperty="id">
+        <selectKey keyProperty="id" order="BEFORE" resultType="String">
+            select uuid() from dual
+        </selectKey>
         insert into ct_task
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="taskCode != null">task_code,</if>
+            id,
+            <if test="taskId != null">task_id,</if>
             <if test="storeNo != null">store_no,</if>
             <if test="staffCode != null">staff_code,</if>
-            <if test="remark != null">remark,</if>
+            <if test="taskType != null">task_type,</if>
+            <if test="descText != null">desc_text,</if>
             <if test="startTime != null">start_time,</if>
             <if test="endTime != null">end_time,</if>
             <if test="isExceptional != null">is_exceptional,</if>
-            <if test="doorLogCode != null">door_log_code,</if>
+            <if test="doorLogId != null">door_log_id,</if>
             <if test="supeviseArea != null">supevise_area,</if>
             <if test="state != null">state,</if>
             <if test="createTime != null">create_time,</if>
@@ -60,14 +67,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="delFlag != null">del_flag,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="taskCode != null">#{taskCode},</if>
+            #{id},
+            <if test="taskId != null">#{taskId},</if>
             <if test="storeNo != null">#{storeNo},</if>
             <if test="staffCode != null">#{staffCode},</if>
-            <if test="remark != null">#{remark},</if>
+            <if test="taskType != null">#{taskType},</if>
+            <if test="descText != null">#{descText},</if>
             <if test="startTime != null">#{startTime},</if>
             <if test="endTime != null">#{endTime},</if>
             <if test="isExceptional != null">#{isExceptional},</if>
-            <if test="doorLogCode != null">#{doorLogCode},</if>
+            <if test="doorLogId != null">#{doorLogId},</if>
             <if test="supeviseArea != null">#{supeviseArea},</if>
             <if test="state != null">#{state},</if>
             <if test="createTime != null">#{createTime},</if>
@@ -79,14 +88,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updateCtTask" parameterType="CtTask">
         update ct_task
         <trim prefix="SET" suffixOverrides=",">
-            <if test="taskCode != null">task_code = #{taskCode},</if>
+            <if test="taskId != null">task_id = #{taskId},</if>
             <if test="storeNo != null">store_no = #{storeNo},</if>
             <if test="staffCode != null">staff_code = #{staffCode},</if>
-            <if test="remark != null">remark = #{remark},</if>
+            <if test="taskType != null">task_type = #{taskType},</if>
+            <if test="descText != null">desc_text = #{descText},</if>
             <if test="startTime != null">start_time = #{startTime},</if>
             <if test="endTime != null">end_time = #{endTime},</if>
             <if test="isExceptional != null">is_exceptional = #{isExceptional},</if>
-            <if test="doorLogCode != null">door_log_code = #{doorLogCode},</if>
+            <if test="doorLogId != null">door_log_id = #{doorLogId},</if>
             <if test="supeviseArea != null">supevise_area = #{supeviseArea},</if>
             <if test="state != null">state = #{state},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
@@ -96,7 +106,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </update>
 
-    <delete id="deleteCtTaskById" parameterType="Long">
+    <delete id="deleteCtTaskById" parameterType="String">
         delete from ct_task where id = #{id}
     </delete>
 

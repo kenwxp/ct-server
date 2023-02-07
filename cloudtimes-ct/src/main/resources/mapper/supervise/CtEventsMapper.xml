@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cloudtimes.supervise.mapper.CtEventsMapper">
+    <sql id="selectCtEventsVo">
+        select id,
+               event_name,
+               event_type,
+               context,
+               user_id,
+               nick_name,
+               task_id,
+               shopping_id,
+               user_type,
+               source_type,
+               enabled,
+               create_time,
+               update_time,
+               del_flag,
+               create_date
+        from ct_events
+    </sql>
+
+    <select id="selectCtEventsList" parameterType="CtEvents" resultType="CtEvents">
+        <include refid="selectCtEventsVo"/>
+        <where>
+            <if test="eventName != null  and eventName != ''">and event_name like concat('%', #{eventName}, '%')</if>
+            <if test="eventType != null  and eventType != ''">and event_type = #{eventType}</if>
+            <if test="context != null  and context != ''">and context = #{context}</if>
+            <if test="userId != null  and userId != ''">and user_id = #{userId}</if>
+            <if test="nickName != null  and nickName != ''">and nick_name like concat('%', #{nickName}, '%')</if>
+            <if test="taskId != null  and taskId != ''">and task_id = #{taskId}</if>
+            <if test="shoppingId != null  and shoppingId != ''">and shopping_id = #{shoppingId}</if>
+            <if test="userType != null  and userType != ''">and user_type = #{userType}</if>
+            <if test="sourceType != null  and sourceType != ''">and source_type = #{sourceType}</if>
+            <if test="enabled != null  and enabled != ''">and enabled = #{enabled}</if>
+            <if test="createDate != null ">and create_date = #{createDate}</if>
+        </where>
+    </select>
+
+    <select id="selectCtEventsById" parameterType="String" resultType="CtEvents">
+        <include refid="selectCtEventsVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertCtEvents" parameterType="CtEvents">
+        <selectKey keyProperty="id" order="BEFORE" resultType="String">
+            select uuid() from dual
+        </selectKey>
+        insert into ct_events
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            id,
+            <if test="eventName != null">event_name,</if>
+            <if test="eventType != null">event_type,</if>
+            <if test="context != null">context,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="nickName != null">nick_name,</if>
+            <if test="taskId != null">task_id,</if>
+            <if test="shoppingId != null">shopping_id,</if>
+            <if test="userType != null">user_type,</if>
+            <if test="sourceType != null">source_type,</if>
+            <if test="enabled != null">enabled,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createDate != null">create_date,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{id},
+            <if test="eventName != null">#{eventName},</if>
+            <if test="eventType != null">#{eventType},</if>
+            <if test="context != null">#{context},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="nickName != null">#{nickName},</if>
+            <if test="taskId != null">#{taskId},</if>
+            <if test="shoppingId != null">#{shoppingId},</if>
+            <if test="userType != null">#{userType},</if>
+            <if test="sourceType != null">#{sourceType},</if>
+            <if test="enabled != null">#{enabled},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createDate != null">#{createDate},</if>
+        </trim>
+    </insert>
+
+    <update id="updateCtEvents" parameterType="CtEvents">
+        update ct_events
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="eventName != null">event_name = #{eventName},</if>
+            <if test="eventType != null">event_type = #{eventType},</if>
+            <if test="context != null">context = #{context},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="nickName != null">nick_name = #{nickName},</if>
+            <if test="taskId != null">task_id = #{taskId},</if>
+            <if test="shoppingId != null">shopping_id = #{shoppingId},</if>
+            <if test="userType != null">user_type = #{userType},</if>
+            <if test="sourceType != null">source_type = #{sourceType},</if>
+            <if test="enabled != null">enabled = #{enabled},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createDate != null">create_date = #{createDate},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCtEventsById" parameterType="String">
+        delete
+        from ct_events
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteCtEventsByIds" parameterType="String">
+        delete from ct_events where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

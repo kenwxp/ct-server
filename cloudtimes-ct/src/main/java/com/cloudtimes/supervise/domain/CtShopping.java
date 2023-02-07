@@ -9,14 +9,14 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.Date;
 
 /**
- * 值守任务对象 ct_task
+ * 购物对象 ct_shopping
  *
  * @author wangxp
  * @date 2023-02-07
  */
 @Data
 @Slf4j
-public class CtTask extends BaseEntity {
+public class CtShopping extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
     /**
@@ -25,9 +25,15 @@ public class CtTask extends BaseEntity {
     private String id;
 
     /**
-     * 任务流水号
+     * 用户编号
      */
-    @Excel(name = "任务流水号")
+    @Excel(name = "用户编号")
+    private String userId;
+
+    /**
+     * 任务编号
+     */
+    @Excel(name = "任务编号")
     private String taskId;
 
     /**
@@ -43,10 +49,10 @@ public class CtTask extends BaseEntity {
     private String staffCode;
 
     /**
-     * 任务状态
+     * 购物状态
      */
-    @Excel(name = "任务状态")
-    private String taskType;
+    @Excel(name = "购物状态")
+    private String shoppingType;
 
     /**
      * 备注
@@ -72,25 +78,25 @@ public class CtTask extends BaseEntity {
      * 是否异常
      */
     @Excel(name = "是否异常")
-    private String isExceptional;
+    private String exceptionalState;
 
     /**
-     * 开门日志编号
+     * 客服审核
      */
-    @Excel(name = "开门日志编号")
-    private String doorLogId;
+    @Excel(name = "客服审核")
+    private String isApprove;
 
     /**
-     * 值守区域
+     * 负责人审核
      */
-    @Excel(name = "值守区域")
-    private String supeviseArea;
+    @Excel(name = "负责人审核")
+    private String isLeadApprove;
 
     /**
-     * 状态
+     * 店主审核
      */
-    @Excel(name = "状态")
-    private String state;
+    @Excel(name = "店主审核")
+    private String isBossApprove;
 
     /**
      * 是否删除
