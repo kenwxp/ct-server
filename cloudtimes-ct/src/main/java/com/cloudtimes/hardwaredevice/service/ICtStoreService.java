@@ -17,7 +17,7 @@ public interface ICtStoreService
      * @param id 门店主键
      * @return 门店
      */
-    public CtStore selectCtStoreById(Long id);
+    public CtStore selectCtStoreById(String id);
 
     /**
      * 查询门店列表

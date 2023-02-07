@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cloudtimes.account.mapper.CtUserAssetsMapper">
+    <sql id="selectCtUserAssetsVo">
+        select user_id,
+               customer_cash_amount,
+               customer_total_withdrawal,
+               customer_score_points,
+               customer_credit_score
+        from ct_user_assets_assets;
+    </sql>
+
+    <select id="selectCtUserAssetsById" parameterType="String" resultType="CtUserAssets">
+        <include refid="selectCtUserAssetsVo"/>
+        where user_id = #{userId}
+    </select>
+    
+    <insert id="insertCtUserAssets" parameterType="CtUserAssets">
+        insert into ct_user_assets
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="customerCashAmount != null">customer_cash_amount,</if>
+            <if test="customerTotalWithdrawal != null">customer_total_withdrawal,</if>
+            <if test="customerScorePoints != null">customer_score_points,</if>
+            <if test="customerCreditScore != null">customer_credit_score,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="customerCashAmount != null">#{customerCashAmount},</if>
+            <if test="customerTotalWithdrawal != null">#{customerTotalWithdrawal},</if>
+            <if test="customerScorePoints != null">#{customerScorePoints},</if>
+            <if test="customerCreditScore != null">#{customerCreditScore},</if>
+        </trim>
+
+    </insert>
+
+    <update id="updateCtUserAssets" parameterType="CtUserAssets">
+        update ct_user_assets
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="customerCashAmount != null">customer_cash_amount = #{customerCashAmount},</if>
+            <if test="customerTotalWithdrawal != null">customer_total_withdrawal = #{customerTotalWithdrawal},</if>
+            <if test="customerScorePoints != null">customer_score_points = #{customerScorePoints},</if>
+            <if test="customerCreditScore != null">customer_credit_score = #{customerCreditScore},</if>
+        </trim>
+        where user_id = #{userId}
+    </update>
+
+    <delete id="deleteCtUserAssetsById" parameterType="Long">
+        delete
+        from ct_user_assets
+        where user_id = #{userId}
+    </delete>
+
+    <delete id="deleteCtUserAssetsByIds" parameterType="String">
+        delete from ct_user_assets where user_id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+    </delete>
+</mapper>

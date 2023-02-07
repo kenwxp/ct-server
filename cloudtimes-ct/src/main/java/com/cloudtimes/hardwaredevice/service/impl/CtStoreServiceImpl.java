@@ -30,7 +30,7 @@ public class CtStoreServiceImpl implements ICtStoreService
      * @return 门店
      */
     @Override
-    public CtStore selectCtStoreById(Long id)
+    public CtStore selectCtStoreById(String id)
     {
         return ctStoreMapper.selectCtStoreById(id);
     }

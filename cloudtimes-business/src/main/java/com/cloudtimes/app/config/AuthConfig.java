@@ -20,8 +20,14 @@ public class AuthConfig implements WebMvcConfigurer {
                         "/auth/device/test",
                         "/auth/device/login",
                         "/auth/user/**",
-                        "/auth/customer/check",
-                        "/auth/customer/login",
+                        "/mapp/login/check",
+                        "/mapp/login",
+                        "/mobile/register",
+                        "/mobile/login",
+                        "/cash/login/check",
+                        "/cash/login",
+                        "/door/login/check",
+                        "/door/login",
                         "/system/**",
                         "/test/**"
                 )

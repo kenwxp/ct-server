@@ -101,8 +101,7 @@ public class CtWeixinApiServiceImpl implements ICtWeixinApiService {
                 fetchAccessToken();
                 return getUserPhoneInfo(jsCode);
             }
-            Map<String, Object> respMap = JSON.parseObject(responseStr, Map.class);
-            return (Map<String, Object>) respMap.get("phone_info");
+            return respObj;
         } catch (Exception e) {
             e.printStackTrace();
         }

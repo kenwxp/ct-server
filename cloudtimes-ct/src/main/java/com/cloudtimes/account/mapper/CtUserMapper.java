@@ -44,6 +44,14 @@ public interface CtUserMapper {
     public CtUser selectCtUserByWxUnionId(String wxUnionId);
 
     /**
+     * 通过mobile查询用户
+     *
+     * @param mobile
+     * @return
+     */
+    public CtUser selectCtUserByMobile(String mobile);
+
+    /**
      * 查询用户列表
      *
      * @param ctUser 用户

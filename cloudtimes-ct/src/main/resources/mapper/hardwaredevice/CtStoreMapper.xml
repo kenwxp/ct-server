@@ -4,60 +4,59 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.cloudtimes.hardwaredevice.mapper.CtStoreMapper">
     
-    <resultMap type="CtStore" id="CtStoreResult">
-        <result property="id"    column="id"    />
-        <result property="name"    column="name"    />
-        <result property="storeCode"    column="store_code"    />
-        <result property="merchantCode"    column="merchant_code"    />
-        <result property="address"    column="address"    />
-        <result property="shortAddress"    column="short_address"    />
-        <result property="storeNo"    column="store_no"    />
-        <result property="regionCode"    column="region_code"    />
-        <result property="longitude"    column="longitude"    />
-        <result property="latitude"    column="latitude"    />
-        <result property="photoUrl"    column="photo_url"    />
-        <result property="area"    column="area"    />
-        <result property="contactName"    column="contact_name"    />
-        <result property="contactPhone"    column="contact_phone"    />
-        <result property="isSupervise"    column="is_supervise"    />
-        <result property="maxBuyPerson"    column="max_buy_person"    />
-        <result property="state"    column="state"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateTime"    column="update_time"    />
-        <result property="delFlag"    column="del_flag"    />
-    </resultMap>
-
     <sql id="selectCtStoreVo">
-        select id, name, store_code, merchant_code, address, short_address, store_no, region_code, longitude, latitude, photo_url, area, contact_name, contact_phone, is_supervise, max_buy_person, state, create_time, update_time, del_flag from ct_store
+        select id, name, merchant_id, address, short_address, store_no, region_code, longitude, latitude, photo_url, area, contact_name, contact_phone, sale_amount, max_buy_person, is_supervise, build_state, state, agent_id, store_online_date, store_online_time, del_flag, create_date, create_time, update_time from ct_store
     </sql>
 
-    <select id="selectCtStoreList" parameterType="CtStore" resultMap="CtStoreResult">
+    <select id="selectCtStoreList" parameterType="CtStore" resultType="CtStore">
         <include refid="selectCtStoreVo"/>
         <where>  
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
-            <if test="storeCode != null  and storeCode != ''"> and store_code = #{storeCode}</if>
-            <if test="merchantCode != null  and merchantCode != ''"> and merchant_code = #{merchantCode}</if>
+            <if test="merchantId != null  and merchantId != ''"> and merchant_id = #{merchantId}</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
             <if test="shortAddress != null  and shortAddress != ''"> and short_address = #{shortAddress}</if>
             <if test="storeNo != null  and storeNo != ''"> and store_no = #{storeNo}</if>
-            <if test="isSupervise != null "> and is_supervise = #{isSupervise}</if>
+            <if test="regionCode != null  and regionCode != ''"> and region_code = #{regionCode}</if>
+            <if test="longitude != null "> and longitude = #{longitude}</if>
+            <if test="latitude != null "> and latitude = #{latitude}</if>
+            <if test="photoUrl != null  and photoUrl != ''"> and photo_url = #{photoUrl}</if>
+            <if test="area != null  and area != ''"> and area = #{area}</if>
+            <if test="contactName != null  and contactName != ''"> and contact_name like concat('%', #{contactName}, '%')</if>
+            <if test="contactPhone != null  and contactPhone != ''"> and contact_phone = #{contactPhone}</if>
+            <if test="saleAmount != null "> and sale_amount = #{saleAmount}</if>
+            <if test="maxBuyPerson != null "> and max_buy_person = #{maxBuyPerson}</if>
+            <if test="isSupervise != null  and isSupervise != ''"> and is_supervise = #{isSupervise}</if>
+            <if test="buildState != null  and buildState != ''"> and build_state = #{buildState}</if>
             <if test="state != null  and state != ''"> and state = #{state}</if>
+            <if test="agentId != null  and agentId != ''"> and agent_id = #{agentId}</if>
+            <if test="storeOnlineDate != null "> and store_online_date = #{storeOnlineDate}</if>
+            <if test="storeOnlineTime != null "> and store_online_time = #{storeOnlineTime}</if>
+            <if test="createDate != null "> and create_date = #{createDate}</if>
         </where>
     </select>
     
-    <select id="selectCtStoreById" parameterType="Long" resultMap="CtStoreResult">
+    <select id="selectCtStoreById" parameterType="String" resultType="CtStore">
         <include refid="selectCtStoreVo"/>
         where id = #{id}
     </select>
+
+    <select id="selectCtStoreByStoreNo" parameterType="String" resultType="CtStore">
+        <include refid="selectCtStoreVo"/>
+        where store_no = #{storeNo}
+    </select>
         
-    <insert id="insertCtStore" parameterType="CtStore" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertCtStore" parameterType="CtStore">
+        <selectKey keyProperty="id" order="BEFORE" resultType="String">
+            select uuid() from dual
+        </selectKey>
         insert into ct_store
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            id,
             <if test="name != null">name,</if>
-            <if test="storeCode != null">store_code,</if>
-            <if test="merchantCode != null">merchant_code,</if>
+            <if test="merchantId != null">merchant_id,</if>
             <if test="address != null">address,</if>
             <if test="shortAddress != null">short_address,</if>
-            <if test="storeNo != null">store_no,</if>
+            <if test="storeNo != null and storeNo != ''">store_no,</if>
             <if test="regionCode != null">region_code,</if>
             <if test="longitude != null">longitude,</if>
             <if test="latitude != null">latitude,</if>
@@ -65,20 +64,26 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="area != null">area,</if>
             <if test="contactName != null">contact_name,</if>
             <if test="contactPhone != null">contact_phone,</if>
-            <if test="isSupervise != null">is_supervise,</if>
+            <if test="saleAmount != null">sale_amount,</if>
             <if test="maxBuyPerson != null">max_buy_person,</if>
-            <if test="state != null">state,</if>
+            <if test="isSupervise != null">is_supervise,</if>
+            <if test="buildState != null and buildState != ''">build_state,</if>
+            <if test="state != null and state != ''">state,</if>
+            <if test="agentId != null">agent_id,</if>
+            <if test="storeOnlineDate != null">store_online_date,</if>
+            <if test="storeOnlineTime != null">store_online_time,</if>
+            <if test="delFlag != null and delFlag != ''">del_flag,</if>
+            <if test="createDate != null">create_date,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
-            <if test="delFlag != null">del_flag,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{id}
             <if test="name != null">#{name},</if>
-            <if test="storeCode != null">#{storeCode},</if>
-            <if test="merchantCode != null">#{merchantCode},</if>
+            <if test="merchantId != null">#{merchantId},</if>
             <if test="address != null">#{address},</if>
             <if test="shortAddress != null">#{shortAddress},</if>
-            <if test="storeNo != null">#{storeNo},</if>
+            <if test="storeNo != null and storeNo != ''">#{storeNo},</if>
             <if test="regionCode != null">#{regionCode},</if>
             <if test="longitude != null">#{longitude},</if>
             <if test="latitude != null">#{latitude},</if>
@@ -86,12 +91,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="area != null">#{area},</if>
             <if test="contactName != null">#{contactName},</if>
             <if test="contactPhone != null">#{contactPhone},</if>
-            <if test="isSupervise != null">#{isSupervise},</if>
+            <if test="saleAmount != null">#{saleAmount},</if>
             <if test="maxBuyPerson != null">#{maxBuyPerson},</if>
-            <if test="state != null">#{state},</if>
+            <if test="isSupervise != null">#{isSupervise},</if>
+            <if test="buildState != null and buildState != ''">#{buildState},</if>
+            <if test="state != null and state != ''">#{state},</if>
+            <if test="agentId != null">#{agentId},</if>
+            <if test="storeOnlineDate != null">#{storeOnlineDate},</if>
+            <if test="storeOnlineTime != null">#{storeOnlineTime},</if>
+            <if test="delFlag != null and delFlag != ''">#{delFlag},</if>
+            <if test="createDate != null">#{createDate},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateTime != null">#{updateTime},</if>
-            <if test="delFlag != null">#{delFlag},</if>
          </trim>
     </insert>
 
@@ -99,11 +110,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update ct_store
         <trim prefix="SET" suffixOverrides=",">
             <if test="name != null">name = #{name},</if>
-            <if test="storeCode != null">store_code = #{storeCode},</if>
-            <if test="merchantCode != null">merchant_code = #{merchantCode},</if>
+            <if test="merchantId != null">merchant_id = #{merchantId},</if>
             <if test="address != null">address = #{address},</if>
             <if test="shortAddress != null">short_address = #{shortAddress},</if>
-            <if test="storeNo != null">store_no = #{storeNo},</if>
+            <if test="storeNo != null and storeNo != ''">store_no = #{storeNo},</if>
             <if test="regionCode != null">region_code = #{regionCode},</if>
             <if test="longitude != null">longitude = #{longitude},</if>
             <if test="latitude != null">latitude = #{latitude},</if>
@@ -111,17 +121,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="area != null">area = #{area},</if>
             <if test="contactName != null">contact_name = #{contactName},</if>
             <if test="contactPhone != null">contact_phone = #{contactPhone},</if>
-            <if test="isSupervise != null">is_supervise = #{isSupervise},</if>
+            <if test="saleAmount != null">sale_amount = #{saleAmount},</if>
             <if test="maxBuyPerson != null">max_buy_person = #{maxBuyPerson},</if>
-            <if test="state != null">state = #{state},</if>
+            <if test="isSupervise != null">is_supervise = #{isSupervise},</if>
+            <if test="buildState != null and buildState != ''">build_state = #{buildState},</if>
+            <if test="state != null and state != ''">state = #{state},</if>
+            <if test="agentId != null">agent_id = #{agentId},</if>
+            <if test="storeOnlineDate != null">store_online_date = #{storeOnlineDate},</if>
+            <if test="storeOnlineTime != null">store_online_time = #{storeOnlineTime},</if>
+            <if test="delFlag != null and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="createDate != null">create_date = #{createDate},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
-            <if test="delFlag != null">del_flag = #{delFlag},</if>
         </trim>
         where id = #{id}
     </update>
 
-    <delete id="deleteCtStoreById" parameterType="Long">
+    <delete id="deleteCtStoreById" parameterType="String">
         delete from ct_store where id = #{id}
     </delete>
 
