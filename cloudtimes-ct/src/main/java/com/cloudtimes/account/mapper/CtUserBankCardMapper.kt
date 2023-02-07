@@ -49,7 +49,7 @@ interface CtUserBankCardMapper {
      * @param ctUserBankCard 用户银行卡
      * @return 结果
      */
-    fun insertCtUserBankCard(ctUserBankCard: CtUserBankCard?): Int
+    fun insertCtUserBankCard(ctUserBankCard: CtUserBankCard): CtUserBankCard?
 
     /**
      * 修改用户银行卡

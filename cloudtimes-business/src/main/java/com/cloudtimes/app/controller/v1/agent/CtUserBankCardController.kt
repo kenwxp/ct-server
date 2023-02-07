@@ -7,11 +7,13 @@ import com.cloudtimes.common.core.controller.BaseController
 import com.cloudtimes.common.core.domain.AjaxResult
 import com.cloudtimes.common.core.page.TableDataInfo
 import com.cloudtimes.common.enums.BusinessType
+import com.cloudtimes.common.enums.UserType
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
+import javax.validation.Valid
 
 /**
  * 用户银行卡Controller
@@ -74,8 +76,10 @@ class CtUserBankCardController : BaseController() {
     @Log(title = "用户银行卡", businessType = BusinessType.INSERT)
     @PostMapping
     @ApiOperation("新增用户银行卡")
-    fun add(@RequestBody ctUserBankCard: CtUserBankCard): AjaxResult {
-        return toAjax(ctUserBankCardService.insertCtUserBankCard(ctUserBankCard))
+    fun add(@Valid @RequestBody ctUserBankCard: CtUserBankCard): AjaxResult {
+        ctUserBankCard.userType = UserType.Agent.code
+        val info = ctUserBankCardService.insertCtUserBankCard(ctUserBankCard)
+        return AjaxResult.success(info)
     }
 
     /**
@@ -84,7 +88,8 @@ class CtUserBankCardController : BaseController() {
     @Log(title = "用户银行卡", businessType = BusinessType.UPDATE)
     @PutMapping
     @ApiOperation("修改用户银行卡")
-    fun edit(@RequestBody ctUserBankCard: CtUserBankCard?): AjaxResult {
-        return toAjax(ctUserBankCardService.updateCtUserBankCard(ctUserBankCard!!))
+    fun edit(@Valid @RequestBody ctUserBankCard: CtUserBankCard): AjaxResult {
+        ctUserBankCard.userType = UserType.Agent.code
+        return toAjax(ctUserBankCardService.updateCtUserBankCard(ctUserBankCard))
     }
 }

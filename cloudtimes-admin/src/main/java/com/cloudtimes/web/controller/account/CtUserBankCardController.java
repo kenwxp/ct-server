@@ -70,17 +70,6 @@ public class CtUserBankCardController extends BaseController
     }
 
     /**
-     * 新增用户银行卡
-     */
-    @PreAuthorize("@ss.hasPermi('account:bank_card:add')")
-    @Log(title = "用户银行卡", businessType = BusinessType.INSERT)
-    @PostMapping
-    public AjaxResult add(@RequestBody CtUserBankCard ctUserBankCard)
-    {
-        return toAjax(ctUserBankCardService.insertCtUserBankCard(ctUserBankCard));
-    }
-
-    /**
      * 修改用户银行卡
      */
     @PreAuthorize("@ss.hasPermi('account:bank_card:edit')")

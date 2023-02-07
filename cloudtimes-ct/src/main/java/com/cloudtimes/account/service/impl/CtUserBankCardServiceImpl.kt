@@ -57,7 +57,7 @@ class CtUserBankCardServiceImpl : ICtUserBankCardService {
      * @param ctUserBankCard 用户银行卡
      * @return 结果
      */
-    override fun insertCtUserBankCard(ctUserBankCard: CtUserBankCard): Int {
+    override fun insertCtUserBankCard(ctUserBankCard: CtUserBankCard): CtUserBankCard? {
         ctUserBankCard.createTime = DateUtils.getNowDate()
         return ctUserBankCardMapper.insertCtUserBankCard(ctUserBankCard)
     }

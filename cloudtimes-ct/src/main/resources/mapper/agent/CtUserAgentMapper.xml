@@ -111,6 +111,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where user_id = #{userId}
     </update>
 
+    <update id="cashWithdrawCtUserAgent" parameterType="CtUserAgent">
+        update ct_user_agent
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="cashAmount != null">cash_amount = #{cashAmount},</if>
+            <if test="totalWithdrawal != null">total_withdrawal = #{totalWithdrawal},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where user_id = #{userId}
+    </update>
+
     <delete id="deleteCtUserAgentByUserId" parameterType="String">
         delete from ct_user_agent where user_id = #{userId}
     </delete>

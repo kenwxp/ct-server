@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonFormat
 import org.apache.commons.lang3.builder.ToStringBuilder
 import org.apache.commons.lang3.builder.ToStringStyle
 import java.util.*
+import javax.validation.constraints.NotEmpty
+import javax.validation.constraints.NotNull
 
 /**
  * 用户银行卡对象 ct_user_bank_card
@@ -19,6 +21,8 @@ class CtUserBankCard : BaseEntity() {
 
     /** 用户编号  */
     @Excel(name = "用户编号")
+    @field:NotEmpty(message =  "用户编号不能为空")
+    @field:NotNull(message =  "用户编号不能为空")
     var userId: String? = null
 
     /** 用户类型  */
@@ -27,18 +31,26 @@ class CtUserBankCard : BaseEntity() {
 
     /** 开户行名称  */
     @Excel(name = "开户行名称")
+    @field:NotEmpty(message =  "开户行名称不能为空")
+    @field:NotNull(message =  "开户行名称不能为空")
     var openBankName: String? = null
 
     /** 持卡人姓名  */
     @Excel(name = "持卡人姓名")
+    @field:NotEmpty(message =  "持卡人姓名不能为空")
+    @field:NotNull(message =  "持卡人姓名不能为空")
     var userName: String? = null
 
     /** 预留手机号  */
     @Excel(name = "预留手机号")
+    @field:NotEmpty(message =  "预留手机号不能为空")
+    @field:NotNull(message =  "预留手机号不能为空")
     var mobile: String? = null
 
     /** 卡号  */
     @Excel(name = "卡号")
+    @field:NotEmpty(message =  "银行卡号不能为空")
+    @field:NotNull(message =  "银行卡号不能为空")
     var cardNo: String? = null
 
     /** 是否解绑  */
