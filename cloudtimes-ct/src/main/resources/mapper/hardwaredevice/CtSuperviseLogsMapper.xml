@@ -1,72 +1,71 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.cloudtimes.hardwaredevice.mapper.CtSuperviseLogsMapper">
-    
-    <resultMap type="CtSuperviseLogs" id="CtSuperviseLogsResult">
-        <result property="id"    column="id"    />
-        <result property="superviseCode"    column="supervise_code"    />
-        <result property="userCode"    column="user_code"    />
-        <result property="storeCode"    column="store_code"    />
-        <result property="startTime"    column="start_time"    />
-        <result property="endTime"    column="end_time"    />
-        <result property="remark"    column="remark"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateTime"    column="update_time"    />
-        <result property="delFlag"    column="del_flag"    />
-    </resultMap>
 
     <sql id="selectCtSuperviseLogsVo">
-        select id, supervise_code, user_code, store_code, start_time, end_time, remark, create_time, update_time, del_flag from ct_supervise_logs
+        select id,
+               user_id,
+               store_id,
+               start_time,
+               end_time,
+               remark,
+               create_time,
+               update_time,
+               del_flag
+        from ct_supervise_logs
     </sql>
 
-    <select id="selectCtSuperviseLogsList" parameterType="CtSuperviseLogs" resultMap="CtSuperviseLogsResult">
+    <select id="selectCtSuperviseLogsList" parameterType="CtSuperviseLogs" resultType="CtSuperviseLogs">
         <include refid="selectCtSuperviseLogsVo"/>
-        <where>  
-            <if test="superviseCode != null  and superviseCode != ''"> and supervise_code = #{superviseCode}</if>
-            <if test="userCode != null  and userCode != ''"> and user_code = #{userCode}</if>
-            <if test="storeCode != null  and storeCode != ''"> and store_code = #{storeCode}</if>
+        <where>
+            <if test="userId != null  and userId != ''">and user_id = #{userId}</if>
+            <if test="storeId != null  and storeId != ''">and store_id = #{storeId}</if>
+            <if test="startTime != null ">and start_time = #{startTime}</if>
+            <if test="endTime != null ">and end_time = #{endTime}</if>
         </where>
     </select>
-    
-    <select id="selectCtSuperviseLogsById" parameterType="Long" resultMap="CtSuperviseLogsResult">
+
+    <select id="selectCtSuperviseLogsById" parameterType="String" resultType="CtSuperviseLogs">
         <include refid="selectCtSuperviseLogsVo"/>
         where id = #{id}
     </select>
-        
-    <insert id="insertCtSuperviseLogs" parameterType="CtSuperviseLogs" useGeneratedKeys="true" keyProperty="id">
+
+    <insert id="insertCtSuperviseLogs" parameterType="CtSuperviseLogs">
         insert into ct_supervise_logs
+        <selectKey keyProperty="id" order="BEFORE" resultType="String">
+            select uuid() from dual
+        </selectKey>
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="superviseCode != null">supervise_code,</if>
-            <if test="userCode != null">user_code,</if>
-            <if test="storeCode != null">store_code,</if>
+            id,
+            <if test="userId != null">user_id,</if>
+            <if test="storeId != null">store_id,</if>
             <if test="startTime != null">start_time,</if>
             <if test="endTime != null">end_time,</if>
             <if test="remark != null">remark,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="delFlag != null">del_flag,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="superviseCode != null">#{superviseCode},</if>
-            <if test="userCode != null">#{userCode},</if>
-            <if test="storeCode != null">#{storeCode},</if>
+            #{id},
+            <if test="userId != null">#{userId},</if>
+            <if test="storeId != null">#{storeId},</if>
             <if test="startTime != null">#{startTime},</if>
             <if test="endTime != null">#{endTime},</if>
             <if test="remark != null">#{remark},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="delFlag != null">#{delFlag},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateCtSuperviseLogs" parameterType="CtSuperviseLogs">
         update ct_supervise_logs
         <trim prefix="SET" suffixOverrides=",">
-            <if test="superviseCode != null">supervise_code = #{superviseCode},</if>
-            <if test="userCode != null">user_code = #{userCode},</if>
-            <if test="storeCode != null">store_code = #{storeCode},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="storeId != null">store_id = #{storeId},</if>
             <if test="startTime != null">start_time = #{startTime},</if>
             <if test="endTime != null">end_time = #{endTime},</if>
             <if test="remark != null">remark = #{remark},</if>
@@ -77,12 +76,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </update>
 
-    <delete id="deleteCtSuperviseLogsById" parameterType="Long">
-        delete from ct_supervise_logs where id = #{id}
+    <delete id="deleteCtSuperviseLogsById" parameterType="String">
+        delete
+        from ct_supervise_logs
+        where id = #{id}
     </delete>
 
     <delete id="deleteCtSuperviseLogsByIds" parameterType="String">
-        delete from ct_supervise_logs where id in 
+        delete from ct_supervise_logs where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

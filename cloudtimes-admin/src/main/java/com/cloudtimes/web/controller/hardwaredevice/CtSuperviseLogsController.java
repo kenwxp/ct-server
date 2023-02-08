@@ -25,7 +25,7 @@ import com.cloudtimes.common.core.page.TableDataInfo;
  * 申请值守日志Controller
  * 
  * @author tank
- * @date 2023-01-17
+ * @date 2023-02-08
  */
 @RestController
 @RequestMapping("/hardwaredevice/ctsuperviselogs")
@@ -64,7 +64,7 @@ public class CtSuperviseLogsController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('hardwaredevice:ctsuperviselogs:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
+    public AjaxResult getInfo(@PathVariable("id") String id)
     {
         return AjaxResult.success(ctSuperviseLogsService.selectCtSuperviseLogsById(id));
     }
@@ -97,7 +97,7 @@ public class CtSuperviseLogsController extends BaseController
     @PreAuthorize("@ss.hasPermi('hardwaredevice:ctsuperviselogs:remove')")
     @Log(title = "申请值守日志", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
+    public AjaxResult remove(@PathVariable String[] ids)
     {
         return toAjax(ctSuperviseLogsService.deleteCtSuperviseLogsByIds(ids));
     }

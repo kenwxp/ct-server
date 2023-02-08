@@ -31,7 +31,9 @@ public class CtStore extends BaseEntity {
     @Excel(name = "店铺名称")
     private String name;
 
-    /** 详细地址 */
+    /**
+     * 详细地址
+     */
     @Excel(name = "详细地址")
     private String address;
 
@@ -107,6 +109,11 @@ public class CtStore extends BaseEntity {
      */
     @Excel(name = "是否值守")
     private String isSupervise;
+    /**
+     * 值守日志编号
+     */
+    @Excel(name = "值守日志编号")
+    private String superviseLogId;
 
     /**
      * 开设状态
@@ -127,50 +134,53 @@ public class CtStore extends BaseEntity {
     @Excel(name = "门店状态")
     private String state;
 
-    /** 店老板用户编号 */
+    /**
+     * 店老板用户编号
+     */
     @Excel(name = "店老板用户编号")
     private String bossId;
 
-    /** 代理用户编号 */
+    /**
+     * 代理用户编号
+     */
     @Excel(name = "代理用户编号")
     private String agentId;
 
-    /** 门店上线日期 */
+    /**
+     * 门店上线日期
+     */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "门店上线日期", width = 30, dateFormat = "yyyy-MM-dd")
     private Date storeOnlineDate;
 
-    /** 门店上线时间 */
+    /**
+     * 门店上线时间
+     */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "门店上线时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date storeOnlineTime;
 
-    /** 收钱吧商户编号 */
+    /**
+     * 收钱吧商户编号
+     */
     @Excel(name = "收钱吧商户编号")
     private String merchantSn;
 
-    /** 收钱吧门店编号 */
+    /**
+     * 收钱吧门店编号
+     */
     @Excel(name = "收钱吧门店编号")
     private String storeSn;
 
-    /** 是否删除 */
+    /**
+     * 是否删除
+     */
     private String delFlag;
 
-   /** 创建日期 */
+    /**
+     * 创建日期
+     */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "创建日期", width = 30, dateFormat = "yyyy-MM-dd")
     private Date createDate;
-
-    /**
-     * 创建日期
-     */
-
-    @Excel(name = "创建时间")
-    private Date createTime;
-    /**
-     * 创建日期
-     */
-    @Excel(name = "修改时间")
-    private Date updateTime;
-
 }
