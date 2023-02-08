@@ -29,4 +29,14 @@ public interface ICtShopBossLoginService {
      */
     public CtUser shopBossLogin(String phone, String password, String loginIp);
 
+    /**
+     * 修改密码
+     *
+     * @param userId      用户id
+     * @param newPassword 新密码
+     * @param oldPassword 旧密码
+     * @return
+     */
+    public boolean changePassword(String userId, String newPassword, String oldPassword);
+
 }

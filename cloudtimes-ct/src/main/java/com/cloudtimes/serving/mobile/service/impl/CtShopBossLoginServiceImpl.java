@@ -6,6 +6,7 @@ import com.cloudtimes.common.annotation.DataSource;
 import com.cloudtimes.common.enums.DataSourceType;
 import com.cloudtimes.common.exception.ServiceException;
 import com.cloudtimes.common.utils.SecurityUtils;
+import com.cloudtimes.common.utils.StringUtils;
 import com.cloudtimes.serving.mobile.service.ICtShopBossLoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -68,6 +69,24 @@ public class CtShopBossLoginServiceImpl implements ICtShopBossLoginService {
             throw new ServiceException("更新用户失败");
         }
         return dbUser;
+    }
+
+    @Override
+    public boolean changePassword(String userId, String newPassword, String oldPassword) {
+        CtUser dbUser = userMapper.selectCtUserById(userId);
+        if (dbUser == null) {
+            throw new ServiceException("无法获取用户信息");
+        }
+        String oldEncrypt = SecurityUtils.encryptPassword(oldPassword);
+        String newEncrypt = SecurityUtils.encryptPassword(newPassword);
+        if (!StringUtils.equals(oldEncrypt, dbUser.getPassword())) {
+            throw new ServiceException("旧密码错误，请确认");
+        }
+        dbUser.setPassword(newEncrypt);
+        if (userMapper.updateCtUser(dbUser) < 1) {
+            return false;
+        }
+        return true;
     }
 }
 

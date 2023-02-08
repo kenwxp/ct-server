@@ -44,14 +44,16 @@ public class CtHikApiServiceImpl implements ICtHikApiService {
         params.put("appSecret", config.getHikAppSecret());
         String result = HttpUtils.sendFormPost("https://" + HikConstant.hikHost + HikConstant.getAccessTokenUri, params, getHikHeader());
         JSONObject retObj = JSON.parseObject(result);
-        String code = retObj.getString("code");
-        if (HikConstant.CODE200.equals(code)) {
-            JSONObject dataObj = retObj.getJSONObject("data");
-            String newToken = dataObj.getString("accessToken");
-            Long expireTs = dataObj.getLong("expireTime");
-            accessToken = newToken;
-            expireTime = new Date(expireTs);
-            return newToken;
+        if (retObj != null) {
+            String code = retObj.getString("code");
+            if (HikConstant.CODE200.equals(code)) {
+                JSONObject dataObj = retObj.getJSONObject("data");
+                String newToken = dataObj.getString("accessToken");
+                Long expireTs = dataObj.getLong("expireTime");
+                accessToken = newToken;
+                expireTime = new Date(expireTs);
+                return newToken;
+            }
         }
         return "";
     }

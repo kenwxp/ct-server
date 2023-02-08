@@ -1,6 +1,8 @@
 package com.cloudtimes.app.controller.mobile;
 
+import com.alibaba.druid.util.StringUtils;
 import com.cloudtimes.account.domain.CtUser;
+import com.cloudtimes.app.controller.mobile.model.ChangePasswordReq;
 import com.cloudtimes.app.controller.mobile.model.LoginReq;
 import com.cloudtimes.app.controller.mobile.model.LoginResp;
 import com.cloudtimes.app.controller.mobile.model.RegisterReq;
@@ -9,6 +11,7 @@ import com.cloudtimes.common.constant.HttpCode;
 import com.cloudtimes.common.core.domain.AjaxResult;
 import com.cloudtimes.common.core.domain.entity.AuthUser;
 import com.cloudtimes.common.enums.ChannelType;
+import com.cloudtimes.common.utils.AuthUtils;
 import com.cloudtimes.common.utils.ip.IpUtils;
 import com.cloudtimes.serving.mobile.service.ICtShopBossLoginService;
 import io.swagger.annotations.Api;
@@ -38,7 +41,7 @@ public class ShopBossLoginController {
                 param.getPassword(),
                 param.getAccount(),
                 param.getNickName());
-        return new AjaxResult(HttpCode.OK, "注册成功", null);
+        return AjaxResult.success();
     }
 
     @ApiOperation("用户登录")
@@ -48,7 +51,18 @@ public class ShopBossLoginController {
         String token = jwtManager.createToken(new AuthUser(ctUser.getId(), ChannelType.MOBILE.getCode()));
         LoginResp loginResp = new LoginResp();
         loginResp.setToken(token);
-        return new AjaxResult(HttpCode.OK, "登录成功", loginResp);
+        return AjaxResult.success(loginResp);
     }
+
+    @ApiOperation("用户修改密码")
+    @PostMapping("/password/change")
+    public AjaxResult changePassword(@RequestBody ChangePasswordReq param) {
+        AuthUser authUser = AuthUtils.getObject();
+        if (StringUtils.equals(authUser.getChannelType(), ChannelType.MOBILE.getCode())) {
+            return AjaxResult.error("渠道类型不匹配");
+        }
+        return loginService.changePassword(authUser.getId(), param.getPasswordNew(), param.getPasswordOld()) ? AjaxResult.success() : AjaxResult.error();
+    }
+
 
 }

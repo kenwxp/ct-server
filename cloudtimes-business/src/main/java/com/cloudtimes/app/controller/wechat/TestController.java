@@ -39,6 +39,14 @@ public class TestController extends BaseController {
 
     private static Logger log = LoggerFactory.getLogger(TestController.class);
 
+    @ApiOperation("获取hik token")
+    @PostMapping("/hik/token/get")
+    public AjaxResult hikToken() {
+        String result = hikApiService.getAccessToken();
+        log.info(result);
+        return AjaxResult.success(result);
+    }
+
     @ApiOperation("查询设备信息")
     @PostMapping("/hik/device/info")
     public AjaxResult login() {
