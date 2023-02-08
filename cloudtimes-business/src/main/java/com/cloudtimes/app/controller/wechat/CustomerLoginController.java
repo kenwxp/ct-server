@@ -8,10 +8,12 @@ import com.cloudtimes.app.controller.wechat.model.LoginReq;
 import com.cloudtimes.app.controller.wechat.model.LoginResp;
 import com.cloudtimes.app.manager.JWTManager;
 import com.cloudtimes.common.core.domain.AjaxResult;
+import com.cloudtimes.app.models.ApiResult;
 import com.cloudtimes.common.core.domain.entity.AuthUser;
 import com.cloudtimes.common.enums.ChannelType;
 import com.cloudtimes.common.utils.ip.IpUtils;
 import com.cloudtimes.serving.wechat.service.ICtCustomerLoginService;
+import com.github.xiaoymin.knife4j.annotations.DynamicParameters;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -42,14 +44,14 @@ public class CustomerLoginController {
      */
     @ApiOperation("小程序用户登录校验")
     @PostMapping("/check")
-    @ApiResponses(
-            @ApiResponse(code = 200, message = "成功", response = AjaxResult.class)
-    )
-    public AjaxResult loginCheck(@RequestBody LoginCheckReq param) {
+//    @ApiResponses(
+//            @ApiResponse(code = 200, message = "成功", response = LoginCheckResp.class)
+//    )
+    public ApiResult<LoginCheckResp> loginCheck(@RequestBody LoginCheckReq param) {
         boolean isNewCustomer = loginService.checkCustomerNew(param.getLoginCode());
         LoginCheckResp loginCheckResp = new LoginCheckResp();
         loginCheckResp.setIsNew(isNewCustomer ? "1" : "0");
-        return AjaxResult.success(loginCheckResp);
+        return new ApiResult().success(loginCheckResp);
     }
 
     /**

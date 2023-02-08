@@ -150,6 +150,11 @@
             <artifactId>cloudtimes-partner</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>cloudtimes</groupId>
+            <artifactId>cloudtimes-rocketmq</artifactId>
+        </dependency>
+
         <!-- sharding-jdbc分库分表 -->
         <dependency>
             <groupId>org.apache.shardingsphere</groupId>
@@ -194,30 +199,30 @@
 
     <build>
         <plugins>
-<!--            <plugin>-->
-<!--                <groupId>org.springframework.boot</groupId>-->
-<!--                <artifactId>spring-boot-maven-plugin</artifactId>-->
-<!--                <version>2.1.1.RELEASE</version>-->
-<!--                <configuration>-->
-<!--                    <fork>true</fork> &lt;!&ndash; 如果没有该配置，devtools不会生效 &ndash;&gt;-->
-<!--                </configuration>-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <goals>-->
-<!--                            <goal>repackage</goal>-->
-<!--                        </goals>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--            </plugin>-->
-<!--            <plugin>-->
-<!--                <groupId>org.apache.maven.plugins</groupId>-->
-<!--                <artifactId>maven-war-plugin</artifactId>-->
-<!--                <version>3.1.0</version>-->
-<!--                <configuration>-->
-<!--                    <failOnMissingWebXml>false</failOnMissingWebXml>-->
-<!--                    <warName>${project.artifactId}</warName>-->
-<!--                </configuration>-->
-<!--            </plugin>-->
+            <!--            <plugin>-->
+            <!--                <groupId>org.springframework.boot</groupId>-->
+            <!--                <artifactId>spring-boot-maven-plugin</artifactId>-->
+            <!--                <version>2.1.1.RELEASE</version>-->
+            <!--                <configuration>-->
+            <!--                    <fork>true</fork> &lt;!&ndash; 如果没有该配置，devtools不会生效 &ndash;&gt;-->
+            <!--                </configuration>-->
+            <!--                <executions>-->
+            <!--                    <execution>-->
+            <!--                        <goals>-->
+            <!--                            <goal>repackage</goal>-->
+            <!--                        </goals>-->
+            <!--                    </execution>-->
+            <!--                </executions>-->
+            <!--            </plugin>-->
+            <!--            <plugin>-->
+            <!--                <groupId>org.apache.maven.plugins</groupId>-->
+            <!--                <artifactId>maven-war-plugin</artifactId>-->
+            <!--                <version>3.1.0</version>-->
+            <!--                <configuration>-->
+            <!--                    <failOnMissingWebXml>false</failOnMissingWebXml>-->
+            <!--                    <warName>${project.artifactId}</warName>-->
+            <!--                </configuration>-->
+            <!--            </plugin>-->
             <!-- 分离lib -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -256,7 +261,7 @@
                             <resources>
                                 <resource>
                                     <directory>src/main/resources</directory>
-<!--                                    <includes>**/*.properties,**/*.xml,**/*.db, **/*.p12</includes>-->
+                                    <!--                                    <includes>**/*.properties,**/*.xml,**/*.db, **/*.p12</includes>-->
                                 </resource>
                             </resources>
                             <outputDirectory>${project.build.directory}/resources</outputDirectory>
@@ -295,12 +300,12 @@
         <resources>
             <resource>
                 <directory>src/main/java</directory>
-<!--                <includes>-->
-<!--                    <include>**/*.properties</include>-->
-<!--                    <include>**/*.xml</include>-->
-<!--                    <include>**/*.dat</include>-->
-<!--                    <include>**/*.p12</include>-->
-<!--                </includes>-->
+                <!--                <includes>-->
+                <!--                    <include>**/*.properties</include>-->
+                <!--                    <include>**/*.xml</include>-->
+                <!--                    <include>**/*.dat</include>-->
+                <!--                    <include>**/*.p12</include>-->
+                <!--                </includes>-->
                 <filtering>false</filtering>
             </resource>
             <resource>

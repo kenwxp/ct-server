@@ -43,6 +43,8 @@ logging:
     com.cloudtimes: debug
     org.springframework: info
 
+knife4j:
+  enable: true
 # 用户配置
 user:
   password:

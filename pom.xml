@@ -2,15 +2,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	
+    <modelVersion>4.0.0</modelVersion>
+
     <groupId>cloudtimes</groupId>
     <artifactId>cloudtimes</artifactId>
     <version>3.8.3</version>
 
     <name>cloudtimes</name>
     <description>云时代服务器系统</description>
-    
+
     <properties>
         <cloudtimes.version>3.8.3</cloudtimes.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -32,8 +32,9 @@
         <poi.version>4.1.2</poi.version>
         <velocity.version>2.3</velocity.version>
         <jwt.version>0.9.1</jwt.version>
+        <rocketmq.version>2.1.1</rocketmq.version>
     </properties>
-	
+
     <!-- 依赖声明 -->
     <dependencyManagement>
         <dependencies>
@@ -186,6 +187,13 @@
                 <version>${cloudtimes.version}</version>
             </dependency>
 
+            <!-- rocketmq模块-->
+            <dependency>
+                <groupId>cloudtimes</groupId>
+                <artifactId>cloudtimes-rocketmq</artifactId>
+                <version>${cloudtimes.version}</version>
+            </dependency>
+
             <!-- 通用工具-->
             <dependency>
                 <groupId>cloudtimes</groupId>
@@ -198,6 +206,13 @@
                 <groupId>cloudtimes</groupId>
                 <artifactId>cloudtimes-partner</artifactId>
                 <version>${cloudtimes.version}</version>
+            </dependency>
+
+            <!-- rocketmq -->
+            <dependency>
+                <groupId>org.apache.rocketmq</groupId>
+                <artifactId>rocketmq-spring-boot-starter</artifactId>
+                <version>${rocketmq.version}</version>
             </dependency>
 
             <!-- sharding-jdbc分库分表 -->
@@ -235,6 +250,7 @@
         <module>cloudtimes-partner</module>
         <module>cloudtimes-business</module>
         <module>cloudtimes-socketserver</module>
+        <module>cloudtimes-rocketmq</module>
     </modules>
     <packaging>pom</packaging>
 
