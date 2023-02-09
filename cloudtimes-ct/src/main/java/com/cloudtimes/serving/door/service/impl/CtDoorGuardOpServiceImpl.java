@@ -17,10 +17,12 @@ import com.cloudtimes.partner.wiegand.WiegandReturning;
 import com.cloudtimes.serving.door.service.ICtDoorGuardOpService;
 import com.cloudtimes.util.NoUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.List;
 
+@Component
 public class CtDoorGuardOpServiceImpl implements ICtDoorGuardOpService {
     @Autowired
     private CtStoreMapper storeMapper;

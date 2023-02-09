@@ -44,4 +44,16 @@ public class CtDeviceDoor extends BaseEntity {
      * 设备序列号 冗余
      */
     private String deviceSerial;
+
+    private String deviceId;
+
+    private String doorDesc;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 }

@@ -17,7 +17,7 @@ public interface ICtDeviceCashService
      * @param id 收银机特有信息主键
      * @return 收银机特有信息
      */
-    public CtDeviceCash selectCtDeviceCashById(Long id);
+    public CtDeviceCash selectCtDeviceCashById(String id);
 
     /**
      * 查询收银机特有信息列表

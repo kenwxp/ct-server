@@ -6,12 +6,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <resultMap type="CtDeviceCash" id="CtDeviceCashResult">
         <result property="id"    column="id"    />
-        <result property="deviceCode"    column="device_code"    />
         <result property="deviceNo"    column="device_no"    />
         <result property="terminalSn"    column="terminal_sn"    />
         <result property="terminalKey"    column="terminal_key"    />
-        <result property="activateCode"    column="activate_code"    />
-        <result property="paymentCode"    column="payment_code"    />
+        <result property="activateId"    column="activate_id"    />
+        <result property="paymentId"    column="payment_id"    />
         <result property="state"    column="state"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateTime"    column="update_time"    />
@@ -19,20 +18,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectCtDeviceCashVo">
-        select id, device_code, device_no, terminal_sn, terminal_key, activate_code, payment_code, state, create_time, update_time, del_flag from ct_device_cash
+        select id, device_no, terminal_sn, terminal_key, activate_id, payment_id, state, create_time, update_time, del_flag from ct_device_cash
     </sql>
 
     <select id="selectCtDeviceCashList" parameterType="CtDeviceCash" resultMap="CtDeviceCashResult">
         <include refid="selectCtDeviceCashVo"/>
         <where>  
-            <if test="deviceCode != null  and deviceCode != ''"> and device_code = #{deviceCode}</if>
             <if test="deviceNo != null  and deviceNo != ''"> and device_no = #{deviceNo}</if>
-            <if test="paymentCode != null  and paymentCode != ''"> and payment_code = #{paymentCode}</if>
+            <if test="paymentId != null  and paymentId != ''"> and payment_id = #{paymentId}</if>
             <if test="state != null  and state != ''"> and state = #{state}</if>
         </where>
     </select>
     
-    <select id="selectCtDeviceCashById" parameterType="Long" resultMap="CtDeviceCashResult">
+    <select id="selectCtDeviceCashById" parameterType="String" resultMap="CtDeviceCashResult">
         <include refid="selectCtDeviceCashVo"/>
         where id = #{id}
     </select>
@@ -40,24 +38,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="insertCtDeviceCash" parameterType="CtDeviceCash" useGeneratedKeys="true" keyProperty="id">
         insert into ct_device_cash
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="deviceCode != null">device_code,</if>
             <if test="deviceNo != null">device_no,</if>
             <if test="terminalSn != null">terminal_sn,</if>
             <if test="terminalKey != null">terminal_key,</if>
-            <if test="activateCode != null">activate_code,</if>
-            <if test="paymentCode != null">payment_code,</if>
+            <if test="activateId != null">activate_id,</if>
+            <if test="paymentId != null">payment_id,</if>
             <if test="state != null">state,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="delFlag != null">del_flag,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="deviceCode != null">#{deviceCode},</if>
             <if test="deviceNo != null">#{deviceNo},</if>
             <if test="terminalSn != null">#{terminalSn},</if>
             <if test="terminalKey != null">#{terminalKey},</if>
-            <if test="activateCode != null">#{activateCode},</if>
-            <if test="paymentCode != null">#{paymentCode},</if>
+            <if test="activateId != null">#{activateId},</if>
+            <if test="paymentId != null">#{paymentId},</if>
             <if test="state != null">#{state},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateTime != null">#{updateTime},</if>
@@ -68,12 +64,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updateCtDeviceCash" parameterType="CtDeviceCash">
         update ct_device_cash
         <trim prefix="SET" suffixOverrides=",">
-            <if test="deviceCode != null">device_code = #{deviceCode},</if>
             <if test="deviceNo != null">device_no = #{deviceNo},</if>
             <if test="terminalSn != null">terminal_sn = #{terminalSn},</if>
             <if test="terminalKey != null">terminal_key = #{terminalKey},</if>
-            <if test="activateCode != null">activate_code = #{activateCode},</if>
-            <if test="paymentCode != null">payment_code = #{paymentCode},</if>
+            <if test="activateId != null">activate_id = #{activateId},</if>
+            <if test="paymentId != null">payment_id = #{paymentId},</if>
             <if test="state != null">state = #{state},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>

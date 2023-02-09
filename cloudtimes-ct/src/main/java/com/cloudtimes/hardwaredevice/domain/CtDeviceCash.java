@@ -1,150 +1,144 @@
 package com.cloudtimes.hardwaredevice.domain;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import com.cloudtimes.common.annotation.Excel;
 import com.cloudtimes.common.core.domain.BaseEntity;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * 收银机特有信息对象 ct_device_cash
- * 
+ *
  * @author tank
  * @date 2023-01-17
  */
-public class CtDeviceCash extends BaseEntity
-{
+public class CtDeviceCash extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
-    /** 序列号 */
-    private Long id;
+    /**
+     * 序列号
+     */
+    private String id;
 
-    /** 设备编码 */
-    @Excel(name = "设备编码")
-    private String deviceCode;
 
-    /** 终端ID */
+    /**
+     * 终端ID
+     */
     @Excel(name = "终端ID")
     private String deviceNo;
 
-    /** 终端SN */
+    /**
+     * 终端SN
+     */
     @Excel(name = "终端SN")
     private String terminalSn;
 
-    /** 终端密钥 */
+    /**
+     * 终端密钥
+     */
     @Excel(name = "终端密钥")
     private String terminalKey;
 
-    /** 激活码 */
+    /**
+     * 激活码
+     */
     @Excel(name = "激活码")
-    private String activateCode;
+    private String activateId;
 
-    /** 支付渠道编码 */
+    public String getPaymentId() {
+        return paymentId;
+    }
+
+    public void setPaymentId(String paymentId) {
+        this.paymentId = paymentId;
+    }
+
+    /**
+     * 支付渠道编码
+     */
     @Excel(name = "支付渠道编码")
-    private String paymentCode;
+    private String paymentId;
 
-    /** 状态 */
+    /**
+     * 状态
+     */
     @Excel(name = "状态")
     private String state;
 
-    /** 是否删除 */
+    /**
+     * 是否删除
+     */
     private Long delFlag;
 
-    public void setId(Long id) 
-    {
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
         this.id = id;
     }
 
-    public Long getId() 
-    {
-        return id;
-    }
-    public void setDeviceCode(String deviceCode) 
-    {
-        this.deviceCode = deviceCode;
-    }
-
-    public String getDeviceCode() 
-    {
-        return deviceCode;
-    }
-    public void setDeviceNo(String deviceNo) 
-    {
+    public void setDeviceNo(String deviceNo) {
         this.deviceNo = deviceNo;
     }
 
-    public String getDeviceNo() 
-    {
+    public String getDeviceNo() {
         return deviceNo;
     }
-    public void setTerminalSn(String terminalSn) 
-    {
+
+    public void setTerminalSn(String terminalSn) {
         this.terminalSn = terminalSn;
     }
 
-    public String getTerminalSn() 
-    {
+    public String getTerminalSn() {
         return terminalSn;
     }
-    public void setTerminalKey(String terminalKey) 
-    {
+
+    public void setTerminalKey(String terminalKey) {
         this.terminalKey = terminalKey;
     }
 
-    public String getTerminalKey() 
-    {
+    public String getTerminalKey() {
         return terminalKey;
     }
-    public void setActivateCode(String activateCode) 
-    {
-        this.activateCode = activateCode;
+
+    public String getActivateId() {
+        return activateId;
     }
 
-    public String getActivateCode() 
-    {
-        return activateCode;
-    }
-    public void setPaymentCode(String paymentCode) 
-    {
-        this.paymentCode = paymentCode;
+    public void setActivateId(String activateId) {
+        this.activateId = activateId;
     }
 
-    public String getPaymentCode() 
-    {
-        return paymentCode;
-    }
-    public void setState(String state) 
-    {
+
+    public void setState(String state) {
         this.state = state;
     }
 
-    public String getState() 
-    {
+    public String getState() {
         return state;
     }
-    public void setDelFlag(Long delFlag) 
-    {
+
+    public void setDelFlag(Long delFlag) {
         this.delFlag = delFlag;
     }
 
-    public Long getDelFlag() 
-    {
+    public Long getDelFlag() {
         return delFlag;
     }
 
+
+
     @Override
     public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("deviceCode", getDeviceCode())
-            .append("deviceNo", getDeviceNo())
-            .append("terminalSn", getTerminalSn())
-            .append("terminalKey", getTerminalKey())
-            .append("activateCode", getActivateCode())
-            .append("paymentCode", getPaymentCode())
-            .append("state", getState())
-            .append("createTime", getCreateTime())
-            .append("updateTime", getUpdateTime())
-            .append("delFlag", getDelFlag())
-            .toString();
+        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
+                .append("id", getId())
+                .append("deviceNo", getDeviceNo())
+                .append("terminalSn", getTerminalSn())
+                .append("terminalKey", getTerminalKey())
+                .append("state", getState())
+                .append("createTime", getCreateTime())
+                .append("updateTime", getUpdateTime())
+                .append("delFlag", getDelFlag())
+                .toString();
     }
 }

@@ -64,7 +64,7 @@ public class CtDeviceCashController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('hardwaredevice:ctdevicecash:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
+    public AjaxResult getInfo(@PathVariable("id") String id)
     {
         return AjaxResult.success(ctDeviceCashService.selectCtDeviceCashById(id));
     }

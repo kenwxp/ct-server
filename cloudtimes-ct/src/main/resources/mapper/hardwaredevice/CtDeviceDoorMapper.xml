@@ -5,7 +5,14 @@
 <mapper namespace="com.cloudtimes.hardwaredevice.mapper.CtDeviceDoorMapper">
 
     <sql id="selectCtDeviceDoorVo">
-        select id, door_no, access_password, create_time, update_time, del_flag
+        select id,
+               door_no,
+               access_password,
+               create_time,
+               update_time,
+               del_flag,
+               device_id,
+               door_desc
         from ct_device_door
     </sql>
 
@@ -21,6 +28,8 @@
         select
         dd.id,
         dd.door_no,
+        dd.device_id,
+        dd.door_desc,
         dd.access_password,
         dd.create_time,
         dd.update_time,
@@ -46,6 +55,8 @@
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
             <if test="doorNo != null">door_no,</if>
+            <if test="deviceId != null">device_id,</if>
+            <if test="doorDesc != null">door_desc,</if>
             <if test="accessPassword != null">access_password,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
@@ -58,6 +69,8 @@
             <if test="createTime != null">#{createTime},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="delFlag != null">#{delFlag},</if>
+            <if test="deviceId != null">#{deviceId},</if>
+            <if test="doorDesc != null">#{doorDesc},</if>
         </trim>
     </insert>
 
@@ -69,6 +82,8 @@
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="deviceId != null">device_id = #{deviceId},</if>
+            <if test="doorDesc != null">door_desc = #{doorDesc},</if>
         </trim>
         where id = #{id}
     </update>

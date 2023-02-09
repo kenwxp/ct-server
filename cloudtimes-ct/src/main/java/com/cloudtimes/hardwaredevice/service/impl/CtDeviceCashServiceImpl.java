@@ -30,7 +30,7 @@ public class CtDeviceCashServiceImpl implements ICtDeviceCashService
      * @return 收银机特有信息
      */
     @Override
-    public CtDeviceCash selectCtDeviceCashById(Long id)
+    public CtDeviceCash selectCtDeviceCashById(String id)
     {
         return ctDeviceCashMapper.selectCtDeviceCashById(id);
     }

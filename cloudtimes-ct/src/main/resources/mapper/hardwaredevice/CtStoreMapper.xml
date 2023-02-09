@@ -4,6 +4,38 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.cloudtimes.hardwaredevice.mapper.CtStoreMapper">
 
+    <resultMap type="CtStore" id="CtStoreResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="address"    column="address"    />
+        <result property="shortAddress"    column="short_address"    />
+        <result property="storeNo"    column="store_no"    />
+        <result property="regionCode"    column="region_code"    />
+        <result property="longitude"    column="longitude"    />
+        <result property="latitude"    column="latitude"    />
+        <result property="photoUrl"    column="photo_url"    />
+        <result property="area"    column="area"    />
+        <result property="contactName"    column="contact_name"    />
+        <result property="contactPhone"    column="contact_phone"    />
+        <result property="saleAmount"    column="sale_amount"    />
+        <result property="maxBuyPerson"    column="max_buy_person"    />
+        <result property="isSupervise"    column="is_supervise"    />
+        <result property="superviseLogId"    column="supervise_log_id"    />
+        <result property="buildState"    column="build_state"    />
+        <result property="state"    column="state"    />
+        <result property="bossId"    column="boss_id"    />
+        <result property="agentId"    column="agent_id"    />
+        <result property="storeOnlineDate"    column="store_online_date"    />
+        <result property="storeOnlineTime"    column="store_online_time"    />
+        <result property="merchantSn"    column="merchant_sn"    />
+        <result property="storeSn"    column="store_sn"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createDate"    column="create_date"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+
     <sql id="selectCtStoreVo">
         select id,
                name,
@@ -83,7 +115,6 @@
         </selectKey>
         insert into ct_store
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            id,
             <if test="name != null">name,</if>
             <if test="address != null">address,</if>
             <if test="shortAddress != null">short_address,</if>
@@ -113,7 +144,6 @@
             <if test="updateTime != null">update_time,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            #{id}
             <if test="name != null">#{name},</if>
             <if test="address != null">#{address},</if>
             <if test="shortAddress != null">#{shortAddress},</if>
