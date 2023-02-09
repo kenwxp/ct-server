@@ -86,6 +86,8 @@ public class CtTask extends BaseEntity {
 
     /**
      * 状态
+     * 进行中	0
+     * 已结束	1
      */
     @Excel(name = "状态")
     private String state;

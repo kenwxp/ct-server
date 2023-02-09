@@ -100,4 +100,23 @@
             #{id}
         </foreach>
     </delete>
+
+    <select id="selectCtOrderDetailListByTaskOrOrder" resultType="CtOrderDetail">
+        select od.id,
+        od.order_id,
+        od.store_no,
+        od.item_type_id,
+        od.item_type_name,
+        od.item_name,
+        od.item_count,
+        od.item_price,
+        od.create_time
+        from ct_order_detail od, ct_order o, ct_task t
+        <where>
+            od.order_id = o.id
+            and o.task_id = t.id
+            <if test="taskState != null  and taskState != ''">and t.state = #{taskState}</if>
+            <if test="orderId != null  and orderId != ''">and o.order_id = #{orderId}</if>
+        </where>
+    </select>
 </mapper>

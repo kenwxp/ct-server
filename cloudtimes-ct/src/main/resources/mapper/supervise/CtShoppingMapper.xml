@@ -125,4 +125,45 @@
             #{id}
         </foreach>
     </delete>
+
+    <select id="selectCtShoppingListByTask" resultType="CtShopping">
+        select o.id,
+        o.task_id,
+        o.store_no,
+        o.store_name,
+        o.store_province,
+        o.store_city,
+        o.agent_id,
+        o.boss_user_id,
+        o.shopping_id,
+        o.staff_code,
+        o.user_id,
+        o.is_compose,
+        o.money_amount,
+        o.total_amount,
+        o.discount_amount,
+        o.deduction_amount,
+        o.actual_amount,
+        o.item_count,
+        o.payment_code,
+        o.payment_name,
+        o.payment_mode,
+        o.payment_action,
+        o.payment_id,
+        o.device_cash_id,
+        o.desc_text,
+        o.is_exceptional,
+        o.state,
+        o.create_time,
+        o.update_time,
+        o.del_flag,
+        o.create_date
+        from ct_order o,
+        ct_task t
+        <where>
+            o.task_id = t.id
+            <if test="state != null  and state != ''">and t.state = #{state}</if>
+            <if test="taskId != null  and taskId != ''">and o.task_id = #{taskId}</if>
+        </where>
+    </select>
 </mapper>

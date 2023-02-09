@@ -1,6 +1,7 @@
 package com.cloudtimes.supervise.mapper;
 
 import com.cloudtimes.supervise.domain.CtOrderDetail;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -58,4 +59,13 @@ public interface CtOrderDetailMapper {
      * @return 结果
      */
     public int deleteCtOrderDetailByIds(String[] ids);
+
+    /**
+     * 根据任务状态或订单查询订单物品清单
+     *
+     * @param orderId
+     * @param taskState
+     * @return
+     */
+    public List<CtOrderDetail> selectCtOrderDetailListByTaskOrOrder(@Param("orderId") String orderId, @Param("taskState") String taskState);
 }
