@@ -30,7 +30,7 @@ public class CtOrderDetailController extends BaseController {
     /**
      * 查询订单物品清单列表
      */
-    @PreAuthorize("@ss.hasPermi('system:detail:list')")
+    @PreAuthorize("@ss.hasPermi('supervise:detail:list')")
     @GetMapping("/list")
     public TableDataInfo list(CtOrderDetail ctOrderDetail) {
         startPage();
@@ -41,7 +41,7 @@ public class CtOrderDetailController extends BaseController {
     /**
      * 导出订单物品清单列表
      */
-    @PreAuthorize("@ss.hasPermi('system:detail:export')")
+    @PreAuthorize("@ss.hasPermi('supervise:detail:export')")
     @Log(title = "订单物品清单", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, CtOrderDetail ctOrderDetail) {
@@ -53,7 +53,7 @@ public class CtOrderDetailController extends BaseController {
     /**
      * 获取订单物品清单详细信息
      */
-    @PreAuthorize("@ss.hasPermi('system:detail:query')")
+    @PreAuthorize("@ss.hasPermi('supervise:detail:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") String id) {
         return AjaxResult.success(ctOrderDetailService.selectCtOrderDetailById(id));
@@ -62,7 +62,7 @@ public class CtOrderDetailController extends BaseController {
     /**
      * 新增订单物品清单
      */
-    @PreAuthorize("@ss.hasPermi('system:detail:add')")
+    @PreAuthorize("@ss.hasPermi('supervise:detail:add')")
     @Log(title = "订单物品清单", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody CtOrderDetail ctOrderDetail) {
@@ -72,7 +72,7 @@ public class CtOrderDetailController extends BaseController {
     /**
      * 修改订单物品清单
      */
-    @PreAuthorize("@ss.hasPermi('system:detail:edit')")
+    @PreAuthorize("@ss.hasPermi('supervise:detail:edit')")
     @Log(title = "订单物品清单", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody CtOrderDetail ctOrderDetail) {
@@ -82,7 +82,7 @@ public class CtOrderDetailController extends BaseController {
     /**
      * 删除订单物品清单
      */
-    @PreAuthorize("@ss.hasPermi('system:detail:remove')")
+    @PreAuthorize("@ss.hasPermi('supervise:detail:remove')")
     @Log(title = "订单物品清单", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable String[] ids) {

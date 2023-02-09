@@ -1,9 +1,14 @@
 package com.cloudtimes.app.interceptor;
 
+import com.alibaba.fastjson.JSONObject;
 import com.cloudtimes.app.manager.JWTManager;
 import com.cloudtimes.app.manager.WsSessionManager;
+import com.cloudtimes.app.process.BaseEventProcess;
+import com.cloudtimes.common.core.domain.AjaxResult;
 import com.cloudtimes.common.core.domain.entity.AuthUser;
+import com.cloudtimes.common.utils.spring.SpringUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -11,11 +16,13 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import javax.annotation.Resource;
-import java.time.LocalDateTime;
 
 @Component
 @Slf4j
 public class CustomWebSocketHandler extends TextWebSocketHandler {
+
+    @Resource
+    private ApplicationContext context;
 
     private static final String HEADER = "Authorization";
 
@@ -51,9 +58,26 @@ public class CustomWebSocketHandler extends TextWebSocketHandler {
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         // 获得客户端传来的消息
         String payload = message.getPayload();
-        System.out.println("server 接收到发送的 " + payload);
-        session.sendMessage(new TextMessage("server 发送给  消息 " + payload + " " + LocalDateTime.now().toString()));
+        log.info("Receive CMD:[" + payload + "] DeviceId:[" + payload + "],");
+        BaseEventProcess process = SpringUtils.getBean(payload);
+        if (process == null) {
+            AjaxResult ajaxResult = AjaxResult.error("无效指令：[" + payload + "]");
+            session.sendMessage(new TextMessage(JSONObject.toJSONString(ajaxResult)));
+            return;
+        }
+
+        try {
+            Object obj = process.process(payload);
+            if (obj != null) {
+                session.sendMessage(new TextMessage(JSONObject.toJSONString(obj)));
+            }
+
+        } catch (Exception ex) {
+            AjaxResult ajaxResult = AjaxResult.error("执行指令异常：[" + payload + "]");
+            session.sendMessage(new TextMessage(JSONObject.toJSONString(ajaxResult)));
+        }
     }
+
 
     /**
      * socket 断开连接时

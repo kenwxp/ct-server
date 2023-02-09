@@ -1,55 +1,52 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.cloudtimes.hardwaredevice.mapper.CtOpenDoorLogsMapper">
-    
-    <resultMap type="CtOpenDoorLogs" id="CtOpenDoorLogsResult">
-        <result property="id"    column="id"    />
-        <result property="logCode"    column="log_code"    />
-        <result property="storeCode"    column="store_code"    />
-        <result property="deviceCode"    column="device_code"    />
-        <result property="userCode"    column="user_code"    />
-        <result property="optChannel"    column="opt_channel"    />
-        <result property="optType"    column="opt_type"    />
-        <result property="state"    column="state"    />
-        <result property="remark"    column="remark"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateTime"    column="update_time"    />
-        <result property="delFlag"    column="del_flag"    />
-        <result property="date"    column="date"    />
-    </resultMap>
 
     <sql id="selectCtOpenDoorLogsVo">
-        select id, log_code, store_code, device_code, user_code, opt_channel, opt_type, state, remark, create_time, update_time, del_flag, date from ct_open_door_logs
+        select id,
+               store_id,
+               device_id,
+               member_id,
+               opt_channel,
+               opt_type,
+               state,
+               remark,
+               create_time,
+               update_time,
+               del_flag, date
+        from ct_open_door_logs
     </sql>
 
-    <select id="selectCtOpenDoorLogsList" parameterType="CtOpenDoorLogs" resultMap="CtOpenDoorLogsResult">
+    <select id="selectCtOpenDoorLogsList" parameterType="CtOpenDoorLogs" resultType="CtOpenDoorLogs">
         <include refid="selectCtOpenDoorLogsVo"/>
-        <where>  
-            <if test="logCode != null  and logCode != ''"> and log_code = #{logCode}</if>
-            <if test="storeCode != null  and storeCode != ''"> and store_code = #{storeCode}</if>
-            <if test="deviceCode != null  and deviceCode != ''"> and device_code = #{deviceCode}</if>
-            <if test="userCode != null  and userCode != ''"> and user_code = #{userCode}</if>
-            <if test="optChannel != null  and optChannel != ''"> and opt_channel = #{optChannel}</if>
-            <if test="optType != null  and optType != ''"> and opt_type = #{optType}</if>
-            <if test="state != null  and state != ''"> and state = #{state}</if>
-            <if test="date != null "> and date = #{date}</if>
+        <where>
+            <if test="storeId != null  and storeId != ''">and store_id = #{storeId}</if>
+            <if test="deviceId != null  and deviceId != ''">and device_id = #{deviceId}</if>
+            <if test="memberId != null  and memberId != ''">and member_id = #{memberId}</if>
+            <if test="optChannel != null  and optChannel != ''">and opt_channel = #{optChannel}</if>
+            <if test="optType != null  and optType != ''">and opt_type = #{optType}</if>
+            <if test="state != null  and state != ''">and state = #{state}</if>
+            <if test="date != null ">and date = #{date}</if>
         </where>
     </select>
-    
-    <select id="selectCtOpenDoorLogsById" parameterType="Long" resultMap="CtOpenDoorLogsResult">
+
+    <select id="selectCtOpenDoorLogsById" parameterType="String" resultType="CtOpenDoorLogs">
         <include refid="selectCtOpenDoorLogsVo"/>
         where id = #{id}
     </select>
-        
-    <insert id="insertCtOpenDoorLogs" parameterType="CtOpenDoorLogs" useGeneratedKeys="true" keyProperty="id">
+
+    <insert id="insertCtOpenDoorLogs" parameterType="CtOpenDoorLogs">
+        <selectKey keyProperty="id" order="BEFORE" resultType="String">
+            select uuid() from dual
+        </selectKey>
         insert into ct_open_door_logs
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="logCode != null">log_code,</if>
-            <if test="storeCode != null">store_code,</if>
-            <if test="deviceCode != null">device_code,</if>
-            <if test="userCode != null">user_code,</if>
+            id,
+            <if test="storeId != null">store_id,</if>
+            <if test="deviceId != null">device_id,</if>
+            <if test="memberId != null">member_id,</if>
             <if test="optChannel != null">opt_channel,</if>
             <if test="optType != null">opt_type,</if>
             <if test="state != null">state,</if>
@@ -58,12 +55,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null">update_time,</if>
             <if test="delFlag != null">del_flag,</if>
             <if test="date != null">date,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="logCode != null">#{logCode},</if>
-            <if test="storeCode != null">#{storeCode},</if>
-            <if test="deviceCode != null">#{deviceCode},</if>
-            <if test="userCode != null">#{userCode},</if>
+            #{id},
+            <if test="storeId != null">#{storeId},</if>
+            <if test="deviceId != null">#{deviceId},</if>
+            <if test="memberId != null">#{memberId},</if>
             <if test="optChannel != null">#{optChannel},</if>
             <if test="optType != null">#{optType},</if>
             <if test="state != null">#{state},</if>
@@ -72,16 +69,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null">#{updateTime},</if>
             <if test="delFlag != null">#{delFlag},</if>
             <if test="date != null">#{date},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateCtOpenDoorLogs" parameterType="CtOpenDoorLogs">
         update ct_open_door_logs
         <trim prefix="SET" suffixOverrides=",">
-            <if test="logCode != null">log_code = #{logCode},</if>
-            <if test="storeCode != null">store_code = #{storeCode},</if>
-            <if test="deviceCode != null">device_code = #{deviceCode},</if>
-            <if test="userCode != null">user_code = #{userCode},</if>
+            <if test="storeId != null">store_id = #{storeId},</if>
+            <if test="deviceId != null">device_id = #{deviceId},</if>
+            <if test="memberId != null">member_id = #{memberId},</if>
             <if test="optChannel != null">opt_channel = #{optChannel},</if>
             <if test="optType != null">opt_type = #{optType},</if>
             <if test="state != null">state = #{state},</if>
@@ -94,12 +90,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </update>
 
-    <delete id="deleteCtOpenDoorLogsById" parameterType="Long">
-        delete from ct_open_door_logs where id = #{id}
+    <delete id="deleteCtOpenDoorLogsById" parameterType="String">
+        delete
+        from ct_open_door_logs
+        where id = #{id}
     </delete>
 
     <delete id="deleteCtOpenDoorLogsByIds" parameterType="String">
-        delete from ct_open_door_logs where id in 
+        delete from ct_open_door_logs where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

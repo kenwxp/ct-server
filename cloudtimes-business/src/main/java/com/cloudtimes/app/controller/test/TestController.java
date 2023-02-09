@@ -1,4 +1,4 @@
-package com.cloudtimes.app.controller.wechat;
+package com.cloudtimes.app.controller.test;
 
 
 import com.cloudtimes.account.domain.CtUser;
@@ -7,6 +7,9 @@ import com.cloudtimes.app.manager.JWTManager;
 import com.cloudtimes.common.core.controller.BaseController;
 import com.cloudtimes.common.core.domain.AjaxResult;
 import com.cloudtimes.common.core.domain.entity.AuthUser;
+import com.cloudtimes.hardwaredevice.domain.CtDevice;
+import com.cloudtimes.hardwaredevice.domain.CtDeviceDoor;
+import com.cloudtimes.hardwaredevice.mapper.CtDeviceDoorMapper;
 import com.cloudtimes.partner.hik.service.ICtHikApiService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -35,7 +38,8 @@ public class TestController extends BaseController {
     private JWTManager jwtManager;
     @Autowired
     private ICtUserService userService;
-
+    @Autowired
+    private CtDeviceDoorMapper ctDeviceDoorMapper;
 
     private static Logger log = LoggerFactory.getLogger(TestController.class);
 
@@ -58,7 +62,7 @@ public class TestController extends BaseController {
     @ApiOperation("获取jwt")
     @GetMapping(value = "/token/get/{id}")
     public AjaxResult getInfo(@PathVariable("id") String id) {
-        String token = jwtManager.createToken(new AuthUser(id,"test"));
+        String token = jwtManager.createToken(new AuthUser(id, "test"));
         return AjaxResult.success(token);
     }
 
@@ -72,6 +76,13 @@ public class TestController extends BaseController {
         System.out.println(ctUser.getId());
         CtUser ctUsers = userService.selectCtUserById(ctUser.getId());
         return AjaxResult.success(ctUsers);
+    }
+
+    @ApiOperation("测试门禁密码mapper")
+    @GetMapping(value = "/select/door")
+    public AjaxResult selectDoorList() {
+        List<CtDeviceDoor> ctDeviceDoors = ctDeviceDoorMapper.selectCtDeviceDoorListByStoreId(new CtDevice());
+        return AjaxResult.success(ctDeviceDoors);
     }
 }
 

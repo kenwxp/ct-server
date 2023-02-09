@@ -7,7 +7,7 @@ public interface ICtWiegandApiService {
      * @param deviceSerial 门控序列号
      * @return boolean 是否成功
      */
-    public boolean remoteOpenDoor(int deviceSerial);
+    public WiegandReturning remoteOpenDoor(String deviceSerial);
 
     /**
      * 设置门禁密码
@@ -19,7 +19,7 @@ public interface ICtWiegandApiService {
      * @param endTime      失效时间 格式 yyyy-MM-dd hh:mm:ss
      * @return boolean 是否成功
      */
-    public boolean settingAccess(int deviceSerial, int password, boolean once, String beginTime, String endTime);
+    public WiegandReturning settingAccess(String deviceSerial, int password, boolean once, String beginTime, String endTime);
 
     /**
      * 删除门禁密码
@@ -28,7 +28,7 @@ public interface ICtWiegandApiService {
      * @param password     密码
      * @return boolean 是否成功
      */
-    public boolean deleteAccess(int deviceSerial, int password);
+    public WiegandReturning deleteAccess(String deviceSerial, int password);
 
     /**
      * 设置门禁参数
@@ -38,7 +38,7 @@ public interface ICtWiegandApiService {
      * @param delaySec     开门延时(秒) 默认3秒, 可设置25秒
      * @return boolean 是否成功
      */
-    public boolean settingParams(int deviceSerial, int mode, int delaySec);
+    public WiegandReturning settingParams(String deviceSerial, int mode, int delaySec);
 
     /**
      * 启用6位临时密码功能
@@ -47,5 +47,5 @@ public interface ICtWiegandApiService {
      * @param enable       是否开启
      * @return
      */
-    public boolean enablePassword(int deviceSerial, boolean enable);
+    public WiegandReturning enablePassword(String deviceSerial, boolean enable);
 }

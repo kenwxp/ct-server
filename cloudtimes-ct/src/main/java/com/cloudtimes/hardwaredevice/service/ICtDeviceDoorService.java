@@ -7,7 +7,7 @@ import com.cloudtimes.hardwaredevice.domain.CtDeviceDoor;
  * 门禁设备密码Service接口
  * 
  * @author tank
- * @date 2023-01-17
+ * @date 2023-02-09
  */
 public interface ICtDeviceDoorService 
 {
@@ -17,7 +17,7 @@ public interface ICtDeviceDoorService
      * @param id 门禁设备密码主键
      * @return 门禁设备密码
      */
-    public CtDeviceDoor selectCtDeviceDoorById(Long id);
+    public CtDeviceDoor selectCtDeviceDoorById(String id);
 
     /**
      * 查询门禁设备密码列表
@@ -49,7 +49,7 @@ public interface ICtDeviceDoorService
      * @param ids 需要删除的门禁设备密码主键集合
      * @return 结果
      */
-    public int deleteCtDeviceDoorByIds(Long[] ids);
+    public int deleteCtDeviceDoorByIds(String[] ids);
 
     /**
      * 删除门禁设备密码信息
@@ -57,5 +57,5 @@ public interface ICtDeviceDoorService
      * @param id 门禁设备密码主键
      * @return 结果
      */
-    public int deleteCtDeviceDoorById(Long id);
+    public int deleteCtDeviceDoorById(String id);
 }

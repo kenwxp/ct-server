@@ -30,7 +30,7 @@ public class CtEventsController extends BaseController {
     /**
      * 查询事件列表
      */
-    @PreAuthorize("@ss.hasPermi('system:events:list')")
+    @PreAuthorize("@ss.hasPermi('supervise:events:list')")
     @GetMapping("/list")
     public TableDataInfo list(CtEvents ctEvents) {
         startPage();
@@ -41,7 +41,7 @@ public class CtEventsController extends BaseController {
     /**
      * 导出事件列表
      */
-    @PreAuthorize("@ss.hasPermi('system:events:export')")
+    @PreAuthorize("@ss.hasPermi('supervise:events:export')")
     @Log(title = "事件", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, CtEvents ctEvents) {
@@ -53,7 +53,7 @@ public class CtEventsController extends BaseController {
     /**
      * 获取事件详细信息
      */
-    @PreAuthorize("@ss.hasPermi('system:events:query')")
+    @PreAuthorize("@ss.hasPermi('supervise:events:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") String id) {
         return AjaxResult.success(ctEventsService.selectCtEventsById(id));
@@ -62,7 +62,7 @@ public class CtEventsController extends BaseController {
     /**
      * 新增事件
      */
-    @PreAuthorize("@ss.hasPermi('system:events:add')")
+    @PreAuthorize("@ss.hasPermi('supervise:events:add')")
     @Log(title = "事件", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody CtEvents ctEvents) {
@@ -72,7 +72,7 @@ public class CtEventsController extends BaseController {
     /**
      * 修改事件
      */
-    @PreAuthorize("@ss.hasPermi('system:events:edit')")
+    @PreAuthorize("@ss.hasPermi('supervise:events:edit')")
     @Log(title = "事件", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody CtEvents ctEvents) {
@@ -82,7 +82,7 @@ public class CtEventsController extends BaseController {
     /**
      * 删除事件
      */
-    @PreAuthorize("@ss.hasPermi('system:events:remove')")
+    @PreAuthorize("@ss.hasPermi('supervise:events:remove')")
     @Log(title = "事件", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable String[] ids) {

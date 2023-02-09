@@ -30,7 +30,7 @@ public class CtOrderController extends BaseController {
     /**
      * 查询购物订单列表
      */
-    @PreAuthorize("@ss.hasPermi('system:order:list')")
+    @PreAuthorize("@ss.hasPermi('supervise:order:list')")
     @GetMapping("/list")
     public TableDataInfo list(CtOrder ctOrder) {
         startPage();
@@ -41,7 +41,7 @@ public class CtOrderController extends BaseController {
     /**
      * 导出购物订单列表
      */
-    @PreAuthorize("@ss.hasPermi('system:order:export')")
+    @PreAuthorize("@ss.hasPermi('supervise:order:export')")
     @Log(title = "购物订单", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, CtOrder ctOrder) {
@@ -53,7 +53,7 @@ public class CtOrderController extends BaseController {
     /**
      * 获取购物订单详细信息
      */
-    @PreAuthorize("@ss.hasPermi('system:order:query')")
+    @PreAuthorize("@ss.hasPermi('supervise:order:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") String id) {
         return AjaxResult.success(ctOrderService.selectCtOrderById(id));
@@ -62,7 +62,7 @@ public class CtOrderController extends BaseController {
     /**
      * 新增购物订单
      */
-    @PreAuthorize("@ss.hasPermi('system:order:add')")
+    @PreAuthorize("@ss.hasPermi('supervise:order:add')")
     @Log(title = "购物订单", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody CtOrder ctOrder) {
@@ -72,7 +72,7 @@ public class CtOrderController extends BaseController {
     /**
      * 修改购物订单
      */
-    @PreAuthorize("@ss.hasPermi('system:order:edit')")
+    @PreAuthorize("@ss.hasPermi('supervise:order:edit')")
     @Log(title = "购物订单", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody CtOrder ctOrder) {
@@ -82,7 +82,7 @@ public class CtOrderController extends BaseController {
     /**
      * 删除购物订单
      */
-    @PreAuthorize("@ss.hasPermi('system:order:remove')")
+    @PreAuthorize("@ss.hasPermi('supervise:order:remove')")
     @Log(title = "购物订单", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable String[] ids) {

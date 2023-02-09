@@ -30,7 +30,7 @@ public class CtCashOrderController extends BaseController {
     /**
      * 查询取现订单列表
      */
-    @PreAuthorize("@ss.hasPermi('system:order:list')")
+    @PreAuthorize("@ss.hasPermi('supervise:order:list')")
     @GetMapping("/list")
     public TableDataInfo list(CtCashOrder ctCashOrder) {
         startPage();
@@ -41,7 +41,7 @@ public class CtCashOrderController extends BaseController {
     /**
      * 导出取现订单列表
      */
-    @PreAuthorize("@ss.hasPermi('system:order:export')")
+    @PreAuthorize("@ss.hasPermi('supervise:order:export')")
     @Log(title = "取现订单", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, CtCashOrder ctCashOrder) {
@@ -53,7 +53,7 @@ public class CtCashOrderController extends BaseController {
     /**
      * 获取取现订单详细信息
      */
-    @PreAuthorize("@ss.hasPermi('system:order:query')")
+    @PreAuthorize("@ss.hasPermi('supervise:order:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") String id) {
         return AjaxResult.success(ctCashOrderService.selectCtCashOrderById(id));
@@ -62,7 +62,7 @@ public class CtCashOrderController extends BaseController {
     /**
      * 新增取现订单
      */
-    @PreAuthorize("@ss.hasPermi('system:order:add')")
+    @PreAuthorize("@ss.hasPermi('supervise:order:add')")
     @Log(title = "取现订单", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody CtCashOrder ctCashOrder) {
@@ -72,7 +72,7 @@ public class CtCashOrderController extends BaseController {
     /**
      * 修改取现订单
      */
-    @PreAuthorize("@ss.hasPermi('system:order:edit')")
+    @PreAuthorize("@ss.hasPermi('supervise:order:edit')")
     @Log(title = "取现订单", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody CtCashOrder ctCashOrder) {
@@ -82,7 +82,7 @@ public class CtCashOrderController extends BaseController {
     /**
      * 删除取现订单
      */
-    @PreAuthorize("@ss.hasPermi('system:order:remove')")
+    @PreAuthorize("@ss.hasPermi('supervise:order:remove')")
     @Log(title = "取现订单", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable String[] ids) {

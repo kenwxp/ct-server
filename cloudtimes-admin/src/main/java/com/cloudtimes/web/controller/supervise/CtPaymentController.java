@@ -30,7 +30,7 @@ public class CtPaymentController extends BaseController {
     /**
      * 查询支付渠道列表
      */
-    @PreAuthorize("@ss.hasPermi('system:payment:list')")
+    @PreAuthorize("@ss.hasPermi('supervise:payment:list')")
     @GetMapping("/list")
     public TableDataInfo list(CtPayment ctPayment) {
         startPage();
@@ -41,7 +41,7 @@ public class CtPaymentController extends BaseController {
     /**
      * 导出支付渠道列表
      */
-    @PreAuthorize("@ss.hasPermi('system:payment:export')")
+    @PreAuthorize("@ss.hasPermi('supervise:payment:export')")
     @Log(title = "支付渠道", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, CtPayment ctPayment) {
@@ -53,7 +53,7 @@ public class CtPaymentController extends BaseController {
     /**
      * 获取支付渠道详细信息
      */
-    @PreAuthorize("@ss.hasPermi('system:payment:query')")
+    @PreAuthorize("@ss.hasPermi('supervise:payment:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") String id) {
         return AjaxResult.success(ctPaymentService.selectCtPaymentById(id));
@@ -62,7 +62,7 @@ public class CtPaymentController extends BaseController {
     /**
      * 新增支付渠道
      */
-    @PreAuthorize("@ss.hasPermi('system:payment:add')")
+    @PreAuthorize("@ss.hasPermi('supervise:payment:add')")
     @Log(title = "支付渠道", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody CtPayment ctPayment) {
@@ -72,7 +72,7 @@ public class CtPaymentController extends BaseController {
     /**
      * 修改支付渠道
      */
-    @PreAuthorize("@ss.hasPermi('system:payment:edit')")
+    @PreAuthorize("@ss.hasPermi('supervise:payment:edit')")
     @Log(title = "支付渠道", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody CtPayment ctPayment) {
@@ -82,7 +82,7 @@ public class CtPaymentController extends BaseController {
     /**
      * 删除支付渠道
      */
-    @PreAuthorize("@ss.hasPermi('system:payment:remove')")
+    @PreAuthorize("@ss.hasPermi('supervise:payment:remove')")
     @Log(title = "支付渠道", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable String[] ids) {

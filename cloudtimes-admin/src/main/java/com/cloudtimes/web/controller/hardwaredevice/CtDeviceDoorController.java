@@ -25,7 +25,7 @@ import com.cloudtimes.common.core.page.TableDataInfo;
  * 门禁设备密码Controller
  * 
  * @author tank
- * @date 2023-01-17
+ * @date 2023-02-09
  */
 @RestController
 @RequestMapping("/hardwaredevice/ctdevicedoor")
@@ -64,7 +64,7 @@ public class CtDeviceDoorController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('hardwaredevice:ctdevicedoor:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
+    public AjaxResult getInfo(@PathVariable("id") String id)
     {
         return AjaxResult.success(ctDeviceDoorService.selectCtDeviceDoorById(id));
     }
@@ -97,7 +97,7 @@ public class CtDeviceDoorController extends BaseController
     @PreAuthorize("@ss.hasPermi('hardwaredevice:ctdevicedoor:remove')")
     @Log(title = "门禁设备密码", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
+    public AjaxResult remove(@PathVariable String[] ids)
     {
         return toAjax(ctDeviceDoorService.deleteCtDeviceDoorByIds(ids));
     }

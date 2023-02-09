@@ -23,9 +23,9 @@ import com.cloudtimes.common.core.page.TableDataInfo;
 
 /**
  * 开门日志Controller
- * 
+ *
  * @author tank
- * @date 2023-01-17
+ * @date 2023-02-08
  */
 @RestController
 @RequestMapping("/hardwaredevice/ctopendoorlogs")
@@ -64,7 +64,7 @@ public class CtOpenDoorLogsController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('hardwaredevice:ctopendoorlogs:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
+    public AjaxResult getInfo(@PathVariable("id") String id)
     {
         return AjaxResult.success(ctOpenDoorLogsService.selectCtOpenDoorLogsById(id));
     }
@@ -96,8 +96,8 @@ public class CtOpenDoorLogsController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('hardwaredevice:ctopendoorlogs:remove')")
     @Log(title = "开门日志", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
+    @DeleteMapping("/{ids}")
+    public AjaxResult remove(@PathVariable String[] ids)
     {
         return toAjax(ctOpenDoorLogsService.deleteCtOpenDoorLogsByIds(ids));
     }

@@ -38,7 +38,7 @@ public class CtShoppingController extends BaseController {
     /**
      * 查询购物列表
      */
-    @PreAuthorize("@ss.hasPermi('system:shopping:list')")
+    @PreAuthorize("@ss.hasPermi('supervise:shopping:list')")
     @GetMapping("/list")
     public TableDataInfo list(CtShopping ctShopping) {
         startPage();
@@ -49,7 +49,7 @@ public class CtShoppingController extends BaseController {
     /**
      * 导出购物列表
      */
-    @PreAuthorize("@ss.hasPermi('system:shopping:export')")
+    @PreAuthorize("@ss.hasPermi('supervise:shopping:export')")
     @Log(title = "购物", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, CtShopping ctShopping) {
@@ -61,7 +61,7 @@ public class CtShoppingController extends BaseController {
     /**
      * 获取购物详细信息
      */
-    @PreAuthorize("@ss.hasPermi('system:shopping:query')")
+    @PreAuthorize("@ss.hasPermi('supervise:shopping:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") String id) {
         return AjaxResult.success(ctShoppingService.selectCtShoppingById(id));
@@ -70,7 +70,7 @@ public class CtShoppingController extends BaseController {
     /**
      * 新增购物
      */
-    @PreAuthorize("@ss.hasPermi('system:shopping:add')")
+    @PreAuthorize("@ss.hasPermi('supervise:shopping:add')")
     @Log(title = "购物", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody CtShopping ctShopping) {
@@ -80,7 +80,7 @@ public class CtShoppingController extends BaseController {
     /**
      * 修改购物
      */
-    @PreAuthorize("@ss.hasPermi('system:shopping:edit')")
+    @PreAuthorize("@ss.hasPermi('supervise:shopping:edit')")
     @Log(title = "购物", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody CtShopping ctShopping) {
@@ -90,7 +90,7 @@ public class CtShoppingController extends BaseController {
     /**
      * 删除购物
      */
-    @PreAuthorize("@ss.hasPermi('system:shopping:remove')")
+    @PreAuthorize("@ss.hasPermi('supervise:shopping:remove')")
     @Log(title = "购物", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable String[] ids) {

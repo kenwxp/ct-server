@@ -14,7 +14,7 @@ import com.cloudtimes.hardwaredevice.service.ICtDeviceDoorService;
  * 门禁设备密码Service业务层处理
  * 
  * @author tank
- * @date 2023-01-17
+ * @date 2023-02-09
  */
 @DataSource(DataSourceType.CT)
 @Service
@@ -30,7 +30,7 @@ public class CtDeviceDoorServiceImpl implements ICtDeviceDoorService
      * @return 门禁设备密码
      */
     @Override
-    public CtDeviceDoor selectCtDeviceDoorById(Long id)
+    public CtDeviceDoor selectCtDeviceDoorById(String id)
     {
         return ctDeviceDoorMapper.selectCtDeviceDoorById(id);
     }
@@ -80,7 +80,7 @@ public class CtDeviceDoorServiceImpl implements ICtDeviceDoorService
      * @return 结果
      */
     @Override
-    public int deleteCtDeviceDoorByIds(Long[] ids)
+    public int deleteCtDeviceDoorByIds(String[] ids)
     {
         return ctDeviceDoorMapper.deleteCtDeviceDoorByIds(ids);
     }
@@ -92,7 +92,7 @@ public class CtDeviceDoorServiceImpl implements ICtDeviceDoorService
      * @return 结果
      */
     @Override
-    public int deleteCtDeviceDoorById(Long id)
+    public int deleteCtDeviceDoorById(String id)
     {
         return ctDeviceDoorMapper.deleteCtDeviceDoorById(id);
     }
