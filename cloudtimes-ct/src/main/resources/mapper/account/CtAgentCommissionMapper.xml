@@ -30,7 +30,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <select id="selectCtAgentCommissionById" parameterType="String" resultMap="CtAgentCommissionResult">
         <include refid="selectCtAgentCommissionVo"/>
-        where id = #{id}
+        where user_id = #{id}
     </select>
         
     <insert id="insertCtAgentCommission" parameterType="CtAgentCommission">

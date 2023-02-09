@@ -1,7 +1,10 @@
 package com.cloudtimes.account.service
 
 import com.cloudtimes.account.domain.CtUserAgent
+import com.cloudtimes.account.dto.request.AgentStoreRequest
 import com.cloudtimes.account.dto.request.WithdrawCashRequest
+import com.cloudtimes.account.dto.response.AgentShopStats
+import com.cloudtimes.account.dto.response.StoreAndCommission
 
 /**
  * 代理Service接口
@@ -25,6 +28,13 @@ interface ICtUserAgentService {
      * @return 代理集合
      */
     fun selectCtUserAgentList(ctUserAgent: CtUserAgent): List<CtUserAgent>
+
+
+    /** 查询代理门店列表 */
+    fun selectCtAgentShopList(agentStoreRequest: AgentStoreRequest): List<StoreAndCommission>
+
+    /** 查询代理门店上线统计 */
+    fun selectCtAgentShopStats(userId: String): List<AgentShopStats>
 
     /**
      * 新增代理

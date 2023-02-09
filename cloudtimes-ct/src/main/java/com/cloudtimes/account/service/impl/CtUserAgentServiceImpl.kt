@@ -3,7 +3,10 @@ package com.cloudtimes.account.service.impl
 import com.cloudtimes.account.domain.CtUserAgent
 import com.cloudtimes.account.domain.CtUserAssetsBook
 import com.cloudtimes.account.domain.CtWithdrawalBook
+import com.cloudtimes.account.dto.request.AgentStoreRequest
 import com.cloudtimes.account.dto.request.WithdrawCashRequest
+import com.cloudtimes.account.dto.response.AgentShopStats
+import com.cloudtimes.account.dto.response.StoreAndCommission
 import com.cloudtimes.account.mapper.CtUserAgentMapper
 import com.cloudtimes.account.mapper.CtUserAssetsBookMapper
 import com.cloudtimes.account.mapper.CtWithdrawalBookMapper
@@ -53,6 +56,25 @@ class CtUserAgentServiceImpl : ICtUserAgentService {
      */
     override fun selectCtUserAgentList(ctUserAgent: CtUserAgent): List<CtUserAgent> {
         return ctUserAgentMapper.selectCtUserAgentList(ctUserAgent)
+    }
+
+
+    /** 查询代理门店列表 */
+    override fun selectCtAgentShopList(agentStoreRequest: AgentStoreRequest): List<StoreAndCommission> {
+        return ctUserAgentMapper.selectCtAgentShopList(agentStoreRequest)
+    }
+
+
+    /** 查询代理门店上线统计 */
+    override fun selectCtAgentShopStats(userId: String): List<AgentShopStats> {
+        val stats = ctUserAgentMapper.selectCtAgentShopStats(userId)
+
+        val allStats = ShopBuildState.values().map {bs ->
+            val found = stats.find { st -> st.buildState == bs.code }
+            found ?: AgentShopStats(bs.code, 0)
+        }
+
+        return allStats
     }
 
     /**

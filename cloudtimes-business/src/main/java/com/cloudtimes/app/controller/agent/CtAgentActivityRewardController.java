@@ -1,4 +1,4 @@
-package com.cloudtimes.app.controller.v1.agent;
+package com.cloudtimes.app.controller.agent;
 
 import com.cloudtimes.account.domain.CtAgentActivityReward;
 import com.cloudtimes.account.service.ICtAgentActivityRewardService;

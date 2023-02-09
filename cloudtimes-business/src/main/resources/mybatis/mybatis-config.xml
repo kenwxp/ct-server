@@ -17,4 +17,10 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 		 <setting name="mapUnderscoreToCamelCase" value="true"/>
 	</settings>
 
+    <!-- 配置其他类型别名 -->
+    <typeAliases>
+        <package name="com.cloudtimes.**.domain" />
+        <package name="com.cloudtimes.**.dto.request" />
+        <package name="com.cloudtimes.**.dto.response" />
+    </typeAliases>
 </configuration>

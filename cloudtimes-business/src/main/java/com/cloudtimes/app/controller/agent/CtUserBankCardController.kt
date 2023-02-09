@@ -1,4 +1,4 @@
-package com.cloudtimes.app.controller.v1.agent
+package com.cloudtimes.app.controller.agent
 
 import com.cloudtimes.account.domain.CtUserBankCard
 import com.cloudtimes.account.service.ICtUserBankCardService
@@ -23,7 +23,7 @@ import javax.validation.Valid
  */
 @RestController
 @RequestMapping("/v1/agent/bank_card")
-@Api("用户银行卡")
+@Api(tags = ["用户银行卡"])
 class CtUserBankCardController : BaseController() {
     @Autowired
     private lateinit var ctUserBankCardService: ICtUserBankCardService
