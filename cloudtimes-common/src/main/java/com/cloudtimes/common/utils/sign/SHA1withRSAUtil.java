@@ -1,6 +1,5 @@
-package com.cloudtimes.common.utils;
+package com.cloudtimes.common.utils.sign;
 
-import com.cloudtimes.common.utils.sign.Base64;
 import org.apache.xmlbeans.impl.util.HexBin;
 import org.bouncycastle.asn1.ASN1Sequence;
 import org.bouncycastle.asn1.pkcs.RSAPrivateKey;
