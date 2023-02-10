@@ -73,11 +73,6 @@
             <artifactId>spring-boot-test</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>cloudtimes</groupId>
-            <artifactId>cloudtimes-rocketmq</artifactId>
-        </dependency>
-
     </dependencies>
 
     <build>

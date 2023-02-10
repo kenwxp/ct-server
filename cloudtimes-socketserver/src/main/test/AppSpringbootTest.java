@@ -1,7 +1,6 @@
 
 import com.cloudtimes.WebSocketServerApplication;
-import com.cloudtimes.common.constant.RocketMQConstants;
-import com.cloudtimes.mq.models.MessageBody;
+import com.cloudtimes.common.mq.MessageBody;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,10 +18,10 @@ public class AppSpringbootTest {
 
     @Test
     public void testMQ() {
-        for(int i =0;i<100;i++){
+        for (int i = 0; i < 100; i++) {
             MessageBody body = new MessageBody();
             body.setPayload("HELLOWORLD:" + Math.random());
-          //  rocketMQTemplate.convertAndSend(RocketMQConstants.TOPIC_DEVICE, body);
+            //  rocketMQTemplate.convertAndSend(RocketMQConstants.TOPIC_DEVICE, body);
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {

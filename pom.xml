@@ -187,13 +187,6 @@
                 <version>${cloudtimes.version}</version>
             </dependency>
 
-            <!-- rocketmq模块-->
-            <dependency>
-                <groupId>cloudtimes</groupId>
-                <artifactId>cloudtimes-rocketmq</artifactId>
-                <version>${cloudtimes.version}</version>
-            </dependency>
-
             <!-- 通用工具-->
             <dependency>
                 <groupId>cloudtimes</groupId>
@@ -250,7 +243,6 @@
         <module>cloudtimes-partner</module>
         <module>cloudtimes-business</module>
         <module>cloudtimes-socketserver</module>
-        <module>cloudtimes-rocketmq</module>
     </modules>
     <packaging>pom</packaging>
 

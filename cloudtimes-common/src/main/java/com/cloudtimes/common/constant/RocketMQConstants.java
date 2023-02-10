@@ -11,5 +11,7 @@ public interface RocketMQConstants {
      */
     public static final String TOPIC_DEVICE = "TOPIC_DEVICE";
 
+    public static final String WS_TOPIC_DEVICE = "WS_TOPIC_DEVICE";
+
 
 }

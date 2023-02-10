@@ -150,11 +150,6 @@
             <artifactId>cloudtimes-partner</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>cloudtimes</groupId>
-            <artifactId>cloudtimes-rocketmq</artifactId>
-        </dependency>
-
         <!-- sharding-jdbc分库分表 -->
         <dependency>
             <groupId>org.apache.shardingsphere</groupId>
