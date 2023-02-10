@@ -4,8 +4,17 @@ import com.cloudtimes.account.dto.response.StoreAndCommission
 import com.cloudtimes.account.domain.CtUserAgent
 import com.cloudtimes.account.dto.request.AgentStoreRequest
 import com.cloudtimes.account.dto.response.AgentShopStats
+
 import org.apache.ibatis.annotations.Param
 import org.apache.ibatis.annotations.Select
+import org.apache.ibatis.annotations.Mapper
+import org.apache.ibatis.annotations.Result
+import org.apache.ibatis.annotations.ResultMap
+import org.apache.ibatis.annotations.Results
+import org.apache.ibatis.annotations.SelectProvider
+import org.apache.ibatis.type.JdbcType
+import org.mybatis.dynamic.sql.select.render.SelectStatementProvider
+import org.mybatis.dynamic.sql.util.SqlProviderAdapter
 
 /**
  * 代理Mapper接口
@@ -13,7 +22,35 @@ import org.apache.ibatis.annotations.Select
  * @author 沈兵
  * @date 2023-02-07
  */
+@Mapper
 interface CtUserAgentMapper {
+    @SelectProvider(type=SqlProviderAdapter::class, method="select")
+    @Results(id="CtUserAgentResult", value = [
+        Result(column="user_id", property="userId", jdbcType=JdbcType.OTHER, id=true),
+        Result(column="nick_name", property="nickName", jdbcType=JdbcType.VARCHAR),
+        Result(column="agent_type", property="agentType", jdbcType=JdbcType.CHAR),
+        Result(column="parent_user_id", property="parentUserId", jdbcType=JdbcType.OTHER),
+        Result(column="cash_amount", property="cashAmount", jdbcType=JdbcType.DECIMAL),
+        Result(column="total_withdrawal", property="totalWithdrawal", jdbcType=JdbcType.DECIMAL),
+        Result(column="total_sales_reward", property="totalSalesReward", jdbcType=JdbcType.DECIMAL),
+        Result(column="total_activity_reward", property="totalActivityReward", jdbcType=JdbcType.DECIMAL),
+        Result(column="total_dividend", property="totalDividend", jdbcType=JdbcType.DECIMAL),
+        Result(column="total_tributes", property="totalTributes", jdbcType=JdbcType.DECIMAL),
+        Result(column="total_tributes_dividend", property="totalTributesDividend", jdbcType=JdbcType.DECIMAL),
+        Result(column="total_tributes_commission", property="totalTributesCommission", jdbcType=JdbcType.DECIMAL),
+        Result(column="remark", property="remark", jdbcType=JdbcType.VARCHAR),
+        Result(column="create_date", property="createDate", jdbcType=JdbcType.DATE),
+        Result(column="create_time", property="createTime", jdbcType=JdbcType.TIMESTAMP),
+        Result(column="update_time", property="updateTime", jdbcType=JdbcType.TIMESTAMP),
+        Result(column="del_flag", property="delFlag", jdbcType=JdbcType.CHAR),
+        Result(column="agent_area", property="agentArea", jdbcType=JdbcType.LONGVARCHAR)
+    ])
+    fun selectMany(selectStatement: SelectStatementProvider): List<CtUserAgent>
+
+    @SelectProvider(type=SqlProviderAdapter::class, method="select")
+    @ResultMap("CtUserAgentResult")
+    fun selectOne(selectStatement: SelectStatementProvider): CtUserAgent?
+
     /**
      * 查询代理
      *

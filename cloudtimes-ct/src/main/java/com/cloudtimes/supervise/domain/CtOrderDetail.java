@@ -73,6 +73,11 @@ public class CtOrderDetail extends BaseEntity {
     private String delFlag;
 
     /**
+     * 订单年月
+     */
+    private Integer yearMonth;
+
+    /**
      * 创建日期
      */
     private Date createDate;

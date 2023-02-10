@@ -78,7 +78,7 @@ public class CtAgentCommissionController extends BaseController
     public AjaxResult add(@RequestBody CtAgentCommission ctAgentCommission)
     {
         var user = getLoginUser();
-        ctAgentCommission.setOperator(user.getUsername());
+        ctAgentCommission.operator = user.getUsername();
         return toAjax(ctAgentCommissionService.insertCtAgentCommission(ctAgentCommission));
     }
 
@@ -91,7 +91,7 @@ public class CtAgentCommissionController extends BaseController
     public AjaxResult edit(@RequestBody CtAgentCommission ctAgentCommission)
     {
         var user = getLoginUser();
-        ctAgentCommission.setOperator(user.getUsername());
+        ctAgentCommission.operator = user.getUsername();
         return toAjax(ctAgentCommissionService.updateCtAgentCommission(ctAgentCommission));
     }
 

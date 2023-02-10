@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cloudtimes.stats.mapper.CtStatsMonthlySalesMapper">
+    
+    <resultMap type="CtStatsMonthlySales" id="CtStatsMonthlySalesResult">
+        <result property="storeId"    column="store_id"    />
+        <result property="yearMonth"    column="year_month"    />
+        <result property="orderCount"    column="order_count"    />
+        <result property="salesMoneyTotals"    column="sales_money_totals"    />
+        <result property="createDate"    column="create_date"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectCtStatsMonthlySalesVo">
+        select store_id, `year_month`, order_count, sales_money_totals, create_date, create_time, update_time, del_flag from ct_stats_monthly_sales
+    </sql>
+
+    <select id="selectCtStatsMonthlySalesList" parameterType="CtStatsMonthlySales" resultMap="CtStatsMonthlySalesResult">
+        <include refid="selectCtStatsMonthlySalesVo"/>
+        <where>
+            <if test="storeId != null "> and store_id = #{storeId}</if>
+        </where>
+        order by `year_month` desc
+    </select>
+    
+    <insert id="insertCtStatsMonthlySales" parameterType="CtStatsMonthlySales">
+        insert into ct_stats_monthly_sales
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="storeId != null">store_id,</if>
+            <if test="yearMonth != null">year_month,</if>
+            <if test="orderCount != null">order_count,</if>
+            <if test="salesMoneyTotals != null">sales_money_totals,</if>
+            <if test="createDate != null">create_date,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="storeId != null">#{storeId},</if>
+            <if test="yearMonth != null">#{yearMonth},</if>
+            <if test="orderCount != null">#{orderCount},</if>
+            <if test="salesMoneyTotals != null">#{salesMoneyTotals},</if>
+            <if test="createDate != null">#{createDate},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+         </trim>
+    </insert>
+</mapper>

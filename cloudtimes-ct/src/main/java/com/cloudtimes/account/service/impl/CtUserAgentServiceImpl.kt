@@ -10,6 +10,7 @@ import com.cloudtimes.account.dto.response.StoreAndCommission
 import com.cloudtimes.account.mapper.CtUserAgentMapper
 import com.cloudtimes.account.mapper.CtUserAssetsBookMapper
 import com.cloudtimes.account.mapper.CtWithdrawalBookMapper
+import com.cloudtimes.account.mapper.provider.CtUserAgentProvider
 import com.cloudtimes.account.service.ICtUserAgentService
 import com.cloudtimes.common.annotation.DataSource
 import com.cloudtimes.common.enums.*
@@ -45,7 +46,7 @@ class CtUserAgentServiceImpl : ICtUserAgentService {
      * @return 代理
      */
     override fun selectCtUserAgentByUserId(userId: String): CtUserAgent? {
-        return ctUserAgentMapper.selectCtUserAgentByUserId(userId)
+        return ctUserAgentMapper.selectOne(CtUserAgentProvider.selectById(userId))
     }
 
     /**
@@ -125,7 +126,7 @@ class CtUserAgentServiceImpl : ICtUserAgentService {
         val agentAssets = ctUserAgentMapper.selectCtUserAgentByUserId(withdrawRequest.userId!!)
             ?: throw ServiceException("未查询到用户资产信息");
 
-        if ( agentAssets.cashAmount < withdrawRequest.amount ) {
+        if ( agentAssets.cashAmount!! < withdrawRequest.amount!! ) {
             throw ServiceException("用户余额不足");
         }
 
@@ -137,7 +138,7 @@ class CtUserAgentServiceImpl : ICtUserAgentService {
             assetsType = AssetsType.Cash.code
             amount = withdrawRequest.amount
             beforeAmount = agentAssets.cashAmount
-            alterAmount = agentAssets.cashAmount.minus(withdrawRequest.amount!!)
+            alterAmount = agentAssets.cashAmount!!.minus(withdrawRequest.amount!!)
             operateType = AssetsOperateType.Decrease.code
             remark = "提现扣减"
         }
@@ -152,8 +153,8 @@ class CtUserAgentServiceImpl : ICtUserAgentService {
         ctWithdrawalBookMapper.insertCtWithdrawalBook(withdrawRecord)
 
         // Step 3. 扣减现金，增加累计已提现
-        agentAssets.cashAmount = agentAssets.cashAmount.minus(withdrawRequest.amount!!)
-        agentAssets.totalWithdrawal = agentAssets.totalWithdrawal.add(withdrawRequest.amount)
+        agentAssets.cashAmount = agentAssets.cashAmount!!.minus(withdrawRequest.amount!!)
+        agentAssets.totalWithdrawal = agentAssets.totalWithdrawal!!.add(withdrawRequest.amount)
         agentAssets.updateTime = Date()
         ctUserAgentMapper.cashWithdrawCtUserAgent(agentAssets)
     }

@@ -3,21 +3,8 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.cloudtimes.account.mapper.CtAgentCommissionMapper">
-    
-    <resultMap type="CtAgentCommission" id="CtAgentCommissionResult">
-        <result property="id"    column="id"    />
-        <result property="parentUserId"    column="parent_user_id"    />
-        <result property="systemPrice"    column="system_price"    />
-        <result property="operator"    column="operator"    />
-        <result property="remark"    column="remark"    />
-        <result property="delFlag"    column="del_flag"    />
-        <result property="createDate"    column="create_date"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateTime"    column="update_time"    />
-    </resultMap>
-
     <sql id="selectCtAgentCommissionVo">
-        select id, parent_user_id, system_price, operator, remark, del_flag, create_date, create_time, update_time from ct_agent_commission
+        select id, parent_user_id, cost_price, operator, remark, del_flag, create_date, create_time, update_time from ct_agent_commission
     </sql>
 
     <select id="selectCtAgentCommissionList" parameterType="CtAgentCommission" resultMap="CtAgentCommissionResult">
@@ -38,7 +25,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
             <if test="parentUserId != null">parent_user_id,</if>
-            <if test="systemPrice != null">system_price,</if>
+            <if test="costPrice != null">cost_price,</if>
             <if test="operator != null">operator,</if>
             <if test="remark != null">remark,</if>
             <if test="delFlag != null">del_flag,</if>
@@ -49,7 +36,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
             <if test="parentUserId != null">#{parentUserId},</if>
-            <if test="systemPrice != null">#{systemPrice},</if>
+            <if test="costPrice != null">#{costPrice</if>
             <if test="operator != null">#{operator},</if>
             <if test="remark != null">#{remark},</if>
             <if test="delFlag != null">#{delFlag},</if>
@@ -63,7 +50,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update ct_agent_commission
         <trim prefix="SET" suffixOverrides=",">
             <if test="parentUserId != null">parent_user_id = #{parentUserId},</if>
-            <if test="systemPrice != null">system_price = #{systemPrice},</if>
+            <if test="costPrice != null">cost_price = #{costPrice</if>
             <if test="operator != null">operator = #{operator},</if>
             <if test="remark != null">remark = #{remark},</if>
             <if test="delFlag != null">del_flag = #{delFlag},</if>

@@ -6,6 +6,7 @@ import com.cloudtimes.common.annotation.DataSource;
 import com.cloudtimes.common.core.redis.RedisCache;
 import com.cloudtimes.common.enums.DataSourceType;
 import com.cloudtimes.common.exception.ServiceException;
+import com.cloudtimes.common.utils.DateUtils;
 import com.cloudtimes.hardwaredevice.domain.CtStore;
 import com.cloudtimes.hardwaredevice.mapper.CtStoreMapper;
 import com.cloudtimes.serving.wechat.service.ICtBusinessService;
@@ -20,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -93,7 +95,7 @@ public class CtBusinessServiceImpl implements ICtBusinessService {
         //新增购物记录，开始时间设置成任务开始时间
         CtOrder newOrder = new CtOrder();
         newOrder.setTaskId(dbTask.getId());
-        newOrder.setStoreNo(dbStore.getStoreNo());
+        newOrder.setStoreId(dbStore.getId());
         newOrder.setStoreName(dbStore.getName());
         newOrder.setStoreProvince(dbStore.getRegionCode());
         newOrder.setStoreCity(dbStore.getRegionCode());
@@ -106,7 +108,10 @@ public class CtBusinessServiceImpl implements ICtBusinessService {
         newOrder.setIsExceptional("0");
         newOrder.setState("0");
         newOrder.setDelFlag("0");
-        newOrder.setCreateDate(new Date());
+        var now = LocalDateTime.now();
+        var yearMonth = now.getYear() * 100 + now.getMonthValue();
+        newOrder.setYearMonth(yearMonth);
+        newOrder.setCreateDate(DateUtils.toDate(now));
         //新增订单，并推送单号，顾客信息，新动态随机数到收银机
         if (orderMapper.insertCtOrder(newOrder) < 1) {
             throw new ServiceException("新增订单失败");

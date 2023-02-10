@@ -129,7 +129,7 @@
     <select id="selectCtShoppingListByTask" resultType="CtShopping">
         select o.id,
         o.task_id,
-        o.store_no,
+        o.store_id,
         o.store_name,
         o.store_province,
         o.store_city,

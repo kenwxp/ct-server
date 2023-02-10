@@ -7,7 +7,7 @@
     <sql id="selectCtOrderVo">
         select id,
                task_id,
-               store_no,
+               store_id,
                store_name,
                store_province,
                store_city,
@@ -43,7 +43,7 @@
         <include refid="selectCtOrderVo"/>
         <where>
             <if test="taskId != null  and taskId != ''">and task_id = #{taskId}</if>
-            <if test="storeNo != null  and storeNo != ''">and store_no = #{storeNo}</if>
+            <if test="storeId != null  and storeId != ''">and store_id = #{storeId}</if>
             <if test="storeName != null  and storeName != ''">and store_name like concat('%', #{storeName}, '%')</if>
             <if test="storeProvince != null  and storeProvince != ''">and store_province = #{storeProvince}</if>
             <if test="storeCity != null  and storeCity != ''">and store_city = #{storeCity}</if>
@@ -55,7 +55,7 @@
             <if test="isCompose != null  and isCompose != ''">and is_compose = #{isCompose}</if>
             <if test="moneyAmount != null ">and money_amount = #{moneyAmount}</if>
             <if test="totalAmount != null ">and total_amount = #{totalAmount}</if>
-            <if test="discountAmount != null ">and discount_amount = #{discountAmount}</if>
+            <if test="discountAmount != null ">and discount_amount = #{discountAmount/</if>
             <if test="deductionAmount != null ">and deduction_amount = #{deductionAmount}</if>
             <if test="actualAmount != null ">and actual_amount = #{actualAmount}</if>
             <if test="itemCount != null ">and item_count = #{itemCount}</if>
@@ -86,7 +86,7 @@
         <trim prefix="(" suffix=")" suffixOverrides=",">
             id,
             <if test="taskId != null">task_id,</if>
-            <if test="storeNo != null">store_no,</if>
+            <if test="storeId != null">store_id,</if>
             <if test="storeName != null">store_name,</if>
             <if test="storeProvince != null">store_province,</if>
             <if test="storeCity != null">store_city,</if>
@@ -119,7 +119,7 @@
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             #{id},
             <if test="taskId != null">#{taskId},</if>
-            <if test="storeNo != null">#{storeNo},</if>
+            <if test="storeId != null">#{storeId},</if>
             <if test="storeName != null">#{storeName},</if>
             <if test="storeProvince != null">#{storeProvince},</if>
             <if test="storeCity != null">#{storeCity},</if>
@@ -155,7 +155,7 @@
         update ct_order
         <trim prefix="SET" suffixOverrides=",">
             <if test="taskId != null">task_id = #{taskId},</if>
-            <if test="storeNo != null">store_no = #{storeNo},</if>
+            <if test="storeId != null">store_id = #{storeId},</if>
             <if test="storeName != null">store_name = #{storeName},</if>
             <if test="storeProvince != null">store_province = #{storeProvince},</if>
             <if test="storeCity != null">store_city = #{storeCity},</if>
@@ -204,7 +204,7 @@
     <select id="selectCtOrderListByTask" resultType="CtOrder">
         select o.id,
                o.task_id,
-               o.store_no,
+               o.store_id,
                o.store_name,
                o.store_province,
                o.store_city,

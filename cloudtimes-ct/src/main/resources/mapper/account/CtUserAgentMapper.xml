@@ -3,25 +3,6 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.cloudtimes.account.mapper.CtUserAgentMapper">
-    <resultMap type="CtUserAgent" id="CtUserAgentResult">
-        <result property="userId"    column="user_id"    />
-        <result property="nickName"    column="nick_name"    />
-        <result property="agentType"    column="agent_type"    />
-        <result property="parentUserId"    column="parent_user_id"    />
-        <result property="agentArea"    column="agent_area"    />
-        <result property="cashAmount"    column="cash_amount"    />
-        <result property="totalWithdrawal"    column="total_withdrawal"    />
-        <result property="totalSalesReward"    column="total_sales_reward"    />
-        <result property="totalDividend"    column="total_dividend"    />
-        <result property="totalActivityReward"    column="total_activity_reward"    />
-        <result property="totalTributes"    column="total_tributes"    />
-        <result property="remark"    column="remark"    />
-        <result property="createDate"    column="create_date"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateTime"    column="update_time"    />
-        <result property="delFlag"    column="del_flag"    />
-    </resultMap>
-    
     <resultMap id="StoreAndCommissionResult" type="StoreAndCommission">
         <association property="store" javaType="CtStore">
             <result property="id"    column="store_id"    />

@@ -31,10 +31,10 @@ public class CtOrder extends BaseEntity {
     private String taskId;
 
     /**
-     * 门店号
+     * 门店ID
      */
-    @Excel(name = "门店号")
-    private String storeNo;
+    @Excel(name = "门店ID")
+    private String storeId;
 
     /**
      * 门店名称
@@ -196,9 +196,15 @@ public class CtOrder extends BaseEntity {
     private String delFlag;
 
     /**
+     * 订单年月
+     */
+    private Integer yearMonth;
+
+    /**
      * 创建日期
      */
     private Date createDate;
+
     /**
      * 创建日期
      */

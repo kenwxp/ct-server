@@ -44,6 +44,12 @@
             <scope>compile</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.mybatis.dynamic-sql</groupId>
+            <artifactId>mybatis-dynamic-sql</artifactId>
+            <version>${mds.version}</version>
+        </dependency>
+
         <!-- Swagger3依赖 -->
         <dependency>
             <groupId>io.springfox</groupId>
