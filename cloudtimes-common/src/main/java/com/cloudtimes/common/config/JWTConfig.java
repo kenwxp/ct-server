@@ -1,4 +1,4 @@
-package com.cloudtimes.app.config;
+package com.cloudtimes.common.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

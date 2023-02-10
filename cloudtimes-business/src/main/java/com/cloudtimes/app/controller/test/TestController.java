@@ -3,19 +3,17 @@ package com.cloudtimes.app.controller.test;
 
 import com.cloudtimes.account.domain.CtUser;
 import com.cloudtimes.account.service.ICtUserService;
-import com.cloudtimes.app.manager.JWTManager;
-import com.cloudtimes.common.constant.RocketMQConstants;
+import com.cloudtimes.common.utils.JWTManager;
 import com.cloudtimes.common.core.controller.BaseController;
 import com.cloudtimes.common.core.domain.AjaxResult;
 import com.cloudtimes.common.core.domain.entity.AuthUser;
 import com.cloudtimes.hardwaredevice.domain.CtDevice;
 import com.cloudtimes.hardwaredevice.domain.CtDeviceDoor;
 import com.cloudtimes.hardwaredevice.mapper.CtDeviceDoorMapper;
-import com.cloudtimes.common.mq.MessageBody;
+import com.cloudtimes.mq.service.CashMqSender;
 import com.cloudtimes.partner.hik.service.ICtHikApiService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +42,7 @@ public class TestController extends BaseController {
     @Autowired
     private CtDeviceDoorMapper ctDeviceDoorMapper;
     @Autowired
-    private RocketMQTemplate rocketMQTemplate;
+    private CashMqSender cashMqSender;
 
     private static Logger log = LoggerFactory.getLogger(TestController.class);
 
@@ -93,10 +91,7 @@ public class TestController extends BaseController {
     @ApiOperation("测试发送mq")
     @GetMapping(value = "/send/mq")
     public AjaxResult sendMQ() {
-        log.info("接受发送mq的请求");
-        MessageBody messageBody = new MessageBody();
-        messageBody.setPayload("你好");
-        rocketMQTemplate.convertAndSend(RocketMQConstants.WS_TOPIC_DEVICE, messageBody);
+        cashMqSender.notifyCashDutyStatus("199976cb-a786-11ed-8957-0242ac110003", "1");
         return AjaxResult.success();
     }
 }

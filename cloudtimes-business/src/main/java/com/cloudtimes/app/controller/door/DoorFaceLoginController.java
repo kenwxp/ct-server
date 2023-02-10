@@ -4,7 +4,7 @@ import com.cloudtimes.app.controller.door.model.DoorFaceLoginCheckReq;
 import com.cloudtimes.app.controller.door.model.DoorFaceLoginCheckResp;
 import com.cloudtimes.app.controller.door.model.DoorFaceLoginReq;
 import com.cloudtimes.app.controller.door.model.DoorFaceLoginResp;
-import com.cloudtimes.app.manager.JWTManager;
+import com.cloudtimes.common.utils.JWTManager;
 import com.cloudtimes.common.core.domain.AjaxResult;
 import com.cloudtimes.common.core.domain.entity.AuthUser;
 import com.cloudtimes.common.enums.ChannelType;

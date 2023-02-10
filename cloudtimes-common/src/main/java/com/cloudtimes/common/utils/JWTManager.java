@@ -1,12 +1,12 @@
-package com.cloudtimes.app.manager;
+package com.cloudtimes.common.utils;
 
-import com.alibaba.druid.support.json.JSONUtils;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.cloudtimes.app.config.JWTConfig;
+import com.cloudtimes.common.config.JWTConfig;
 import com.cloudtimes.common.core.domain.entity.AuthUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -36,6 +36,7 @@ public class JWTManager {
 
     /**
      * 生产jwt token
+     *
      * @param authUser
      * @param expire   失效时间 单位分钟，设置为0时为永久
      * @return
@@ -69,8 +70,8 @@ public class JWTManager {
      * @return
      */
     public AuthUser getAuthUser(String token) {
-        String authUserString = this.verify(token).getPayload();
-        return (AuthUser) JSONUtils.parse(authUserString);
+        String authUserString = this.verify(token).getClaim(AUTH_USER).asString();
+        return JSONObject.parseObject(authUserString, AuthUser.class);
     }
 
     /**
