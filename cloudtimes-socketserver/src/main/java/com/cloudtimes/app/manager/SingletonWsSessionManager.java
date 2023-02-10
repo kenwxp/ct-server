@@ -1,8 +1,11 @@
 package com.cloudtimes.app.manager;
 
 
+import com.alibaba.fastjson.JSONObject;
+import com.cloudtimes.common.core.domain.AjaxResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
@@ -10,10 +13,11 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /*
 Session管理器，用于管理session，并注册层spring的一个Bean
+一个登录实例，只能创建一个链接
 */
 @Component
 @Slf4j
-public class WsSessionManager {
+public class SingletonWsSessionManager {
     // 使用ConcurrentHashMap在多线程写时保证线程安全
     private static final ConcurrentHashMap<String, WebSocketSession>
             SESSION_POOL = new ConcurrentHashMap<>();
@@ -53,6 +57,32 @@ public class WsSessionManager {
             }
         }
         return session;
+    }
+
+    public void sendSuccess(String id, Object data) {
+        WebSocketSession session = get(id);
+        if (session != null) {
+            AjaxResult success = AjaxResult.success(data);
+            TextMessage textMessage = new TextMessage(JSONObject.toJSONString(success));
+            try {
+                session.sendMessage(textMessage);
+            } catch (IOException e) {
+                log.error(String.format("发送消息失败, id=%s", id), e);
+            }
+        }
+    }
+
+    public void sendError(String id, Object data) {
+        WebSocketSession session = get(id);
+        if (session != null) {
+            AjaxResult error = AjaxResult.error(data.toString());
+            TextMessage textMessage = new TextMessage(JSONObject.toJSONString(error));
+            try {
+                session.sendMessage(textMessage);
+            } catch (IOException e) {
+                log.error(String.format("发送消息失败, id=%s", id), e);
+            }
+        }
     }
 }
 

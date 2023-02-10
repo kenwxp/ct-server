@@ -1,19 +1,16 @@
 package com.cloudtimes.common.mq;
 
-import org.springframework.context.ApplicationEvent;
-
 import java.io.Serializable;
-import java.time.Clock;
 
 public class MessageBody implements Serializable {
 
-    private Object payload;
+    private String payload;
 
-    public Object getPayload() {
+    public String getPayload() {
         return payload;
     }
 
-    public void setPayload(Object payload) {
+    public void setPayload(String payload) {
         this.payload = payload;
     }
 }

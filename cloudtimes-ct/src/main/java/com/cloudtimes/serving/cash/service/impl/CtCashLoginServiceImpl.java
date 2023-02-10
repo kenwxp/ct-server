@@ -12,6 +12,8 @@ import com.cloudtimes.util.NoUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 
 @Service
 public class CtCashLoginServiceImpl implements ICtCashLoginService {
@@ -53,6 +55,8 @@ public class CtCashLoginServiceImpl implements ICtCashLoginService {
             newDevice.setDeviceAscription("0");
             newDevice.setState("0");
             newDevice.setDelFlag("0");
+            newDevice.setCreateTime(new Date());
+            newDevice.setUpdateTime(new Date());
             if (deviceMapper.insertCtDevice(newDevice) < 1) {
                 throw new ServiceException("新增设备失败");
             }

@@ -1,11 +1,8 @@
 package com.cloudtimes.common.core.domain.entity;
 
-import com.cloudtimes.common.core.domain.BaseEntity;
-import com.cloudtimes.common.enums.ChannelType;
-
 import java.util.Date;
 
-public class AuthUser extends BaseEntity {
+public class AuthUser {
 
     /**
      * 序列号
