@@ -1,27 +1,27 @@
 package com.cloudtimes.resources.mapper;
 
 import java.util.List;
+
 import com.cloudtimes.resources.domain.CtMediaTemplate;
 
 /**
  * 媒体资源模板Mapper接口
- * 
+ *
  * @author tank
  * @date 2023-01-17
  */
-public interface CtMediaTemplateMapper 
-{
+public interface CtMediaTemplateMapper {
     /**
      * 查询媒体资源模板
-     * 
+     *
      * @param id 媒体资源模板主键
      * @return 媒体资源模板
      */
-    public CtMediaTemplate selectCtMediaTemplateById(Long id);
+    public CtMediaTemplate selectCtMediaTemplateById(String id);
 
     /**
      * 查询媒体资源模板列表
-     * 
+     *
      * @param ctMediaTemplate 媒体资源模板
      * @return 媒体资源模板集合
      */
@@ -29,7 +29,7 @@ public interface CtMediaTemplateMapper
 
     /**
      * 新增媒体资源模板
-     * 
+     *
      * @param ctMediaTemplate 媒体资源模板
      * @return 结果
      */
@@ -37,7 +37,7 @@ public interface CtMediaTemplateMapper
 
     /**
      * 修改媒体资源模板
-     * 
+     *
      * @param ctMediaTemplate 媒体资源模板
      * @return 结果
      */
@@ -45,17 +45,17 @@ public interface CtMediaTemplateMapper
 
     /**
      * 删除媒体资源模板
-     * 
+     *
      * @param id 媒体资源模板主键
      * @return 结果
      */
-    public int deleteCtMediaTemplateById(Long id);
+    public int deleteCtMediaTemplateById(String id);
 
     /**
      * 批量删除媒体资源模板
-     * 
+     *
      * @param ids 需要删除的数据主键集合
      * @return 结果
      */
-    public int deleteCtMediaTemplateByIds(Long[] ids);
+    public int deleteCtMediaTemplateByIds(String[] ids);
 }

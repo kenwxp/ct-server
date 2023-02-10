@@ -1,63 +1,61 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.cloudtimes.resources.mapper.CtMediaTemplateMapper">
-    
+
     <resultMap type="CtMediaTemplate" id="CtMediaTemplateResult">
-        <result property="id"    column="id"    />
-        <result property="templateCode"    column="template_code"    />
-        <result property="templateName"    column="template_name"    />
-        <result property="mediaCode"    column="media_code"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateTime"    column="update_time"    />
-        <result property="delFlag"    column="del_flag"    />
+        <result property="id" column="id"/>
+        <result property="templateName" column="template_name"/>
+        <result property="mediaId" column="media_id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="delFlag" column="del_flag"/>
     </resultMap>
 
     <sql id="selectCtMediaTemplateVo">
-        select id, template_code, template_name, media_code, create_time, update_time, del_flag from ct_media_template
+        select id, template_name, create_time, media_id, update_time, del_flag
+        from ct_media_template
     </sql>
 
     <select id="selectCtMediaTemplateList" parameterType="CtMediaTemplate" resultMap="CtMediaTemplateResult">
         <include refid="selectCtMediaTemplateVo"/>
-        <where>  
-            <if test="templateCode != null  and templateCode != ''"> and template_code = #{templateCode}</if>
-            <if test="templateName != null  and templateName != ''"> and template_name like concat('%', #{templateName}, '%')</if>
-            <if test="mediaCode != null  and mediaCode != ''"> and media_code = #{mediaCode}</if>
+        <where>
+            <if test="templateName != null  and templateName != ''">and template_name like concat('%', #{templateName},
+                '%')
+            </if>
+            <if test="mediaId != null  and mediaId != ''">and media_id = #{mediaId}</if>
         </where>
     </select>
-    
-    <select id="selectCtMediaTemplateById" parameterType="Long" resultMap="CtMediaTemplateResult">
+
+    <select id="selectCtMediaTemplateById" parameterType="String" resultMap="CtMediaTemplateResult">
         <include refid="selectCtMediaTemplateVo"/>
         where id = #{id}
     </select>
-        
+
     <insert id="insertCtMediaTemplate" parameterType="CtMediaTemplate" useGeneratedKeys="true" keyProperty="id">
         insert into ct_media_template
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="templateCode != null">template_code,</if>
+            <if test="mediaId != null">media_id,</if>
             <if test="templateName != null">template_name,</if>
-            <if test="mediaCode != null">media_code,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="delFlag != null">del_flag,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="templateCode != null">#{templateCode},</if>
+            <if test="mediaId != null">#{mediaId},</if>
             <if test="templateName != null">#{templateName},</if>
-            <if test="mediaCode != null">#{mediaCode},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="delFlag != null">#{delFlag},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateCtMediaTemplate" parameterType="CtMediaTemplate">
         update ct_media_template
         <trim prefix="SET" suffixOverrides=",">
-            <if test="templateCode != null">template_code = #{templateCode},</if>
+            <if test="mediaId != null">media_id = #{mediaId},</if>
             <if test="templateName != null">template_name = #{templateName},</if>
-            <if test="mediaCode != null">media_code = #{mediaCode},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="delFlag != null">del_flag = #{delFlag},</if>
@@ -65,12 +63,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </update>
 
-    <delete id="deleteCtMediaTemplateById" parameterType="Long">
-        delete from ct_media_template where id = #{id}
+    <delete id="deleteCtMediaTemplateById" parameterType="String">
+        delete
+        from ct_media_template
+        where id = #{id}
     </delete>
 
     <delete id="deleteCtMediaTemplateByIds" parameterType="String">
-        delete from ct_media_template where id in 
+        delete from ct_media_template where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

@@ -22,10 +22,10 @@ import com.cloudtimes.common.utils.poi.ExcelUtil;
 import com.cloudtimes.common.core.page.TableDataInfo;
 
 /**
- * 媒体信息Controller
+ * 媒体Controller
  * 
  * @author tank
- * @date 2023-01-17
+ * @date 2023-02-10
  */
 @RestController
 @RequestMapping("/resources/ctmedia")
@@ -35,7 +35,7 @@ public class CtMediaController extends BaseController
     private ICtMediaService ctMediaService;
 
     /**
-     * 查询媒体信息列表
+     * 查询媒体列表
      */
     @PreAuthorize("@ss.hasPermi('resources:ctmedia:list')")
     @GetMapping("/list")
@@ -47,33 +47,33 @@ public class CtMediaController extends BaseController
     }
 
     /**
-     * 导出媒体信息列表
+     * 导出媒体列表
      */
     @PreAuthorize("@ss.hasPermi('resources:ctmedia:export')")
-    @Log(title = "媒体信息", businessType = BusinessType.EXPORT)
+    @Log(title = "媒体", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, CtMedia ctMedia)
     {
         List<CtMedia> list = ctMediaService.selectCtMediaList(ctMedia);
         ExcelUtil<CtMedia> util = new ExcelUtil<CtMedia>(CtMedia.class);
-        util.exportExcel(response, list, "媒体信息数据");
+        util.exportExcel(response, list, "媒体数据");
     }
 
     /**
-     * 获取媒体信息详细信息
+     * 获取媒体详细信息
      */
     @PreAuthorize("@ss.hasPermi('resources:ctmedia:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
+    public AjaxResult getInfo(@PathVariable("id") String id)
     {
         return AjaxResult.success(ctMediaService.selectCtMediaById(id));
     }
 
     /**
-     * 新增媒体信息
+     * 新增媒体
      */
     @PreAuthorize("@ss.hasPermi('resources:ctmedia:add')")
-    @Log(title = "媒体信息", businessType = BusinessType.INSERT)
+    @Log(title = "媒体", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody CtMedia ctMedia)
     {
@@ -81,10 +81,10 @@ public class CtMediaController extends BaseController
     }
 
     /**
-     * 修改媒体信息
+     * 修改媒体
      */
     @PreAuthorize("@ss.hasPermi('resources:ctmedia:edit')")
-    @Log(title = "媒体信息", businessType = BusinessType.UPDATE)
+    @Log(title = "媒体", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody CtMedia ctMedia)
     {
@@ -92,12 +92,12 @@ public class CtMediaController extends BaseController
     }
 
     /**
-     * 删除媒体信息
+     * 删除媒体
      */
     @PreAuthorize("@ss.hasPermi('resources:ctmedia:remove')")
-    @Log(title = "媒体信息", businessType = BusinessType.DELETE)
+    @Log(title = "媒体", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
+    public AjaxResult remove(@PathVariable String[] ids)
     {
         return toAjax(ctMediaService.deleteCtMediaByIds(ids));
     }

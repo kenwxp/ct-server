@@ -9,7 +9,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="regionName"    column="region_name"    />
         <result property="regionShortName"    column="region_short_name"    />
         <result property="regionCode"    column="region_code"    />
-        <result property="regionParentCode"    column="region_parent_code"    />
+        <result property="regionParentId"    column="region_parent_id"    />
         <result property="regionLevel"    column="region_level"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateTime"    column="update_time"    />
@@ -17,7 +17,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectCtRegionVo">
-        select id, region_name, region_short_name, region_code, region_parent_code, region_level, create_time, update_time, del_flag from ct_region
+        select id, region_name, region_short_name, region_code, region_parent_id, region_level, create_time, update_time, del_flag from ct_region
     </sql>
 
     <select id="selectCtRegionList" parameterType="CtRegion" resultMap="CtRegionResult">
@@ -30,7 +30,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
     </select>
     
-    <select id="selectCtRegionById" parameterType="Long" resultMap="CtRegionResult">
+    <select id="selectCtRegionById" parameterType="String" resultMap="CtRegionResult">
         <include refid="selectCtRegionVo"/>
         where id = #{id}
     </select>
@@ -41,7 +41,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="regionName != null">region_name,</if>
             <if test="regionShortName != null">region_short_name,</if>
             <if test="regionCode != null">region_code,</if>
-            <if test="regionParentCode != null">region_parent_code,</if>
+            <if test="regionParentId != null  and regionParentId != ''">region_parent_id,</if>
             <if test="regionLevel != null">region_level,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
@@ -51,7 +51,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="regionName != null">#{regionName},</if>
             <if test="regionShortName != null">#{regionShortName},</if>
             <if test="regionCode != null">#{regionCode},</if>
-            <if test="regionParentCode != null">#{regionParentCode},</if>
+            <if test="regionParentId != null and regionParentId != ''">#{regionParentId},</if>
             <if test="regionLevel != null">#{regionLevel},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateTime != null">#{updateTime},</if>
@@ -65,7 +65,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="regionName != null">region_name = #{regionName},</if>
             <if test="regionShortName != null">region_short_name = #{regionShortName},</if>
             <if test="regionCode != null">region_code = #{regionCode},</if>
-            <if test="regionParentCode != null">region_parent_code = #{regionParentCode},</if>
+            <if test="regionParentId != null  and regionParentId != ''">region_parent_id = #{regionParentId},</if>
             <if test="regionLevel != null">region_level = #{regionLevel},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
@@ -74,7 +74,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </update>
 
-    <delete id="deleteCtRegionById" parameterType="Long">
+    <delete id="deleteCtRegionById" parameterType="String">
         delete from ct_region where id = #{id}
     </delete>
 

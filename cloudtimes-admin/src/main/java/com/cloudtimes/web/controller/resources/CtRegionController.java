@@ -64,7 +64,7 @@ public class CtRegionController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('resources:ctregion:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
+    public AjaxResult getInfo(@PathVariable("id") String id)
     {
         return AjaxResult.success(ctRegionService.selectCtRegionById(id));
     }
@@ -97,7 +97,7 @@ public class CtRegionController extends BaseController
     @PreAuthorize("@ss.hasPermi('resources:ctregion:remove')")
     @Log(title = "地区信息", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
+    public AjaxResult remove(@PathVariable String[] ids)
     {
         return toAjax(ctRegionService.deleteCtRegionByIds(ids));
     }

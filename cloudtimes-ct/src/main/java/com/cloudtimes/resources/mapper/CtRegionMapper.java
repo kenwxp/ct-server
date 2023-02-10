@@ -17,7 +17,7 @@ public interface CtRegionMapper
      * @param id 地区信息主键
      * @return 地区信息
      */
-    public CtRegion selectCtRegionById(Long id);
+    public CtRegion selectCtRegionById(String id);
 
     /**
      * 查询地区信息列表
@@ -49,7 +49,7 @@ public interface CtRegionMapper
      * @param id 地区信息主键
      * @return 结果
      */
-    public int deleteCtRegionById(Long id);
+    public int deleteCtRegionById(String id);
 
     /**
      * 批量删除地区信息
@@ -57,5 +57,5 @@ public interface CtRegionMapper
      * @param ids 需要删除的数据主键集合
      * @return 结果
      */
-    public int deleteCtRegionByIds(Long[] ids);
+    public int deleteCtRegionByIds(String[] ids);
 }

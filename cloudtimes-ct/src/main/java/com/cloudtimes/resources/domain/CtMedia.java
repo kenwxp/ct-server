@@ -6,25 +6,22 @@ import com.cloudtimes.common.annotation.Excel;
 import com.cloudtimes.common.core.domain.BaseEntity;
 
 /**
- * 媒体信息对象 ct_media
+ * 媒体对象 ct_media
  * 
  * @author tank
- * @date 2023-01-17
+ * @date 2023-02-10
  */
 public class CtMedia extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
-    /** 序列号 */
-    private Long id;
+    /** 编号 */
+    @Excel(name = "编号")
+    private String id;
 
-    /** 媒体编码 */
-    @Excel(name = "媒体编码")
-    private String mediaCode;
-
-    /** 关连编码 */
-    @Excel(name = "关连编码")
-    private String linkCode;
+    /** 关连编号 */
+    @Excel(name = "关连编号")
+    private String linkId;
 
     /** 媒体类型 */
     @Excel(name = "媒体类型")
@@ -48,37 +45,28 @@ public class CtMedia extends BaseEntity
 
     /** 启用标志 */
     @Excel(name = "启用标志")
-    private Long enabled;
+    private String isEnabled;
 
     /** 是否删除 */
-    private Long delFlag;
+    private String delFlag;
 
-    public void setId(Long id) 
+    public void setId(String id) 
     {
         this.id = id;
     }
 
-    public Long getId() 
+    public String getId() 
     {
         return id;
     }
-    public void setMediaCode(String mediaCode) 
+    public void setLinkId(String linkId) 
     {
-        this.mediaCode = mediaCode;
+        this.linkId = linkId;
     }
 
-    public String getMediaCode() 
+    public String getLinkId() 
     {
-        return mediaCode;
-    }
-    public void setLinkCode(String linkCode) 
-    {
-        this.linkCode = linkCode;
-    }
-
-    public String getLinkCode() 
-    {
-        return linkCode;
+        return linkId;
     }
     public void setMediaType(String mediaType) 
     {
@@ -125,21 +113,21 @@ public class CtMedia extends BaseEntity
     {
         return ossLink;
     }
-    public void setEnabled(Long enabled) 
+    public void setIsEnabled(String isEnabled) 
     {
-        this.enabled = enabled;
+        this.isEnabled = isEnabled;
     }
 
-    public Long getEnabled() 
+    public String getIsEnabled() 
     {
-        return enabled;
+        return isEnabled;
     }
-    public void setDelFlag(Long delFlag) 
+    public void setDelFlag(String delFlag) 
     {
         this.delFlag = delFlag;
     }
 
-    public Long getDelFlag() 
+    public String getDelFlag() 
     {
         return delFlag;
     }
@@ -148,14 +136,13 @@ public class CtMedia extends BaseEntity
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("id", getId())
-            .append("mediaCode", getMediaCode())
-            .append("linkCode", getLinkCode())
+            .append("linkId", getLinkId())
             .append("mediaType", getMediaType())
             .append("fileName", getFileName())
             .append("fileSize", getFileSize())
             .append("saveType", getSaveType())
             .append("ossLink", getOssLink())
-            .append("enabled", getEnabled())
+            .append("isEnabled", getIsEnabled())
             .append("createTime", getCreateTime())
             .append("updateTime", getUpdateTime())
             .append("delFlag", getDelFlag())

@@ -30,7 +30,7 @@ public class CtRegionServiceImpl implements ICtRegionService
      * @return 地区信息
      */
     @Override
-    public CtRegion selectCtRegionById(Long id)
+    public CtRegion selectCtRegionById(String id)
     {
         return ctRegionMapper.selectCtRegionById(id);
     }
@@ -80,7 +80,7 @@ public class CtRegionServiceImpl implements ICtRegionService
      * @return 结果
      */
     @Override
-    public int deleteCtRegionByIds(Long[] ids)
+    public int deleteCtRegionByIds(String[] ids)
     {
         return ctRegionMapper.deleteCtRegionByIds(ids);
     }
@@ -92,7 +92,7 @@ public class CtRegionServiceImpl implements ICtRegionService
      * @return 结果
      */
     @Override
-    public int deleteCtRegionById(Long id)
+    public int deleteCtRegionById(String id)
     {
         return ctRegionMapper.deleteCtRegionById(id);
     }

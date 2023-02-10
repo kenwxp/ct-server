@@ -64,7 +64,7 @@ public class CtMediaTemplateController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('resources:ctmediatemplate:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
+    public AjaxResult getInfo(@PathVariable("id") String id)
     {
         return AjaxResult.success(ctMediaTemplateService.selectCtMediaTemplateById(id));
     }
@@ -97,7 +97,7 @@ public class CtMediaTemplateController extends BaseController
     @PreAuthorize("@ss.hasPermi('resources:ctmediatemplate:remove')")
     @Log(title = "媒体资源模板", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
+    public AjaxResult remove(@PathVariable String[] ids)
     {
         return toAjax(ctMediaTemplateService.deleteCtMediaTemplateByIds(ids));
     }
