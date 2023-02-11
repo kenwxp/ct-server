@@ -1,8 +1,11 @@
 package com.cloudtimes.app.manager;
 
 
+import com.alibaba.fastjson.JSONObject;
+import com.cloudtimes.common.core.domain.AjaxResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
@@ -65,6 +68,42 @@ public class MultitonWsSessionManager {
             return session;
         }
         return null;
+    }
+
+    public void sendSuccess(String id, Object data) {
+        Map<String, WebSocketSession> sessionMap = getSessionMap(id);
+        if (sessionMap != null) {
+            for (WebSocketSession session :
+                    sessionMap.values()) {
+                if (session != null && session.isOpen()) {
+                    AjaxResult success = AjaxResult.success(data);
+                    TextMessage textMessage = new TextMessage(JSONObject.toJSONString(success));
+                    try {
+                        session.sendMessage(textMessage);
+                    } catch (IOException e) {
+                        log.error(String.format("发送消息失败, id=%s", id), e);
+                    }
+                }
+            }
+        }
+    }
+
+    public void sendError(String id, Object data) {
+        Map<String, WebSocketSession> sessionMap = getSessionMap(id);
+        if (sessionMap != null) {
+            for (WebSocketSession session :
+                    sessionMap.values()) {
+                if (session != null && session.isOpen()) {
+                    AjaxResult error = AjaxResult.error(data.toString());
+                    TextMessage textMessage = new TextMessage(JSONObject.toJSONString(error));
+                    try {
+                        session.sendMessage(textMessage);
+                    } catch (IOException e) {
+                        log.error(String.format("发送消息失败, id=%s", id), e);
+                    }
+                }
+            }
+        }
     }
 }
 
