@@ -1,6 +1,7 @@
 package com.cloudtimes.serving.door.service.impl;
 
 import com.cloudtimes.common.enums.ChannelType;
+import com.cloudtimes.common.utils.NumberUtils;
 import com.cloudtimes.common.utils.StringUtils;
 import com.cloudtimes.enums.DeviceType;
 import com.cloudtimes.enums.DoorOpenType;
@@ -305,7 +306,7 @@ public class CtDoorGuardOpServiceImpl implements ICtDoorGuardOpService {
             return false;
         }
         WiegandReturning ret;
-        int password = Integer.parseInt(NoUtils.genRandNum(6));
+        int password = Integer.parseInt(NumberUtils.genRandNum(6));
         for (CtDevice doorGuard : doorGuardList) {
             String serial = doorGuard.getDeviceSerial();
             //开启密码设置
