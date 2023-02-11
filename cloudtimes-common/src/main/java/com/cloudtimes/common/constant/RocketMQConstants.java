@@ -21,5 +21,5 @@ public interface RocketMQConstants {
     public static final String SEND_DUTY_STATUS = "DUTY-STATUS";// 收银机值守状态
     public static final String SEND_CALL_DO = "CALL-DO"; // 加入频道
     public static final String SEND_BILL_SERIAL = "BILL-SERIAL"; // 推送单号
-    public static final String SEND_PRODUCT_LIST = "PRODUCT-LIST";// 商品列表
+    public static final String SEND_SYNC_PRODUCT = "SYNC-PRODUCT";// 同步商品列表
 }
