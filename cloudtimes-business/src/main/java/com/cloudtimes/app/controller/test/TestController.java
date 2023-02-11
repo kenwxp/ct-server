@@ -3,10 +3,12 @@ package com.cloudtimes.app.controller.test;
 
 import com.cloudtimes.account.domain.CtUser;
 import com.cloudtimes.account.service.ICtUserService;
-import com.cloudtimes.common.utils.JWTManager;
 import com.cloudtimes.common.core.controller.BaseController;
 import com.cloudtimes.common.core.domain.AjaxResult;
 import com.cloudtimes.common.core.domain.entity.AuthUser;
+import com.cloudtimes.common.mq.CallDoData;
+import com.cloudtimes.common.utils.JWTManager;
+import com.cloudtimes.common.utils.XmlUtils;
 import com.cloudtimes.hardwaredevice.domain.CtDevice;
 import com.cloudtimes.hardwaredevice.domain.CtDeviceDoor;
 import com.cloudtimes.hardwaredevice.mapper.CtDeviceDoorMapper;
@@ -92,6 +94,18 @@ public class TestController extends BaseController {
     @GetMapping(value = "/send/mq")
     public AjaxResult sendMQ() {
         cashMqSender.notifyCashDutyStatus("199976cb-a786-11ed-8957-0242ac110003", "1");
+        return AjaxResult.success();
+    }
+
+    @ApiOperation("测试xml解析")
+    @GetMapping(value = "/xml")
+    public AjaxResult testXML() {
+        CallDoData callDoData = new CallDoData();
+        callDoData.setDoJoin("1");
+        String s1 = XmlUtils.formatXml(callDoData);
+        System.out.println(s1);
+        CallDoData data = XmlUtils.parseXml(s1, CallDoData.class);
+        System.out.println(data);
         return AjaxResult.success();
     }
 }

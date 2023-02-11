@@ -38,4 +38,7 @@ public interface ICtWeixinApiService {
     public Map<String, Object> getUserPhoneInfo(String jsCode);
 
 
+
+
+
 }

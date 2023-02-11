@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 /**
- * 处理开门MQ消息
+ * 处理收银机模块信息
  */
 @Slf4j
 @Service

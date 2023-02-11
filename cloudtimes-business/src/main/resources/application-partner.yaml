@@ -4,6 +4,8 @@ hik:
 wx:
   appid: wxdee2b19db3be8517
   secret: 99887628a67e7d8a23d4d8410bcf47a1
+  mch_id: wxdee2b19db3be8517
+  mch_key: wxdee2b19db3be8517
 agora:
   appid: 7be11df0b1b547e0b67b7960a4d7ff05
   app_certificate: 7066736b8f59453fb3e55f59361f987a
