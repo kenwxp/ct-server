@@ -14,6 +14,8 @@ import com.cloudtimes.hardwaredevice.domain.CtDeviceDoor;
 import com.cloudtimes.hardwaredevice.mapper.CtDeviceDoorMapper;
 import com.cloudtimes.mq.service.CashMqSender;
 import com.cloudtimes.partner.hik.service.ICtHikApiService;
+import com.cloudtimes.partner.weixin.ICtWeixinApiService;
+import com.cloudtimes.partner.weixin.domain.WxpayfaceAuthInfoResp;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -37,6 +39,8 @@ public class TestController extends BaseController {
 
     @Autowired
     private ICtHikApiService hikApiService;
+    @Autowired
+    private ICtWeixinApiService weixinApiService;
     @Autowired
     private JWTManager jwtManager;
     @Autowired
@@ -107,6 +111,14 @@ public class TestController extends BaseController {
         CallDoData data = XmlUtils.parseXml(s1, CallDoData.class);
         System.out.println(data);
         return AjaxResult.success();
+    }
+
+
+    @ApiOperation("获取刷脸凭证")
+    @GetMapping(value = "/face/auth/{rawdata}")
+    public AjaxResult testFaceAuthInfo(@PathVariable("rawdata") String rawdata) {
+        WxpayfaceAuthInfoResp wxpayfaceAuthInfo = weixinApiService.getWxpayfaceAuthInfo("199976cb-a786-11ed-8957-0242ac110003", "测试店", "ZDXLVP75870772", rawdata);
+        return AjaxResult.success(wxpayfaceAuthInfo);
     }
 }
 

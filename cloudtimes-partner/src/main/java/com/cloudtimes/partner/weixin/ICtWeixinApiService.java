@@ -1,5 +1,7 @@
 package com.cloudtimes.partner.weixin;
 
+import com.cloudtimes.partner.weixin.domain.WxpayfaceAuthInfoResp;
+
 import java.util.Map;
 
 public interface ICtWeixinApiService {
@@ -38,7 +40,15 @@ public interface ICtWeixinApiService {
     public Map<String, Object> getUserPhoneInfo(String jsCode);
 
 
-
-
+    /**
+     * 获取设备刷脸凭证
+     *
+     * @param storeId
+     * @param storeName
+     * @param deviceId
+     * @param rawData
+     * @return
+     */
+    public WxpayfaceAuthInfoResp getWxpayfaceAuthInfo(String storeId, String storeName, String deviceId, String rawData);
 
 }

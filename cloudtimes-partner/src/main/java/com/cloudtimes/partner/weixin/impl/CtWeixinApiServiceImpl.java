@@ -149,12 +149,15 @@ public class CtWeixinApiServiceImpl implements ICtWeixinApiService {
 
     public String getSign(Object params) {
         Field[] declaredFields = params.getClass().getDeclaredFields();
+        // 通过rowdata 进行字段排序
         TreeMap<String, Object> map = new TreeMap<>();
         for (Field f :
                 declaredFields) {
             try {
                 f.setAccessible(true);
-                map.put(StringUtils.toUnderScoreCase(f.getName()), f.get(params));
+                if (f.get(params) != null) {
+                    map.put(StringUtils.toUnderScoreCase(f.getName()), f.get(params));
+                }
             } catch (IllegalAccessException e) {
                 log.error("生成微信签名错误", e);
                 return "";
@@ -163,6 +166,7 @@ public class CtWeixinApiServiceImpl implements ICtWeixinApiService {
         StringBuffer stringBuffer = new StringBuffer();
         map.forEach((key, value) -> stringBuffer.append(key).append("=").append(value).append("&"));
         String raw = stringBuffer.deleteCharAt(stringBuffer.length() - 1).append("&key=").append(config.getWxMchKey()).toString();
+        log.info("微信签名字符串：" + raw);
         String sign = Md5Utils.hash(raw).toUpperCase();
         return sign;
     }

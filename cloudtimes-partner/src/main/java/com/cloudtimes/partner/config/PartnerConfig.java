@@ -13,12 +13,16 @@ public class PartnerConfig {
     private String hikAppSecret;
     @Value("${wx.appid}")
     private String wxAppId;
+    @Value("${wx.secret}")
+    private String wxAppSecret;
     @Value("${wx.mch_id}")
     private String wxMchId;
     @Value("${wx.mch_key}")
     private String wxMchKey;
-    @Value("${wx.secret}")
-    private String wxAppSecret;
+    @Value("${wx.official_appid}")
+    private String wxOfficialAppid;
+    @Value("${wx.official_secret}")
+    private String wxOfficialSecret;
     @Value("${agora.appid}")
     private String agoraAppId;
     @Value("${agora.app_certificate}")

@@ -2,10 +2,18 @@ hik:
   app_key: e69b05304140449997738272d2afa7cc
   app_secret: 2bcca73bb23c65af91f5fcd79e713409
 wx:
+  #小程序appid
   appid: wxdee2b19db3be8517
+  #小程序秘钥
   secret: 99887628a67e7d8a23d4d8410bcf47a1
-  mch_id: wxdee2b19db3be8517
-  mch_key: wxdee2b19db3be8517
+  #商户号
+  mch_id: 1631185974
+  #商户秘钥
+  mch_key: QAZ12wsxcdQAZ12wsxcdQAZ12wsxcd21
+  #公众号appid
+  official_appid: wxdee2b19db3be8517
+  #公众号秘钥
+  official_secret: 99887628a67e7d8a23d4d8410bcf47a1
 agora:
   appid: 7be11df0b1b547e0b67b7960a4d7ff05
   app_certificate: 7066736b8f59453fb3e55f59361f987a
