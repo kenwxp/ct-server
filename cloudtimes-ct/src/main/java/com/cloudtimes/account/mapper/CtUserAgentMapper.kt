@@ -4,6 +4,7 @@ import com.cloudtimes.account.dto.response.StoreAndCommission
 import com.cloudtimes.account.domain.CtUserAgent
 import com.cloudtimes.account.dto.request.AgentStoreRequest
 import com.cloudtimes.account.dto.response.AgentShopStats
+import com.cloudtimes.account.mapper.provider.CtUserAgentProvider
 
 import org.apache.ibatis.annotations.Param
 import org.apache.ibatis.annotations.Select
@@ -14,6 +15,7 @@ import org.apache.ibatis.annotations.Results
 import org.apache.ibatis.annotations.SelectProvider
 import org.apache.ibatis.type.JdbcType
 import org.mybatis.dynamic.sql.select.render.SelectStatementProvider
+import org.mybatis.dynamic.sql.util.mybatis3.CommonUpdateMapper
 import org.mybatis.dynamic.sql.util.SqlProviderAdapter
 
 /**
@@ -23,7 +25,7 @@ import org.mybatis.dynamic.sql.util.SqlProviderAdapter
  * @date 2023-02-07
  */
 @Mapper
-interface CtUserAgentMapper {
+interface CtUserAgentMapper : CommonUpdateMapper  {
     @SelectProvider(type=SqlProviderAdapter::class, method="select")
     @Results(id="CtUserAgentResult", value = [
         Result(column="user_id", property="userId", jdbcType=JdbcType.OTHER, id=true),
@@ -132,4 +134,8 @@ interface CtUserAgentMapper {
      * @return 结果
      */
     fun deleteCtUserAgentByUserIds(userIds: Array<String>): Int
+}
+
+fun CtUserAgentMapper.selectById(id: String): CtUserAgent? {
+    return selectOne(CtUserAgentProvider.selectById(id))
 }

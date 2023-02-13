@@ -1,6 +1,7 @@
 package com.cloudtimes.app.controller.agent
 
 import com.cloudtimes.account.domain.CtUserAgent
+import com.cloudtimes.account.dto.request.TransferCashRequest
 import com.cloudtimes.account.dto.request.WithdrawCashRequest
 import com.cloudtimes.account.service.ICtUserAgentService
 import com.cloudtimes.common.core.controller.BaseController
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import javax.validation.Valid
 
 /**
  * 代理Controller
@@ -41,9 +43,16 @@ class CtAgentAssetsController : BaseController() {
      * 代理提现
      */
     @Log(title = "代理提现", businessType = BusinessType.UPDATE)
-    @PostMapping
+    @PostMapping("/withdrawal")
     @ApiOperation("代理提现")
-    fun withdrawCash(@RequestBody request: WithdrawCashRequest): AjaxResult {
-        return AjaxResult.success(ctUserAgentService.withdrawCache(request))
+    fun withdrawCash(@Valid @RequestBody request: WithdrawCashRequest): AjaxResult {
+        return AjaxResult.success(ctUserAgentService.withdrawCash(request))
+    }
+
+    @Log(title = "代理提现", businessType = BusinessType.UPDATE)
+    @PostMapping("/transfer")
+    @ApiOperation("代理提现")
+    fun transferCash(@Valid @RequestBody request: TransferCashRequest): AjaxResult {
+        return AjaxResult.success(ctUserAgentService.transferCash(request))
     }
 }

@@ -3,27 +3,8 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.cloudtimes.account.mapper.CtAgentCommissionSettlementMapper">
-    
-    <resultMap type="CtAgentCommissionSettlement" id="CtAgentCommissionSettlementResult">
-        <result property="id"    column="id"    />
-        <result property="storeId"    column="store_id"    />
-        <result property="userId"    column="user_id"    />
-        <result property="systemPrice"    column="system_price"    />
-        <result property="settleTime"    column="settle_time"    />
-        <result property="isAgentOk"    column="is_agent_ok"    />
-        <result property="isPlatformOk"    column="is_platform_ok"    />
-        <result property="state"    column="state"    />
-        <result property="remark"    column="remark"    />
-        <result property="delFlag"    column="del_flag"    />
-        <result property="platformApprovedTime"    column="platform_approved_time"    />
-        <result property="agentApprovedTime"    column="agent_approved_time"    />
-        <result property="createDate"    column="create_date"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateTime"    column="update_time"    />
-    </resultMap>
-
     <sql id="selectCtAgentCommissionSettlementVo">
-        select id, store_id, user_id, system_price, settle_time, is_agent_ok, is_platform_ok, state, remark, del_flag, platform_approved_time, agent_approved_time, create_date, create_time, update_time from ct_agent_commission_settlement
+        select id, store_id, user_id, cost_price, settle_time, is_agent_ok, is_platform_ok, state, remark, del_flag, platform_approved_time, agent_approved_time, create_date, create_time, update_time from ct_agent_commission_settlement
     </sql>
 
     <select id="selectCtAgentCommissionSettlementList" parameterType="CtAgentCommissionSettlement" resultMap="CtAgentCommissionSettlementResult">

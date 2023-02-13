@@ -90,15 +90,4 @@ public class CtAgentDividendSettlementController extends BaseController
     {
         return toAjax(ctAgentDividendSettlementService.updateCtAgentDividendSettlement(ctAgentDividendSettlement));
     }
-
-    /**
-     * 删除分润结算审核
-     */
-    @PreAuthorize("@ss.hasPermi('account:dividend_settlement:remove')")
-    @Log(title = "分润结算审核", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable String[] ids)
-    {
-        return toAjax(ctAgentDividendSettlementService.deleteCtAgentDividendSettlementByIds(ids));
-    }
 }

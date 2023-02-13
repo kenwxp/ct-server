@@ -5,6 +5,9 @@ import com.cloudtimes.account.service.ICtUserAgentService
 import com.cloudtimes.common.core.controller.BaseController
 import com.cloudtimes.common.core.domain.AjaxResult
 import com.cloudtimes.common.core.page.TableDataInfo
+import com.cloudtimes.hardwaredevice.dto.request.ShopOrderByMonthRequest
+import com.cloudtimes.supervise.domain.CtOrder
+import com.cloudtimes.supervise.service.ICtOrderService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import org.springframework.beans.factory.annotation.Autowired
@@ -24,6 +27,9 @@ class CtStoreController : BaseController() {
     @Autowired
     private lateinit var ctUserAgentService: ICtUserAgentService
 
+    @Autowired
+    private lateinit var ctOrderService: ICtOrderService
+
     /**
      * 查询代理门店
      */
@@ -32,6 +38,20 @@ class CtStoreController : BaseController() {
     fun list(@Valid agentStoreRequest: AgentStoreRequest): TableDataInfo {
         startPage()
         val list = ctUserAgentService.selectCtAgentShopList(agentStoreRequest)
+        return getDataTable(list)
+    }
+
+    /**
+     * 查询代理门店没有订单
+     */
+    @ApiOperation("查询代理门店没有订单")
+    @GetMapping("/monthly_order")
+    fun monthlyOrder(@Valid monthlyOrderRequest: ShopOrderByMonthRequest): TableDataInfo {
+        startPage()
+        val order = CtOrder()
+        order.yearMonth = monthlyOrderRequest.yearMonth
+        order.storeId = monthlyOrderRequest.storeId
+        val list = ctOrderService.selectCtOrderList(order)
         return getDataTable(list)
     }
 

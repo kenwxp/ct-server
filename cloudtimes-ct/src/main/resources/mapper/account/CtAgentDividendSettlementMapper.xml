@@ -3,27 +3,8 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.cloudtimes.account.mapper.CtAgentDividendSettlementMapper">
-    
-    <resultMap type="CtAgentDividendSettlement" id="CtAgentDividendSettlementResult">
-        <result property="id"    column="id"    />
-        <result property="userId"    column="user_id"    />
-        <result property="storeId"    column="store_id"    />
-        <result property="dividendYear"    column="dividend_year"    />
-        <result property="dividendMonth"    column="dividend_month"    />
-        <result property="settleAmount"    column="settle_amount"    />
-        <result property="isAgentOk"    column="is_agent_ok"    />
-        <result property="isPlatformOk"    column="is_platform_ok"    />
-        <result property="state"    column="state"    />
-        <result property="delFlag"    column="del_flag"    />
-        <result property="platformApprovedTime"    column="platform_approved_time"    />
-        <result property="agentApprovedTime"    column="agent_approved_time"    />
-        <result property="createDate"    column="create_date"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateTime"    column="update_time"    />
-    </resultMap>
-
     <sql id="selectCtAgentDividendSettlementVo">
-        select id, user_id, store_id, dividend_year, dividend_month, settle_amount, is_agent_ok, is_platform_ok, state, del_flag, platform_approved_time, agent_approved_time, create_date, create_time, update_time from ct_agent_dividend_settlement
+        select *
     </sql>
 
     <select id="selectCtAgentDividendSettlementList" parameterType="CtAgentDividendSettlement" resultMap="CtAgentDividendSettlementResult">
@@ -100,19 +81,4 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </trim>
         where id = #{id}
     </update>
-
-    <delete id="deleteCtAgentDividendSettlementById" parameterType="String">
-        update ct_agent_dividend_settlement
-        set del_flag = '1'
-        where id = #{id}
-    </delete>
-
-    <delete id="deleteCtAgentDividendSettlementByIds" parameterType="String">
-        update ct_agent_dividend_settlement
-        set del_flag = '1'
-        where id in
-        <foreach item="id" collection="array" open="(" separator="," close=")">
-            #{id}
-        </foreach>
-    </delete>
 </mapper>

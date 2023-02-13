@@ -1,6 +1,5 @@
 package com.cloudtimes.account.table
 
-import java.lang.Object
 import java.math.BigDecimal
 import java.sql.JDBCType
 import java.util.Date
@@ -19,6 +18,9 @@ class CtAgentCommission : AliasableSqlTable<CtAgentCommission>("ct_agent_commiss
 
     /** 成本价格 */
     val costPrice = column<BigDecimal>(name = "cost_price", jdbcType = JDBCType.DECIMAL)
+
+    /** 手续费费率 */
+    val taxRatio = column<BigDecimal>(name = "tax_ratio", jdbcType = JDBCType.DECIMAL)
 
     /** 操作管理员 */
     val operator = column<String>(name = "operator", jdbcType = JDBCType.VARCHAR)

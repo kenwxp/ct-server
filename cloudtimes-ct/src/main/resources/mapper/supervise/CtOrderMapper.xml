@@ -35,6 +35,7 @@
                create_time,
                update_time,
                del_flag,
+               `year_month`,
                create_date
         from ct_order
     </sql>
@@ -69,6 +70,7 @@
             <if test="deviceCashId != null  and deviceCashId != ''">and device_cash_id = #{deviceCashId}</if>
             <if test="descText != null  and descText != ''">and desc_text = #{descText}</if>
             <if test="isExceptional != null  and isExceptional != ''">and is_exceptional = #{isExceptional}</if>
+            <if test="yearMonth != null">and `year_month = #{yearMonth}</if>
             <if test="state != null  and state != ''">and state = #{state}</if>
         </where>
     </select>
@@ -114,6 +116,7 @@
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="delFlag != null">del_flag,</if>
+            <if test="yearMonth != null">`year_month`,</if>
             <if test="createDate != null">create_date,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -147,6 +150,7 @@
             <if test="createTime != null">#{createTime},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="delFlag != null">#{delFlag},</if>
+            <if test="yearMonth != null">yearMonth,</if>
             <if test="createDate != null">#{createDate},</if>
         </trim>
     </insert>
@@ -232,6 +236,7 @@
                o.create_time,
                o.update_time,
                o.del_flag,
+               o.year_month,
                o.create_date
         from ct_order o,
              ct_task t

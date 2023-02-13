@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cloudtimes.account.mapper.CtAgentActivity2Mapper">
+    
+    <resultMap type="CtAgentActivity2" id="CtAgentActivity2Result">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="content"    column="content"    />
+        <result property="areas"    column="areas"    />
+        <result property="rewardShopCount"    column="reward_shop_count"    />
+        <result property="usedShopCount"    column="used_shop_count"    />
+        <result property="taxRatio"    column="tax_ratio"    />
+        <result property="operator"    column="operator"    />
+        <result property="isEnabled"    column="is_enabled"    />
+        <result property="state"    column="state"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="endTime"    column="end_time"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectCtAgentActivity2Vo">
+        select id, title, content, areas, reward_shop_count, used_shop_count, tax_ratio, operator, is_enabled, state, del_flag, start_time, end_time, create_time, update_time from ct_agent_activity2
+    </sql>
+
+    <select id="selectCtAgentActivity2List" parameterType="CtAgentActivity2" resultMap="CtAgentActivity2Result">
+        <include refid="selectCtAgentActivity2Vo"/>
+        <where>  
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="areas != null  and areas != ''"> and areas = #{areas}</if>
+            <if test="rewardShopCount != null "> and reward_shop_count = #{rewardShopCount}</if>
+            <if test="usedShopCount != null "> and used_shop_count = #{usedShopCount}</if>
+            <if test="taxRatio != null "> and tax_ratio = #{taxRatio}</if>
+            <if test="operator != null  and operator != ''"> and operator = #{operator}</if>
+            <if test="isEnabled != null  and isEnabled != ''"> and is_enabled = #{isEnabled}</if>
+            <if test="state != null  and state != ''"> and state = #{state}</if>
+            <if test="startTime != null "> and start_time = #{startTime}</if>
+            <if test="endTime != null "> and end_time = #{endTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectCtAgentActivity2ById" parameterType="String" resultMap="CtAgentActivity2Result">
+        <include refid="selectCtAgentActivity2Vo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertCtAgentActivity2" parameterType="CtAgentActivity2">
+        insert into ct_agent_activity2
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="title != null and title != ''">title,</if>
+            <if test="content != null and content != ''">content,</if>
+            <if test="areas != null and areas != ''">areas,</if>
+            <if test="rewardShopCount != null">reward_shop_count,</if>
+            <if test="usedShopCount != null">used_shop_count,</if>
+            <if test="taxRatio != null">tax_ratio,</if>
+            <if test="operator != null">operator,</if>
+            <if test="isEnabled != null and isEnabled != ''">is_enabled,</if>
+            <if test="state != null and state != ''">state,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="title != null and title != ''">#{title},</if>
+            <if test="content != null and content != ''">#{content},</if>
+            <if test="areas != null and areas != ''">#{areas},</if>
+            <if test="rewardShopCount != null">#{rewardShopCount},</if>
+            <if test="usedShopCount != null">#{usedShopCount},</if>
+            <if test="taxRatio != null">#{taxRatio},</if>
+            <if test="operator != null">#{operator},</if>
+            <if test="isEnabled != null and isEnabled != ''">#{isEnabled},</if>
+            <if test="state != null and state != ''">#{state},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCtAgentActivity2" parameterType="CtAgentActivity2">
+        update ct_agent_activity2
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="content != null and content != ''">content = #{content},</if>
+            <if test="areas != null and areas != ''">areas = #{areas},</if>
+            <if test="rewardShopCount != null">reward_shop_count = #{rewardShopCount},</if>
+            <if test="usedShopCount != null">used_shop_count = #{usedShopCount},</if>
+            <if test="taxRatio != null">tax_ratio = #{taxRatio},</if>
+            <if test="operator != null">operator = #{operator},</if>
+            <if test="isEnabled != null and isEnabled != ''">is_enabled = #{isEnabled},</if>
+            <if test="state != null and state != ''">state = #{state},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCtAgentActivity2ById" parameterType="String">
+        delete from ct_agent_activity2 where id = #{id}
+    </delete>
+
+    <delete id="deleteCtAgentActivity2ByIds" parameterType="String">
+        delete from ct_agent_activity2 where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

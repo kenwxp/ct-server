@@ -40,6 +40,11 @@
             <artifactId>cloudtimes-system</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>cloudtimes</groupId>
+            <artifactId>cloudtimes-ct</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>

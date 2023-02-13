@@ -72,28 +72,4 @@ public class CtAgentDividendSettlementServiceImpl implements ICtAgentDividendSet
         ctAgentDividendSettlement.setUpdateTime(DateUtils.getNowDate());
         return ctAgentDividendSettlementMapper.updateCtAgentDividendSettlement(ctAgentDividendSettlement);
     }
-
-    /**
-     * 批量删除分润结算审核
-     * 
-     * @param ids 需要删除的分润结算审核主键
-     * @return 结果
-     */
-    @Override
-    public int deleteCtAgentDividendSettlementByIds(String[] ids)
-    {
-        return ctAgentDividendSettlementMapper.deleteCtAgentDividendSettlementByIds(ids);
-    }
-
-    /**
-     * 删除分润结算审核信息
-     * 
-     * @param id 分润结算审核主键
-     * @return 结果
-     */
-    @Override
-    public int deleteCtAgentDividendSettlementById(String id)
-    {
-        return ctAgentDividendSettlementMapper.deleteCtAgentDividendSettlementById(id);
-    }
 }

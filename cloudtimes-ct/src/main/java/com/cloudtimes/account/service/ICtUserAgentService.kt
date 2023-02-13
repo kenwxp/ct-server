@@ -2,6 +2,7 @@ package com.cloudtimes.account.service
 
 import com.cloudtimes.account.domain.CtUserAgent
 import com.cloudtimes.account.dto.request.AgentStoreRequest
+import com.cloudtimes.account.dto.request.TransferCashRequest
 import com.cloudtimes.account.dto.request.WithdrawCashRequest
 import com.cloudtimes.account.dto.response.AgentShopStats
 import com.cloudtimes.account.dto.response.StoreAndCommission
@@ -68,11 +69,9 @@ interface ICtUserAgentService {
      */
     fun deleteCtUserAgentByUserId(userId: String): Int
 
-    /**
-     * 提现
-     *
-     * @param withdrawCashRequest 提现参数
-     * @return 结果
-     */
-    fun withdrawCache(withdrawCashRequest: WithdrawCashRequest)
+    /** 提现 */
+    fun withdrawCash(withdrawCashRequest: WithdrawCashRequest)
+
+    /** 转账 */
+    fun transferCash(transferCashRequest: TransferCashRequest)
 }

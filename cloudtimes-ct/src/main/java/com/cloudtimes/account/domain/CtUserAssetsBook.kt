@@ -5,6 +5,7 @@ import com.cloudtimes.common.core.domain.BaseEntity
 import org.apache.commons.lang3.builder.ToStringBuilder
 import org.apache.commons.lang3.builder.ToStringStyle
 import java.math.BigDecimal
+import java.time.YearMonth
 import java.util.*
 
 /**
@@ -49,6 +50,21 @@ data class CtUserAssetsBook (
     @Excel(name = "操作额度")
     var amount: BigDecimal? = null,
 
+    /** 手续费费率  */
+    @Excel(name = "手续费费率")
+    var taxRatio: BigDecimal? = null,
+
+    /** 手续费金额  */
+    @Excel(name = "手续费金额")
+    var taxAmount: BigDecimal? = null,
+
+    /** 稅前金额  */
+    @Excel(name = "稅前金额")
+    var beforeTaxAmount: BigDecimal? = null,
+
+    /** 年月  */
+    var yearMonth: Int? = null,
+
     /** 创建日期  */
     var createDate: Date? = null,
 
@@ -66,6 +82,7 @@ data class CtUserAssetsBook (
             .append("beforeAmount", beforeAmount)
             .append("alterAmount", alterAmount)
             .append("amount", amount)
+            .append("yearMonth", yearMonth)
             .append("createDate", createDate)
             .append("createTime", createTime)
             .append("updateTime", updateTime)

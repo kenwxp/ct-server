@@ -25,6 +25,7 @@ interface CtAgentCommissionMapper {
         Result(column="user_id", property="userId", jdbcType=JdbcType.OTHER),
         Result(column="parent_user_id", property="parentUserId", jdbcType=JdbcType.OTHER),
         Result(column="cost_price", property="costPrice", jdbcType=JdbcType.DECIMAL),
+        Result(column="tax_ratio", property="taxRatio", jdbcType=JdbcType.DECIMAL),
         Result(column="operator", property="operator", jdbcType=JdbcType.VARCHAR),
         Result(column="remark", property="remark", jdbcType=JdbcType.VARCHAR),
         Result(column="del_flag", property="delFlag", jdbcType=JdbcType.CHAR),

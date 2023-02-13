@@ -37,8 +37,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <result property="id"    column="commission_id"    />
             <result property="storeId"    column="commission_store_id"    />
             <result property="userId"    column="commission_user_id"    />
-            <result property="systemPrice"    column="commission_system_price"    />
-            <result property="settleTime"    column="commission_settle_time"    />
+            <result property="costPrice"    column="commission_cost_price"    />
             <result property="isAgentOk"    column="commission_is_agent_ok"    />
             <result property="isPlatformOk"    column="commission_is_platform_ok"    />
             <result property="state"    column="commission_state"    />
@@ -106,8 +105,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         commission.id                        as commission_id,
         commission.store_id                  as commission_store_id,
         commission.user_id                   as commission_user_id,
-        commission.system_price              as commission_system_price,
-        commission.settle_time               as commission_settle_time,
+        commission.cost_price                as commission_cost_price,
         commission.is_agent_ok               as commission_is_agent_ok,
         commission.is_platform_ok            as commission_is_platform_ok,
         commission.state                     as commission_state,

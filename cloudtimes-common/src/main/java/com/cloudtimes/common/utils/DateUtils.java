@@ -182,4 +182,9 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
         endTime.set(Calendar.MILLISECOND, 999);
         return endTime.getTime();
     }
+
+    public static int getYearMonth() {
+        var localDate = LocalDate.now();
+        return localDate.getYear() * 100 + localDate.getMonthValue();
+    }
 }

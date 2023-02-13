@@ -26,6 +26,10 @@ class CtAgentCommission : BaseEntity() {
     @Excel(name = "成本价格")
     var costPrice: BigDecimal? = null
 
+    /** 手续费费率  */
+    @Excel(name = "成本价格")
+    var taxRatio: BigDecimal? = null
+
     /** 操作管理员  */
     @JvmField
     @Excel(name = "操作管理员")

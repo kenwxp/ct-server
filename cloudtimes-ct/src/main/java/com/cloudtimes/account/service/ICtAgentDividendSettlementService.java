@@ -42,20 +42,4 @@ public interface ICtAgentDividendSettlementService
      * @return 结果
      */
     public int updateCtAgentDividendSettlement(CtAgentDividendSettlement ctAgentDividendSettlement);
-
-    /**
-     * 批量删除分润结算审核
-     * 
-     * @param ids 需要删除的分润结算审核主键集合
-     * @return 结果
-     */
-    public int deleteCtAgentDividendSettlementByIds(String[] ids);
-
-    /**
-     * 删除分润结算审核信息
-     * 
-     * @param id 分润结算审核主键
-     * @return 结果
-     */
-    public int deleteCtAgentDividendSettlementById(String id);
 }
