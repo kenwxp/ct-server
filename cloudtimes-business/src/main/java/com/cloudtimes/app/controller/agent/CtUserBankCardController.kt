@@ -33,10 +33,10 @@ class CtUserBankCardController : BaseController() {
      */
     @GetMapping("/list")
     @ApiOperation("查询用户银行卡列表")
-    fun list(ctUserBankCard: CtUserBankCard?): TableDataInfo {
+    fun list(ctUserBankCard: CtUserBankCard): TableDataInfo {
         startPage()
-        val list: List<CtUserBankCard?> = ctUserBankCardService.selectCtUserBankCardList(
-            ctUserBankCard!!
+        val list: List<CtUserBankCard> = ctUserBankCardService.selectCtUserBankCardList(
+            ctUserBankCard
         )
         return getDataTable(list)
     }

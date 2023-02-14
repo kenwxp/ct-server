@@ -23,16 +23,16 @@ import javax.servlet.http.HttpServletResponse
 @RequestMapping("/account/suggestion")
 class CtSuggestionController : BaseController() {
     @Autowired
-    private val ctSuggestionService: ICtSuggestionService? = null
+    private lateinit var ctSuggestionService: ICtSuggestionService
 
     /**
      * 查询投诉建议列表
      */
     @PreAuthorize("@ss.hasPermi('account:suggestion:list')")
     @GetMapping("/list")
-    fun list(ctSuggestion: CtSuggestion?): TableDataInfo {
+    fun list(ctSuggestion: CtSuggestion): TableDataInfo {
         startPage()
-        val list: List<CtSuggestion?> = ctSuggestionService!!.selectCtSuggestionList(ctSuggestion!!)
+        val list: List<CtSuggestion> = ctSuggestionService.selectCtSuggestionList(ctSuggestion)
         return getDataTable(list)
     }
 
@@ -42,8 +42,8 @@ class CtSuggestionController : BaseController() {
     @PreAuthorize("@ss.hasPermi('account:suggestion:export')")
     @Log(title = "投诉建议", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    fun export(response: HttpServletResponse?, ctSuggestion: CtSuggestion?) {
-        val list = ctSuggestionService!!.selectCtSuggestionList(ctSuggestion!!)
+    fun export(response: HttpServletResponse, ctSuggestion: CtSuggestion) {
+        val list = ctSuggestionService.selectCtSuggestionList(ctSuggestion)
         val util = ExcelUtil(
             CtSuggestion::class.java
         )
@@ -55,8 +55,8 @@ class CtSuggestionController : BaseController() {
      */
     @PreAuthorize("@ss.hasPermi('account:suggestion:query')")
     @GetMapping(value = ["/{id}"])
-    fun getInfo(@PathVariable("id") id: String?): AjaxResult {
-        return AjaxResult.success(ctSuggestionService!!.selectCtSuggestionById(id!!))
+    fun getInfo(@PathVariable("id") id: String): AjaxResult {
+        return AjaxResult.success(ctSuggestionService.selectCtSuggestionById(id))
     }
 
     /**
@@ -65,8 +65,8 @@ class CtSuggestionController : BaseController() {
     @PreAuthorize("@ss.hasPermi('account:suggestion:add')")
     @Log(title = "投诉建议", businessType = BusinessType.INSERT)
     @PostMapping
-    fun add(@RequestBody ctSuggestion: CtSuggestion?): AjaxResult {
-        return toAjax(ctSuggestionService!!.insertCtSuggestion(ctSuggestion!!))
+    fun add(@RequestBody ctSuggestion: CtSuggestion): AjaxResult {
+        return toAjax(ctSuggestionService.insertCtSuggestion(ctSuggestion))
     }
 
     /**
@@ -75,7 +75,7 @@ class CtSuggestionController : BaseController() {
     @PreAuthorize("@ss.hasPermi('account:suggestion:edit')")
     @Log(title = "投诉建议", businessType = BusinessType.UPDATE)
     @PutMapping
-    fun edit(@RequestBody ctSuggestion: CtSuggestion?): AjaxResult {
-        return toAjax(ctSuggestionService!!.updateCtSuggestion(ctSuggestion!!))
+    fun edit(@RequestBody ctSuggestion: CtSuggestion): AjaxResult {
+        return toAjax(ctSuggestionService.updateCtSuggestion(ctSuggestion))
     }
 }

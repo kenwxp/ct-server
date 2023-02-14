@@ -8,6 +8,8 @@ import io.swagger.annotations.ApiModelProperty
 import org.apache.commons.lang3.builder.ToStringBuilder
 import org.apache.commons.lang3.builder.ToStringStyle
 import java.util.*
+import javax.validation.constraints.NotEmpty
+import javax.validation.constraints.NotNull
 
 /**
  * 投诉建议 ct_suggestion
@@ -22,6 +24,8 @@ class CtSuggestion : BaseEntity() {
 
     @ApiModelProperty(value = "投诉人")
     @Excel(name = "投诉人")
+    @NotNull(message = "投诉人不能为空")
+    @NotEmpty(message = "投诉人不能为空")
     var userId: String? = null
 
     @ApiModelProperty(value = "联系方式(页面采集)")
@@ -30,6 +34,8 @@ class CtSuggestion : BaseEntity() {
 
     @ApiModelProperty(value = "投诉内容")
     @Excel(name = "投诉内容")
+    @NotNull(message = "投诉内容不能为空")
+    @NotEmpty(message = "投诉内容不能为空")
     var content: String? = null
 
     @ApiModelProperty(value = "处理员工工号")
@@ -51,6 +57,8 @@ class CtSuggestion : BaseEntity() {
 
     @ApiModelProperty(value = "投诉/建议类型")
     @Excel(name = "投诉/建议类型")
+    @NotNull(message = "投诉建议类型不能为空")
+    @NotEmpty(message = "投诉建议类型不能为空")
     var suggestionType: String? = null
 
     @ApiModelProperty(value = "处理状态")
