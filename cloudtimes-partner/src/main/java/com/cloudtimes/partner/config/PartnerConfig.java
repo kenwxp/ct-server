@@ -20,11 +20,11 @@ public class PartnerConfig {
     @Value("${wx.mch_key}")
     private String wxMchKey;
     @Value("${wx.apiV2_secret}")
-    private String apiV2Secret;
+    private String wxApiV2Secret;
     @Value("${wx.apiV3_secret}")
-    private String apiV3Secret;
+    private String wxApiV3Secret;
     @Value("${wx.cert_serial}")
-    private String certSerial;
+    private String wxCertSerial;
     @Value("${wx.official_appid}")
     private String wxOfficialAppid;
     @Value("${wx.official_secret}")
