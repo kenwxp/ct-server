@@ -17,8 +17,8 @@ class CtAgentActivity2Table : AliasableSqlTable<CtAgentActivity2Table>("ct_agent
     /** 内容 */
     val content = column<String>(name = "content", jdbcType = JDBCType.VARCHAR)
 
-    /** 活动区域 */
-    val areas = column<String>(name = "areas", jdbcType = JDBCType.LONGVARCHAR)
+    /** 活动类型 */
+    val activityType = column<String>(name = "activity_type", jdbcType = JDBCType.CHAR)
 
     /** 奖励门店数 */
     val rewardShopCount = column<Int>(name = "reward_shop_count", jdbcType = JDBCType.INTEGER)
@@ -56,3 +56,5 @@ class CtAgentActivity2Table : AliasableSqlTable<CtAgentActivity2Table>("ct_agent
     /** 修改时间 */
     val updateTime = column<Date>(name = "update_time", jdbcType = JDBCType.TIMESTAMP)
 }
+
+val activity2Table = CtAgentActivity2Table()

@@ -3,27 +3,8 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.cloudtimes.account.mapper.CtAgentActivity1Mapper">
-    
-    <resultMap type="CtAgentActivity1" id="CtAgentActivity1Result">
-        <result property="id"    column="id"    />
-        <result property="title"    column="title"    />
-        <result property="content"    column="content"    />
-        <result property="storeCount"    column="store_count"    />
-        <result property="rewardMoney"    column="reward_money"    />
-        <result property="taxRatio"    column="tax_ratio"    />
-        <result property="timeSpan"    column="time_span"    />
-        <result property="operator"    column="operator"    />
-        <result property="isEnabled"    column="is_enabled"    />
-        <result property="state"    column="state"    />
-        <result property="delFlag"    column="del_flag"    />
-        <result property="startTime"    column="start_time"    />
-        <result property="endTime"    column="end_time"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateTime"    column="update_time"    />
-    </resultMap>
-
     <sql id="selectCtAgentActivity1Vo">
-        select id, title, content, store_count, reward_money, tax_ratio, time_span, operator, is_enabled, state, del_flag, start_time, end_time, create_time, update_time from ct_agent_activity1
+        select * from ct_agent_activity1
     </sql>
 
     <select id="selectCtAgentActivity1List" parameterType="CtAgentActivity1" resultMap="CtAgentActivity1Result">

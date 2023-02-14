@@ -1,4 +1,4 @@
 package com.cloudtimes.account.mapper.provider
 
-object CtAgentActivityProvider {
+object CtAgentActivityProvider{
 }

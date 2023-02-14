@@ -1,6 +1,7 @@
 package com.cloudtimes.account.mapper
 
 import com.cloudtimes.account.domain.CtAgentActivity
+
 import org.apache.ibatis.annotations.Mapper
 import org.apache.ibatis.annotations.Result
 import org.apache.ibatis.annotations.ResultMap
@@ -15,16 +16,15 @@ import org.mybatis.dynamic.sql.util.mybatis3.CommonInsertMapper
 import org.mybatis.dynamic.sql.util.mybatis3.CommonUpdateMapper
 
 @Mapper
-interface CtAgentActivityMapper : CommonCountMapper, CommonDeleteMapper, CommonInsertMapper<CtAgentActivity>, CommonUpdateMapper {
+interface CtActivityRegionMapper : CommonCountMapper, CommonDeleteMapper, CommonInsertMapper<CtAgentActivity>, CommonUpdateMapper {
     @SelectProvider(type=SqlProviderAdapter::class, method="select")
-    @Results(id="CtAgentActivityResult", value = [
-        Result(column="user_id", property="userId", jdbcType=JdbcType.OTHER, id=true),
-        Result(column="activity_id", property="activityId", jdbcType=JdbcType.OTHER),
-        Result(column="activity_type", property="activityType", jdbcType=JdbcType.CHAR)
+    @Results(id="CtActivityRegionResult", value = [
+        Result(column="activity_id", property="activityId", jdbcType=JdbcType.OTHER, id = true),
+        Result(column="region_code", property="regionCode", jdbcType=JdbcType.VARCHAR, id=true),
     ])
     fun selectMany(selectStatement: SelectStatementProvider): List<CtAgentActivity>
 
     @SelectProvider(type=SqlProviderAdapter::class, method="select")
-    @ResultMap("CtAgentActivityResult")
+    @ResultMap("CtActivityRegionResult")
     fun selectOne(selectStatement: SelectStatementProvider): CtAgentActivity?
 }

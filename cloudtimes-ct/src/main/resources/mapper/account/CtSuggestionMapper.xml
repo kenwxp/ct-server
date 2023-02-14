@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cloudtimes.account.mapper.CtSuggestionMapper">
+    <sql id="selectCtSuggestionVo">
+        select * from ct_suggestion
+    </sql>
+
+    <select id="selectCtSuggestionList" parameterType="CtSuggestion" resultMap="CtSuggestionResult">
+        <include refid="selectCtSuggestionVo"/>
+        <where>  
+            <if test="userId != null  and userId != ''"> and user_id = #{userId}</if>
+            <if test="contact != null  and contact != ''"> and contact = #{contact}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="replyAccNo != null  and replyAccNo != ''"> and reply_acc_no = #{replyAccNo}</if>
+            <if test="replyTime != null "> and reply_time = #{replyTime}</if>
+            <if test="replyRemark != null  and replyRemark != ''"> and reply_remark = #{replyRemark}</if>
+            <if test="channelType != null  and channelType != ''"> and channel_type = #{channelType}</if>
+            <if test="suggestionType != null  and suggestionType != ''"> and suggestion_type = #{suggestionType}</if>
+            <if test="processState != null  and processState != ''"> and process_state = #{processState}</if>
+            <if test="createDate != null "> and create_date = #{createDate}</if>
+        </where>
+    </select>
+    
+    <select id="selectCtSuggestionById" parameterType="String" resultMap="CtSuggestionResult">
+        <include refid="selectCtSuggestionVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertCtSuggestion" parameterType="CtSuggestion">
+        insert into ct_suggestion
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="userId != null and userId != ''">user_id,</if>
+            <if test="contact != null">contact,</if>
+            <if test="content != null">content,</if>
+            <if test="replyAccNo != null">reply_acc_no,</if>
+            <if test="replyTime != null">reply_time,</if>
+            <if test="replyRemark != null">reply_remark,</if>
+            <if test="channelType != null and channelType != ''">channel_type,</if>
+            <if test="suggestionType != null and suggestionType != ''">suggestion_type,</if>
+            <if test="processState != null and processState != ''">process_state,</if>
+            <if test="createDate != null">create_date,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="userId != null and userId != ''">#{userId},</if>
+            <if test="contact != null">#{contact},</if>
+            <if test="content != null">#{content},</if>
+            <if test="replyAccNo != null">#{replyAccNo},</if>
+            <if test="replyTime != null">#{replyTime},</if>
+            <if test="replyRemark != null">#{replyRemark},</if>
+            <if test="channelType != null and channelType != ''">#{channelType},</if>
+            <if test="suggestionType != null and suggestionType != ''">#{suggestionType},</if>
+            <if test="processState != null and processState != ''">#{processState},</if>
+            <if test="createDate != null">#{createDate},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCtSuggestion" parameterType="CtSuggestion">
+        update ct_suggestion
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null and userId != ''">user_id = #{userId},</if>
+            <if test="contact != null">contact = #{contact},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="replyAccNo != null">reply_acc_no = #{replyAccNo},</if>
+            <if test="replyTime != null">reply_time = #{replyTime},</if>
+            <if test="replyRemark != null">reply_remark = #{replyRemark},</if>
+            <if test="channelType != null and channelType != ''">channel_type = #{channelType},</if>
+            <if test="suggestionType != null and suggestionType != ''">suggestion_type = #{suggestionType},</if>
+            <if test="processState != null and processState != ''">process_state = #{processState},</if>
+            <if test="createDate != null">create_date = #{createDate},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+</mapper>

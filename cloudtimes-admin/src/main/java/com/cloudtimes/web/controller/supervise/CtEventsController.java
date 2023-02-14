@@ -1,29 +1,36 @@
 package com.cloudtimes.web.controller.supervise;
 
+import java.util.List;
+import javax.servlet.http.HttpServletResponse;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import com.cloudtimes.common.annotation.Log;
 import com.cloudtimes.common.core.controller.BaseController;
 import com.cloudtimes.common.core.domain.AjaxResult;
-import com.cloudtimes.common.core.page.TableDataInfo;
 import com.cloudtimes.common.enums.BusinessType;
-import com.cloudtimes.common.utils.poi.ExcelUtil;
 import com.cloudtimes.supervise.domain.CtEvents;
 import com.cloudtimes.supervise.service.ICtEventsService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletResponse;
-import java.util.List;
+import com.cloudtimes.common.utils.poi.ExcelUtil;
+import com.cloudtimes.common.core.page.TableDataInfo;
 
 /**
  * 事件Controller
- *
- * @author wangxp
- * @date 2023-02-07
+ * 
+ * @author 沈兵
+ * @date 2023-02-14
  */
 @RestController
 @RequestMapping("/supervise/events")
-public class CtEventsController extends BaseController {
+public class CtEventsController extends BaseController
+{
     @Autowired
     private ICtEventsService ctEventsService;
 
@@ -32,7 +39,8 @@ public class CtEventsController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('supervise:events:list')")
     @GetMapping("/list")
-    public TableDataInfo list(CtEvents ctEvents) {
+    public TableDataInfo list(CtEvents ctEvents)
+    {
         startPage();
         List<CtEvents> list = ctEventsService.selectCtEventsList(ctEvents);
         return getDataTable(list);
@@ -44,7 +52,8 @@ public class CtEventsController extends BaseController {
     @PreAuthorize("@ss.hasPermi('supervise:events:export')")
     @Log(title = "事件", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, CtEvents ctEvents) {
+    public void export(HttpServletResponse response, CtEvents ctEvents)
+    {
         List<CtEvents> list = ctEventsService.selectCtEventsList(ctEvents);
         ExcelUtil<CtEvents> util = new ExcelUtil<CtEvents>(CtEvents.class);
         util.exportExcel(response, list, "事件数据");
@@ -55,7 +64,8 @@ public class CtEventsController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('supervise:events:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") String id) {
+    public AjaxResult getInfo(@PathVariable("id") String id)
+    {
         return AjaxResult.success(ctEventsService.selectCtEventsById(id));
     }
 
@@ -65,7 +75,8 @@ public class CtEventsController extends BaseController {
     @PreAuthorize("@ss.hasPermi('supervise:events:add')")
     @Log(title = "事件", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody CtEvents ctEvents) {
+    public AjaxResult add(@RequestBody CtEvents ctEvents)
+    {
         return toAjax(ctEventsService.insertCtEvents(ctEvents));
     }
 
@@ -75,7 +86,8 @@ public class CtEventsController extends BaseController {
     @PreAuthorize("@ss.hasPermi('supervise:events:edit')")
     @Log(title = "事件", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody CtEvents ctEvents) {
+    public AjaxResult edit(@RequestBody CtEvents ctEvents)
+    {
         return toAjax(ctEventsService.updateCtEvents(ctEvents));
     }
 
@@ -84,8 +96,9 @@ public class CtEventsController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('supervise:events:remove')")
     @Log(title = "事件", businessType = BusinessType.DELETE)
-    @DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable String[] ids) {
+	@DeleteMapping("/{ids}")
+    public AjaxResult remove(@PathVariable String[] ids)
+    {
         return toAjax(ctEventsService.deleteCtEventsByIds(ids));
     }
 }
