@@ -51,6 +51,7 @@ public class TestController extends BaseController {
     private ICtWeixinApiService weixinApiService;
     @Autowired
     private JWTManager jwtManager;
+
     @Autowired
     private ICtUserService userService;
     @Autowired
@@ -140,7 +141,6 @@ public class TestController extends BaseController {
         System.out.println(JSONObject.toJSONString(callback));
         // callback.setState(AuthStateUtils.createState());
         AuthResponse ds = weixinOfficialApiService.login(callback);
-
 
         System.out.println(JSONObject.toJSONString(ds));
         String token = jwtManager.createToken(new AuthUser("", ChannelType.WECHAT.getCode()));

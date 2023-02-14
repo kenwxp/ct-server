@@ -90,15 +90,4 @@ public class CtUserController extends BaseController
     {
         return toAjax(ctUserService.updateCtUser(ctUser));
     }
-
-    /**
-     * 删除用户
-     */
-    @PreAuthorize("@ss.hasPermi('account:ctuser:remove')")
-    @Log(title = "用户", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
-    {
-        return toAjax(ctUserService.deleteCtUserByIds(ids));
-    }
 }

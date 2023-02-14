@@ -1,12 +1,9 @@
-package com.cloudtimes.account.domain;
+package com.cloudtimes.account.domain
 
-import com.cloudtimes.common.annotation.Excel;
-import com.cloudtimes.common.core.domain.BaseEntity;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
-
-import java.util.Date;
+import com.cloudtimes.common.annotation.Excel
+import com.cloudtimes.common.core.domain.BaseEntity
+import com.fasterxml.jackson.annotation.JsonFormat
+import java.util.*
 
 /**
  * 用户对象 ct_user
@@ -14,67 +11,71 @@ import java.util.Date;
  * @author 沈兵
  * @date 2023-01-17
  */
-@Data
-@Slf4j
-public class CtUser extends BaseEntity {
-    private static final long serialVersionUID = 1L;
-
+class CtUser : BaseEntity() {
     /**
      * 序列号
      */
-    private String id;
+    var id: String? = null
 
     /**
      * 登录账号
      */
     @Excel(name = "登录账号")
-    private String account;
+    var account: String? = null
+
     /**
      * 微信openId
      */
     @Excel(name = "微信openId")
-    private String wxOpenId;
+    var wxOpenId: String? = null
+
     /**
      * 微信unionId
      */
     @Excel(name = "微信unionId")
-    private String wxUnionId;
+    var wxUnionId: String? = null
+
+    /**
+     * 微信头像
+     */
+    @Excel(name = "微信头像")
+    var wxAvatar: String? = null
+
     /**
      * 登录密码
      */
     @Excel(name = "登录密码")
-    private String password;
+    var password: String? = null
 
     /**
      * 电话号码
      */
     @Excel(name = "电话号码")
-    private String mobile;
-
+    var mobile: String? = null
 
     /**
      * 昵称
      */
-    private String nickName;
+    var nickName: String? = null
 
     /**
      * 真实姓名
      */
     @Excel(name = "真实姓名")
-    private String realName;
+    var realName: String? = null
 
     /**
      * 性别
      */
     @Excel(name = "性别")
-    private String sex;
+    var sex: String? = null
 
     /**
      * 生日
      */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "生日", width = 30, dateFormat = "yyyy-MM-dd")
-    private Date birthday;
+    @Excel(name = "生日", width = 30.0, dateFormat = "yyyy-MM-dd")
+    var birthday: Date? = null
 
     /**
      * 是否实名
@@ -82,19 +83,20 @@ public class CtUser extends BaseEntity {
      * 是	1
      */
     @Excel(name = "是否实名")
-    private String isReal;
+    @set:JvmName("setIsReal")
+    var isReal: String? = null
 
     /**
      * 违规次数
      */
     @Excel(name = "违规次数")
-    private Long violationCount;
+    var violationCount: Long? = null
 
     /**
      * 身份证号
      */
     @Excel(name = "身份证号")
-    private String idNo;
+    var idNo: String? = null
 
     /**
      * 是否代理
@@ -102,13 +104,14 @@ public class CtUser extends BaseEntity {
      * 是	1
      */
     @Excel(name = "是否代理")
-    private String isAgent;
+    @set:JvmName("setIsAgent")
+    var isAgent: String? = null
 
     /**
      * 注册门店编号
      */
     @Excel(name = "注册门店编号")
-    private String registerStoreId;
+    var registerStoreId: String? = null
 
     /**
      * 是否店老板
@@ -116,34 +119,35 @@ public class CtUser extends BaseEntity {
      * 是	1
      */
     @Excel(name = "是否店老板")
-    private String isShopBoss;
+    @set:JvmName("setIsShopBoss")
+    var isShopBoss: String? = null
 
     /**
      * 最近登录IP
      */
     @Excel(name = "最近登录IP")
-    private String lastLoginIp;
+    var lastLoginIp: String? = null
 
     /**
      * 最近登录时间
      */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "最近登录时间", width = 30, dateFormat = "yyyy-MM-dd")
-    private Date lastLoginTime;
+    @Excel(name = "最近登录时间", width = 30.0, dateFormat = "yyyy-MM-dd")
+    var lastLoginTime: Date? = null
 
     /**
      * 成为店主时间
      */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "成为店主时间", width = 30, dateFormat = "yyyy-MM-dd")
-    private Date createBossTime;
+    @Excel(name = "成为店主时间", width = 30.0, dateFormat = "yyyy-MM-dd")
+    var createBossTime: Date? = null
 
     /**
      * 成为代理时间
      */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "成为代理时间", width = 30, dateFormat = "yyyy-MM-dd")
-    private Date createAgentTime;
+    @Excel(name = "成为代理时间", width = 30.0, dateFormat = "yyyy-MM-dd")
+    var createAgentTime: Date? = null
 
     /**
      * 代理状态
@@ -153,7 +157,7 @@ public class CtUser extends BaseEntity {
      * 已停用	3
      */
     @Excel(name = "代理状态")
-    private String agentState;
+    var agentState: String? = null
 
     /**
      * 代理类型
@@ -162,7 +166,7 @@ public class CtUser extends BaseEntity {
      * 普通代理	2
      */
     @Excel(name = "代理类型")
-    private String agentType;
+    var agentType: String? = null
 
     /**
      * 店主状态
@@ -172,7 +176,7 @@ public class CtUser extends BaseEntity {
      * 已停用	3
      */
     @Excel(name = "店主状态")
-    private String bossState;
+    var bossState: String? = null
 
     /**
      * 顾客状态
@@ -181,26 +185,32 @@ public class CtUser extends BaseEntity {
      * 禁用	2
      */
     @Excel(name = "顾客状态")
-    private String customerState;
+    var customerState: String? = null
 
     /**
      * 操作管理员
      */
     @Excel(name = "操作管理员")
-    private String operator;
+    var operator: String? = null
 
     /**
      * 注册日期
      */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "注册日期", width = 30, dateFormat = "yyyy-MM-dd")
-    private Date createDate;
+    @Excel(name = "注册日期", width = 30.0, dateFormat = "yyyy-MM-dd")
+    var createDate: Date? = null
 
     /**
      * 是否删除
      * 否	0
      * 是	1
      */
-    private String delFlag;
+    var delFlag: String? = null
 
+    /** token: 不体现在数据库中，只是用于和前段交互  */
+    var token: String? = null
+
+    companion object {
+        const val serialVersionUID = 1L
+    }
 }

@@ -16,6 +16,8 @@ class CtUserTable : AliasableSqlTable<CtUserTable>("ct_user", ::CtUserTable) {
 
     val wxUnionId = column<String>(name = "wx_union_id", jdbcType = JDBCType.VARCHAR)
 
+    val wxAvatar = column<String>(name = "wx_avatar", jdbcType = JDBCType.VARCHAR)
+
     val password = column<String>(name = "password", jdbcType = JDBCType.VARCHAR)
 
     val mobile = column<String>(name = "mobile", jdbcType = JDBCType.VARCHAR)
@@ -74,3 +76,5 @@ class CtUserTable : AliasableSqlTable<CtUserTable>("ct_user", ::CtUserTable) {
 
     val delFlag = column<String>(name = "del_flag", jdbcType = JDBCType.CHAR)
 }
+
+val userTable = CtUserTable()

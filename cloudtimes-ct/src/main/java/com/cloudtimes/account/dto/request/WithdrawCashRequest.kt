@@ -1,11 +1,13 @@
 package com.cloudtimes.account.dto.request
 
+import io.swagger.annotations.ApiModel
 import java.math.BigDecimal
 import javax.validation.constraints.DecimalMax
 import javax.validation.constraints.DecimalMin
 import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.NotNull
 
+@ApiModel(value = "CashTransferRequest", description = "现金转账请求体")
 data class WithdrawCashRequest (
     /** 用户编号  */
     @field:NotEmpty(message =  "用户编号不能为空")

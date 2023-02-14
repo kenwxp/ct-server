@@ -1,13 +1,10 @@
 package com.cloudtimes.account.mapper
 
 import com.cloudtimes.account.domain.CtUser
+import org.apache.ibatis.annotations.*
 
-import org.apache.ibatis.annotations.Mapper
-import org.apache.ibatis.annotations.Result
-import org.apache.ibatis.annotations.ResultMap
-import org.apache.ibatis.annotations.Results
-import org.apache.ibatis.annotations.SelectProvider
 import org.apache.ibatis.type.JdbcType
+import org.mybatis.dynamic.sql.insert.render.InsertStatementProvider
 import org.mybatis.dynamic.sql.select.render.SelectStatementProvider
 import org.mybatis.dynamic.sql.util.SqlProviderAdapter
 import org.mybatis.dynamic.sql.util.mybatis3.CommonCountMapper
@@ -67,6 +64,10 @@ interface CtUserMapper : CommonCountMapper, CommonDeleteMapper, CommonInsertMapp
     @SelectProvider(type = SqlProviderAdapter::class, method = "select")
     @ResultMap("CtUserResult")
     fun selectOne(selectStatement: SelectStatementProvider): CtUser?
+
+    @InsertProvider(type = SqlProviderAdapter::class, method = "insert")
+    @SelectKey(statement = ["select uuid() from dual"], keyProperty="row.id", resultType=String::class, before=true)
+    override fun insert(insertStatement: InsertStatementProvider<CtUser>): Int
 
     /**
      * 查询用户
