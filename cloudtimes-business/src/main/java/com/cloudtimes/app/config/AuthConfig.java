@@ -36,7 +36,7 @@ public class AuthConfig implements WebMvcConfigurer {
                 )
                 .excludePathPatterns("/js/**", "/css/**", "/images/**", "/lib/**",
                         "/fonts/**")
-                .excludePathPatterns("/swagger-resources/**", "/webjars/**", "/v2/**", "/swagger-ui/**", "/v3/**", "/error","/**.ico","/doc**");
+                .excludePathPatterns("/swagger-resources/**", "/webjars/**", "/v2/**", "/swagger-ui/**", "/v3/**", "/error", "/**.ico", "/doc**");
     }
 
     @Override

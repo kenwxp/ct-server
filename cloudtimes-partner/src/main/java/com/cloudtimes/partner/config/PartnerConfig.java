@@ -55,4 +55,7 @@ public class PartnerConfig {
     private String wiegandHttpHost;
     @Value("${wiegand.ws_host}")
     private String wiegandWsHost;
+
+    @Value("${wx.login_callback_api_url}")
+    private String loginCallbackApiUrl;
 }

@@ -1,11 +1,13 @@
 package com.cloudtimes.app.controller.test;
 
 
+import com.alibaba.fastjson.JSONObject;
 import com.cloudtimes.account.domain.CtUser;
 import com.cloudtimes.account.service.ICtUserService;
 import com.cloudtimes.common.core.controller.BaseController;
 import com.cloudtimes.common.core.domain.AjaxResult;
 import com.cloudtimes.common.core.domain.entity.AuthUser;
+import com.cloudtimes.common.enums.ChannelType;
 import com.cloudtimes.common.mq.CallDoData;
 import com.cloudtimes.common.utils.JWTManager;
 import com.cloudtimes.common.utils.XmlUtils;
@@ -15,14 +17,20 @@ import com.cloudtimes.hardwaredevice.mapper.CtDeviceDoorMapper;
 import com.cloudtimes.mq.service.CashMqSender;
 import com.cloudtimes.partner.hik.service.ICtHikApiService;
 import com.cloudtimes.partner.weixin.ICtWeixinApiService;
+import com.cloudtimes.partner.weixin.ICtWeixinOfficialApiService;
 import com.cloudtimes.partner.weixin.domain.WxpayfaceAuthInfoResp;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import me.zhyd.oauth.model.AuthCallback;
+import me.zhyd.oauth.model.AuthResponse;
+import me.zhyd.oauth.utils.AuthStateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -49,6 +57,10 @@ public class TestController extends BaseController {
     private CtDeviceDoorMapper ctDeviceDoorMapper;
     @Autowired
     private CashMqSender cashMqSender;
+
+
+    @Autowired
+    private ICtWeixinOfficialApiService weixinOfficialApiService;
 
     private static Logger log = LoggerFactory.getLogger(TestController.class);
 
@@ -119,6 +131,52 @@ public class TestController extends BaseController {
     public AjaxResult testFaceAuthInfo(@PathVariable("rawdata") String rawdata) {
         WxpayfaceAuthInfoResp wxpayfaceAuthInfo = weixinApiService.getWxpayfaceAuthInfo("199976cb-a786-11ed-8957-0242ac110003", "测试店", "ZDXLVP75870772", rawdata);
         return AjaxResult.success(wxpayfaceAuthInfo);
+    }
+
+
+    @ApiOperation("微信公众号授权登录")
+    @GetMapping(value = "/official/auth")
+    public AjaxResult testOfficialAuth(AuthCallback callback) {
+        System.out.println(JSONObject.toJSONString(callback));
+        // callback.setState(AuthStateUtils.createState());
+        AuthResponse ds = weixinOfficialApiService.login(callback);
+
+
+        System.out.println(JSONObject.toJSONString(ds));
+        String token = jwtManager.createToken(new AuthUser("", ChannelType.WECHAT.getCode()));
+        AjaxResult ajaxResult = AjaxResult.success("成功", token);
+        ajaxResult.put("isAgent", false);
+        ajaxResult.put("isApprove", true);
+        ajaxResult.put("wxUserInfo", ds.getData());
+
+        return ajaxResult;
+    }
+
+
+    @ApiOperation("微信公众号授权登录")
+    @GetMapping(value = "/official/wxAuth")
+    public void testOfficialAuth(HttpServletResponse response) {
+        String url = weixinOfficialApiService.getWXAuthURL();
+        try {
+            response.sendRedirect(url);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+
+    @ApiOperation("微信公众号授权登录-微信服务回调")
+    @GetMapping(value = "/official/callback")
+    public void testOfficialCallback(AuthCallback callback, HttpServletResponse response) throws IOException {
+        AuthResponse ds = weixinOfficialApiService.login(callback);
+        System.out.println(JSONObject.toJSONString(ds));
+        try {
+            //  response.sendRedirect("https://ctdev.htymeta.com/h5#/pages/login/wxLogin?type=wxauth");
+            response.sendRedirect("https://ctdev.htymeta.com/h5");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
     }
 }
 

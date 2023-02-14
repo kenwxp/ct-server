@@ -21,7 +21,7 @@ server:
   port: 9090
   servlet:
     # 应用的访问路径
-    context-path: /
+    context-path: /polo-api
   # undertow 配置
   undertow:
     # HTTP post内容的最大大小。当值为-1时，默认值为大小是无限的
