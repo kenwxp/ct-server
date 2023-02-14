@@ -10,6 +10,12 @@ wx:
   mch_id: 1631185974
   #商户秘钥
   mch_key: QAZ12wsxcdQAZ12wsxcdQAZ12wsxcd21
+  #apiV2 秘钥
+  apiV2_secret: QBmbglkLDeZrVDYrfj75zN2yiTY8BToI
+  #apiV3 秘钥
+  apiV3_secret: ERuAkVmMaiYRiFNNaNMyvnuNEQHksRBC
+  #商户证书序列号
+  cert_serial: 73C3AEF33ECD9C7E71FA11C155BFAF99694230F8
   #公众号appid
   official_appid: wxdee2b19db3be8517
   #公众号秘钥
