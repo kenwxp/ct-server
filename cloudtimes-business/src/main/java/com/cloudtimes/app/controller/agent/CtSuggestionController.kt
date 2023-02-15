@@ -15,12 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 
-
 class CtSuggestionListResponse(var rows: List<CtSuggestion>) : RestResult<Any>()
 
 @RestController
-@RequestMapping("/v1/agent/suggestion")
-@Api(tags = ["投诉建议"])
+@RequestMapping("/agent/suggestion")
+@Api(tags = ["代理-投诉建议"])
 class CtSuggestionController : BaseController() {
     @Autowired
     private lateinit var ctSuggestionService: ICtSuggestionService

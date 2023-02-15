@@ -1,10 +1,12 @@
 package com.cloudtimes.app.controller.agent
 
 import com.cloudtimes.account.domain.CtUserBankCard
+import com.cloudtimes.account.dto.request.QueryByUserIdRequest
 import com.cloudtimes.account.service.ICtUserBankCardService
 import com.cloudtimes.common.annotation.Log
 import com.cloudtimes.common.core.controller.BaseController
 import com.cloudtimes.common.core.domain.AjaxResult
+import com.cloudtimes.common.core.domain.RestResult
 import com.cloudtimes.common.core.page.TableDataInfo
 import com.cloudtimes.common.enums.BusinessType
 import com.cloudtimes.common.enums.UserType
@@ -15,6 +17,9 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 
+
+class AgentBackCardResponse(override var data: CtUserBankCard? = null) : RestResult<CtUserBankCard>(data)
+
 /**
  * 用户银行卡Controller
  *
@@ -22,8 +27,8 @@ import javax.validation.Valid
  * @date 2023-02-03
  */
 @RestController
-@RequestMapping("/v1/agent/bank_card")
-@Api(tags = ["用户银行卡"])
+@RequestMapping("/agent/bank_card")
+@Api(tags = ["代理-银行卡"])
 class CtUserBankCardController : BaseController() {
     @Autowired
     private lateinit var ctUserBankCardService: ICtUserBankCardService
@@ -44,30 +49,15 @@ class CtUserBankCardController : BaseController() {
     /**
      * 获取用户银行卡详细信息
      */
-    @GetMapping(value = ["/{id}"])
+    @PostMapping(value = ["/by_user_id"])
     @ApiOperation("获取用户银行卡详细信息")
-    fun getInfo(@PathVariable("id") id: String): AjaxResult {
-        val info = ctUserBankCardService.selectCtUserBankCardById(id)
-        return if (info == null) {
-            AjaxResult.error(HttpStatus.NOT_FOUND.value(), "未找到银行卡")
-        } else {
-            AjaxResult.success(info)
+    fun getInfoByUserId(@Valid @RequestBody request: QueryByUserIdRequest): AgentBackCardResponse {
+        val info = ctUserBankCardService.selectCtUserBankCardByUserId(request.userId!!)
+        val response = AgentBackCardResponse(info)
+        if (info == null) {
+            response.msg = "未找到银行卡"
         }
-    }
-
-    /**
-     * 获取用户银行卡详细信息
-     */
-    @GetMapping(value = ["/by_user_id/{userId}"])
-    @ApiOperation("获取用户银行卡详细信息")
-    fun getInfoByUserId(@PathVariable("userId") userId: String): AjaxResult {
-        val info = ctUserBankCardService.selectCtUserBankCardByUserId(userId)
-        return if (info == null) {
-            AjaxResult.error(HttpStatus.NOT_FOUND.value(), "Not Found")
-            AjaxResult.error(HttpStatus.NOT_FOUND.value(), "未找到银行卡")
-        } else {
-            AjaxResult.success(info)
-        }
+        return response
     }
 
     /**

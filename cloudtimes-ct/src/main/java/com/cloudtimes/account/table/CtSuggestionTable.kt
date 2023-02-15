@@ -1,6 +1,5 @@
 package com.cloudtimes.account.table
 
-import java.lang.Object
 import java.sql.JDBCType
 import java.util.Date
 import org.mybatis.dynamic.sql.AliasableSqlTable
@@ -8,10 +7,10 @@ import org.mybatis.dynamic.sql.util.kotlin.elements.column
 
 class CtSuggestionTable : AliasableSqlTable<CtSuggestionTable>("ct_suggestion", ::CtSuggestionTable) {
     /** 编号 */
-    val id = column<Object>(name = "id", jdbcType = JDBCType.OTHER)
+    val id = column<String>(name = "id", jdbcType = JDBCType.OTHER)
 
     /** 投诉人 */
-    val userId = column<Object>(name = "user_id", jdbcType = JDBCType.OTHER)
+    val userId = column<String>(name = "user_id", jdbcType = JDBCType.OTHER)
 
     /** 联系方式(页面采集) */
     val contact = column<String>(name = "contact", jdbcType = JDBCType.VARCHAR)

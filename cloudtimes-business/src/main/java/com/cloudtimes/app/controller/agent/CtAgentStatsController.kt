@@ -18,8 +18,8 @@ import javax.validation.Valid
  * @date 2023-02-09
  */
 @RestController
-@RequestMapping("/v1/agent/stats")
-@Api(tags = ["代理数据统计"])
+@RequestMapping("/agent/stats")
+@Api(tags = ["代理-数据统计"])
 class CtAgentStatsController : BaseController() {
     @Autowired
     private lateinit var ctStatsMonthlySalesService: ICtAgentStatsService

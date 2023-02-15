@@ -24,13 +24,17 @@ class CtEvents : BaseEntity() {
     @Excel(name = "事件类型")
     var eventType: String? = null
 
+    @ApiModelProperty(value = "事件子类型")
+    @Excel(name = "事件子类型")
+    var subType: String? = null
+
     @ApiModelProperty(value = "事件名称")
     @Excel(name = "事件名称")
     var eventName: String? = null
 
     @ApiModelProperty(value = "事件详情")
     @Excel(name = "事件详情")
-    var context: String? = null
+    var content: String? = null
 
     @ApiModelProperty(value = "发送者用户编码")
     @Excel(name = "发送者用户编码")
@@ -84,7 +88,7 @@ class CtEvents : BaseEntity() {
             .append("id", id)
             .append("eventType", eventType)
             .append("eventName", eventName)
-            .append("context", context)
+            .append("content", content)
             .append("sender", sender)
             .append("senderName", senderName)
             .append("receiver", receiver)

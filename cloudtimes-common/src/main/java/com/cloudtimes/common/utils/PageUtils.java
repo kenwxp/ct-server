@@ -25,6 +25,11 @@ public class PageUtils extends PageHelper
         PageHelper.startPage(pageNum, pageSize, orderBy).setReasonable(reasonable);
     }
 
+    public static void startPage(Integer pageNum, Integer pageSize)
+    {
+        PageHelper.startPage(pageNum, pageSize, "").setReasonable(true);
+    }
+
     /**
      * 清理分页的线程变量
      */

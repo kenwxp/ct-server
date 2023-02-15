@@ -21,8 +21,8 @@ import javax.validation.Valid
  * @date 2023-02-03
  */
 @RestController
-@RequestMapping("/v1/agent/commission_settlement")
-@Api(tags = ["代理佣金结算"])
+@RequestMapping("/agent/commission_settlement")
+@Api(tags = ["代理-佣金结算"])
 class CtAgentCommissionSettlementController : BaseController() {
     @Autowired
     private lateinit var ctAgentCommissionSettlementService: ICtAgentCommissionSettlementService

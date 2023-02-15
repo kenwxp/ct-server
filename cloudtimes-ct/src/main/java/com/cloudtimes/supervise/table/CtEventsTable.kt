@@ -13,11 +13,14 @@ class CtEventsTable : AliasableSqlTable<CtEventsTable>("ct_events", ::CtEventsTa
     /** 事件类型 */
     val eventType = column<String>(name = "event_type", jdbcType = JDBCType.CHAR)
 
+    /** 事件子类型 */
+    val subType = column<String>(name = "sub_type", jdbcType = JDBCType.CHAR)
+
     /** 事件名称 */
     val eventName = column<String>(name = "event_name", jdbcType = JDBCType.VARCHAR)
 
     /** 事件详情 */
-    val context = column<String>(name = "context", jdbcType = JDBCType.VARCHAR)
+    val content = column<String>(name = "content", jdbcType = JDBCType.VARCHAR)
 
     /** 发送者用户编码 */
     val sender = column<String>(name = "sender", jdbcType = JDBCType.OTHER)

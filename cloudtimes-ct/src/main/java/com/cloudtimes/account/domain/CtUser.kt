@@ -83,6 +83,7 @@ class CtUser : BaseEntity() {
      * 是	1
      */
     @Excel(name = "是否实名")
+    @get:JvmName("getIsReal")
     @set:JvmName("setIsReal")
     var isReal: String? = null
 
@@ -105,6 +106,7 @@ class CtUser : BaseEntity() {
      */
     @Excel(name = "是否代理")
     @set:JvmName("setIsAgent")
+    @get:JvmName("getIsAgent")
     var isAgent: String? = null
 
     /**
@@ -119,6 +121,7 @@ class CtUser : BaseEntity() {
      * 是	1
      */
     @Excel(name = "是否店老板")
+    @get:JvmName("getIsShopBoss")
     @set:JvmName("setIsShopBoss")
     var isShopBoss: String? = null
 

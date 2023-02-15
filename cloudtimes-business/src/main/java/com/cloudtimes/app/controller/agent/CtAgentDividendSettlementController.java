@@ -21,8 +21,8 @@ import java.util.List;
  * @date 2023-02-03
  */
 @RestController
-@RequestMapping("/v1/agent/dividend_settlement")
-@Api(tags = "代理分润结算")
+@RequestMapping("/agent/dividend_settlement")
+@Api(tags = "代理-分润结算")
 public class CtAgentDividendSettlementController extends BaseController
 {
     @Autowired

@@ -8,7 +8,7 @@ import org.mybatis.dynamic.sql.AliasableSqlTable
 import org.mybatis.dynamic.sql.util.kotlin.elements.column
 
 class CtUserTable : AliasableSqlTable<CtUserTable>("ct_user", ::CtUserTable) {
-    val id = column<Object>(name = "id", jdbcType = JDBCType.OTHER)
+    val id = column<String>(name = "id", jdbcType = JDBCType.OTHER)
 
     val account = column<String>(name = "account", jdbcType = JDBCType.VARCHAR)
 
@@ -44,7 +44,7 @@ class CtUserTable : AliasableSqlTable<CtUserTable>("ct_user", ::CtUserTable) {
 
     val idNo = column<String>(name = "id_no", jdbcType = JDBCType.VARCHAR)
 
-    val registerStoreId = column<Object>(name = "register_store_id", jdbcType = JDBCType.OTHER)
+    val registerStoreId = column<String>(name = "register_store_id", jdbcType = JDBCType.OTHER)
 
     val isAgent = column<String>(name = "is_agent", jdbcType = JDBCType.CHAR)
 

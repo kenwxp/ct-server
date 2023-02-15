@@ -41,7 +41,7 @@ public class CtShopBossBusinessServiceImpl implements ICtShopBossBusinessService
         if (dbUser == null) {
             throw new ServiceException("无法获取用户信息");
         }
-        if (!StringUtils.equals(dbUser.isShopBoss(), "1")) {
+        if (!StringUtils.equals(dbUser.getIsShopBoss(), "1")) {
             throw new ServiceException("当前用户不是店老板");
         }
         CtStore dbStore = storeMapper.selectCtStoreById(storeId);

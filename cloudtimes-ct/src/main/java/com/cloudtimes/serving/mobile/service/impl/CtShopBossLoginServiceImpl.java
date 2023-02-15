@@ -60,7 +60,7 @@ public class CtShopBossLoginServiceImpl implements ICtShopBossLoginService {
         if (!SecurityUtils.matchesPassword(password, dbUser.getPassword())) {
             throw new ServiceException("用户名或密码不正确");
         }
-        if (!"1".equals(dbUser.isShopBoss())) {
+        if (!"1".equals(dbUser.getIsShopBoss())) {
             throw new ServiceException("用户非店老板");
         }
         dbUser.setLastLoginTime(new Date());

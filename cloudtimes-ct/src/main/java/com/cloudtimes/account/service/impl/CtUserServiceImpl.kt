@@ -1,6 +1,7 @@
 package com.cloudtimes.account.service.impl
 
 import com.cloudtimes.account.domain.CtUser
+import com.cloudtimes.account.dto.request.VerifyRealNameRequest
 import com.cloudtimes.account.mapper.CtUserMapper
 import com.cloudtimes.account.mapper.provider.CtUserProvider
 import com.cloudtimes.account.service.ICtUserService
@@ -31,6 +32,14 @@ class CtUserServiceImpl : ICtUserService {
 
         ctUserMapper.insert(CtUserProvider.insertWxUser(loginUser))
         return loginUser
+    }
+
+    override fun verifyRealName(request: VerifyRealNameRequest): Int {
+        return ctUserMapper.update(CtUserProvider.updateRealName(request))
+    }
+
+    override fun selectCtUserBySsn(ssn: String): CtUser? {
+        return ctUserMapper.selectOne(CtUserProvider.selectUserBySsn(ssn))
     }
 
     /**

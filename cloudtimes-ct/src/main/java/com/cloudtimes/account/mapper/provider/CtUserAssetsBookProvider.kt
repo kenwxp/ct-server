@@ -21,6 +21,7 @@ object CtUserAssetsBookProvider {
                 set(beforeAmount) toValueWhenPresent row.beforeAmount
                 set(alterAmount) toValueWhenPresent row.alterAmount
                 set(amount) toValueWhenPresent row.amount
+                set(beforeTaxAmount) toValueWhenPresent row.beforeTaxAmount
                 set(createDate) toValueWhenPresent row.createDate
                 set(createTime) toValueWhenPresent row.createTime
                 set(updateTime) toValueWhenPresent row.updateTime

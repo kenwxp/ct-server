@@ -11,16 +11,16 @@ class CtAgentDividendSettlementTable : AliasableSqlTable<CtAgentDividendSettleme
     ::CtAgentDividendSettlementTable
 ) {
     /** 编号 */
-    val id = column<Object>(name = "id", jdbcType = JDBCType.OTHER)
+    val id = column<String>(name = "id", jdbcType = JDBCType.OTHER)
 
     /** 门店编号 */
-    val storeId = column<Object>(name = "store_id", jdbcType = JDBCType.OTHER)
+    val storeId = column<String>(name = "store_id", jdbcType = JDBCType.OTHER)
 
     /** 开发门店的代理会员编号 */
-    val userId = column<Object>(name = "user_id", jdbcType = JDBCType.OTHER)
+    val userId = column<String>(name = "user_id", jdbcType = JDBCType.OTHER)
 
     /** 上级代理编号 */
-    val parentUserId = column<Object>(name = "parent_user_id", jdbcType = JDBCType.OTHER)
+    val parentUserId = column<String>(name = "parent_user_id", jdbcType = JDBCType.OTHER)
 
     /** 分润年月 */
     val dividendYearMonth = column<Int>(name = "dividend_year_month", jdbcType = JDBCType.INTEGER)

@@ -21,8 +21,8 @@ import java.util.List;
  * @date 2023-02-03
  */
 @RestController
-@RequestMapping("/v1/agent/withdrawal_book")
-@Api(tags = "提现登记簿")
+@RequestMapping("/agent/withdrawal_book")
+@Api(tags = "代理-提现登记簿")
 public class CtWithdrawalBookController extends BaseController
 {
     @Autowired

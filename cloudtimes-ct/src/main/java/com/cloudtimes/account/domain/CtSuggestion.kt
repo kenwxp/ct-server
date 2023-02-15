@@ -22,17 +22,17 @@ class CtSuggestion : BaseEntity() {
     @ApiModelProperty(value = "编号")
     var id: String? = null
 
-    @ApiModelProperty(value = "投诉人")
-    @Excel(name = "投诉人")
+    @ApiModelProperty(value = "投诉人", required = true)
     @NotNull(message = "投诉人不能为空")
     @NotEmpty(message = "投诉人不能为空")
+    @Excel(name = "投诉人")
     var userId: String? = null
 
     @ApiModelProperty(value = "联系方式(页面采集)")
     @Excel(name = "联系方式(页面采集)")
     var contact: String? = null
 
-    @ApiModelProperty(value = "投诉内容")
+    @ApiModelProperty(value = "投诉内容", required = true)
     @Excel(name = "投诉内容")
     @NotNull(message = "投诉内容不能为空")
     @NotEmpty(message = "投诉内容不能为空")
@@ -51,11 +51,13 @@ class CtSuggestion : BaseEntity() {
     @Excel(name = "处理批复")
     var replyRemark: String? = null
 
-    @ApiModelProperty(value = "投诉渠道")
+    @ApiModelProperty(value = "投诉渠道", required = true)
     @Excel(name = "投诉渠道")
+    @NotNull(message = "投诉渠道不能为空")
+    @NotEmpty(message = "投诉渠道不能为空")
     var channelType: String? = null
 
-    @ApiModelProperty(value = "投诉/建议类型")
+    @ApiModelProperty(value = "投诉/建议类型", required = true)
     @Excel(name = "投诉/建议类型")
     @NotNull(message = "投诉建议类型不能为空")
     @NotEmpty(message = "投诉建议类型不能为空")

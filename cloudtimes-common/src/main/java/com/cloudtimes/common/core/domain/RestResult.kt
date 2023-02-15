@@ -1,4 +1,7 @@
 package com.cloudtimes.common.core.domain
+
+import org.springframework.http.HttpStatus
+
 /**
  * Rest结构集
  *
@@ -7,21 +10,26 @@ package com.cloudtimes.common.core.domain
 open class RestResult<T> {
     var code: Int = 200
     var msg: String = "处理成功"
-    var total: Int? = null
     open var data: T? = null
 
-    constructor() : this(code = 200, msg = "处理成功", total = null, data = null)
+    constructor() : this(code = 200, msg = "处理成功", data = null)
 
-    constructor(data: T?) : this(code = 200, msg = "处理成功", total = null, data = data)
+    constructor(data: T?) : this(code = 200, msg = "处理成功", data = data)
 
-    constructor(code: Int, msg: String, total: Int?, data: T?) {
+    constructor(code: Int, msg: String, data: T?) {
         this.code = code
         this.msg = msg
-        this.total = total
         this.data = data
     }
 
-    override fun toString(): String {
-        return "RestResult{code: $code, msg: $msg, total: $total, data: $data}"
+
+    fun notFound(msg: String) {
+        this.code = HttpStatus.NOT_FOUND.value()
+        this.msg = msg;
     }
+
+    override fun toString(): String {
+        return "RestResult{code: $code, msg: $msg, data: $data}"
+    }
+
 }

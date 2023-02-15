@@ -36,8 +36,8 @@ object CtUserAgentProvider {
     fun updateAgentCashStmt(row: CtUserAgent): UpdateStatementProvider {
         return with(ctUserAgentTable) {
             update(ctUserAgentTable) {
-                set(cashAmount).equalTo(row.cashAmount!!)
-                set(updateTime).equalTo(Date())
+                set(cashAmount) equalTo row.cashAmount!!
+                set(updateTime) equalTo Date()
                 where {
                     userId isEqualTo row.userId!!
                 }

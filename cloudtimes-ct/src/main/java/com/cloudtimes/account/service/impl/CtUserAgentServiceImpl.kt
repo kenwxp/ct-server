@@ -142,6 +142,7 @@ class CtUserAgentServiceImpl : ICtUserAgentService {
             bookType = AssetsBookType.AgentCashWithdraw.code
             assetsType = AssetsType.Cash.code
             amount = withdrawRequest.amount
+            beforeTaxAmount = withdrawRequest.amount
             beforeAmount = agentAssets.cashAmount
             alterAmount = agentAssets.cashAmount!!.minus(withdrawRequest.amount!!)
             operateType = AssetsOperateType.Decrease.code
@@ -188,6 +189,7 @@ class CtUserAgentServiceImpl : ICtUserAgentService {
             bookType = AssetsBookType.AgentTransfer.code
             assetsType = AssetsType.Cash.code
             amount = transferAmount
+            beforeTaxAmount = transferAmount
             beforeAmount = payer.cashAmount
             alterAmount = payer.cashAmount!!.minus(transferAmount)
             operateType = AssetsOperateType.Decrease.code
@@ -202,6 +204,7 @@ class CtUserAgentServiceImpl : ICtUserAgentService {
             bookType = AssetsBookType.AgentTransfer.code
             assetsType = AssetsType.Cash.code
             amount = transferAmount
+            beforeTaxAmount = transferAmount
             beforeAmount = payee.cashAmount
             alterAmount = payee.cashAmount!!.plus(transferAmount)
             operateType = AssetsOperateType.Increase.code

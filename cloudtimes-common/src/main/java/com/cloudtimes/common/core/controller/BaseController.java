@@ -52,6 +52,10 @@ public class BaseController {
         PageUtils.startPage();
     }
 
+    protected void startPage(Integer pageNum, Integer pageSize) {
+        PageUtils.startPage(pageNum, pageSize);
+    }
+
     /**
      * 设置请求排序数据
      */

@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.*
  * @date 2023-02-03
  */
 @RestController
-@RequestMapping("/v1/agent/agent_dividend")
-@Api(tags = ["代理分润"])
+@RequestMapping("/agent/agent_dividend")
+@Api(tags = ["代理-分润"])
 class CtAgentDividendController : BaseController() {
     @Autowired
     private lateinit var ctAgentDividendService: ICtAgentDividendService

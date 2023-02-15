@@ -1,5 +1,6 @@
 package com.cloudtimes.app.controller.agent
 
+import com.cloudtimes.account.domain.CtUser
 import com.cloudtimes.account.dto.request.AgentStoreRequest
 import com.cloudtimes.account.service.ICtUserAgentService
 import com.cloudtimes.common.core.controller.BaseController
@@ -8,6 +9,8 @@ import com.cloudtimes.common.core.page.TableDataInfo
 import com.cloudtimes.hardwaredevice.dto.request.ShopOrderByMonthRequest
 import com.cloudtimes.supervise.domain.CtOrder
 import com.cloudtimes.supervise.service.ICtOrderService
+import com.github.xiaoymin.knife4j.annotations.DynamicParameter
+import com.github.xiaoymin.knife4j.annotations.DynamicResponseParameters
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import org.springframework.beans.factory.annotation.Autowired
@@ -21,8 +24,8 @@ import javax.validation.Valid
  * @date 2023-01-17
  */
 @RestController
-@RequestMapping("/v1/agent/store")
-@Api(tags = ["代理门店管理"])
+@RequestMapping("/agent/store")
+@Api(tags = ["代理-门店"])
 class CtStoreController : BaseController() {
     @Autowired
     private lateinit var ctUserAgentService: ICtUserAgentService

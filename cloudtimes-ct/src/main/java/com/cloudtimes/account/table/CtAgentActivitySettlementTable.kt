@@ -12,13 +12,13 @@ class CtAgentActivitySettlementTable : AliasableSqlTable<CtAgentActivitySettleme
 ) {
 
     /** 编号 */
-    val id = column<Object>(name = "id", jdbcType = JDBCType.OTHER)
+    val id = column<String>(name = "id", jdbcType = JDBCType.OTHER)
 
     /** 活动编号 */
-    val activityId = column<Object>(name = "activity_id", jdbcType = JDBCType.OTHER)
+    val activityId = column<String>(name = "activity_id", jdbcType = JDBCType.OTHER)
 
     /** 代理用户编号 */
-    val userId = column<Object>(name = "user_id", jdbcType = JDBCType.OTHER)
+    val userId = column<String>(name = "user_id", jdbcType = JDBCType.OTHER)
 
     /** 操作额度/实际到账金额 */
     val amount = column<BigDecimal>(name = "amount", jdbcType = JDBCType.DECIMAL)

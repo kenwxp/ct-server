@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.*
  * @date 2023-02-03
  */
 @RestController
-@RequestMapping("/v1/agent/agent_commission")
-@Api(tags = ["代理佣金"])
+@RequestMapping("/agent/agent_commission")
+@Api(tags = ["代理-佣金"])
 class CtAgentCommissionController : BaseController() {
     @Autowired
     private lateinit var ctAgentCommissionService: ICtAgentCommissionService

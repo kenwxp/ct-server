@@ -28,8 +28,8 @@ class AgentActivityResponse(override var data: AgentActivity?) : RestResult<Agen
  * @date 2023-02-07
  */
 @RestController
-@RequestMapping("/v1/agent/activity")
-@Api(tags = ["代理活动"])
+@RequestMapping("/agent/activity")
+@Api(tags = ["代理-活动"])
 class CtAgentActivityController : BaseController() {
     @Autowired
     private lateinit var agentActivityService: ICtAgentActivityService

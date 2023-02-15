@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*
  */
 @RestController
 @RequestMapping("/account/user_cards")
-@Api(tags = ["用户卡劵维护"])
+@Api(tags = ["代理-卡劵维护"])
 class CtUserCardsController : BaseController() {
     @Autowired
     private val ctUserCardsService: ICtUserCardsService? = null

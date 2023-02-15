@@ -5,6 +5,7 @@ import com.cloudtimes.common.enums.DataSourceType
 import com.cloudtimes.common.utils.DateUtils
 import com.cloudtimes.supervise.domain.CtEvents
 import com.cloudtimes.supervise.mapper.CtEventsMapper
+import com.cloudtimes.supervise.mapper.provide.CtEventsProvider
 import com.cloudtimes.supervise.service.ICtEventsService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -20,6 +21,11 @@ import org.springframework.stereotype.Service
 class CtEventsServiceImpl : ICtEventsService {
     @Autowired
     private lateinit var ctEventsMapper: CtEventsMapper
+
+    override fun selectEventsByReceiver(receiver: String): List<CtEvents> {
+        val selectStmt = CtEventsProvider.byReceiver(receiver)
+        return ctEventsMapper.selectMany(selectStmt)
+    }
 
     /**
      * 查询事件
