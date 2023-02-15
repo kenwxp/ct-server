@@ -4,6 +4,9 @@ import com.cloudtimes.partner.weixin.domain.WxpayfaceAuthInfoResp;
 
 import java.util.Map;
 
+/**
+ * 微信小程序接口调用service服务
+ */
 public interface ICtWeixinApiService {
     /**
      * 获取微信access token
@@ -38,17 +41,5 @@ public interface ICtWeixinApiService {
      * * countryCode     string  // 区号
      */
     public Map<String, Object> getUserPhoneInfo(String jsCode);
-
-
-    /**
-     * 获取设备刷脸凭证
-     *
-     * @param storeId
-     * @param storeName
-     * @param deviceId
-     * @param rawData
-     * @return
-     */
-    public WxpayfaceAuthInfoResp getWxpayfaceAuthInfo(String storeId, String storeName, String deviceId, String rawData);
 
 }

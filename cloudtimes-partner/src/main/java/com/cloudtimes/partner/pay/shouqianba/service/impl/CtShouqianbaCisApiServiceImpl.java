@@ -2,9 +2,9 @@ package com.cloudtimes.partner.pay.shouqianba.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson2.JSONObject;
-import com.cloudtimes.common.utils.sign.SHA1withRSAUtil;
 import com.cloudtimes.common.utils.http.HttpUtils;
 import com.cloudtimes.common.utils.sign.Base64;
+import com.cloudtimes.common.utils.sign.RSAUtil;
 import com.cloudtimes.partner.config.PartnerConfig;
 import com.cloudtimes.partner.pay.shouqianba.domain.ShouqianbaConstant;
 import com.cloudtimes.partner.pay.shouqianba.service.ICtShouqianbaCisApiService;
@@ -63,9 +63,8 @@ public class CtShouqianbaCisApiServiceImpl implements ICtShouqianbaCisApiService
         requestObj.put("body", reqBody);
         reqObj.put("request", requestObj);
         // 签名
-        byte[] signRaw = SHA1withRSAUtil.sign(
-                config.getShouqianbaCtPrivKey(),
-                SHA1withRSAUtil.PKCS1,
+        byte[] signRaw = RSAUtil.sign(
+                RSAUtil.parsePKCS1KeyStr(config.getShouqianbaCtPrivKey()),
                 requestObj.toString());
         String signature = Base64.encode(signRaw);
         reqObj.put("signature", signature);
@@ -76,7 +75,7 @@ public class CtShouqianbaCisApiServiceImpl implements ICtShouqianbaCisApiService
             Map<String, Object> responseObj = JSON.parseObject(responseStr, Map.class);
             String retSign = (String) responseObj.get("signature");
             // 验签
-            if (SHA1withRSAUtil.verify(config.getShouqianbaShouqbCisPubKey(), getResponseStr(responseStr), retSign)) {
+            if (RSAUtil.verify(RSAUtil.parsePublicKeyStr(config.getShouqianbaShouqbCisPubKey()), getResponseStr(responseStr), retSign)) {
                 return responseObj;
             } else {
                 throw new RuntimeException(path + " 验签失败");

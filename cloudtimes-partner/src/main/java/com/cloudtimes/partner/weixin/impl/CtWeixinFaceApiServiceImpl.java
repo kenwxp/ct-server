@@ -2,13 +2,15 @@ package com.cloudtimes.partner.weixin.impl;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
+import com.cloudtimes.common.constant.Constants;
 import com.cloudtimes.common.utils.NumberUtils;
 import com.cloudtimes.common.utils.StringUtils;
 import com.cloudtimes.common.utils.XmlUtils;
 import com.cloudtimes.common.utils.http.HttpUtils;
+import com.cloudtimes.common.utils.sign.Base64;
 import com.cloudtimes.common.utils.sign.Md5Utils;
+import com.cloudtimes.common.utils.sign.RSAUtil;
 import com.cloudtimes.partner.config.PartnerConfig;
-import com.cloudtimes.partner.weixin.ICtWeixinApiService;
 import com.cloudtimes.partner.weixin.ICtWeixinFaceApiService;
 import com.cloudtimes.partner.weixin.domain.WxpayfaceAuthInfoReq;
 import com.cloudtimes.partner.weixin.domain.WxpayfaceAuthInfoResp;
@@ -18,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
+import java.security.PrivateKey;
 import java.util.*;
 
 /**
@@ -43,10 +46,9 @@ public class CtWeixinFaceApiServiceImpl implements ICtWeixinFaceApiService {
         reqParams.setVersion("1");
         reqParams.setSignType("MD5");
         reqParams.setNonceStr(NumberUtils.getRandomString(32));
-        String sign = getSign(reqParams);
+        String sign = getFaceSign(reqParams);
         reqParams.setSign(sign);
         String xmlParams = XmlUtils.formatXml(reqParams);
-
         HashMap<String, String> header = new HashMap<>();
         header.put("Accept", "application/xml");
         header.put("Content-Type", "application/xml");
@@ -60,28 +62,8 @@ public class CtWeixinFaceApiServiceImpl implements ICtWeixinFaceApiService {
         return null;
     }
 
-    /**
-     * 根据刷脸token 获取unionId
-     *
-     * @param token
-     * @return
-     */
-    @Override
-    public String getWxpayfaceUserUnionId(String token) {
-        String url = "https://api.mch.weixin.qq.com/v3/facemch/users/" + token
-                + "?info_type=ASK_UNIONID&appid=" + config.getWxAppId();
-        String resultStr = HttpUtils.sendGet(url);
-        if (StringUtils.isNotBlank(resultStr)) {
-            JSONObject jsonObject = JSON.parseObject(resultStr);
-            if (jsonObject != null) {
-                return jsonObject.getString("union_id");
-            }
-        }
-        return "";
-    }
 
-
-    public String getSign(Object params) {
+    public String getFaceSign(Object params) {
         Field[] declaredFields = params.getClass().getDeclaredFields();
         // 通过rowdata 进行字段排序
         TreeMap<String, Object> map = new TreeMap<>();
@@ -103,6 +85,59 @@ public class CtWeixinFaceApiServiceImpl implements ICtWeixinFaceApiService {
         log.info("微信签名字符串：" + raw);
         String sign = Md5Utils.hash(raw).toUpperCase();
         return sign;
+    }
+
+    /**
+     * 根据刷脸token 获取unionId
+     *
+     * @param token
+     * @return
+     */
+    @Override
+    public String getWxpayfaceUserUnionId(String token) {
+        String domain = "https://api.mch.weixin.qq.com";
+        String url = "/v3/facemch/users/" + token + "?info_type=ASK_UNIONID&appid=" + config.getWxAppId();
+        HashMap<String, String> header = new HashMap<>();
+        header.put("Content-Type", "application/json; charset=utf-8");
+        header.put("Accept", "application/json; charset=utf-8");
+        String authToken = getAuthToken("GET", url, "");
+        header.put("Authorization", "WECHATPAY2-SHA256-RSA2048" + " " + authToken);
+        String resultStr = HttpUtils.sendGet(domain + url, "", Constants.UTF8, header);
+        System.out.println(resultStr);
+        if (StringUtils.isNotBlank(resultStr)) {
+            JSONObject jsonObject = JSON.parseObject(resultStr);
+            if (jsonObject != null) {
+                return jsonObject.getString("union_id");
+            }
+        }
+        return "";
+    }
+
+    private String getAuthToken(String method, String url, String body) {
+        String nonceStr = NumberUtils.getRandomString(32);
+        long timestamp = System.currentTimeMillis() / 1000;
+        String message = buildMessage(method, url, timestamp, nonceStr, body);
+        String signature = getSign(message);
+        System.out.println(signature);
+        return "mchid=\"" + config.getWxMchId() + "\","
+                + "nonce_str=\"" + nonceStr + "\","
+                + "timestamp=\"" + timestamp + "\","
+                + "serial_no=\"" + config.getWxCertSerial() + "\","
+                + "signature=\"" + signature + "\"";
+    }
+
+    private String getSign(String message) {
+        PrivateKey certPrivate = RSAUtil.getPrivateKeyFromPath(config.getWxCertPrivatePemPath());
+        byte[] sha256withRSAS = RSAUtil.sign(certPrivate, message, "SHA256withRSA");
+        return Base64.encode(sha256withRSAS);
+    }
+
+    private String buildMessage(String method, String url, long timestamp, String nonceStr, String body) {
+        return method + "\n"
+                + url + "\n"
+                + timestamp + "\n"
+                + nonceStr + "\n"
+                + body + "\n";
     }
 
 }

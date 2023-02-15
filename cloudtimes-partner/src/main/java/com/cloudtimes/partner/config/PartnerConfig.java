@@ -25,6 +25,10 @@ public class PartnerConfig {
     private String wxApiV3Secret;
     @Value("${wx.cert_serial}")
     private String wxCertSerial;
+    @Value("${wx.cert_private_pem_path}")
+    private String wxCertPrivatePemPath;
+    @Value("${wx.cert_public_pem_path}")
+    private String wxCertPublicPemPath;
     @Value("${wx.official_appid}")
     private String wxOfficialAppid;
     @Value("${wx.official_secret}")
