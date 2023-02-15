@@ -2,6 +2,7 @@ package com.cloudtimes.app.controller.agent
 
 import com.cloudtimes.account.domain.CtUser
 import com.cloudtimes.account.dto.request.H5LoginRequest
+import com.cloudtimes.account.dto.request.QueryByUserIdRequest
 import com.cloudtimes.account.dto.request.VerifyRealNameRequest
 import com.cloudtimes.account.service.ICtUserService
 import com.cloudtimes.common.annotation.Log
@@ -21,6 +22,8 @@ import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 
 class H5LoginResponse(override var data: CtUser?) : RestResult<CtUser>(data)
+
+class UserDetailResponse(override var data: CtUser?) : RestResult<CtUser>(data)
 
 /**
  * 用户Controller
@@ -52,10 +55,11 @@ class CtUserController : BaseController() {
     /**
      * 获取用户详细信息
      */
-    @GetMapping(value = ["/{id}"])
+    @PostMapping(value = ["/detail"])
     @ApiOperation("获取用户详细信息")
-    fun getInfo(@PathVariable("id") id: String): AjaxResult {
-        return AjaxResult.success(ctUserService.selectCtUserById(id))
+    fun getInfo(@Valid @RequestBody request: QueryByUserIdRequest): UserDetailResponse {
+        val user = ctUserService.selectCtUserById(request.userId!!)
+        return UserDetailResponse(user)
     }
 
     @ApiOperation("实名认证")

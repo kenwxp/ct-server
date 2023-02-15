@@ -9,6 +9,26 @@ object CtEventsProvider {
         return select(eventsTable.allColumns()) {
             from(eventsTable)
             where { eventsTable.receiver isEqualTo receiver }
+            orderBy(eventsTable.createTime.descending())
+        }
+    }
+
+    fun byReceiverAndMessageType(receiver: String, msgType: String): SelectStatementProvider {
+        return select(eventsTable.allColumns()) {
+            from(eventsTable)
+            where { eventsTable.receiver isEqualTo receiver }
+            and { eventsTable.subType isEqualTo msgType }
+            orderBy(eventsTable.createTime.descending())
+        }
+    }
+
+    fun byReceiverAndMessageTypeLimitOne(receiver: String, msgType: String): SelectStatementProvider {
+        return select(eventsTable.allColumns()) {
+            from(eventsTable)
+            where { eventsTable.receiver isEqualTo receiver }
+            and { eventsTable.subType isEqualTo msgType }
+            orderBy(eventsTable.createTime.descending())
+            limit(1)
         }
     }
 }

@@ -9,7 +9,11 @@ import com.cloudtimes.supervise.domain.CtEvents
  * @date 2023-02-14
  */
 interface ICtEventsService {
-    fun selectEventsByReceiver(receiver: String): List<CtEvents>
+    fun selectByReceiver(receiver: String): List<CtEvents>
+
+    fun selectSummaryByReceiver(receiver: String): List<CtEvents>
+
+    fun selectByReceiverAndMsgType(receiver: String, msgType: String): List<CtEvents>
 
     /**
      * 查询事件

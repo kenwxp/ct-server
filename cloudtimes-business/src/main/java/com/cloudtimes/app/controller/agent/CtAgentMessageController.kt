@@ -1,6 +1,7 @@
 package com.cloudtimes.app.controller.agent
 
 import com.cloudtimes.account.domain.CtUserAgent
+import com.cloudtimes.account.dto.request.ListMessageByTypeRequest
 import com.cloudtimes.account.dto.request.QueryByUserIdRequest
 import com.cloudtimes.common.core.controller.BaseController
 import com.cloudtimes.common.core.domain.RestPageResult
@@ -20,7 +21,7 @@ import javax.validation.Valid
 class AgentMessagePage() : RestPageResult<CtEvents>()
 
 @ApiModel(value = "AgentMessageListRequest", description = "查询代理的消息列表请求体")
-class AgentMessageListRequest(var pageNum: Int = 1, var pageSize: Int = 2) : QueryByUserIdRequest()
+class AgentMessageListRequest(var pageNum: Int = 1, var pageSize: Int = 10) : QueryByUserIdRequest()
 
 /**
  * 代理Controller
@@ -35,11 +36,33 @@ class CtAgentMessageController : BaseController() {
     @Autowired
     private lateinit var eventsService: ICtEventsService
 
+    @PostMapping(value = ["/summary"])
+    @ApiOperation(value = "查询代理的消息摘要", response = CtUserAgent::class)
+    fun summary(@Valid @RequestBody request: AgentMessageListRequest): AgentMessagePage {
+        val messages = eventsService.selectSummaryByReceiver(request.userId!!)
+        return AgentMessagePage().apply {
+            total = messages.size.toLong()
+            rows = messages
+        }
+    }
+
+    @PostMapping(value = ["/list_by_type"])
+    @ApiOperation(value = "按消息类型查询代理消息列表", response = CtUserAgent::class)
+    fun listMessageByType(@Valid @RequestBody request: ListMessageByTypeRequest): AgentMessagePage {
+        startPage(request.pageNum, request.pageSize)
+        val messages = eventsService.selectByReceiverAndMsgType(request.userId!!, request.msgType!!)
+        val pageData = getDataTable(messages)
+        return AgentMessagePage().apply {
+            total = pageData.total
+            rows = messages
+        }
+    }
+
     @PostMapping(value = ["/list"])
     @ApiOperation(value = "查询代理的消息列表", response = CtUserAgent::class)
-    fun listMessages(@Valid @RequestBody request: AgentMessageListRequest): AgentMessagePage {
+    fun listMessage(@Valid @RequestBody request: AgentMessageListRequest): AgentMessagePage {
         startPage(request.pageNum, request.pageSize)
-        val messages = eventsService.selectEventsByReceiver(request.userId!!)
+        val messages = eventsService.selectByReceiver(request.userId!!)
         val pageData = getDataTable(messages)
         return AgentMessagePage().apply {
             total = pageData.total

@@ -1,6 +1,7 @@
 package com.cloudtimes.supervise.service.impl
 
 import com.cloudtimes.common.annotation.DataSource
+import com.cloudtimes.common.enums.AgentMessageType
 import com.cloudtimes.common.enums.DataSourceType
 import com.cloudtimes.common.utils.DateUtils
 import com.cloudtimes.supervise.domain.CtEvents
@@ -22,9 +23,26 @@ class CtEventsServiceImpl : ICtEventsService {
     @Autowired
     private lateinit var ctEventsMapper: CtEventsMapper
 
-    override fun selectEventsByReceiver(receiver: String): List<CtEvents> {
+    override fun selectByReceiver(receiver: String): List<CtEvents> {
         val selectStmt = CtEventsProvider.byReceiver(receiver)
         return ctEventsMapper.selectMany(selectStmt)
+    }
+
+    override fun selectByReceiverAndMsgType(receiver: String, msgType: String): List<CtEvents> {
+        val selectStmt = CtEventsProvider.byReceiverAndMessageType(receiver, msgType)
+        return ctEventsMapper.selectMany(selectStmt)
+    }
+
+    override fun selectSummaryByReceiver(receiver: String): List<CtEvents> {
+        val messages = mutableListOf<CtEvents>()
+        val messageTypes = AgentMessageType.values()
+        messageTypes.forEach {
+            val message = ctEventsMapper.selectOne(
+                CtEventsProvider.byReceiverAndMessageTypeLimitOne(receiver, it.code)
+            )
+            message?.let { messages.add(message) }
+        }
+        return messages
     }
 
     /**
