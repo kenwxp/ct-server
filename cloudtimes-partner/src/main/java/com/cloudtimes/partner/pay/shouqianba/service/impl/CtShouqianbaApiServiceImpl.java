@@ -1,11 +1,17 @@
 package com.cloudtimes.partner.pay.shouqianba.service.impl;
 
 import com.alibaba.fastjson2.JSONObject;
+import com.cloudtimes.common.utils.http.HttpHelper;
 import com.cloudtimes.common.utils.http.HttpUtils;
 import com.cloudtimes.common.utils.sign.Md5Utils;
 import com.cloudtimes.partner.config.PartnerConfig;
-import com.cloudtimes.partner.pay.shouqianba.domain.ShouqianbaConstant;
+import com.cloudtimes.partner.pay.shouqianba.domain.*;
 import com.cloudtimes.partner.pay.shouqianba.service.ICtShouqianbaApiService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +22,8 @@ import java.util.Map;
 public class CtShouqianbaApiServiceImpl implements ICtShouqianbaApiService {
     @Autowired
     private PartnerConfig config;
+
+    private Logger log = LoggerFactory.getLogger(CtShouqianbaApiServiceImpl.class);
 
     /**
      * 设备终端激活
@@ -31,7 +39,7 @@ public class CtShouqianbaApiServiceImpl implements ICtShouqianbaApiService {
      * biz_response.terminal_key    终端key
      */
     @Override
-    public Map<String, Object> activateTerminal(String deviceNo, String code) {
+    public BuzResponse activateTerminal(String deviceNo, String code) {
         String appId = config.getShouqianbaAppId();
         String sn = config.getShouqianbaVendorSn();
         String key = config.getShouqianbaVendorKey();
@@ -40,8 +48,8 @@ public class CtShouqianbaApiServiceImpl implements ICtShouqianbaApiService {
         reqObj.put("device_id", deviceNo);
         reqObj.put("code", code);
         String resultStr = sendShouqianbaHttp(ShouqianbaConstant.activateTerminal, reqObj, sn, key);
-        Map<String, Object> resultMap = JSONObject.parseObject(resultStr, Map.class);
-        return resultMap;
+        log.info(Thread.currentThread().getStackTrace()[1].getMethodName() + ": " + resultStr);
+        return getBuzResponse(resultStr);
     }
 
     /**
@@ -53,13 +61,13 @@ public class CtShouqianbaApiServiceImpl implements ICtShouqianbaApiService {
      * @return
      */
     @Override
-    public Map<String, Object> checkinTerminal(String deviceNo, String terminalSN, String terminalKey) {
+    public BuzResponse checkinTerminal(String deviceNo, String terminalSN, String terminalKey) {
         JSONObject reqObj = new JSONObject();
         reqObj.put("terminal_sn", terminalSN);
         reqObj.put("device_id", deviceNo);
         String resultStr = sendShouqianbaHttp(ShouqianbaConstant.checkinTerminal, reqObj, terminalSN, terminalKey);
-        Map<String, Object> resultMap = JSONObject.parseObject(resultStr, Map.class);
-        return resultMap;
+        log.info(Thread.currentThread().getStackTrace()[1].getMethodName() + ": " + resultStr);
+        return getBuzResponse(resultStr);
     }
 
     /**
@@ -114,15 +122,15 @@ public class CtShouqianbaApiServiceImpl implements ICtShouqianbaApiService {
      * * * * "reflect"             // N 透传参数    {"tips": "200"}
      */
     @Override
-    public Map<String, Object> b2cPay(Map<String, Object> params, String terminalKey) {
+    public BuzResponse b2cPay(Map<String, Object> params, String terminalKey) {
         JSONObject reqObj = new JSONObject(params);
         String terminalSN = reqObj.getString("terminal_sn");
         if ("".equals(terminalSN)) {
             throw new RuntimeException("终端sn不能为空");
         }
         String resultStr = sendShouqianbaHttp(ShouqianbaConstant.b2CPay, reqObj, terminalSN, terminalKey);
-        Map<String, Object> resultMap = JSONObject.parseObject(resultStr, Map.class);
-        return resultMap;
+        log.info(Thread.currentThread().getStackTrace()[1].getMethodName() + ": " + resultStr);
+        return getBuzResponse(resultStr);
     }
 
     /**
@@ -143,15 +151,15 @@ public class CtShouqianbaApiServiceImpl implements ICtShouqianbaApiService {
      * * * data   map  订单信息 同上
      */
     @Override
-    public Map<String, Object> queryPayOrder(String paySn, String billSerial, String terminalSN, String terminalKey) {
+    public PayOrderData queryPayOrder(String paySn, String billSerial, String terminalSN, String terminalKey) {
         JSONObject reqObj = new JSONObject();
         //sn与client_sn不能同时为空，优先按照sn查找订单，如果没有，再按照client_sn查询
         reqObj.put("terminal_sn", terminalSN);
         reqObj.put("sn", paySn);
         reqObj.put("client_sn", billSerial);
         String resultStr = sendShouqianbaHttp(ShouqianbaConstant.queryPayOrder, reqObj, terminalSN, terminalKey);
-        Map<String, Object> resultMap = JSONObject.parseObject(resultStr, Map.class);
-        return resultMap;
+        log.info(Thread.currentThread().getStackTrace()[1].getMethodName() + ": " + resultStr);
+        return getData(resultStr, PayOrderData.class);
     }
 
     /**
@@ -172,15 +180,15 @@ public class CtShouqianbaApiServiceImpl implements ICtShouqianbaApiService {
      * * * data   map  订单信息 同上
      */
     @Override
-    public Map<String, Object> cancelPayOrder(String paySn, String billSerial, String terminalSN, String terminalKey) {
+    public BuzResponse cancelPayOrder(String paySn, String billSerial, String terminalSN, String terminalKey) {
         JSONObject reqObj = new JSONObject();
         //sn与client_sn不能同时为空，优先按照sn查找订单，如果没有，再按照client_sn查询
         reqObj.put("terminal_sn", terminalSN);
         reqObj.put("sn", paySn);
         reqObj.put("client_sn", billSerial);
         String resultStr = sendShouqianbaHttp(ShouqianbaConstant.cancelPayOrder, reqObj, terminalSN, terminalKey);
-        Map<String, Object> resultMap = JSONObject.parseObject(resultStr, Map.class);
-        return resultMap;
+        log.info(Thread.currentThread().getStackTrace()[1].getMethodName() + ": " + resultStr);
+        return getBuzResponse(resultStr);
     }
 
     /**
@@ -192,14 +200,14 @@ public class CtShouqianbaApiServiceImpl implements ICtShouqianbaApiService {
      * @return
      */
     @Override
-    public Map<String, Object> getWxPayFaceAuthInfo(String rawData, String terminalSN, String terminalKey) {
+    public AuthInfoData getWxPayFaceAuthInfo(String rawData, String terminalSN, String terminalKey) {
         JSONObject reqObj = new JSONObject();
         //sn与client_sn不能同时为空，优先按照sn查找订单，如果没有，再按照client_sn查询
         reqObj.put("terminal_sn", terminalSN);
         reqObj.put("rawdata", rawData);
         String resultStr = sendShouqianbaHttp(ShouqianbaConstant.getWxpayFaceAuthinfo, reqObj, terminalSN, terminalKey);
-        Map<String, Object> resultMap = JSONObject.parseObject(resultStr, Map.class);
-        return resultMap;
+        log.info(Thread.currentThread().getStackTrace()[1].getMethodName() + ": " + resultStr);
+        return getData(resultStr, AuthInfoData.class);
     }
 
     private String sendShouqianbaHttp(String path, JSONObject bodyJson, String sn, String key) {
@@ -214,5 +222,43 @@ public class CtShouqianbaApiServiceImpl implements ICtShouqianbaApiService {
             e.printStackTrace();
         }
         return "";
+    }
+
+    /**
+     * @param rawString
+     * @return error
+     * buzResponse
+     */
+    private BuzResponse getBuzResponse(String rawString) {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            CommonResp commonResp = mapper.readValue(rawString, CommonResp.class);
+            if (StringUtils.equals(commonResp.getResultCode(), ShouqianbaConstant.response200)) {
+                return commonResp.getBizResponse();
+            }
+            log.error(commonResp.getErrorMessage());
+        } catch (JsonProcessingException e) {
+            log.error(e.getMessage());
+        }
+        return null;
+    }
+
+
+    private <T> T getData(String rawString, Class<T> tClass) {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            CommonResp commonResp = mapper.readValue(rawString, CommonResp.class);
+            if (StringUtils.equals(commonResp.getResultCode(), ShouqianbaConstant.response200)) {
+                BuzResponse bizResponse = commonResp.getBizResponse();
+                Object data = bizResponse.getData();
+                if (data != null) {
+                    return mapper.convertValue(bizResponse.getData(), tClass);
+                }
+            }
+            log.error(commonResp.getErrorMessage());
+        } catch (JsonProcessingException e) {
+            log.error(e.getMessage());
+        }
+        return null;
     }
 }

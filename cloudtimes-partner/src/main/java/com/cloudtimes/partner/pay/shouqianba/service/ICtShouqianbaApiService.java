@@ -1,5 +1,9 @@
 package com.cloudtimes.partner.pay.shouqianba.service;
 
+import com.cloudtimes.partner.pay.shouqianba.domain.AuthInfoData;
+import com.cloudtimes.partner.pay.shouqianba.domain.BuzResponse;
+import com.cloudtimes.partner.pay.shouqianba.domain.PayOrderData;
+
 import java.util.Map;
 
 /**
@@ -19,7 +23,7 @@ public interface ICtShouqianbaApiService {
      * biz_response.terminal_sn 终端sn
      * biz_response.terminal_key    终端key
      */
-    public Map<String, Object> activateTerminal(String deviceNo, String code);
+    public BuzResponse activateTerminal(String deviceNo, String code);
 
     /**
      * 设备签到
@@ -35,7 +39,7 @@ public interface ICtShouqianbaApiService {
      * biz_response.terminal_sn 终端sn
      * biz_response.terminal_key    终端key
      */
-    public Map<String, Object> checkinTerminal(String deviceNo, String terminalSN, String terminalKey);
+    public BuzResponse checkinTerminal(String deviceNo, String terminalSN, String terminalKey);
 
     /**
      * 支付接口(支持分账)
@@ -88,7 +92,7 @@ public interface ICtShouqianbaApiService {
      * * * * "operator"            // Y 门店操作员    "张三丰"
      * * * * "reflect"             // N 透传参数    {"tips": "200"}
      */
-    public Map<String, Object> b2cPay(Map<String, Object> params, String terminalKey);
+    public BuzResponse b2cPay(Map<String, Object> params, String terminalKey);
 
     /**
      * 查询支付订单信息接口
@@ -107,7 +111,7 @@ public interface ICtShouqianbaApiService {
      * * * error_message   String  错误信息
      * * * data   map  订单信息 同上
      */
-    public Map<String, Object> queryPayOrder(String paySn, String billSerial, String terminalSN, String terminalKey);
+    public PayOrderData queryPayOrder(String paySn, String billSerial, String terminalSN, String terminalKey);
 
     /**
      * 撤单接口
@@ -126,7 +130,7 @@ public interface ICtShouqianbaApiService {
      * * * error_message   String  错误信息
      * * * data   map  订单信息 同上
      */
-    public Map<String, Object> cancelPayOrder(String paySn, String billSerial, String terminalSN, String terminalKey);
+    public BuzResponse cancelPayOrder(String paySn, String billSerial, String terminalSN, String terminalKey);
 
     /**
      * 获取调用凭证接口
@@ -136,7 +140,7 @@ public interface ICtShouqianbaApiService {
      * @param terminalKey
      * @return
      */
-    public Map<String, Object> getWxPayFaceAuthInfo(String rawData, String terminalSN, String terminalKey);
+    public AuthInfoData getWxPayFaceAuthInfo(String rawData, String terminalSN, String terminalKey);
 
 
 }

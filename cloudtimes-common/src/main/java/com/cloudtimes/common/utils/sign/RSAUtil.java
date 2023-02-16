@@ -108,7 +108,6 @@ public class RSAUtil {
             return null;
         }
         raw = raw.replace("-----BEGIN PRIVATE KEY-----", "").replace("-----END PRIVATE KEY-----", "");
-        System.out.println(raw);
         return parsePKCS8KeyStr(raw);
     }
 
@@ -141,20 +140,10 @@ public class RSAUtil {
     public static byte[] sign(PrivateKey privateKey, String data, String signType) {
         byte[] arr = new byte[0];
         try {
-//            PrivateKey privateKey = null;
-//            switch (privKeyType) {
-//                case PKCS1:
-//                    privateKey = parsePKCS1KeyStr(privateKeyStr);
-//                    break;
-//                case PKCS8:
-//                    privateKey = parsePKCS8KeyStr(privateKeyStr);
-//                    break;
-//            }
             Signature signature = Signature.getInstance(signType);
             signature.initSign(privateKey);
             signature.update(data.getBytes());
             arr = signature.sign();
-            System.out.println("jdk rsa sign:" + HexBin.encode(arr));
         } catch (Exception e) {
             e.printStackTrace();
         }

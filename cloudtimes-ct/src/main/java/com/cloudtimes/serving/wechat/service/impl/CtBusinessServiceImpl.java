@@ -73,7 +73,7 @@ public class CtBusinessServiceImpl implements ICtBusinessService {
         query.setState("0");
         List<CtTask> dbTasks = taskMapper.selectCtTaskList(query);
         if (dbTasks == null || dbTasks.size() == 0) {
-            //未查到，则生成新的任务，推送值守端
+            // todo 未查到，则生成新的任务，推送值守端
         }
         CtTask dbTask = dbTasks.get(0);
         CtShopping newShopping = new CtShopping();

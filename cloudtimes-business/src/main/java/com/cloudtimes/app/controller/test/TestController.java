@@ -20,9 +20,11 @@ import com.cloudtimes.hardwaredevice.mapper.CtDeviceDoorMapper;
 import com.cloudtimes.mq.service.CashMqSender;
 import com.cloudtimes.partner.config.PartnerConfig;
 import com.cloudtimes.partner.hik.service.ICtHikApiService;
+import com.cloudtimes.partner.pay.shouqianba.domain.AuthInfoData;
+import com.cloudtimes.partner.pay.shouqianba.domain.PayOrderData;
+import com.cloudtimes.partner.pay.shouqianba.service.ICtShouqianbaApiService;
 import com.cloudtimes.partner.weixin.ICtWeixinFaceApiService;
 import com.cloudtimes.partner.weixin.ICtWeixinOfficialApiService;
-import com.cloudtimes.partner.weixin.domain.WxpayfaceAuthInfoResp;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import me.zhyd.oauth.model.AuthCallback;
@@ -55,6 +57,8 @@ public class TestController extends BaseController {
     private ICtHikApiService hikApiService;
     @Autowired
     private ICtWeixinFaceApiService faceApiService;
+    @Autowired
+    private ICtShouqianbaApiService shouqianbaApiService;
     @Autowired
     private JWTManager jwtManager;
     @Autowired
@@ -137,8 +141,12 @@ public class TestController extends BaseController {
     @ApiOperation("获取刷脸凭证")
     @PostMapping(value = "/face/auth")
     public AjaxResult testFaceAuthInfo(@RequestBody FaceAuthInfoReq info) {
-        WxpayfaceAuthInfoResp wxpayfaceAuthInfo = faceApiService.getWxpayfaceAuthInfo("199976cb-a786-11ed-8957-0242ac110003", "测试店", "ZDXLVP75870772", info.getRawdata());
-        return AjaxResult.success(wxpayfaceAuthInfo);
+//        WxpayfaceAuthInfoResp wxpayfaceAuthInfo = faceApiService.getWxpayfaceAuthInfo("199976cb-a786-11ed-8957-0242ac110003", "测试店", "ZDXLVP75870772", info.getRawdata());
+        AuthInfoData wxPayFaceAuthInfo = shouqianbaApiService.getWxPayFaceAuthInfo(info.getRawdata(), "100051020027241143", "97c8682e0bd78a0fa4e5db056d10f694");
+        if (wxPayFaceAuthInfo != null) {
+            return AjaxResult.success(wxPayFaceAuthInfo);
+        }
+        return AjaxResult.success();
     }
 
     @ApiOperation("获取刷脸unionid")
@@ -214,6 +222,16 @@ public class TestController extends BaseController {
             ex.printStackTrace();
         }
 
+    }
+
+    @ApiOperation("收钱吧设备激活")
+    @PostMapping(value = "/device/active")
+    public AjaxResult testActiveDevice() {
+        PayOrderData order = shouqianbaApiService.queryPayOrder("7895282218633583", "", "100051020027440980", "aeee41ee3f908d9d1f9bb5a0dcae03e7");
+        if (order != null) {
+            return AjaxResult.success(order);
+        }
+        return AjaxResult.success();
     }
 }
 

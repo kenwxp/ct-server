@@ -1,7 +1,12 @@
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.cloudtimes.partner.pay.shouqianba.domain.BuzResponse;
+import com.cloudtimes.partner.pay.shouqianba.domain.PayOrderData;
 import com.cloudtimes.partner.pay.shouqianba.service.ICtShouqianbaApiService;
 import com.cloudtimes.partner.pay.shouqianba.service.ICtShouqianbaCisApiService;
 import com.cloudtimes.partner.pay.shouqianba.service.impl.CtShouqianbaApiServiceImpl;
 import com.cloudtimes.partner.pay.shouqianba.service.impl.CtShouqianbaCisApiServiceImpl;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -12,10 +17,11 @@ public class TestShouqianba {
 
     public void test1() {
         ICtShouqianbaApiService service = new CtShouqianbaApiServiceImpl();
-        Map<String, Object> result = service.activateTerminal("test002", "61359037");
-        Map<String, String> response = (Map<String, String>) result.get("biz_response");
-        System.out.println(response.get("terminal_sn"));
-        System.out.println(response.get("terminal_key"));
+        BuzResponse bz = service.activateTerminal("test003", "61359037");
+        if (bz != null) {
+            System.out.println(bz.getData());
+        }
+
         //{
         //    "result_code": "200",
         //    "biz_response": {
@@ -31,10 +37,10 @@ public class TestShouqianba {
 
     public void test2() {
         ICtShouqianbaApiService service = new CtShouqianbaApiServiceImpl();
-        Map<String, Object> result = service.checkinTerminal("test003", "100051020027440980", "759ac9b16958129d3ee5707991114d8a");
-        Map<String, String> response = (Map<String, String>) result.get("biz_response");
-        System.out.println(response.get("terminal_sn"));    //100051020027440980
-        System.out.println(response.get("terminal_key")); //aeee41ee3f908d9d1f9bb5a0dcae03e7
+        BuzResponse bz = service.checkinTerminal("test003", "100051020027440980", "759ac9b16958129d3ee5707991114d8a");
+        if (bz != null) {
+            System.out.println(bz.getData());
+        }
     }
 
     public void test3() {
@@ -47,30 +53,27 @@ public class TestShouqianba {
         paramMap.put("subject", "测试"); //交易简介	本次交易的简要介绍
         paramMap.put("operator", "0001"); //门店操作员	发起本次交易的操作员
         paramMap.put("notify_url", ""); //回调	支付回调的地址
-        Map<String, Object> result = service.b2cPay(paramMap, "aeee41ee3f908d9d1f9bb5a0dcae03e7");
-        Map<String, String> response = (Map<String, String>) result.get("biz_response");
-        //7895282218633583
-        //testorder0000004
+        BuzResponse bz = service.b2cPay(paramMap, "aeee41ee3f908d9d1f9bb5a0dcae03e7");
+        if (bz != null) {
+            System.out.println(bz.getData());
+        }
     }
 
     public void test4() {
         ICtShouqianbaApiService service = new CtShouqianbaApiServiceImpl();
-        Map<String, Object> result = service.queryPayOrder("7895282218633583", "", "100051020027440980", "aeee41ee3f908d9d1f9bb5a0dcae03e7");
-        Map<String, Object> response = (Map<String, Object>) result.get("biz_response");
-        System.out.println(response);
-        Map<String, String> data = (Map<String, String>) response.get("data");
-        System.out.println(data);
-        System.out.println(data.get("status"));
+        PayOrderData payOrderData = service.queryPayOrder("7895282218633583", "", "100051020027440980", "aeee41ee3f908d9d1f9bb5a0dcae03e7");
+        if (payOrderData != null) {
+            System.out.println(payOrderData);
+        }
         //7895282218633583
     }
 
     public void test5() {
         ICtShouqianbaApiService service = new CtShouqianbaApiServiceImpl();
-        Map<String, Object> result = service.cancelPayOrder("7895282218633583", "", "100051020027440980", "aeee41ee3f908d9d1f9bb5a0dcae03e7");
-        Map<String, Object> response = (Map<String, Object>) result.get("biz_response");
-        System.out.println(response);
-        Map<String, String> data = (Map<String, String>) response.get("data");
-        System.out.println(data);
+        BuzResponse bz = service.cancelPayOrder("7895282218633583", "", "100051020027440980", "aeee41ee3f908d9d1f9bb5a0dcae03e7");
+        if (bz != null) {
+            System.out.println(bz.getData());
+        }
         //7895282218633583
     }
 

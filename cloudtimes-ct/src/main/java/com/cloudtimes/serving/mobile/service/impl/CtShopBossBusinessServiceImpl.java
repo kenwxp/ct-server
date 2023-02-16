@@ -3,6 +3,7 @@ package com.cloudtimes.serving.mobile.service.impl;
 import com.cloudtimes.account.domain.CtUser;
 import com.cloudtimes.account.mapper.CtUserMapper;
 import com.cloudtimes.common.annotation.DataSource;
+import com.cloudtimes.common.enums.ChannelType;
 import com.cloudtimes.common.enums.DataSourceType;
 import com.cloudtimes.common.exception.ServiceException;
 import com.cloudtimes.common.utils.StringUtils;
@@ -10,6 +11,8 @@ import com.cloudtimes.hardwaredevice.domain.CtStore;
 import com.cloudtimes.hardwaredevice.domain.CtSuperviseLogs;
 import com.cloudtimes.hardwaredevice.mapper.CtStoreMapper;
 import com.cloudtimes.hardwaredevice.mapper.CtSuperviseLogsMapper;
+import com.cloudtimes.mq.service.CashMqSender;
+import com.cloudtimes.serving.door.service.ICtDoorGuardOpService;
 import com.cloudtimes.serving.mobile.service.ICtShopBossBusinessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,6 +36,10 @@ public class CtShopBossBusinessServiceImpl implements ICtShopBossBusinessService
     private CtStoreMapper storeMapper;
     @Autowired
     private CtSuperviseLogsMapper superviseLogsMapper;
+    @Autowired
+    private CashMqSender cashMqSender;
+    @Autowired
+    private ICtDoorGuardOpService doorGuardOpService;
 
     @Transactional
     @Override
@@ -68,15 +75,18 @@ public class CtShopBossBusinessServiceImpl implements ICtShopBossBusinessService
                 throw new ServiceException("新增值守日志异常");
             }
             //更新门店值守状态
-            dbStore.setIsSupervise("1");
+            String isSupervise = "1";
+            dbStore.setIsSupervise(isSupervise);
             dbStore.setSuperviseLogId(newLog.getId());
             dbStore.setUpdateTime(new Date());
             if (storeMapper.updateCtStore(dbStore) < 1) {
                 throw new ServiceException("更新门店值守状态异常");
             }
             //通知收银机进行状态转换
-            //发送app客户端消息
+            cashMqSender.notifyCashDutyStatus(dbStore.getId(), isSupervise);
+            //todo 发送app客户端消息
             //解锁门禁
+            doorGuardOpService.unlock(dbStore.getId(), userId, ChannelType.MOBILE);
 
         } else if (StringUtils.equals(opFlag, "0")) {
             //取消云值守
@@ -89,14 +99,17 @@ public class CtShopBossBusinessServiceImpl implements ICtShopBossBusinessService
                 throw new ServiceException("新增值守日志异常");
             }
             //更新门店值守状态
-            dbStore.setIsSupervise("0");
+            String isSupervise = "0";
+            dbStore.setIsSupervise(isSupervise);
             dbStore.setUpdateTime(new Date());
             if (storeMapper.updateCtStore(dbStore) < 1) {
                 throw new ServiceException("更新门店值守状态异常");
             }
             //通知收银机进行状态转换
-            //发送值守端结束任务通知
+            cashMqSender.notifyCashDutyStatus(dbStore.getId(), isSupervise);
+            //todo 发送值守端结束任务通知
             //强锁门禁
+            doorGuardOpService.forceLock(dbStore.getId(), userId, ChannelType.MOBILE);
         }
         return true;
     }
