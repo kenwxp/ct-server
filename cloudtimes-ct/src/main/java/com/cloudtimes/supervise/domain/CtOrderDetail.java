@@ -31,10 +31,15 @@ public class CtOrderDetail extends BaseEntity {
     private String orderId;
 
     /**
+     * 门店编号
+     */
+    @Excel(name = "物品编号")
+    private String storeId;
+    /**
      * 物品编号
      */
     @Excel(name = "物品编号")
-    private String storeNo;
+    private String itemId;
 
     /**
      * 物品类别
