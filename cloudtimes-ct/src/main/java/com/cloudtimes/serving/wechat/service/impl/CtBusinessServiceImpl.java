@@ -69,7 +69,7 @@ public class CtBusinessServiceImpl implements ICtBusinessService {
 
         //查询当前店正在进行中任务
         CtTask query = new CtTask();
-        query.setStoreNo(storeNo);
+        // query.setStoreNo(storeNo);
         query.setState("0");
         List<CtTask> dbTasks = taskMapper.selectCtTaskList(query);
         if (dbTasks == null || dbTasks.size() == 0) {
@@ -79,7 +79,7 @@ public class CtBusinessServiceImpl implements ICtBusinessService {
         CtShopping newShopping = new CtShopping();
         newShopping.setUserId(userId);
         newShopping.setTaskId(dbTask.getId());
-        newShopping.setStoreNo(storeNo);
+      //  newShopping.setStoreNo(storeNo);
         newShopping.setStaffCode(dbTask.getStaffCode());
         newShopping.setShoppingType("0");
         newShopping.setDescText("");

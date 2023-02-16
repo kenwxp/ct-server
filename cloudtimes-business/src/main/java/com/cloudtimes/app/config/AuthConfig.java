@@ -32,7 +32,8 @@ public class AuthConfig implements WebMvcConfigurer {
                         "/auth/shopBoss/register",
                         "/auth/shopBoss/login",
                         "/system/**",
-                        "/test/**"
+                        "/test/**",
+                        "/sms/**"
                 )
                 .excludePathPatterns("/js/**", "/css/**", "/images/**", "/lib/**",
                         "/fonts/**")
