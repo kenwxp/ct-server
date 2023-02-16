@@ -82,7 +82,7 @@ public class CtTask extends BaseEntity {
      * 值守区域
      */
     @Excel(name = "值守区域")
-    private String supeviseArea;
+    private String superviseArea;
 
     /**
      * 状态

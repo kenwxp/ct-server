@@ -13,7 +13,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                end_time, 
                is_exceptional, 
                door_log_id, 
-               supevise_area, 
+               supervise_area, 
                state, 
                create_time, 
                update_time, 
@@ -32,7 +32,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="endTime != null "> and end_time = #{endTime}</if>
             <if test="isExceptional != null  and isExceptional != ''"> and is_exceptional = #{isExceptional}</if>
             <if test="doorLogId != null  and doorLogId != ''"> and door_log_id = #{doorLogId}</if>
-            <if test="supeviseArea != null  and supeviseArea != ''"> and supevise_area = #{supeviseArea}</if>
+            <if test="superviseArea != null  and superviseArea != ''"> and supervise_area = #{superviseArea}</if>
             <if test="state != null  and state != ''"> and state = #{state}</if>
         </where>
     </select>
@@ -57,7 +57,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="endTime != null">end_time,</if>
             <if test="isExceptional != null">is_exceptional,</if>
             <if test="doorLogId != null">door_log_id,</if>
-            <if test="supeviseArea != null">supevise_area,</if>
+            <if test="superviseArea != null">supervise_area,</if>
             <if test="state != null">state,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
@@ -73,7 +73,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="endTime != null">#{endTime},</if>
             <if test="isExceptional != null">#{isExceptional},</if>
             <if test="doorLogId != null">#{doorLogId},</if>
-            <if test="supeviseArea != null">#{supeviseArea},</if>
+            <if test="superviseArea != null">#{superviseArea},</if>
             <if test="state != null">#{state},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateTime != null">#{updateTime},</if>
@@ -92,7 +92,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="endTime != null">end_time = #{endTime},</if>
             <if test="isExceptional != null">is_exceptional = #{isExceptional},</if>
             <if test="doorLogId != null">door_log_id = #{doorLogId},</if>
-            <if test="supeviseArea != null">supevise_area = #{supeviseArea},</if>
+            <if test="superviseArea != null">supervise_area = #{superviseArea},</if>
             <if test="state != null">state = #{state},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
