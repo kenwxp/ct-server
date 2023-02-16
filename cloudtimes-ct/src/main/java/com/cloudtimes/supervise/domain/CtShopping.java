@@ -37,10 +37,10 @@ public class CtShopping extends BaseEntity {
     private String taskId;
 
     /**
-     * 门店号
+     * 门店编号
      */
-    @Excel(name = "门店号")
-    private String storeNo;
+    @Excel(name = "门店编号")
+    private String storeId;
 
     /**
      * 值守员工号

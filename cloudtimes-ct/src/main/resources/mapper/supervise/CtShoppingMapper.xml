@@ -7,7 +7,7 @@
         select id,
                user_id,
                task_id,
-               store_no,
+               store_id,
                staff_code,
                shopping_type,
                desc_text,
@@ -28,7 +28,7 @@
         <where>
             <if test="userId != null  and userId != ''">and user_id = #{userId}</if>
             <if test="taskId != null  and taskId != ''">and task_id = #{taskId}</if>
-            <if test="storeNo != null  and storeNo != ''">and store_no = #{storeNo}</if>
+            <if test="storeId != null  and storeId != ''">and store_id = #{storeId}</if>
             <if test="staffCode != null  and staffCode != ''">and staff_code = #{staffCode}</if>
             <if test="shoppingType != null  and shoppingType != ''">and shopping_type = #{shoppingType}</if>
             <if test="descText != null  and descText != ''">and desc_text = #{descText}</if>
@@ -57,7 +57,7 @@
             id,
             <if test="userId != null">user_id,</if>
             <if test="taskId != null">task_id,</if>
-            <if test="storeNo != null">store_no,</if>
+            <if test="storeId != null">store_id,</if>
             <if test="staffCode != null">staff_code,</if>
             <if test="shoppingType != null">shopping_type,</if>
             <if test="descText != null">desc_text,</if>
@@ -75,7 +75,7 @@
             #{id},
             <if test="userId != null">#{userId},</if>
             <if test="taskId != null">#{taskId},</if>
-            <if test="storeNo != null">#{storeNo},</if>
+            <if test="storeId != null">#{storeId},</if>
             <if test="staffCode != null">#{staffCode},</if>
             <if test="shoppingType != null">#{shoppingType},</if>
             <if test="descText != null">#{descText},</if>
@@ -96,7 +96,7 @@
         <trim prefix="SET" suffixOverrides=",">
             <if test="userId != null">user_id = #{userId},</if>
             <if test="taskId != null">task_id = #{taskId},</if>
-            <if test="storeNo != null">store_no = #{storeNo},</if>
+            <if test="storeId != null">store_id = #{storeId},</if>
             <if test="staffCode != null">staff_code = #{staffCode},</if>
             <if test="shoppingType != null">shopping_type = #{shoppingType},</if>
             <if test="descText != null">desc_text = #{descText},</if>
