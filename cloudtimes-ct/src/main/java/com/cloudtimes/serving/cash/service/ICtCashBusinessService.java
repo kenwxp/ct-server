@@ -2,6 +2,7 @@ package com.cloudtimes.serving.cash.service;
 
 import com.cloudtimes.partner.pay.shouqianba.domain.AuthInfoData;
 import com.cloudtimes.product.domain.CtShopProduct;
+import com.cloudtimes.serving.cash.service.domain.VoiceTokenData;
 
 import java.util.List;
 import java.util.Map;
@@ -35,4 +36,43 @@ public interface ICtCashBusinessService {
      * @return
      */
     public List<CtShopProduct> getProductList(String deviceId);
+
+    /**
+     * 获取语音token相关信息
+     *
+     * @param deviceId
+     * @return
+     */
+    public VoiceTokenData getVoiceToken(String deviceId);
+
+    /**
+     * 订单添加商品
+     *
+     * @param orderId
+     * @param isSupervise
+     * @param goodId
+     * @param goodName
+     * @param num
+     * @param buyPrice
+     * @param sellPrice
+     */
+    public String addOrderItem(String orderId, String isSupervise, String goodId, String goodName, int num, int buyPrice, int sellPrice);
+
+    /**
+     * 订单删除商品
+     *
+     * @param orderId
+     * @param isSupervise
+     * @param goodId
+     * @param num
+     */
+    public void deleteOrderItem(String orderId, String isSupervise, String goodId, int num);
+
+    /**
+     * 取消订单
+     *
+     * @param orderId
+     * @param isSupervise
+     */
+    public void cancelOrder(String orderId, String isSupervise);
 }

@@ -73,4 +73,14 @@ public class NumberUtils {
         }
         return "";
     }
+    public static String getHiddenPhone(String phone ){
+        if (phone.length() != 11) {
+            return "";
+        }
+        return phone.substring(0,3)+"****"+phone.substring(phone.length()-4);
+    }
+
+    public static void main(String[] args) {
+        System.out.println(getHiddenPhone("13922138094"));
+    }
 }

@@ -8,7 +8,7 @@ import java.util.Map;
  * @author wangxp
  * @date 2023-02-07
  */
-public interface ICtBusinessService {
+public interface ICtCustomerBusinessService {
     /**
      * @param storeNo
      * @param dynamicCode

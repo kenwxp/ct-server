@@ -2,33 +2,32 @@ package com.cloudtimes.serving.wechat.service.impl;
 
 import com.cloudtimes.account.domain.CtUser;
 import com.cloudtimes.account.mapper.CtUserMapper;
+import com.cloudtimes.cache.TaskOrderCache;
+import com.cloudtimes.cache.TaskShoppingCache;
 import com.cloudtimes.common.annotation.DataSource;
 import com.cloudtimes.common.core.redis.RedisCache;
 import com.cloudtimes.common.enums.DataSourceType;
 import com.cloudtimes.common.exception.ServiceException;
-import com.cloudtimes.common.utils.DateUtils;
 import com.cloudtimes.hardwaredevice.domain.CtStore;
 import com.cloudtimes.hardwaredevice.mapper.CtStoreMapper;
-import com.cloudtimes.serving.wechat.service.ICtBusinessService;
+import com.cloudtimes.serving.common.CtTaskInnerService;
+import com.cloudtimes.serving.wechat.service.ICtCustomerBusinessService;
 import com.cloudtimes.supervise.domain.CtOrder;
 import com.cloudtimes.supervise.domain.CtShopping;
 import com.cloudtimes.supervise.domain.CtTask;
 import com.cloudtimes.supervise.mapper.CtOrderMapper;
 import com.cloudtimes.supervise.mapper.CtShoppingMapper;
-import com.cloudtimes.supervise.mapper.CtTaskMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 @DataSource(DataSourceType.CT)
 @Service
-public class CtBusinessServiceImpl implements ICtBusinessService {
+public class CtCustomerBusinessServiceImpl implements ICtCustomerBusinessService {
     @Autowired
     private RedisCache redisCache;
     @Autowired
@@ -36,11 +35,15 @@ public class CtBusinessServiceImpl implements ICtBusinessService {
     @Autowired
     private CtStoreMapper storeMapper;
     @Autowired
-    private CtTaskMapper taskMapper;
-    @Autowired
     private CtShoppingMapper shoppingMapper;
     @Autowired
     private CtOrderMapper orderMapper;
+    @Autowired
+    private CtTaskInnerService taskInnerService;
+    @Autowired
+    private TaskShoppingCache taskShoppingCache;
+    @Autowired
+    private TaskOrderCache taskOrderCache;
 
     @Override
     @Transactional
@@ -62,39 +65,41 @@ public class CtBusinessServiceImpl implements ICtBusinessService {
         if (StringUtils.isEmpty(dynamicCode)) {
             // 若为开门码，则查30分钟内的购物记录，直接返回购物流水
         }
-
         if (!StringUtils.isEmpty(dynamicCode)) {
             // 若为动态码，则校验内存中动态码是否一致，不一致则产生新的二维码，推送收银机，一致流程继续
         }
-
-        //查询当前店正在进行中任务
-        CtTask query = new CtTask();
-        // query.setStoreNo(storeNo);
-        query.setState("0");
-        List<CtTask> dbTasks = taskMapper.selectCtTaskList(query);
-        if (dbTasks == null || dbTasks.size() == 0) {
-            // todo 未查到，则生成新的任务，推送值守端
+        //获取任务
+        CtTask task = taskInnerService.distributeTask(dbStore.getId());
+        String taskId = "";
+        if (taskId != null) {
+            taskId = task.getId();
         }
-        CtTask dbTask = dbTasks.get(0);
         CtShopping newShopping = new CtShopping();
         newShopping.setUserId(userId);
-        newShopping.setTaskId(dbTask.getId());
-      //  newShopping.setStoreNo(storeNo);
-        newShopping.setStaffCode(dbTask.getStaffCode());
+        newShopping.setTaskId(taskId);
+        newShopping.setStoreId(dbStore.getId());
+        newShopping.setStaffCode(task.getStaffCode());
         newShopping.setShoppingType("0");
-        newShopping.setDescText("");
-        newShopping.setStartTime(dbTask.getStartTime());
+        newShopping.setDescText("扫码购物");
+        newShopping.setStartTime(task.getStartTime());
+        newShopping.setEndTime(new Date());
         newShopping.setExceptionalState("0");
         newShopping.setIsApprove("0");
         newShopping.setIsLeadApprove("0");
         newShopping.setIsBossApprove("0");
         newShopping.setDelFlag("0");
+        newShopping.setCreateTime(new Date());
+        newShopping.setUpdateTime(new Date());
         if (shoppingMapper.insertCtShopping(newShopping) < 1) {
             throw new ServiceException("新增购物失败");
         }
+        if (StringUtils.isNotEmpty(taskId)) {
+            //加入内存
+            taskShoppingCache.setCacheShopping(task.getId(), newShopping.getId(), newShopping);
+        }
         //新增购物记录，开始时间设置成任务开始时间
         CtOrder newOrder = new CtOrder();
-        newOrder.setTaskId(dbTask.getId());
+        newOrder.setTaskId(task.getId());
         newOrder.setStoreId(dbStore.getId());
         newOrder.setStoreName(dbStore.getName());
         newOrder.setStoreProvince(dbStore.getRegionCode());
@@ -102,19 +107,24 @@ public class CtBusinessServiceImpl implements ICtBusinessService {
         newOrder.setAgentId(dbStore.getAgentId());
         newOrder.setBossUserId(dbStore.getBossId());
         newOrder.setShoppingId(newShopping.getId());
-        newOrder.setStaffCode(dbTask.getStaffCode());
+        newOrder.setStaffCode(task.getStaffCode());
         newOrder.setUserId(userId);
         newOrder.setDeviceCashId(deviceId);
+        newOrder.setDescText("扫码订单");
         newOrder.setIsExceptional("0");
         newOrder.setState("0");
         newOrder.setDelFlag("0");
-        var now = LocalDateTime.now();
-        var yearMonth = now.getYear() * 100 + now.getMonthValue();
-        newOrder.setYearMonth(yearMonth);
-        newOrder.setCreateDate(DateUtils.toDate(now));
+        Date now = new Date();
+        newOrder.setYearMonth(now.getYear() * 100 + now.getMonth());
+        newOrder.setCreateDate(now);
+        newOrder.setCreateTime(now);
+        newOrder.setUpdateTime(now);
         //新增订单，并推送单号，顾客信息，新动态随机数到收银机
         if (orderMapper.insertCtOrder(newOrder) < 1) {
             throw new ServiceException("新增订单失败");
+        }
+        if (StringUtils.isNotEmpty(taskId)) {
+            taskOrderCache.setCacheOrder(task.getId(), newOrder.getId(), newOrder);
         }
         return null;
     }

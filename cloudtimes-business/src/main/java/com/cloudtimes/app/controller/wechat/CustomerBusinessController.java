@@ -7,7 +7,7 @@ import com.cloudtimes.common.core.domain.AjaxResult;
 import com.cloudtimes.common.core.domain.entity.AuthUser;
 import com.cloudtimes.common.enums.ChannelType;
 import com.cloudtimes.common.utils.AuthUtils;
-import com.cloudtimes.serving.wechat.service.ICtBusinessService;
+import com.cloudtimes.serving.wechat.service.ICtCustomerBusinessService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/mapp/business")
 public class CustomerBusinessController {
     @Autowired
-    private ICtBusinessService businessService;
+    private ICtCustomerBusinessService businessService;
 
 
     @ApiOperation("扫码流程")

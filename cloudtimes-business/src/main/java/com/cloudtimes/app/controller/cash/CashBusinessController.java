@@ -11,6 +11,7 @@ import com.cloudtimes.partner.pay.shouqianba.domain.AuthInfoData;
 import com.cloudtimes.product.domain.CtShopProduct;
 import com.cloudtimes.serving.cash.service.ICtCashBusinessService;
 import com.cloudtimes.serving.cash.service.ICtCashLoginService;
+import com.cloudtimes.serving.cash.service.domain.VoiceTokenData;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
+import java.util.Map;
 
 @Api(tags = "收银机业务相关接口")
 @RestController
@@ -53,14 +54,24 @@ public class CashBusinessController {
     @ApiOperation("根据刷脸token获取订单号")
     @PostMapping(value = "/face/order")
     public AjaxResult getOrderId(@RequestBody GetOrderIdReq info) {
+        AuthUser authUser = AuthUtils.getObject();
+        if (!StringUtils.equals(authUser.getChannelType(), ChannelType.CASH.getCode())) {
+            return AjaxResult.error("渠道类型错误");
+        }
+        Map<String, String> orderInfo = cashBusinessService.getOrderId(authUser.getId(), info.getToken());
         GetOrderIdResp resp = new GetOrderIdResp();
+        resp.setOrderId(orderInfo.get("orderId"));
+        resp.setCustomerPhone(orderInfo.get("phone"));
         return AjaxResult.success(resp);
     }
 
     @ApiOperation("拉取商品列表")
     @PostMapping(value = "/product/fetch")
-    public AjaxResult GetProductList() {
+    public AjaxResult getProductList() {
         AuthUser authUser = AuthUtils.getObject();
+        if (!StringUtils.equals(authUser.getChannelType(), ChannelType.CASH.getCode())) {
+            return AjaxResult.error("渠道类型错误");
+        }
         List<CtShopProduct> productList = cashBusinessService.getProductList(authUser.getId());
         List<GetProductListResp> resp = new ArrayList<>();
         for (CtShopProduct dbProduct :
@@ -84,40 +95,66 @@ public class CashBusinessController {
 
     @ApiOperation("获取语音token")
     @PostMapping(value = "/voice/token")
-    public AjaxResult GetVoiceToken() {
+    public AjaxResult getVoiceToken() {
+        AuthUser authUser = AuthUtils.getObject();
+        if (!StringUtils.equals(authUser.getChannelType(), ChannelType.CASH.getCode())) {
+            return AjaxResult.error("渠道类型错误");
+        }
+        VoiceTokenData voiceToken = cashBusinessService.getVoiceToken(authUser.getId());
         GetVoiceTokenResp resp = new GetVoiceTokenResp();
+        resp.setAppId(voiceToken.getAppId());
+        resp.setVoiceToken(voiceToken.getVoiceToken());
+        resp.setChannelName(voiceToken.getChannelName());
+        resp.setUid(voiceToken.getUid());
         return AjaxResult.success(resp);
     }
 
     @ApiOperation("订单加商品")
     @PostMapping(value = "/order/item/add")
-    public AjaxResult AddOrderItem(@RequestBody OrderItemReq info) {
-        OrderItemResp orderItemResp = new OrderItemResp();
-        return AjaxResult.success(orderItemResp);
+    public AjaxResult addOrderItem(@RequestBody OrderItemReq info) {
+        AuthUser authUser = AuthUtils.getObject();
+        if (!StringUtils.equals(authUser.getChannelType(), ChannelType.CASH.getCode())) {
+            return AjaxResult.error("渠道类型错误");
+        }
+        String newOrderId = cashBusinessService.addOrderItem(info.getOrderId(), info.getIsDuty(), info.getGoodId(), info.getGoodName(), info.getNum(), info.getBuyPrice(), info.getSellPrice());
+        if (StringUtils.isEmpty(newOrderId)) {
+            return AjaxResult.success(new OrderItemResp(info.getOrderId()));
+        } else {
+            return AjaxResult.success(new OrderItemResp(newOrderId));
+        }
     }
 
     @ApiOperation("订单减商品")
     @PostMapping(value = "/order/item/delete")
-    public AjaxResult DeleteOrderItem(@RequestBody OrderItemReq info) {
-        OrderItemResp orderItemResp = new OrderItemResp();
-        return AjaxResult.success(orderItemResp);
+    public AjaxResult deleteOrderItem(@RequestBody OrderItemReq info) {
+        AuthUser authUser = AuthUtils.getObject();
+        if (!StringUtils.equals(authUser.getChannelType(), ChannelType.CASH.getCode())) {
+            return AjaxResult.error("渠道类型错误");
+        }
+        cashBusinessService.deleteOrderItem(info.getOrderId(), info.getIsDuty(), info.getGoodId(), info.getNum());
+        return AjaxResult.success(new OrderItemResp(info.getOrderId()));
     }
 
     @ApiOperation("取消订单")
     @PostMapping(value = "/order/cancel")
-    public AjaxResult CancelOrder(@RequestBody OrderItemReq info) {
-        return AjaxResult.success();
+    public AjaxResult cancelOrder(@RequestBody OrderItemReq info) {
+        AuthUser authUser = AuthUtils.getObject();
+        if (!StringUtils.equals(authUser.getChannelType(), ChannelType.CASH.getCode())) {
+            return AjaxResult.error("渠道类型错误");
+        }
+        cashBusinessService.cancelOrder(info.getOrderId(), info.getIsDuty());
+        return AjaxResult.success(new OrderItemResp(info.getOrderId()));
     }
 
     @ApiOperation("订单支付")
     @PostMapping(value = "/order/pay")
-    public AjaxResult PayOrder(@RequestBody OrderPayReq info) {
+    public AjaxResult payOrder(@RequestBody OrderPayReq info) {
         return AjaxResult.success();
     }
 
     @ApiOperation("查询订单状态")
     @PostMapping(value = "/order/status")
-    public AjaxResult PayOrderStatus(@RequestBody OrderPayReq info) {
+    public AjaxResult payOrderStatus(@RequestBody OrderPayReq info) {
         return AjaxResult.success();
     }
 }

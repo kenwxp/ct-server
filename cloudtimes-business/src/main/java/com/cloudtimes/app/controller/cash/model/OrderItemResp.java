@@ -11,4 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 public class OrderItemResp {
     @ApiModelProperty("订单号")
     private String orderId;
+
+    public OrderItemResp(String orderId) {
+        this.orderId = orderId;
+    }
 }

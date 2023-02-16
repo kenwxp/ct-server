@@ -42,7 +42,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </select>
         
-    <insert id="insertCtTask" parameterType="CtTask" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertCtTask" parameterType="CtTask">
         <selectKey keyProperty="id" order="BEFORE" resultType="String">
             select uuid() from dual
         </selectKey>
