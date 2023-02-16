@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cloudtimes.product.mapper.CtShopProductMapper">
+    <sql id="selectCtShopProductVo">
+        select id,
+               shop_no,
+               category_id,
+               barcode,
+               product_name,
+               english_name,
+               brand,
+               label,
+               supplier_id,
+               supplier,
+               specification,
+               unit,
+               weight,
+               color, size, style, purchase_price, retail_price, wholesale_price, vip_price, stock, max_stock, min_stock, picture_url, production_date, quality_period, remarks, is_enable, is_enable_vip_price, is_enable_points, is_deleted, create_time, update_time
+        from ct_shop_product
+    </sql>
+
+    <select id="selectCtShopProductList" parameterType="CtShopProduct" resultType="CtShopProduct">
+        <include refid="selectCtShopProductVo"/>
+        <where>
+            <if test="shopNo != null  and shopNo != ''">and shop_no = #{shopNo}</if>
+            <if test="categoryId != null  and categoryId != ''">and category_id = #{categoryId}</if>
+            <if test="barcode != null  and barcode != ''">and barcode = #{barcode}</if>
+            <if test="productName != null  and productName != ''">and product_name like concat('%', #{productName},
+                '%')
+            </if>
+            <if test="englishName != null  and englishName != ''">and english_name like concat('%', #{englishName},
+                '%')
+            </if>
+            <if test="brand != null  and brand != ''">and brand = #{brand}</if>
+            <if test="label != null  and label != ''">and label = #{label}</if>
+            <if test="supplierId != null  and supplierId != ''">and supplier_id = #{supplierId}</if>
+            <if test="supplier != null  and supplier != ''">and supplier = #{supplier}</if>
+            <if test="specification != null  and specification != ''">and specification = #{specification}</if>
+            <if test="unit != null  and unit != ''">and unit = #{unit}</if>
+            <if test="weight != null  and weight != ''">and weight = #{weight}</if>
+            <if test="color != null  and color != ''">and color = #{color}</if>
+            <if test="size != null  and size != ''">and size = #{size}</if>
+            <if test="style != null  and style != ''">and style = #{style}</if>
+            <if test="purchasePrice != null ">and purchase_price = #{purchasePrice}</if>
+            <if test="retailPrice != null ">and retail_price = #{retailPrice}</if>
+            <if test="wholesalePrice != null ">and wholesale_price = #{wholesalePrice}</if>
+            <if test="vipPrice != null ">and vip_price = #{vipPrice}</if>
+            <if test="stock != null ">and stock = #{stock}</if>
+            <if test="maxStock != null ">and max_stock = #{maxStock}</if>
+            <if test="minStock != null ">and min_stock = #{minStock}</if>
+            <if test="pictureUrl != null  and pictureUrl != ''">and picture_url = #{pictureUrl}</if>
+            <if test="productionDate != null ">and production_date = #{productionDate}</if>
+            <if test="qualityPeriod != null  and qualityPeriod != ''">and quality_period = #{qualityPeriod}</if>
+            <if test="remarks != null  and remarks != ''">and remarks = #{remarks}</if>
+            <if test="isEnable != null  and isEnable != ''">and is_enable = #{isEnable}</if>
+            <if test="isEnableVipPrice != null  and isEnableVipPrice != ''">and is_enable_vip_price =
+                #{isEnableVipPrice}
+            </if>
+            <if test="isEnablePoints != null  and isEnablePoints != ''">and is_enable_points = #{isEnablePoints}</if>
+            <if test="isDeleted != null  and isDeleted != ''">and is_deleted = #{isDeleted}</if>
+        </where>
+    </select>
+
+    <select id="selectCtShopProductById" parameterType="String" resultType="CtShopProduct">
+        <include refid="selectCtShopProductVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertCtShopProduct" parameterType="CtShopProduct">
+        insert into ct_shop_product
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="shopNo != null and shopNo != ''">shop_no,</if>
+            <if test="categoryId != null and categoryId != ''">category_id,</if>
+            <if test="barcode != null and barcode != ''">barcode,</if>
+            <if test="productName != null and productName != ''">product_name,</if>
+            <if test="englishName != null">english_name,</if>
+            <if test="brand != null">brand,</if>
+            <if test="label != null">label,</if>
+            <if test="supplierId != null">supplier_id,</if>
+            <if test="supplier != null">supplier,</if>
+            <if test="specification != null">specification,</if>
+            <if test="unit != null">unit,</if>
+            <if test="weight != null">weight,</if>
+            <if test="color != null">color,</if>
+            <if test="size != null">size,</if>
+            <if test="style != null">style,</if>
+            <if test="purchasePrice != null">purchase_price,</if>
+            <if test="retailPrice != null">retail_price,</if>
+            <if test="wholesalePrice != null">wholesale_price,</if>
+            <if test="vipPrice != null">vip_price,</if>
+            <if test="stock != null">stock,</if>
+            <if test="maxStock != null">max_stock,</if>
+            <if test="minStock != null">min_stock,</if>
+            <if test="pictureUrl != null">picture_url,</if>
+            <if test="productionDate != null">production_date,</if>
+            <if test="qualityPeriod != null">quality_period,</if>
+            <if test="remarks != null">remarks,</if>
+            <if test="isEnable != null">is_enable,</if>
+            <if test="isEnableVipPrice != null">is_enable_vip_price,</if>
+            <if test="isEnablePoints != null">is_enable_points,</if>
+            <if test="isDeleted != null">is_deleted,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="shopNo != null and shopNo != ''">#{shopNo},</if>
+            <if test="categoryId != null and categoryId != ''">#{categoryId},</if>
+            <if test="barcode != null and barcode != ''">#{barcode},</if>
+            <if test="productName != null and productName != ''">#{productName},</if>
+            <if test="englishName != null">#{englishName},</if>
+            <if test="brand != null">#{brand},</if>
+            <if test="label != null">#{label},</if>
+            <if test="supplierId != null">#{supplierId},</if>
+            <if test="supplier != null">#{supplier},</if>
+            <if test="specification != null">#{specification},</if>
+            <if test="unit != null">#{unit},</if>
+            <if test="weight != null">#{weight},</if>
+            <if test="color != null">#{color},</if>
+            <if test="size != null">#{size},</if>
+            <if test="style != null">#{style},</if>
+            <if test="purchasePrice != null">#{purchasePrice},</if>
+            <if test="retailPrice != null">#{retailPrice},</if>
+            <if test="wholesalePrice != null">#{wholesalePrice},</if>
+            <if test="vipPrice != null">#{vipPrice},</if>
+            <if test="stock != null">#{stock},</if>
+            <if test="maxStock != null">#{maxStock},</if>
+            <if test="minStock != null">#{minStock},</if>
+            <if test="pictureUrl != null">#{pictureUrl},</if>
+            <if test="productionDate != null">#{productionDate},</if>
+            <if test="qualityPeriod != null">#{qualityPeriod},</if>
+            <if test="remarks != null">#{remarks},</if>
+            <if test="isEnable != null">#{isEnable},</if>
+            <if test="isEnableVipPrice != null">#{isEnableVipPrice},</if>
+            <if test="isEnablePoints != null">#{isEnablePoints},</if>
+            <if test="isDeleted != null">#{isDeleted},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateCtShopProduct" parameterType="CtShopProduct">
+        update ct_shop_product
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="shopNo != null and shopNo != ''">shop_no = #{shopNo},</if>
+            <if test="categoryId != null and categoryId != ''">category_id = #{categoryId},</if>
+            <if test="barcode != null and barcode != ''">barcode = #{barcode},</if>
+            <if test="productName != null and productName != ''">product_name = #{productName},</if>
+            <if test="englishName != null">english_name = #{englishName},</if>
+            <if test="brand != null">brand = #{brand},</if>
+            <if test="label != null">label = #{label},</if>
+            <if test="supplierId != null">supplier_id = #{supplierId},</if>
+            <if test="supplier != null">supplier = #{supplier},</if>
+            <if test="specification != null">specification = #{specification},</if>
+            <if test="unit != null">unit = #{unit},</if>
+            <if test="weight != null">weight = #{weight},</if>
+            <if test="color != null">color = #{color},</if>
+            <if test="size != null">size = #{size},</if>
+            <if test="style != null">style = #{style},</if>
+            <if test="purchasePrice != null">purchase_price = #{purchasePrice},</if>
+            <if test="retailPrice != null">retail_price = #{retailPrice},</if>
+            <if test="wholesalePrice != null">wholesale_price = #{wholesalePrice},</if>
+            <if test="vipPrice != null">vip_price = #{vipPrice},</if>
+            <if test="stock != null">stock = #{stock},</if>
+            <if test="maxStock != null">max_stock = #{maxStock},</if>
+            <if test="minStock != null">min_stock = #{minStock},</if>
+            <if test="pictureUrl != null">picture_url = #{pictureUrl},</if>
+            <if test="productionDate != null">production_date = #{productionDate},</if>
+            <if test="qualityPeriod != null">quality_period = #{qualityPeriod},</if>
+            <if test="remarks != null">remarks = #{remarks},</if>
+            <if test="isEnable != null">is_enable = #{isEnable},</if>
+            <if test="isEnableVipPrice != null">is_enable_vip_price = #{isEnableVipPrice},</if>
+            <if test="isEnablePoints != null">is_enable_points = #{isEnablePoints},</if>
+            <if test="isDeleted != null">is_deleted = #{isDeleted},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCtShopProductById" parameterType="String">
+        delete
+        from ct_shop_product
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteCtShopProductByIds" parameterType="String">
+        delete from ct_shop_product where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
