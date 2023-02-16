@@ -250,6 +250,7 @@
         <module>cloudtimes-partner</module>
         <module>cloudtimes-business</module>
         <module>cloudtimes-socketserver</module>
+        <module>cloudtimes-detectionserver</module>
     </modules>
     <packaging>pom</packaging>
 
