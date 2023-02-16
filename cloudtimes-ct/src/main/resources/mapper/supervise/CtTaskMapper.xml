@@ -5,7 +5,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="com.cloudtimes.supervise.mapper.CtTaskMapper">
     <sql id="selectCtTaskVo">
         select id, 
-               store_no,
+               store_id,
                staff_code, 
                task_type, 
                desc_text, 
@@ -24,7 +24,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectCtTaskList" parameterType="CtTask" resultType="CtTask">
         <include refid="selectCtTaskVo"/>
         <where>  
-            <if test="storeNo != null  and storeNo != ''"> and store_no = #{storeNo}</if>
+            <if test="storeId != null  and storeId != ''"> and store_id = #{storeId}</if>
             <if test="staffCode != null  and staffCode != ''"> and staff_code = #{staffCode}</if>
             <if test="taskType != null  and taskType != ''"> and task_type = #{taskType}</if>
             <if test="descText != null  and descText != ''"> and desc_text = #{descText}</if>
@@ -49,7 +49,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         insert into ct_task
         <trim prefix="(" suffix=")" suffixOverrides=",">
             id,
-            <if test="storeNo != null">store_no,</if>
+            <if test="storeId != null">store_id,</if>
             <if test="staffCode != null">staff_code,</if>
             <if test="taskType != null">task_type,</if>
             <if test="descText != null">desc_text,</if>
@@ -65,7 +65,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             #{id},
-            <if test="storeNo != null">#{storeNo},</if>
+            <if test="storeId != null">#{storeId},</if>
             <if test="staffCode != null">#{staffCode},</if>
             <if test="taskType != null">#{taskType},</if>
             <if test="descText != null">#{descText},</if>
@@ -84,7 +84,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updateCtTask" parameterType="CtTask">
         update ct_task
         <trim prefix="SET" suffixOverrides=",">
-            <if test="storeNo != null">store_no = #{storeNo},</if>
+            <if test="storeId != null">store_id = #{storeId},</if>
             <if test="staffCode != null">staff_code = #{staffCode},</if>
             <if test="taskType != null">task_type = #{taskType},</if>
             <if test="descText != null">desc_text = #{descText},</if>
