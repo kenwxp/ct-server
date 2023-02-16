@@ -52,6 +52,8 @@
             </if>
             <if test="contactPhone != null  and contactPhone != ''">and contact_phone = #{contactPhone}</if>
             <if test="saleAmount != null ">and sale_amount = #{saleAmount}</if>
+            <if test="dividendRate != null ">and dividend_rate = #{dividendRate}</if>
+            <if test="validDistance != null ">and valid_distance = #{validDistance}</if>
             <if test="maxBuyPerson != null ">and max_buy_person = #{maxBuyPerson}</if>
             <if test="isSupervise != null  and isSupervise != ''">and is_supervise = #{isSupervise}</if>
             <if test="buildState != null  and buildState != ''">and build_state = #{buildState}</if>
@@ -94,6 +96,8 @@
             <if test="contactName != null">contact_name,</if>
             <if test="contactPhone != null">contact_phone,</if>
             <if test="saleAmount != null">sale_amount,</if>
+            <if test="dividendRate != null">dividend_rate,</if>
+            <if test="validDistance != null">valid_distance,</if>
             <if test="maxBuyPerson != null">max_buy_person,</if>
             <if test="isSupervise != null">is_supervise,</if>
             <if test="superviseLogId != null">supervise_log_id,</if>
@@ -156,6 +160,8 @@
             <if test="contactName != null">contact_name = #{contactName},</if>
             <if test="contactPhone != null">contact_phone = #{contactPhone},</if>
             <if test="saleAmount != null">sale_amount = #{saleAmount},</if>
+            <if test="dividendRate != null">dividend_rate = #{dividendRate},</if>
+            <if test="validDistance != null">valid_distance = #{validDistance},</if>
             <if test="maxBuyPerson != null">max_buy_person = #{maxBuyPerson},</if>
             <if test="isSupervise != null">is_supervise = #{isSupervise},</if>
             <if test="superviseLogId != null">supervise_log_id = #{superviseLogId},</if>

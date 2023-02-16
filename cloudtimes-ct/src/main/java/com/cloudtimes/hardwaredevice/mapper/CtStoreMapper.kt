@@ -37,6 +37,8 @@ interface CtStoreMapper : CommonCountMapper, CommonDeleteMapper, CommonInsertMap
         Result(column="contact_name", property="contactName", jdbcType=JdbcType.VARCHAR),
         Result(column="contact_phone", property="contactPhone", jdbcType=JdbcType.VARCHAR),
         Result(column="sale_amount", property="saleAmount", jdbcType=JdbcType.DECIMAL),
+        Result(column="dividend_rate", property="dividendRate", jdbcType=JdbcType.DECIMAL),
+        Result(column="valid_distance", property="validDistance", jdbcType=JdbcType.DECIMAL),
         Result(column="max_buy_person", property="maxBuyPerson", jdbcType=JdbcType.INTEGER),
         Result(column="is_supervise", property="isSupervise", jdbcType=JdbcType.CHAR),
         Result(column="build_state", property="buildState", jdbcType=JdbcType.CHAR),
