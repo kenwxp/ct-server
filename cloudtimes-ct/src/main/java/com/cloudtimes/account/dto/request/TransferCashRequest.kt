@@ -20,6 +20,11 @@ class TransferCashRequest {
     @field:NotNull(message =  "收款人编号不能为空")
     var payeeUserId: String? = null;
 
+    @ApiModelProperty(value = "附言", required = true)
+    @field:NotNull(message =  "转账附言不能为空")
+    @field:NotEmpty(message =  "转账附言不能为空")
+    val remark: String? = null
+
     @ApiModelProperty(value = "转账金额", required = true)
     @field:NotNull(message =  "转账金额不能为空")
     @DecimalMin("1.00", message = "转账金额太小")

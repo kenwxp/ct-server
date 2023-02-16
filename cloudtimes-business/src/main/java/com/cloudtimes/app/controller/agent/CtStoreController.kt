@@ -1,21 +1,24 @@
 package com.cloudtimes.app.controller.agent
 
-import com.cloudtimes.account.domain.CtUser
 import com.cloudtimes.account.dto.request.AgentStoreRequest
+import com.cloudtimes.account.dto.response.StoreAndCommission
 import com.cloudtimes.account.service.ICtUserAgentService
 import com.cloudtimes.common.core.controller.BaseController
 import com.cloudtimes.common.core.domain.AjaxResult
+import com.cloudtimes.common.core.domain.RestPageResult
 import com.cloudtimes.common.core.page.TableDataInfo
 import com.cloudtimes.hardwaredevice.dto.request.ShopOrderByMonthRequest
 import com.cloudtimes.supervise.domain.CtOrder
 import com.cloudtimes.supervise.service.ICtOrderService
-import com.github.xiaoymin.knife4j.annotations.DynamicParameter
-import com.github.xiaoymin.knife4j.annotations.DynamicResponseParameters
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
+
+
+// 泛型具体化
+class StoreAndCommissionPage() : RestPageResult<StoreAndCommission>()
 
 /**
  * 用户Controller
@@ -37,11 +40,15 @@ class CtStoreController : BaseController() {
      * 查询代理门店
      */
     @ApiOperation("查询代理门店")
-    @GetMapping("/list")
-    fun list(@Valid agentStoreRequest: AgentStoreRequest): TableDataInfo {
-        startPage()
-        val list = ctUserAgentService.selectCtAgentShopList(agentStoreRequest)
-        return getDataTable(list)
+    @PostMapping("/list")
+    fun list(@Valid @RequestBody request: AgentStoreRequest): StoreAndCommissionPage {
+        startPage(request.pageNum, request.pageSize)
+        val storeAndCommissionList = ctUserAgentService.selectCtAgentShopList(request)
+        val pageData = getDataTable(storeAndCommissionList)
+        return StoreAndCommissionPage().apply {
+            total = pageData.total
+            data = storeAndCommissionList
+        }
     }
 
     /**

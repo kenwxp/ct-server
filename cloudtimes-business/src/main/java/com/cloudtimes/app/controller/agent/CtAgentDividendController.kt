@@ -1,16 +1,22 @@
 package com.cloudtimes.app.controller.agent
 
 import com.cloudtimes.account.domain.CtAgentDividend
+import com.cloudtimes.account.dto.request.QueryBySubUserIdRequest
+import com.cloudtimes.account.dto.request.QueryByUserIdRequest
+import com.cloudtimes.account.dto.request.UpdateSubAgentDividendRequest
 import com.cloudtimes.account.service.ICtAgentDividendService
 import com.cloudtimes.common.annotation.Log
 import com.cloudtimes.common.core.controller.BaseController
 import com.cloudtimes.common.core.domain.AjaxResult
-import com.cloudtimes.common.core.page.TableDataInfo
+import com.cloudtimes.common.core.domain.RestPageResult
 import com.cloudtimes.common.enums.BusinessType
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
+import javax.validation.Valid
+
+class AgentDividendPage() : RestPageResult<CtAgentDividend>()
 
 /**
  * 分润配置Controller
@@ -20,50 +26,35 @@ import org.springframework.web.bind.annotation.*
  */
 @RestController
 @RequestMapping("/agent/agent_dividend")
-@Api(tags = ["代理-分润"])
+@Api(tags = ["代理-分润配置"])
 class CtAgentDividendController : BaseController() {
     @Autowired
     private lateinit var ctAgentDividendService: ICtAgentDividendService
 
-    /**
-     * 查询分润配置列表
-     */
-    @GetMapping("/list")
-    @ApiOperation("查询分润配置列表")
-    fun list(ctAgentDividend: CtAgentDividend): TableDataInfo {
-        // :TODO: userId从接口中取
-        ctAgentDividend.userId = "e4011707-a691-11ed-8957-0242ac110003"
-        startPage()
-        val list = ctAgentDividendService.selectCtAgentDividendList(ctAgentDividend)
-        return getDataTable(list)
+    @PostMapping("/list")
+    @ApiOperation("查询代理分润配置列表")
+    fun list(@Valid @RequestBody request: QueryByUserIdRequest): AgentDividendPage {
+        val list = ctAgentDividendService.selectManyByUserId(request.userId!!)
+        return AgentDividendPage().apply {
+                data = list
+                total = list.size.toLong()
+        }
     }
 
-    /**
-     * 获取分润配置详细信息
-     */
-    @GetMapping(value = ["/{id}"])
-    @ApiOperation("获取分润配置详细信息")
-    fun getInfo(@PathVariable("id") id: String?): AjaxResult {
-        return AjaxResult.success(ctAgentDividendService.selectCtAgentDividendById(id))
+    @PostMapping("/sub_user_list")
+    @ApiOperation("查询下级代理分润配置列表")
+    fun suer_user_list(@Valid @RequestBody request: QueryBySubUserIdRequest): AgentDividendPage {
+        val list = ctAgentDividendService.selectManyByUserId(request.subUserId!!)
+        return AgentDividendPage().apply {
+            data = list
+            total = list.size.toLong()
+        }
     }
 
-    /**
-     * 新增分润配置
-     */
-    @Log(title = "分润配置", businessType = BusinessType.INSERT)
-    @PostMapping
-    @ApiOperation("新增分润配置")
-    fun add(@RequestBody ctAgentDividend: CtAgentDividend?): AjaxResult {
-        return toAjax(ctAgentDividendService.insertCtAgentDividend(ctAgentDividend))
-    }
-
-    /**
-     * 修改分润配置
-     */
-    @Log(title = "分润配置", businessType = BusinessType.UPDATE)
-    @PutMapping
-    @ApiOperation("修改分润配置")
-    fun edit(@RequestBody ctAgentDividend: CtAgentDividend?): AjaxResult {
-        return toAjax(ctAgentDividendService.updateCtAgentDividend(ctAgentDividend))
+    @PostMapping("/update_sub_agent_dividend")
+    @ApiOperation("更新下级代理分润配置")
+    fun updateSubAgentDividend(@Valid @RequestBody request: UpdateSubAgentDividendRequest): AjaxResult {
+        val list = ctAgentDividendService.updateSubAgentDividend(request)
+        return AjaxResult.success()
     }
 }

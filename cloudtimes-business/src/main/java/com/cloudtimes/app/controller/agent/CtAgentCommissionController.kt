@@ -1,16 +1,22 @@
 package com.cloudtimes.app.controller.agent
 
 import com.cloudtimes.account.domain.CtAgentCommission
+import com.cloudtimes.account.dto.request.QueryBySubUserIdRequest
+import com.cloudtimes.account.dto.request.QueryByUserIdRequest
+import com.cloudtimes.account.dto.request.UpdateSubUserCommissionRequest
 import com.cloudtimes.account.service.ICtAgentCommissionService
-import com.cloudtimes.common.annotation.Log
 import com.cloudtimes.common.core.controller.BaseController
 import com.cloudtimes.common.core.domain.AjaxResult
-import com.cloudtimes.common.core.page.TableDataInfo
-import com.cloudtimes.common.enums.BusinessType
+import com.cloudtimes.common.core.domain.RestResult
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
+import javax.validation.Valid
+
+
+class AgentCommissionDetail() : RestResult<CtAgentCommission>()
+
 
 /**
  * 代理销售佣金设置Controller
@@ -20,52 +26,32 @@ import org.springframework.web.bind.annotation.*
  */
 @RestController
 @RequestMapping("/agent/agent_commission")
-@Api(tags = ["代理-佣金"])
+@Api(tags = ["代理-佣金配置"])
 class CtAgentCommissionController : BaseController() {
     @Autowired
-    private lateinit var ctAgentCommissionService: ICtAgentCommissionService
-
-    /**
-     * 查询代理销售佣金设置列表
-     */
-    @GetMapping("/list")
-    @ApiOperation("查询代理销售佣金设置列表")
-    fun list(ctAgentCommission: CtAgentCommission): TableDataInfo {
-        startPage()
-        val list = ctAgentCommissionService.selectCtAgentCommissionList(ctAgentCommission)
-        return getDataTable(list)
-    }
+    private lateinit var commissionService: ICtAgentCommissionService
 
     /**
      * 获取代理销售佣金设置详细信息
      */
-    @GetMapping(value = ["/{id}"])
+    @PostMapping(value = ["detail"])
     @ApiOperation("获取代理销售佣金设置")
-    fun getInfo(@PathVariable("id") id: String): AjaxResult {
-        return AjaxResult.success(ctAgentCommissionService.selectCtAgentCommissionById(id))
+    fun detail(@Valid @RequestBody request: QueryByUserIdRequest): AgentCommissionDetail {
+        val commission = commissionService.selectCtAgentCommissionByUserId(request.userId!!)
+        return AgentCommissionDetail().apply { data = commission }
     }
 
-    /**
-     * 新增代理销售佣金设置
-     */
-    @Log(title = "代理销售佣金设置", businessType = BusinessType.INSERT)
-    @PostMapping
-    @ApiOperation("新增代理销售佣金")
-    fun add(@RequestBody ctAgentCommission: CtAgentCommission): AjaxResult {
-        val user = loginUser
-        ctAgentCommission.operator = user.username
-        return toAjax(ctAgentCommissionService.insertCtAgentCommission(ctAgentCommission))
+    @PostMapping(value = ["sub_detail"])
+    @ApiOperation("获取下级代理销售佣金设置")
+    fun subDetail(@Valid @RequestBody request: QueryBySubUserIdRequest): AgentCommissionDetail {
+        val commission = commissionService.selectCtAgentCommissionByUserId(request.subUserId!!)
+        return AgentCommissionDetail().apply { data = commission }
     }
 
-    /**
-     * 修改代理销售佣金设置
-     */
-    @Log(title = "代理销售佣金设置", businessType = BusinessType.UPDATE)
-    @PutMapping
-    @ApiOperation("修改代理销售佣金")
-    fun edit(@RequestBody ctAgentCommission: CtAgentCommission): AjaxResult {
-        val user = loginUser
-        ctAgentCommission.operator = user.username
-        return toAjax(ctAgentCommissionService.updateCtAgentCommission(ctAgentCommission))
+    @PostMapping(value = ["update_sub_detail"])
+    @ApiOperation("修改下级代理销售佣金设置")
+    fun updateSubDetail(@Valid @RequestBody request: UpdateSubUserCommissionRequest): AjaxResult {
+        commissionService.updateSubUserCommission(request)
+        return AjaxResult.success()
     }
 }

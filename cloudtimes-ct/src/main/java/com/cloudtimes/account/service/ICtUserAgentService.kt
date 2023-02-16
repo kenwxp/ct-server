@@ -6,6 +6,7 @@ import com.cloudtimes.account.dto.request.TransferCashRequest
 import com.cloudtimes.account.dto.request.WithdrawCashRequest
 import com.cloudtimes.account.dto.response.AgentShopStats
 import com.cloudtimes.account.dto.response.StoreAndCommission
+import com.cloudtimes.account.dto.response.TeamMember
 
 /**
  * 代理Service接口
@@ -14,6 +15,10 @@ import com.cloudtimes.account.dto.response.StoreAndCommission
  * @date 2023-02-07
  */
 interface ICtUserAgentService {
+    fun selectTeamMember(userId: String): TeamMember?
+
+    fun selectTeamMembers(userId: String): List<TeamMember>
+
     /**
      * 查询代理
      *

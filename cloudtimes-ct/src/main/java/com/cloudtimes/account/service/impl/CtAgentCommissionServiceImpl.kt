@@ -1,13 +1,20 @@
 package com.cloudtimes.account.service.impl
 
 import com.cloudtimes.account.domain.CtAgentCommission
+import com.cloudtimes.account.dto.request.UpdateSubUserCommissionRequest
 import com.cloudtimes.account.mapper.CtAgentCommissionMapper
+import com.cloudtimes.account.mapper.CtUserAgentMapper
+import com.cloudtimes.account.mapper.provider.CtAgentCommissionProvider
+import com.cloudtimes.account.mapper.provider.CtUserAgentProvider
 import com.cloudtimes.account.service.ICtAgentCommissionService
 import com.cloudtimes.common.annotation.DataSource
+import com.cloudtimes.common.enums.AgentType
 import com.cloudtimes.common.enums.DataSourceType
+import com.cloudtimes.common.exception.ServiceException
 import com.cloudtimes.common.utils.DateUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.math.BigDecimal
 
 /**
  * 代理销售佣金设置Service业务层处理
@@ -19,7 +26,64 @@ import org.springframework.stereotype.Service
 @Service
 class CtAgentCommissionServiceImpl : ICtAgentCommissionService {
     @Autowired
-    private lateinit var ctAgentCommissionMapper: CtAgentCommissionMapper
+    private lateinit var commissionMapper: CtAgentCommissionMapper
+
+    @Autowired
+    private lateinit var agentMapper: CtUserAgentMapper
+
+    override fun selectCtAgentCommissionByUserId(userId: String): CtAgentCommission? {
+        var commission = commissionMapper.selectOne(
+            CtAgentCommissionProvider.selectByUserId(userId)
+        )
+
+        //  查询到记录直接返回
+        if (commission != null) return commission
+
+        // 获取代理信息
+        val agent = agentMapper.selectOne(CtUserAgentProvider.selectById(userId)) ?:
+            throw ServiceException("数据库异常，查询代理信息失败")
+
+        if (agent.agentType != AgentType.GeneralAgent.code) {
+            throw ServiceException("数据库异常，代理佣金参数未配置")
+        }
+
+        if (agent.parentUserId == null) {
+            throw ServiceException("数据库异常，代理没有绑定上级代理")
+        }
+
+        // 获取上级代理佣金信息
+        val parentCommission = commissionMapper.selectOne(
+            CtAgentCommissionProvider.selectByUserId(agent.parentUserId!!)
+        ) ?: throw ServiceException("数据库异常，代理佣金参数未配置")
+
+        //  插入下级代理佣金默认值
+        commissionMapper.generalInsert(
+            CtAgentCommissionProvider.insertOneWithParentConfig(parentCommission, userId)
+        )
+
+        // 再次查询
+        commission = commissionMapper.selectOne(
+            CtAgentCommissionProvider.selectByUserId(userId)
+        )
+
+        return commission
+    }
+
+    override fun updateSubUserCommission(request: UpdateSubUserCommissionRequest): Int {
+        // Step 1. 合法性检查
+        val parentCommission = commissionMapper.selectCtAgentCommissionById(
+            request.detail!!.parentUserId ?: ""
+        ) ?: throw ServiceException("数据库异常，未能查询到上级佣金配置信息")
+
+        val costPrice = request.detail!!.costPrice ?: BigDecimal.ZERO
+        if (costPrice <= parentCommission.costPrice!! || costPrice > BigDecimal("1000000.00")) {
+            throw ServiceException("参数错误，代理价格不合理")
+        }
+
+        return commissionMapper.update(
+            CtAgentCommissionProvider.updateSubUserCommission(request)
+        )
+    }
 
     /**
      * 查询代理销售佣金设置
@@ -28,7 +92,7 @@ class CtAgentCommissionServiceImpl : ICtAgentCommissionService {
      * @return 代理销售佣金设置
      */
     override fun selectCtAgentCommissionById(id: String): CtAgentCommission? {
-        return ctAgentCommissionMapper.selectCtAgentCommissionById(id)
+        return commissionMapper.selectCtAgentCommissionById(id)
     }
 
     /**
@@ -38,7 +102,7 @@ class CtAgentCommissionServiceImpl : ICtAgentCommissionService {
      * @return 代理销售佣金设置
      */
     override fun selectCtAgentCommissionList(ctAgentCommission: CtAgentCommission): List<CtAgentCommission> {
-        return ctAgentCommissionMapper.selectCtAgentCommissionList(ctAgentCommission)
+        return commissionMapper.selectCtAgentCommissionList(ctAgentCommission)
     }
 
     /**
@@ -49,7 +113,7 @@ class CtAgentCommissionServiceImpl : ICtAgentCommissionService {
      */
     override fun insertCtAgentCommission(ctAgentCommission: CtAgentCommission): Int {
         ctAgentCommission.createTime = DateUtils.getNowDate()
-        return ctAgentCommissionMapper.insertCtAgentCommission(ctAgentCommission)
+        return commissionMapper.insertCtAgentCommission(ctAgentCommission)
     }
 
     /**
@@ -60,7 +124,7 @@ class CtAgentCommissionServiceImpl : ICtAgentCommissionService {
      */
     override fun updateCtAgentCommission(ctAgentCommission: CtAgentCommission): Int {
         ctAgentCommission.updateTime = DateUtils.getNowDate()
-        return ctAgentCommissionMapper.updateCtAgentCommission(ctAgentCommission)
+        return commissionMapper.updateCtAgentCommission(ctAgentCommission)
     }
 
     /**
@@ -70,7 +134,7 @@ class CtAgentCommissionServiceImpl : ICtAgentCommissionService {
      * @return 结果
      */
     override fun deleteCtAgentCommissionByIds(ids: Array<String>): Int {
-        return ctAgentCommissionMapper.deleteCtAgentCommissionByIds(ids)
+        return commissionMapper.deleteCtAgentCommissionByIds(ids)
     }
 
     /**
@@ -80,6 +144,6 @@ class CtAgentCommissionServiceImpl : ICtAgentCommissionService {
      * @return 结果
      */
     override fun deleteCtAgentCommissionById(id: String): Int {
-        return ctAgentCommissionMapper.deleteCtAgentCommissionById(id)
+        return commissionMapper.deleteCtAgentCommissionById(id)
     }
 }

@@ -9,7 +9,7 @@ open class RestPageResult<T> {
     var code: Int = 200
     var msg: String = "处理成功"
     var total: Long = 0
-    var rows: List<T> = emptyList<T>()
+    var data: List<T> = emptyList<T>()
 
     constructor() : this(code = 200, msg = "处理成功", total = 0, rows = emptyList<T>())
 
@@ -17,11 +17,11 @@ open class RestPageResult<T> {
         this.code = code
         this.msg = msg
         this.total = total
-        this.rows = rows
+        this.data = rows
     }
 
 
     override fun toString(): String {
-        return "RestResult{code: $code, msg: $msg, total: $total, rows: $rows}"
+        return "RestResult{code: $code, msg: $msg, total: $total, rows: $data}"
     }
 }

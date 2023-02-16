@@ -4,7 +4,6 @@ import com.cloudtimes.account.mapper.CtAgentCommissionSettlementMapper
 import com.cloudtimes.account.mapper.CtUserAgentMapper
 import com.cloudtimes.account.mapper.provider.CtAgentCommissionSettlementProvider
 import com.cloudtimes.account.mapper.provider.CtUserAgentProvider
-import com.cloudtimes.account.table.ctUserAgentTable
 import com.cloudtimes.hardwaredevice.mapper.CtStoreMapper
 import com.cloudtimes.hardwaredevice.mapper.provider.CTStoreProvider
 import org.springframework.beans.factory.annotation.Autowired
@@ -14,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.time.LocalDate
-import kotlin.math.log
 
 @Component("agentTask")
 class AgentTask {
@@ -52,7 +50,7 @@ class AgentTask {
         }
 
         // Step 3. 更新佣金结算表里的上线店铺
-        val onlineStoreIds = onlineShops.map { it.id }
+        val onlineStoreIds = onlineShops.map { it.id!! }
         val updatedRows = commissionSettlementMapper.update(
             CtAgentCommissionSettlementProvider.updateOnlineStores(onlineStoreIds)
         )
@@ -79,7 +77,7 @@ class AgentTask {
 
         for (store in stores) {
             val storeAgent = agentMapper.selectOne(
-                CtUserAgentProvider.selectById(store.agentId)
+                CtUserAgentProvider.selectById(store.agentId!!)
             )
 
             if (storeAgent == null) {

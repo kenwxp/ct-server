@@ -42,7 +42,7 @@ class CtAgentMessageController : BaseController() {
         val messages = eventsService.selectSummaryByReceiver(request.userId!!)
         return AgentMessagePage().apply {
             total = messages.size.toLong()
-            rows = messages
+            data = messages
         }
     }
 
@@ -54,7 +54,7 @@ class CtAgentMessageController : BaseController() {
         val pageData = getDataTable(messages)
         return AgentMessagePage().apply {
             total = pageData.total
-            rows = messages
+            data = messages
         }
     }
 
@@ -66,7 +66,7 @@ class CtAgentMessageController : BaseController() {
         val pageData = getDataTable(messages)
         return AgentMessagePage().apply {
             total = pageData.total
-            rows = messages
+            data = messages
         }
     }
 }

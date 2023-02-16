@@ -1,5 +1,6 @@
 package com.cloudtimes.account.mapper
 
+import com.cloudtimes.account.domain.CtAgentActivity
 import org.apache.ibatis.annotations.Mapper
 import org.apache.ibatis.annotations.Result
 import org.apache.ibatis.annotations.ResultMap
@@ -10,6 +11,10 @@ import org.mybatis.dynamic.sql.select.render.SelectStatementProvider
 import org.mybatis.dynamic.sql.util.SqlProviderAdapter
 
 import com.cloudtimes.account.domain.CtAgentCommission
+import org.mybatis.dynamic.sql.util.mybatis3.CommonCountMapper
+import org.mybatis.dynamic.sql.util.mybatis3.CommonDeleteMapper
+import org.mybatis.dynamic.sql.util.mybatis3.CommonInsertMapper
+import org.mybatis.dynamic.sql.util.mybatis3.CommonUpdateMapper
 
 /**
  * 代理销售佣金设置Mapper接口
@@ -18,24 +23,27 @@ import com.cloudtimes.account.domain.CtAgentCommission
  * @date 2023-02-03
  */
 @Mapper
-interface CtAgentCommissionMapper {
-    @SelectProvider(type=SqlProviderAdapter::class, method="select")
-    @Results(id="CtAgentCommissionResult", value = [
-        Result(column="id", property="id", jdbcType=JdbcType.OTHER, id=true),
-        Result(column="user_id", property="userId", jdbcType=JdbcType.OTHER),
-        Result(column="parent_user_id", property="parentUserId", jdbcType=JdbcType.OTHER),
-        Result(column="cost_price", property="costPrice", jdbcType=JdbcType.DECIMAL),
-        Result(column="tax_ratio", property="taxRatio", jdbcType=JdbcType.DECIMAL),
-        Result(column="operator", property="operator", jdbcType=JdbcType.VARCHAR),
-        Result(column="remark", property="remark", jdbcType=JdbcType.VARCHAR),
-        Result(column="del_flag", property="delFlag", jdbcType=JdbcType.CHAR),
-        Result(column="create_date", property="createDate", jdbcType=JdbcType.DATE),
-        Result(column="create_time", property="createTime", jdbcType=JdbcType.TIMESTAMP),
-        Result(column="update_time", property="updateTime", jdbcType=JdbcType.TIMESTAMP)
-    ])
+interface CtAgentCommissionMapper
+    : CommonCountMapper, CommonDeleteMapper, CommonInsertMapper<CtAgentCommission>, CommonUpdateMapper {
+    @SelectProvider(type = SqlProviderAdapter::class, method = "select")
+    @Results(
+        id = "CtAgentCommissionResult", value = [
+            Result(column = "id", property = "id", jdbcType = JdbcType.OTHER, id = true),
+            Result(column = "user_id", property = "userId", jdbcType = JdbcType.OTHER),
+            Result(column = "parent_user_id", property = "parentUserId", jdbcType = JdbcType.OTHER),
+            Result(column = "cost_price", property = "costPrice", jdbcType = JdbcType.DECIMAL),
+            Result(column = "tax_ratio", property = "taxRatio", jdbcType = JdbcType.DECIMAL),
+            Result(column = "operator", property = "operator", jdbcType = JdbcType.VARCHAR),
+            Result(column = "remark", property = "remark", jdbcType = JdbcType.VARCHAR),
+            Result(column = "del_flag", property = "delFlag", jdbcType = JdbcType.CHAR),
+            Result(column = "create_date", property = "createDate", jdbcType = JdbcType.DATE),
+            Result(column = "create_time", property = "createTime", jdbcType = JdbcType.TIMESTAMP),
+            Result(column = "update_time", property = "updateTime", jdbcType = JdbcType.TIMESTAMP)
+        ]
+    )
     fun selectMany(selectStatement: SelectStatementProvider): List<CtAgentCommission>
 
-    @SelectProvider(type=SqlProviderAdapter::class, method="select")
+    @SelectProvider(type = SqlProviderAdapter::class, method = "select")
     @ResultMap("CtAgentCommissionResult")
     fun selectOne(selectStatement: SelectStatementProvider): CtAgentCommission?
 

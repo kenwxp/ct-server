@@ -6,7 +6,7 @@ import java.util.Date
 import org.mybatis.dynamic.sql.AliasableSqlTable
 import org.mybatis.dynamic.sql.util.kotlin.elements.column
 
-class CtAgentCommission : AliasableSqlTable<CtAgentCommission>("ct_agent_commission", ::CtAgentCommission) {
+class CtAgentCommissionTable : AliasableSqlTable<CtAgentCommissionTable>("ct_agent_commission", ::CtAgentCommissionTable) {
     /** 编号 */
     val id = column<String>(name = "id", jdbcType = JDBCType.OTHER)
 
@@ -40,3 +40,5 @@ class CtAgentCommission : AliasableSqlTable<CtAgentCommission>("ct_agent_commiss
     /** 修改时间 */
     val updateTime = column<Date>(name = "update_time", jdbcType = JDBCType.TIMESTAMP)
 }
+
+var commissionTable = CtAgentCommissionTable()

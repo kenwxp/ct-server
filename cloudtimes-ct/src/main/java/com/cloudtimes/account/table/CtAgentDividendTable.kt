@@ -13,6 +13,12 @@ class CtAgentDividendTable : AliasableSqlTable<CtAgentDividendTable>("ct_agent_d
     /** 代理用户编号 */
     val userId = column<String>(name = "user_id", jdbcType = JDBCType.OTHER)
 
+    /** 上级代理用户编号 */
+    val parentUserId = column<String>(name = "parent_user_id", jdbcType = JDBCType.OTHER)
+
+    /** 比较类型 */
+    val compareType = column<String>(name = "compare_type", jdbcType = JDBCType.VARCHAR)
+
     /** 营收金额 */
     val billAmount = column<BigDecimal>(name = "bill_amount", jdbcType = JDBCType.DECIMAL)
 

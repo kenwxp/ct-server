@@ -3,6 +3,8 @@ package com.cloudtimes.account.domain
 import com.cloudtimes.common.annotation.Excel
 import com.cloudtimes.common.core.domain.BaseEntity
 import com.fasterxml.jackson.annotation.JsonFormat
+import io.swagger.annotations.ApiModel
+import io.swagger.annotations.ApiModelProperty
 import org.apache.commons.lang3.builder.ToStringBuilder
 import org.apache.commons.lang3.builder.ToStringStyle
 import java.math.BigDecimal
@@ -14,19 +16,20 @@ import java.util.*
 /** @author 沈兵 */
 /** @date 2023-02-03 */
  */
+@ApiModel(value = "CtAgentCommissionSettlement", description = "代理佣金结算信息")
 class CtAgentCommissionSettlement : BaseEntity() {
-    /** 结算编号  */
+    @ApiModelProperty(value = "结算编号")
     var id: String? = null
 
-    /** 门店编号  */
+    @ApiModelProperty(value = "门店编号")
     @Excel(name = "门店编号")
     var storeId: String? = null
 
-    /** 代理会员编号  */
+    @ApiModelProperty(value = "代理会员编号")
     @Excel(name = "代理会员编号")
     var userId: String? = null
 
-    /** 上级代理会员编号  */
+    @ApiModelProperty(value = "上级代理会员编号")
     @Excel(name = "上级代理会员编号")
     var parentUserId: String? = null
 
@@ -34,72 +37,72 @@ class CtAgentCommissionSettlement : BaseEntity() {
     @Excel(name = "开店费用/合同价格")
     val saleAmount: BigDecimal? = null
 
-    /** 成本价格  */
+    @ApiModelProperty(value = "成本价格")
     @Excel(name = "成本价格")
     var costPrice: BigDecimal? = null
 
-    /** 上级成本价格  */
+    @ApiModelProperty(value = "上级成本价格")
     @Excel(name = "上级成本价格")
     var parentCostPrice: BigDecimal? = null
 
-    /** 手续费费率 */
+    @ApiModelProperty(value = "手续费费率")
     @Excel(name = "手续费费率")
     var taxRatio: BigDecimal? = null
 
-    /** 结算金额 */
+    @ApiModelProperty(value = "结算金额")
     @Excel(name = "结算金额")
     var amount: BigDecimal? = null
 
-    /** 手续费金额 */
+    @ApiModelProperty(value = "手续费金额")
     @Excel(name = "手续费金额")
     var taxAmount: BigDecimal? = null
 
-    /** 稅前结算金额 */
+    @ApiModelProperty(value = "稅前结算金额")
     @Excel(name = "稅前结算金额")
     var beforeTaxAmount: BigDecimal? = null
 
-    /** 上级结算金额 */
+    @ApiModelProperty(value = "上级结算金额")
     @Excel(name = "上级结算金额")
     var parentAmount: BigDecimal? = null
 
-    /** 上级手续费金额 */
+    @ApiModelProperty(value = "上级手续费金额")
     @Excel(name = "上级手续费金额")
     var parentTaxAmount: BigDecimal? = null
 
-    /** 上级稅前结算金额 */
+    @ApiModelProperty(value = "上级稅前结算金额")
     @Excel(name = "上级稅前结算金额")
     var parentBeforeTaxAmount: BigDecimal? = null
 
-    /** 店铺是否上线  */
+    @ApiModelProperty(value = "店铺是否上线")
     @Excel(name = "店铺是否上线")
     var isStoreOnline: String? = null
 
-    /** 代理是否审核  */
+    @ApiModelProperty(value = "代理是否审核")
     @Excel(name = "代理是否审核")
     var isAgentOk: String? = null
 
-    /** 平台是否审核  */
+    @ApiModelProperty(value = "平台是否审核")
     @Excel(name = "平台是否审核")
     var isPlatformOk: String? = null
 
-    /** 结算状态  */
+    @ApiModelProperty(value = "结算状态")
     @Excel(name = "结算状态")
     var state: String? = null
 
-    /** 是否删除  */
+    @ApiModelProperty(value = "是否删除")
     var delFlag: String? = null
 
-    /** 平台审核时间  */
+    @ApiModelProperty(value = "平台审核时间")
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "平台审核时间", width = 30.0, dateFormat = "yyyy-MM-dd")
     var platformApprovedTime: Date? = null
 
-    /** 代理审核时间  */
+    @ApiModelProperty(value = "代理审核时间")
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "代理审核时间", width = 30.0, dateFormat = "yyyy-MM-dd")
     var agentApprovedTime: Date? = null
 
-    /** 创建日期  */
+    @ApiModelProperty(value = "创建日期")
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "创建日期", width = 30.0, dateFormat = "yyyy-MM-dd")
     var createDate: Date? = null

@@ -4,7 +4,6 @@ import java.math.BigDecimal
 import java.sql.JDBCType
 import java.util.*
 import org.mybatis.dynamic.sql.AliasableSqlTable
-import org.mybatis.dynamic.sql.util.kotlin.elements.column
 
 class CtUserAgentTable : AliasableSqlTable<CtUserAgentTable>("ct_user_agent", ::CtUserAgentTable) {
     /** 用户编号 */
@@ -62,4 +61,4 @@ class CtUserAgentTable : AliasableSqlTable<CtUserAgentTable>("ct_user_agent", ::
     val agentArea = column<String>("agent_area", JDBCType.LONGVARCHAR)
 }
 
-val ctUserAgentTable = CtUserAgentTable()
+val agentTable = CtUserAgentTable()
