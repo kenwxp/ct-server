@@ -1,7 +1,7 @@
 package com.cloudtimes.app.controller.agent;
 
-import com.cloudtimes.account.domain.CtAgentDividendSettlement;
-import com.cloudtimes.account.service.ICtAgentDividendSettlementService;
+import com.cloudtimes.agent.domain.CtAgentDividendSettlement;
+import com.cloudtimes.agent.service.ICtAgentDividendSettlementService;
 import com.cloudtimes.common.annotation.Log;
 import com.cloudtimes.common.core.controller.BaseController;
 import com.cloudtimes.common.core.domain.AjaxResult;

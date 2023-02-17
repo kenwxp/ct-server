@@ -1,10 +1,10 @@
 package com.cloudtimes.app.controller.agent
 
-import com.cloudtimes.account.domain.CtAgentCommission
+import com.cloudtimes.agent.domain.CtAgentCommission
 import com.cloudtimes.account.dto.request.QueryBySubUserIdRequest
 import com.cloudtimes.account.dto.request.QueryByUserIdRequest
 import com.cloudtimes.account.dto.request.UpdateSubUserCommissionRequest
-import com.cloudtimes.account.service.ICtAgentCommissionService
+import com.cloudtimes.agent.service.ICtAgentCommissionService
 import com.cloudtimes.common.core.controller.BaseController
 import com.cloudtimes.common.core.domain.AjaxResult
 import com.cloudtimes.common.core.domain.RestResult

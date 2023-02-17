@@ -1,6 +1,6 @@
 package com.cloudtimes.app.controller.agent
 
-import com.cloudtimes.account.domain.CtUserAgent
+import com.cloudtimes.agent.domain.CtUserAgent
 import com.cloudtimes.account.dto.request.ListMessageByTypeRequest
 import com.cloudtimes.account.dto.request.QueryByUserIdRequest
 import com.cloudtimes.common.core.controller.BaseController

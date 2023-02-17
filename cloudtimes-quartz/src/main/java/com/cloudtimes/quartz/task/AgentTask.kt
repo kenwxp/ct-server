@@ -1,9 +1,9 @@
 package com.cloudtimes.quartz.task
 
-import com.cloudtimes.account.mapper.CtAgentCommissionSettlementMapper
-import com.cloudtimes.account.mapper.CtUserAgentMapper
-import com.cloudtimes.account.mapper.provider.CtAgentCommissionSettlementProvider
-import com.cloudtimes.account.mapper.provider.CtUserAgentProvider
+import com.cloudtimes.agent.mapper.CtAgentCommissionSettlementMapper
+import com.cloudtimes.agent.mapper.CtUserAgentMapper
+import com.cloudtimes.agent.mapper.provider.CtAgentCommissionSettlementProvider
+import com.cloudtimes.agent.mapper.provider.CtUserAgentProvider
 import com.cloudtimes.hardwaredevice.mapper.CtStoreMapper
 import com.cloudtimes.hardwaredevice.mapper.provider.CTStoreProvider
 import org.springframework.beans.factory.annotation.Autowired

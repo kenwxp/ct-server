@@ -1,10 +1,10 @@
 package com.cloudtimes.app.controller.agent
 
-import com.cloudtimes.account.domain.CtAgentDividend
+import com.cloudtimes.agent.domain.CtAgentDividend
 import com.cloudtimes.account.dto.request.QueryBySubUserIdRequest
 import com.cloudtimes.account.dto.request.QueryByUserIdRequest
-import com.cloudtimes.account.dto.request.UpdateSubAgentDividendRequest
-import com.cloudtimes.account.service.ICtAgentDividendService
+import com.cloudtimes.agent.dto.request.UpdateSubAgentDividendRequest
+import com.cloudtimes.agent.service.ICtAgentDividendService
 import com.cloudtimes.common.annotation.Log
 import com.cloudtimes.common.core.controller.BaseController
 import com.cloudtimes.common.core.domain.AjaxResult

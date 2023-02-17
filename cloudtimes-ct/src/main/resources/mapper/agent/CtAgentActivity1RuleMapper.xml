@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cloudtimes.agent.mapper.CtAgentActivity1RuleMapper">
+    
+    <sql id="selectCtAgentActivity1RuleVo">
+        select * from ct_agent_activity1_rule
+    </sql>
+
+    <select id="selectCtAgentActivity1RuleList" parameterType="CtAgentActivity1Rule" resultMap="CtAgentActivity1RuleResult">
+        <include refid="selectCtAgentActivity1RuleVo"/>
+        <where>  
+            <if test="activityId != null  and activityId != ''"> and activity_id = #{activityId}</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="activityType != null  and activityType != ''"> and activity_type = #{activityType}</if>
+            <if test="storeCount != null "> and store_count = #{storeCount}</if>
+            <if test="rewardMoney != null "> and reward_money = #{rewardMoney}</if>
+            <if test="taxRatio != null "> and tax_ratio = #{taxRatio}</if>
+            <if test="timeSpan != null "> and time_span = #{timeSpan}</if>
+            <if test="operator != null  and operator != ''"> and operator = #{operator}</if>
+            <if test="isEnabled != null  and isEnabled != ''"> and is_enabled = #{isEnabled}</if>
+            <if test="state != null  and state != ''"> and state = #{state}</if>
+            <if test="startTime != null "> and start_time = #{startTime}</if>
+            <if test="endTime != null "> and end_time = #{endTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectCtAgentActivity1RuleById" parameterType="String" resultMap="CtAgentActivity1RuleResult">
+        <include refid="selectCtAgentActivity1RuleVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertCtAgentActivity1Rule" parameterType="CtAgentActivity1Rule">
+        insert into ct_agent_activity1_rule
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="activityId != null and activityId != ''">activity_id,</if>
+            <if test="title != null and title != ''">title,</if>
+            <if test="content != null and content != ''">content,</if>
+            <if test="activityType != null and activityType != ''">activity_type,</if>
+            <if test="storeCount != null">store_count,</if>
+            <if test="rewardMoney != null">reward_money,</if>
+            <if test="taxRatio != null">tax_ratio,</if>
+            <if test="timeSpan != null">time_span,</if>
+            <if test="operator != null">operator,</if>
+            <if test="isEnabled != null and isEnabled != ''">is_enabled,</if>
+            <if test="state != null and state != ''">state,</if>
+            <if test="delFlag != null and delFlag != ''">del_flag,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="activityId != null and activityId != ''">#{activityId},</if>
+            <if test="title != null and title != ''">#{title},</if>
+            <if test="content != null and content != ''">#{content},</if>
+            <if test="activityType != null and activityType != ''">#{activityType},</if>
+            <if test="storeCount != null">#{storeCount},</if>
+            <if test="rewardMoney != null">#{rewardMoney},</if>
+            <if test="taxRatio != null">#{taxRatio},</if>
+            <if test="timeSpan != null">#{timeSpan},</if>
+            <if test="operator != null">#{operator},</if>
+            <if test="isEnabled != null and isEnabled != ''">#{isEnabled},</if>
+            <if test="state != null and state != ''">#{state},</if>
+            <if test="delFlag != null and delFlag != ''">#{delFlag},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCtAgentActivity1Rule" parameterType="CtAgentActivity1Rule">
+        update ct_agent_activity1_rule
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="activityId != null and activityId != ''">activity_id = #{activityId},</if>
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="content != null and content != ''">content = #{content},</if>
+            <if test="activityType != null and activityType != ''">activity_type = #{activityType},</if>
+            <if test="storeCount != null">store_count = #{storeCount},</if>
+            <if test="rewardMoney != null">reward_money = #{rewardMoney},</if>
+            <if test="taxRatio != null">tax_ratio = #{taxRatio},</if>
+            <if test="timeSpan != null">time_span = #{timeSpan},</if>
+            <if test="operator != null">operator = #{operator},</if>
+            <if test="isEnabled != null and isEnabled != ''">is_enabled = #{isEnabled},</if>
+            <if test="state != null and state != ''">state = #{state},</if>
+            <if test="delFlag != null and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCtAgentActivity1RuleById" parameterType="String">
+        delete from ct_agent_activity1_rule where id = #{id}
+    </delete>
+
+    <delete id="deleteCtAgentActivity1RuleByIds" parameterType="String">
+        delete from ct_agent_activity1_rule where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

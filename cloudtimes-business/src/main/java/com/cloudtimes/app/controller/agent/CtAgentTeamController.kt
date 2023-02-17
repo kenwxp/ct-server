@@ -3,9 +3,9 @@ package com.cloudtimes.app.controller.agent
 import com.cloudtimes.account.dto.request.QueryBySubUserIdRequest
 import javax.validation.Valid
 
-import com.cloudtimes.account.dto.request.QueryTeamMemberRequest
+import com.cloudtimes.account.dto.request.QueryByUserIdWithPageRequest
 import com.cloudtimes.account.dto.response.TeamMember
-import com.cloudtimes.account.service.ICtUserAgentService
+import com.cloudtimes.agent.service.ICtUserAgentService
 import com.cloudtimes.common.core.controller.BaseController
 import com.cloudtimes.common.core.domain.RestPageResult
 import com.cloudtimes.common.core.domain.RestResult
@@ -37,7 +37,7 @@ class CtAgentTeamController : BaseController() {
     private lateinit var agentService: ICtUserAgentService
     @PostMapping(value = ["/list_members"])
     @ApiOperation(value = "查询团队成员列表")
-    fun listMembers(@Valid @RequestBody request: QueryTeamMemberRequest): TeamMemberPage {
+    fun listMembers(@Valid @RequestBody request: QueryByUserIdWithPageRequest): TeamMemberPage {
         startPage(request.pageNum, request.pageSize)
         val members = agentService.selectTeamMembers(request.userId!!)
         val pageData = getDataTable(members)

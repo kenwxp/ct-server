@@ -1,8 +1,8 @@
 package com.cloudtimes.app.controller.agent
 
-import com.cloudtimes.account.domain.CtAgentCommissionSettlement
+import com.cloudtimes.agent.domain.CtAgentCommissionSettlement
 import com.cloudtimes.account.dto.request.ConfirmCommissionRequest
-import com.cloudtimes.account.service.ICtAgentCommissionSettlementService
+import com.cloudtimes.agent.service.ICtAgentCommissionSettlementService
 import com.cloudtimes.common.annotation.Log
 import com.cloudtimes.common.core.controller.BaseController
 import com.cloudtimes.common.core.domain.AjaxResult

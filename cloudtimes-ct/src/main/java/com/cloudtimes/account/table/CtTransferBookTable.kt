@@ -15,7 +15,7 @@ class CtTransferBookTable : AliasableSqlTable<CtTransferBookTable>("ct_transfer_
 
     val amount = column<BigDecimal>(name = "amount", jdbcType = JDBCType.DECIMAL)
 
-    val yearMonth = column<Int>(name = "year_month", jdbcType = JDBCType.INTEGER)
+    val yearMonth = column<Int>(name = "`year_month`", jdbcType = JDBCType.INTEGER)
 
     val createDate = column<Date>(name = "create_date", jdbcType = JDBCType.DATE)
 
@@ -23,3 +23,5 @@ class CtTransferBookTable : AliasableSqlTable<CtTransferBookTable>("ct_transfer_
 
     val remark = column<String>(name = "remark", jdbcType = JDBCType.VARCHAR)
 }
+
+val transferBookTable = CtTransferBookTable()

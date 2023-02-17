@@ -1,6 +1,7 @@
 package com.cloudtimes.account.mapper
 
 import com.cloudtimes.account.domain.CtTransferBook
+import com.cloudtimes.account.dto.response.TransferRecord
 import org.apache.ibatis.annotations.Mapper
 
 import org.apache.ibatis.annotations.Result
@@ -35,6 +36,9 @@ interface CtTransferBookMapper : CommonCountMapper, CommonDeleteMapper, CommonIn
         Result(column="remark", property="remark", jdbcType=JdbcType.VARCHAR)
     ])
     fun selectMany(selectStatement: SelectStatementProvider): List<CtTransferBook>
+
+    @SelectProvider(type=SqlProviderAdapter::class, method="select")
+    fun selectTransferRecords(selectStatement: SelectStatementProvider): List<TransferRecord>
 
     @SelectProvider(type=SqlProviderAdapter::class, method="select")
     @ResultMap("CtTransferBookResult")

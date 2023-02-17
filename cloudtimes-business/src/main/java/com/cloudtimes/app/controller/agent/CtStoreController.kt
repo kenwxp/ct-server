@@ -1,8 +1,8 @@
 package com.cloudtimes.app.controller.agent
 
-import com.cloudtimes.account.dto.request.AgentStoreRequest
+import com.cloudtimes.agent.dto.request.AgentStoreRequest
 import com.cloudtimes.account.dto.response.StoreAndCommission
-import com.cloudtimes.account.service.ICtUserAgentService
+import com.cloudtimes.agent.service.ICtUserAgentService
 import com.cloudtimes.common.core.controller.BaseController
 import com.cloudtimes.common.core.domain.AjaxResult
 import com.cloudtimes.common.core.domain.RestPageResult

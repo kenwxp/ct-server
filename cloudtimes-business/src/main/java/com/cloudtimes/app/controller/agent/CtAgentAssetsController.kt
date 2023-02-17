@@ -1,17 +1,23 @@
 package com.cloudtimes.app.controller.agent
 
-import com.cloudtimes.account.domain.CtUserAgent
+import com.cloudtimes.agent.domain.CtUserAgent
 import com.cloudtimes.account.dto.request.QueryByUserIdRequest
+import com.cloudtimes.account.dto.request.QueryByUserIdWithPageRequest
 import com.cloudtimes.account.dto.request.TransferCashRequest
 import com.cloudtimes.account.dto.request.WithdrawCashRequest
-import com.cloudtimes.account.service.ICtUserAgentService
+import com.cloudtimes.account.dto.response.TransferRecord
+import com.cloudtimes.account.service.ICtTransferBookService
+import com.cloudtimes.agent.service.ICtUserAgentService
+import com.cloudtimes.account.service.ICtUserService
+import com.cloudtimes.account.service.impl.CtTransferBookServiceImpl
+import com.cloudtimes.app.controller.system.SmsController
 import com.cloudtimes.common.core.controller.BaseController
 import com.cloudtimes.common.core.domain.AjaxResult
 import com.cloudtimes.common.annotation.Log
+import com.cloudtimes.common.core.domain.RestPageResult
 import com.cloudtimes.common.core.domain.RestResult
 import com.cloudtimes.common.enums.BusinessType
-import com.github.xiaoymin.knife4j.annotations.DynamicParameters
-import com.github.xiaoymin.knife4j.annotations.DynamicResponseParameters
+import com.cloudtimes.common.exception.ServiceException
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import org.springframework.beans.factory.annotation.Autowired
@@ -22,7 +28,9 @@ import org.springframework.web.bind.annotation.RestController
 import javax.validation.Valid
 
 
+/** 泛型具体化 */
 class AgentAssetsResponse(override var data: CtUserAgent? = null) : RestResult<CtUserAgent>(data)
+class TransferRecordPage() : RestPageResult<TransferRecord>()
 
 /**
  * 代理Controller
@@ -35,13 +43,22 @@ class AgentAssetsResponse(override var data: CtUserAgent? = null) : RestResult<C
 @Api(tags = ["代理-资产"])
 class CtAgentAssetsController : BaseController() {
     @Autowired
-    private lateinit var ctUserAgentService: ICtUserAgentService
+    private lateinit var agentService: ICtUserAgentService
+
+    @Autowired
+    private lateinit var userService: ICtUserService
+
+    @Autowired
+    private lateinit var smsController: SmsController
+
+    @Autowired
+    private lateinit var transferBookService: ICtTransferBookService
 
     /** 获取代理资产详细信息 */
     @PostMapping()
     @ApiOperation(value = "获取代理资产详细信息", response = CtUserAgent::class)
     fun listAssetsByUserId(@Valid @RequestBody request: QueryByUserIdRequest): AgentAssetsResponse {
-        val assets = ctUserAgentService.selectCtUserAgentByUserId(request.userId!!)
+        val assets = agentService.selectCtUserAgentByUserId(request.userId!!)
         return if (assets == null) {
             AgentAssetsResponse().apply{
                 notFound("没有获取到代理资产详细信息")
@@ -55,13 +72,33 @@ class CtAgentAssetsController : BaseController() {
     @PostMapping("/withdrawal")
     @ApiOperation("代理提现")
     fun withdrawCash(@Valid @RequestBody request: WithdrawCashRequest): AjaxResult {
-        return AjaxResult.success(ctUserAgentService.withdrawCash(request))
+        return AjaxResult.success(agentService.withdrawCash(request))
     }
 
     @Log(title = "代理转账", businessType = BusinessType.UPDATE)
     @PostMapping("/transfer")
     @ApiOperation("代理转账")
     fun transferCash(@Valid @RequestBody request: TransferCashRequest): AjaxResult {
-        return AjaxResult.success(ctUserAgentService.transferCash(request))
+        // Step 1. 校验手机验证码
+        val payer = userService.selectCtUserById(request.payerUserId!!) ?:
+            throw ServiceException("没有查询到用户信息")
+        smsController.validateSMS(payer.mobile, request.verifyCode, request.verifyUUID)
+
+        // Step 2. 业务处理
+        return AjaxResult.success(agentService.transferCash(request))
+    }
+
+    @Log(title = "代理转账记录", businessType = BusinessType.UPDATE)
+    @PostMapping("/list_transfer_records")
+    @ApiOperation("查询代理转账记录")
+    fun listTransferRecords(@Valid @RequestBody request: QueryByUserIdWithPageRequest): TransferRecordPage {
+        startPage(request.pageNum, request.pageSize)
+
+        val transferRecords = transferBookService.selectTransferRecords(request.userId!!)
+
+        return TransferRecordPage().apply {
+            total = getDataTable(transferRecords).total
+            data = transferRecords
+        }
     }
 }

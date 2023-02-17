@@ -1,6 +1,6 @@
 package com.cloudtimes.account.dto.request
 
-import com.cloudtimes.account.domain.CtAgentCommission
+import com.cloudtimes.agent.domain.CtAgentCommission
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
 import javax.validation.constraints.NotEmpty

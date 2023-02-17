@@ -98,6 +98,17 @@ class CtUserController : BaseController() {
     }
 
     /**
+     * 获取用户详细信息
+     */
+    @PostMapping(value = ["/get_verify_code"])
+    @ApiOperation("获取手机验证码")
+    fun getVerifyCode(@Valid @RequestBody request: QueryByUserIdRequest): AjaxResult {
+        val user = ctUserService.selectCtUserById(request.userId!!)
+        return AjaxResult()
+    }
+
+
+    /**
      * 新增用户
      */
     @Log(title = "用户", businessType = BusinessType.INSERT)

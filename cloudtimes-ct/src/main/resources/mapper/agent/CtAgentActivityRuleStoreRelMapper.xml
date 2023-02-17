@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cloudtimes.agent.mapper.CtAgentActivityRuleStoreRelMapper">
+
+    <sql id="selectCtAgentActivityRuleStoreRelVo">
+        select * from ct_agent_activity_rule_store_rel
+    </sql>
+
+    <select id="selectCtAgentActivityRuleStoreRelList" parameterType="CtAgentActivityRuleStoreRel" resultMap="CtAgentActivityRuleStoreRelResult">
+        <include refid="selectCtAgentActivityRuleStoreRelVo"/>
+        <where>  
+            <if test="activityRuleId != null  and activityRuleId != ''"> and activity_rule_id = #{activityRuleId}</if>
+            <if test="storeId != null  and storeId != ''"> and store_id = #{storeId}</if>
+            <if test="storeOnlineDate != null "> and store_online_date = #{storeOnlineDate}</if>
+            <if test="regionCode != null  and regionCode != ''"> and region_code = #{regionCode}</if>
+            <if test="parentAgentId != null  and parentAgentId != ''"> and parent_agent_id = #{parentAgentId}</if>
+            <if test="agentId != null  and agentId != ''"> and agent_id = #{agentId}</if>
+        </where>
+    </select>
+    
+    <select id="selectCtAgentActivityRuleStoreRelById" parameterType="String" resultMap="CtAgentActivityRuleStoreRelResult">
+        <include refid="selectCtAgentActivityRuleStoreRelVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertCtAgentActivityRuleStoreRel" parameterType="CtAgentActivityRuleStoreRel">
+        insert into ct_agent_activity_rule_store_rel
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="activityRuleId != null and activityRuleId != ''">activity_rule_id,</if>
+            <if test="storeId != null and storeId != ''">store_id,</if>
+            <if test="storeOnlineDate != null">store_online_date,</if>
+            <if test="regionCode != null and regionCode != ''">region_code,</if>
+            <if test="parentAgentId != null and parentAgentId != ''">parent_agent_id,</if>
+            <if test="agentId != null">agent_id,</if>
+            <if test="delFlag != null and delFlag != ''">del_flag,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="activityRuleId != null and activityRuleId != ''">#{activityRuleId},</if>
+            <if test="storeId != null and storeId != ''">#{storeId},</if>
+            <if test="storeOnlineDate != null">#{storeOnlineDate},</if>
+            <if test="regionCode != null and regionCode != ''">#{regionCode},</if>
+            <if test="parentAgentId != null and parentAgentId != ''">#{parentAgentId},</if>
+            <if test="agentId != null">#{agentId},</if>
+            <if test="delFlag != null and delFlag != ''">#{delFlag},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCtAgentActivityRuleStoreRel" parameterType="CtAgentActivityRuleStoreRel">
+        update ct_agent_activity_rule_store_rel
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="activityRuleId != null and activityRuleId != ''">activity_rule_id = #{activityRuleId},</if>
+            <if test="storeId != null and storeId != ''">store_id = #{storeId},</if>
+            <if test="storeOnlineDate != null">store_online_date = #{storeOnlineDate},</if>
+            <if test="regionCode != null and regionCode != ''">region_code = #{regionCode},</if>
+            <if test="parentAgentId != null and parentAgentId != ''">parent_agent_id = #{parentAgentId},</if>
+            <if test="agentId != null">agent_id = #{agentId},</if>
+            <if test="delFlag != null and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCtAgentActivityRuleStoreRelById" parameterType="String">
+        delete from ct_agent_activity_rule_store_rel where id = #{id}
+    </delete>
+
+    <delete id="deleteCtAgentActivityRuleStoreRelByIds" parameterType="String">
+        delete from ct_agent_activity_rule_store_rel where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

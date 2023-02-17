@@ -30,4 +30,14 @@ class TransferCashRequest {
     @DecimalMin("1.00", message = "转账金额太小")
     @DecimalMax("50000.00", message = "转账金额不能大于5万元")
     val amount: BigDecimal? = null
+
+    @ApiModelProperty(value = "手机验证码UUID", required = true)
+    @field:NotNull(message =  "手机验证码UUID不能为空")
+    @field:NotEmpty(message =  "手机验证码UUID不能为空")
+    val verifyUUID: String? = null
+
+    @ApiModelProperty(value = "手机验证码", required = true)
+    @field:NotNull(message =  "手机验证码不能为空")
+    @field:NotEmpty(message =  "手机验证码不能为空")
+    val verifyCode: String? = null
 }

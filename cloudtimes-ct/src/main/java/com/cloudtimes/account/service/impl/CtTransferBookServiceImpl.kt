@@ -1,11 +1,11 @@
 package com.cloudtimes.account.service.impl
 
-import com.cloudtimes.account.domain.CtTransferBook
+import com.cloudtimes.account.dto.response.TransferRecord
 import com.cloudtimes.account.mapper.CtTransferBookMapper
+import com.cloudtimes.account.mapper.provider.CtTransferBookProvider
 import com.cloudtimes.account.service.ICtTransferBookService
 import com.cloudtimes.common.annotation.DataSource
 import com.cloudtimes.common.enums.DataSourceType
-import com.cloudtimes.common.utils.DateUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -19,5 +19,9 @@ import org.springframework.stereotype.Service
 @Service
 class CtTransferBookServiceImpl : ICtTransferBookService {
     @Autowired
-    private val ctTransferBookMapper: CtTransferBookMapper? = null
+    private lateinit var transferBookMapper: CtTransferBookMapper
+
+    override fun selectTransferRecords(userId: String): List<TransferRecord> {
+        return transferBookMapper.selectTransferRecords(CtTransferBookProvider.selectTransferRecordsStmt(userId))
+    }
 }
