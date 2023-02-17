@@ -2,8 +2,7 @@ package com.cloudtimes.serving.wechat.service.impl;
 
 import com.cloudtimes.account.domain.CtUser;
 import com.cloudtimes.account.mapper.CtUserMapper;
-import com.cloudtimes.cache.TaskOrderCache;
-import com.cloudtimes.cache.TaskShoppingCache;
+import com.cloudtimes.cache.CtTaskCache;
 import com.cloudtimes.common.annotation.DataSource;
 import com.cloudtimes.common.core.redis.RedisCache;
 import com.cloudtimes.common.enums.DataSourceType;
@@ -41,9 +40,8 @@ public class CtCustomerBusinessServiceImpl implements ICtCustomerBusinessService
     @Autowired
     private CtTaskInnerService taskInnerService;
     @Autowired
-    private TaskShoppingCache taskShoppingCache;
-    @Autowired
-    private TaskOrderCache taskOrderCache;
+    private CtTaskCache taskCache;
+
 
     @Override
     @Transactional
@@ -95,7 +93,7 @@ public class CtCustomerBusinessServiceImpl implements ICtCustomerBusinessService
         }
         if (StringUtils.isNotEmpty(taskId)) {
             //加入内存
-            taskShoppingCache.setCacheShopping(task.getId(), newShopping.getId(), newShopping);
+            taskCache.setCacheShopping(newShopping);
         }
         //新增购物记录，开始时间设置成任务开始时间
         CtOrder newOrder = new CtOrder();
@@ -124,7 +122,7 @@ public class CtCustomerBusinessServiceImpl implements ICtCustomerBusinessService
             throw new ServiceException("新增订单失败");
         }
         if (StringUtils.isNotEmpty(taskId)) {
-            taskOrderCache.setCacheOrder(task.getId(), newOrder.getId(), newOrder);
+            taskCache.setCacheOrder(newOrder);
         }
         return null;
     }

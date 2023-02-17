@@ -1,6 +1,7 @@
 package com.cloudtimes.product.mapper;
 
 import com.cloudtimes.product.domain.CtShopProduct;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -59,4 +60,11 @@ public interface CtShopProductMapper
      * @return 结果
      */
     public int deleteCtShopProductByIds(String[] ids);
+
+    /**
+     * 查询商店商品列表
+     * @param shopNo
+     * @return
+     */
+    public List<CtShopProduct> selectCtShopProductListByStore(@Param("shopNo") String shopNo);
 }

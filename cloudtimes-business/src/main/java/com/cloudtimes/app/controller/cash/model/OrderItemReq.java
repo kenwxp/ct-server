@@ -12,6 +12,8 @@ public class OrderItemReq {
     private String orderId; // 	订单序列号（首次调用为空）
     private String goodId;     // 	商品id
     private String goodName;   // 	商品名
+    private String categoryId;     // 	商品类别id
+    private String categoryName;   // 	商品类别名
     private int num;        // 	数量
     private int buyPrice;   // 	单价 单位：分/件
     private int sellPrice;  // 	单价 单位：分/件

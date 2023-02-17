@@ -56,23 +56,21 @@ public interface ICtCashBusinessService {
      * @param buyPrice
      * @param sellPrice
      */
-    public String addOrderItem(String orderId, String isSupervise, String goodId, String goodName, int num, int buyPrice, int sellPrice);
+    public String addOrderItem(String deviceId, String orderId, String isSupervise, String goodId, String goodName, String categoryId, String categoryName, int num, int buyPrice, int sellPrice);
 
     /**
      * 订单删除商品
      *
      * @param orderId
-     * @param isSupervise
      * @param goodId
      * @param num
      */
-    public void deleteOrderItem(String orderId, String isSupervise, String goodId, int num);
+    public void deleteOrderItem(String deviceId, String orderId, String goodId, int num);
 
     /**
      * 取消订单
      *
      * @param orderId
-     * @param isSupervise
      */
-    public void cancelOrder(String orderId, String isSupervise);
+    public void cancelOrder(String deviceId, String orderId);
 }

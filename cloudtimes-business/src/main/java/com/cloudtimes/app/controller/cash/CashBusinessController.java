@@ -116,12 +116,17 @@ public class CashBusinessController {
         if (!StringUtils.equals(authUser.getChannelType(), ChannelType.CASH.getCode())) {
             return AjaxResult.error("渠道类型错误");
         }
-        String newOrderId = cashBusinessService.addOrderItem(info.getOrderId(), info.getIsDuty(), info.getGoodId(), info.getGoodName(), info.getNum(), info.getBuyPrice(), info.getSellPrice());
-        if (StringUtils.isEmpty(newOrderId)) {
-            return AjaxResult.success(new OrderItemResp(info.getOrderId()));
-        } else {
-            return AjaxResult.success(new OrderItemResp(newOrderId));
-        }
+        String newOrderId = cashBusinessService.addOrderItem(authUser.getId(),
+                info.getOrderId(),
+                info.getIsDuty(),
+                info.getGoodId(),
+                info.getGoodName(),
+                info.getCategoryId(),
+                info.getCategoryName(),
+                info.getNum(),
+                info.getBuyPrice(),
+                info.getSellPrice());
+        return AjaxResult.success(new OrderItemResp(newOrderId));
     }
 
     @ApiOperation("订单减商品")
@@ -131,7 +136,7 @@ public class CashBusinessController {
         if (!StringUtils.equals(authUser.getChannelType(), ChannelType.CASH.getCode())) {
             return AjaxResult.error("渠道类型错误");
         }
-        cashBusinessService.deleteOrderItem(info.getOrderId(), info.getIsDuty(), info.getGoodId(), info.getNum());
+        cashBusinessService.deleteOrderItem(authUser.getId(), info.getOrderId(), info.getGoodId(), info.getNum());
         return AjaxResult.success(new OrderItemResp(info.getOrderId()));
     }
 
@@ -142,7 +147,7 @@ public class CashBusinessController {
         if (!StringUtils.equals(authUser.getChannelType(), ChannelType.CASH.getCode())) {
             return AjaxResult.error("渠道类型错误");
         }
-        cashBusinessService.cancelOrder(info.getOrderId(), info.getIsDuty());
+        cashBusinessService.cancelOrder(authUser.getId(), info.getOrderId());
         return AjaxResult.success(new OrderItemResp(info.getOrderId()));
     }
 

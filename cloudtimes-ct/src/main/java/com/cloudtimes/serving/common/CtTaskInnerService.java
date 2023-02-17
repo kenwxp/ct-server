@@ -1,6 +1,6 @@
 package com.cloudtimes.serving.common;
 
-import com.cloudtimes.cache.UserTaskCache;
+import com.cloudtimes.cache.CtTaskCache;
 import com.cloudtimes.common.exception.ServiceException;
 import com.cloudtimes.hardwaredevice.domain.CtStore;
 import com.cloudtimes.hardwaredevice.mapper.CtStoreMapper;
@@ -20,7 +20,7 @@ public class CtTaskInnerService {
     @Autowired
     private CtTaskMapper taskMapper;
     @Autowired
-    private UserTaskCache userTaskCache;
+    private CtTaskCache taskCache;
 
     /**
      * 门店分配任务
@@ -66,7 +66,7 @@ public class CtTaskInnerService {
                     throw new ServiceException("新增任务失败");
                 }
                 // 放入内存
-                userTaskCache.setCacheTask(staffCode, newTask.getId(), newTask);
+                taskCache.setCacheTask(newTask);
                 return newTask;
             } else {
                 return dbTasks.get(0);

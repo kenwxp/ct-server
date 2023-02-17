@@ -35,7 +35,11 @@ public class CtShopProduct extends BaseEntity {
      */
     @Excel(name = "商品分类编号")
     private String categoryId;
-
+    /**
+     * 商品分类名（冗余）
+     */
+    @Excel(name = "商品分类名（冗余")
+    private String categoryName;
     /**
      * 商品条形码
      */

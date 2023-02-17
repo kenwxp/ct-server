@@ -10,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 public class GetProductListResp {
     private String productUid;         // 商品的唯一标识
     private String productName;        // 商品名称
+    private String categoryUid;         // 商品类别的唯一标识
+    private String categoryName;        // 商品类别名称
     private String barcode;            // 商品条形码
     private String imageUrl;           // 商品图片的url
     private int buyPrice;           // 商品进货价

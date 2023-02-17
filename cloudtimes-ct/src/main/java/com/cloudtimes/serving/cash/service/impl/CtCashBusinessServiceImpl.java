@@ -2,9 +2,7 @@ package com.cloudtimes.serving.cash.service.impl;
 
 import com.cloudtimes.account.domain.CtUser;
 import com.cloudtimes.account.mapper.CtUserMapper;
-import com.cloudtimes.cache.OrderDetailCache;
-import com.cloudtimes.cache.TaskOrderCache;
-import com.cloudtimes.cache.TaskShoppingCache;
+import com.cloudtimes.cache.CtTaskCache;
 import com.cloudtimes.common.exception.ServiceException;
 import com.cloudtimes.common.utils.NumberUtils;
 import com.cloudtimes.hardwaredevice.domain.CtDevice;
@@ -34,12 +32,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
@@ -64,13 +60,9 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
     @Autowired
     private CtOrderMapper orderMapper;
     @Autowired
-    private TaskShoppingCache taskShoppingCache;
-    @Autowired
-    private TaskOrderCache taskOrderCache;
+    private CtTaskCache taskCache;
     @Autowired
     private CtAgoraApiService agoraApiService;
-    @Autowired
-    private OrderDetailCache orderDetailCache;
 
     /**
      * 获取刷脸凭证
@@ -182,7 +174,7 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
         }
         if (StringUtils.isNotEmpty(taskId)) {
             //加入内存
-            taskShoppingCache.setCacheShopping(task.getId(), newShopping.getId(), newShopping);
+            taskCache.setCacheShopping(newShopping);
         }
         //新增购物记录，开始时间设置成任务开始时间
         CtOrder newOrder = new CtOrder();
@@ -211,7 +203,7 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
             throw new ServiceException("新增订单失败");
         }
         if (StringUtils.isNotEmpty(taskId)) {
-            taskOrderCache.setCacheOrder(task.getId(), newOrder.getId(), newOrder);
+            taskCache.setCacheOrder(newOrder);
         }
         return retMap;
     }
@@ -229,9 +221,7 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
         if (ctStore == null) {
             throw new ServiceException("无法获取门店信息");
         }
-        CtShopProduct ctShopProduct = new CtShopProduct();
-        ctShopProduct.setShopNo(ctStore.getStoreNo());
-        return shopProductMapper.selectCtShopProductList(ctShopProduct);
+        return shopProductMapper.selectCtShopProductListByStore(ctStore.getStoreNo());
     }
 
     @Autowired
@@ -264,22 +254,133 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
     }
 
     @Override
-    public String addOrderItem(String orderId, String isSupervise, String goodId, String goodName, int num, int buyPrice, int sellPrice) {
-        Map<String, CtOrderDetail> cacheOrderDetails = orderDetailCache.getCacheOrderDetails(orderId);
-        if (cacheOrderDetails == null) {
-            
+    public String addOrderItem(String deviceId, String orderId, String isSupervise, String goodId, String goodName, String categoryId, String categoryName, int num, int buyPrice, int sellPrice) {
+        if (StringUtils.isEmpty(orderId)) {
+            //只有在非值守状态才能扫商品产生新订单
+            if (StringUtils.equals(isSupervise, "1")) {
+                throw new ServiceException("收银机在值守模式下，不能直接扫商品");
+            }
+            //根据设备获取门店信息
+            CtDevice dbDevice = deviceMapper.selectCtDeviceById(deviceId);
+            if (dbDevice == null) {
+                throw new ServiceException("无法获取设备信息");
+            }
+            if (StringUtils.isEmpty(dbDevice.getStoreId())) {
+                throw new ServiceException("当前设备未绑定门店");
+            }
+            CtStore dbStore = storeMapper.selectCtStoreById(dbDevice.getStoreId());
+            if (dbDevice == null) {
+                throw new ServiceException("无法获取门店信息");
+            }
+            //有人模式下直接扫码，则产生新订单
+            CtOrder newOrder = new CtOrder();
+            newOrder.setTaskId("");
+            newOrder.setStoreId(dbStore.getId());
+            newOrder.setStoreName(dbStore.getName());
+            newOrder.setStoreProvince(dbStore.getRegionCode());
+            newOrder.setStoreCity(dbStore.getRegionCode());
+            newOrder.setAgentId(dbStore.getAgentId());
+            newOrder.setBossUserId(dbStore.getBossId());
+            newOrder.setShoppingId("");
+            newOrder.setStaffCode("");
+            newOrder.setUserId("");
+            newOrder.setDeviceCashId(deviceId);
+            newOrder.setDescText("直接扫商品");
+            newOrder.setIsExceptional("0");
+            newOrder.setState("0");
+            newOrder.setDelFlag("0");
+            Date now = new Date();
+            newOrder.setYearMonth(now.getYear() * 100 + now.getMonth());
+            newOrder.setCreateDate(now);
+            newOrder.setCreateTime(now);
+            newOrder.setUpdateTime(now);
+            //新增订单，并推送单号，顾客信息，新动态随机数到收银机
+            if (orderMapper.insertCtOrder(newOrder) < 1) {
+                throw new ServiceException("新增订单失败");
+            }
+            taskCache.setCacheOrder(newOrder);
+            orderId = newOrder.getId();
         }
-        return "";
+        CtOrder cacheOrder = taskCache.getCacheOrder(orderId);
+        if (cacheOrder == null) {
+            throw new ServiceException("无法获取订单信息");
+        }
+        if (StringUtils.equals(cacheOrder.getDeviceCashId(), deviceId)) {
+            throw new ServiceException("该订单不属于当前收银机");
+        }
+        int increase = num * buyPrice;
+        //更新订单中的价格参数
+        cacheOrder.setTotalAmount(cacheOrder.getTotalAmount().add(BigDecimal.valueOf(increase)));
+        cacheOrder.setItemCount(cacheOrder.getItemCount() + num);
+        taskCache.setCacheOrder(cacheOrder);
+
+        CtOrderDetail od = taskCache.getCacheOrderDetail(goodId);
+        if (od == null) {
+            //生产订单物品
+            od = new CtOrderDetail();
+            od.setOrderId(orderId);
+            od.setItemId(goodId);
+            od.setItemName(goodName);
+            od.setItemTypeId(categoryId);
+            od.setItemTypeName(categoryName);
+            od.setItemCount(BigDecimal.valueOf(num));
+            od.setItemPrice(BigDecimal.valueOf(buyPrice));
+            od.setItemSum(BigDecimal.valueOf(num * buyPrice));
+        } else {
+            od.setItemCount(od.getItemCount().add(BigDecimal.valueOf(num)));
+            od.setItemSum(od.getItemSum().add(BigDecimal.valueOf(increase)));
+        }
+        taskCache.setCacheOrderDetail(od);
+        return orderId;
     }
 
     @Override
-    public void deleteOrderItem(String orderId, String isSupervise, String goodId, int num) {
-
+    public void deleteOrderItem(String deviceId, String orderId, String goodId, int num) {
+        CtOrder cacheOrder = taskCache.getCacheOrder(orderId);
+        if (cacheOrder == null) {
+            throw new ServiceException("无法获取订单信息");
+        }
+        if (StringUtils.equals(cacheOrder.getDeviceCashId(), deviceId)) {
+            throw new ServiceException("该订单不属于当前收银机");
+        }
+        CtOrderDetail od = taskCache.getCacheOrderDetail(goodId);
+        if (od == null) {
+            throw new ServiceException("清单已无此商品");
+        }
+        BigDecimal itemPrice = od.getItemPrice();
+        BigDecimal decrease = itemPrice.multiply(BigDecimal.valueOf(num));
+        BigDecimal itemCount = od.getItemCount();
+        BigDecimal remain = itemCount.subtract(BigDecimal.valueOf(num));
+        if (remain.intValue() < 0) {
+            throw new ServiceException("扣减数量过大");
+        }
+        if (remain.intValue() == 0) {
+            taskCache.deleteCacheOrderDetail(goodId);
+        } else {
+            od.setItemCount(remain);
+            od.setItemSum(od.getItemSum().subtract(decrease));
+            taskCache.setCacheOrderDetail(od);
+        }
+        //更新订单中的价格参数
+        cacheOrder.setTotalAmount(cacheOrder.getTotalAmount().subtract(decrease));
+        cacheOrder.setItemCount(cacheOrder.getItemCount() - num);
+        taskCache.setCacheOrder(cacheOrder);
     }
 
     @Override
-    public void cancelOrder(String orderId, String isSupervise) {
-
+    public void cancelOrder(String deviceId, String orderId) {
+        CtOrder cacheOrder = taskCache.getCacheOrder(orderId);
+        if (cacheOrder == null) {
+            throw new ServiceException("无法获取订单信息");
+        }
+        if (StringUtils.equals(cacheOrder.getDeviceCashId(), deviceId)) {
+            throw new ServiceException("该订单不属于当前收银机");
+        }
+        if (StringUtils.equals(cacheOrder.getState(), "0")) {
+            if (taskCache.deleteCacheOrder(orderId)) {
+                orderMapper.deleteCtOrderById(orderId);
+            }
+        }
     }
 
 }
