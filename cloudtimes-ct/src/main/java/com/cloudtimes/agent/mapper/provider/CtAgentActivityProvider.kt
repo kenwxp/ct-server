@@ -1,18 +1,15 @@
 package com.cloudtimes.agent.mapper.provider
 
-import com.cloudtimes.agent.dto.request.QueryActivityRequest
+import com.cloudtimes.agent.dto.request.ActivityListRequest
 import com.cloudtimes.agent.table.activityTable
 import com.cloudtimes.agent.table.agentActivityRelTable
 import org.mybatis.dynamic.sql.util.kotlin.mybatis3.select
 import org.mybatis.dynamic.sql.select.render.SelectStatementProvider
-import org.mybatis.dynamic.sql.insert.render.InsertStatementProvider
-import org.mybatis.dynamic.sql.update.render.UpdateStatementProvider
-import org.mybatis.dynamic.sql.util.kotlin.mybatis3.update
-import org.mybatis.dynamic.sql.util.kotlin.mybatis3.insert
 
 object CtAgentActivityProvider {
-    fun selectAgentActivityListStmt(request: QueryActivityRequest): SelectStatementProvider {
+    fun selectAgentActivityListStmt(request: ActivityListRequest): SelectStatementProvider {
         return select(activityTable.allColumns()) {
+            from(activityTable)
             where {
                 activityTable.id isIn {
                     select(agentActivityRelTable.activityId) {
@@ -22,6 +19,15 @@ object CtAgentActivityProvider {
                 }
             }
             and { activityTable.state isEqualToWhenPresent request.state }
+        }
+    }
+
+    fun selectByIdStmt(activityId: String): SelectStatementProvider {
+        return select(activityTable.allColumns()) {
+            from (activityTable)
+            where {
+                activityTable.id isEqualTo activityId
+            }
         }
     }
 }

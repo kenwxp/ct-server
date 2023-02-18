@@ -1,10 +1,14 @@
 package com.cloudtimes.agent.service.impl
 
 import com.cloudtimes.agent.domain.*
+import com.cloudtimes.agent.dto.request.ActivityRuleRequest
 import com.cloudtimes.agent.mapper.*
+import com.cloudtimes.agent.mapper.provider.CtAgentActivitySettlementProvider
 import com.cloudtimes.agent.service.*
 import com.cloudtimes.common.annotation.DataSource
 import com.cloudtimes.common.enums.DataSourceType
+import com.cloudtimes.common.enums.YesNoState
+import com.cloudtimes.common.exception.ServiceException
 import com.cloudtimes.common.utils.DateUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -19,7 +23,25 @@ import org.springframework.stereotype.Service
 @Service
 class CtAgentActivitySettlementServiceImpl : ICtAgentActivitySettlementService {
     @Autowired
-    private lateinit var ctAgentActivitySettlementMapper: CtAgentActivitySettlementMapper
+    private lateinit var settlementMapper: CtAgentActivitySettlementMapper
+
+
+    /** 代理确认活动完成情况 */
+    override fun agentConfirm(request: ActivityRuleRequest): Int {
+
+        val settlement = settlementMapper.selectOne(
+            CtAgentActivitySettlementProvider.selectByKey(request.activityRuleId!!, request.userId!!)
+        ) ?: throw ServiceException("活动未完成，不能确定")
+
+        if ( settlement.isFulfilled === null || settlement.isFulfilled != YesNoState.Yes.code) {
+            throw ServiceException("活动未完成，不能确定")
+        }
+
+        return settlementMapper.update(
+            CtAgentActivitySettlementProvider.updateFulfilledByKey(request.activityRuleId!!, request.userId!!)
+        )
+    }
+
 
     /**
      * 查询代理活动结算
@@ -28,7 +50,7 @@ class CtAgentActivitySettlementServiceImpl : ICtAgentActivitySettlementService {
      * @return 代理活动结算
      */
     override fun selectCtAgentActivitySettlementById(id: String): CtAgentActivitySettlement? {
-        return ctAgentActivitySettlementMapper.selectCtAgentActivitySettlementById(id)
+        return settlementMapper.selectCtAgentActivitySettlementById(id)
     }
 
     /**
@@ -38,7 +60,7 @@ class CtAgentActivitySettlementServiceImpl : ICtAgentActivitySettlementService {
      * @return 代理活动结算
      */
     override fun selectCtAgentActivitySettlementList(ctAgentActivitySettlement: CtAgentActivitySettlement): List<CtAgentActivitySettlement> {
-        return ctAgentActivitySettlementMapper.selectCtAgentActivitySettlementList(ctAgentActivitySettlement)
+        return settlementMapper.selectCtAgentActivitySettlementList(ctAgentActivitySettlement)
     }
 
     /**
@@ -49,7 +71,7 @@ class CtAgentActivitySettlementServiceImpl : ICtAgentActivitySettlementService {
      */
     override fun insertCtAgentActivitySettlement(ctAgentActivitySettlement: CtAgentActivitySettlement): Int {
         ctAgentActivitySettlement.createTime = DateUtils.getNowDate()
-        return ctAgentActivitySettlementMapper.insertCtAgentActivitySettlement(ctAgentActivitySettlement)
+        return settlementMapper.insertCtAgentActivitySettlement(ctAgentActivitySettlement)
     }
 
     /**
@@ -60,7 +82,7 @@ class CtAgentActivitySettlementServiceImpl : ICtAgentActivitySettlementService {
      */
     override fun updateCtAgentActivitySettlement(ctAgentActivitySettlement: CtAgentActivitySettlement): Int {
         ctAgentActivitySettlement.updateTime = DateUtils.getNowDate()
-        return ctAgentActivitySettlementMapper.updateCtAgentActivitySettlement(ctAgentActivitySettlement)
+        return settlementMapper.updateCtAgentActivitySettlement(ctAgentActivitySettlement)
     }
 
     /**
@@ -70,7 +92,7 @@ class CtAgentActivitySettlementServiceImpl : ICtAgentActivitySettlementService {
      * @return 结果
      */
     override fun deleteCtAgentActivitySettlementByIds(ids: Array<String>): Int {
-        return ctAgentActivitySettlementMapper.deleteCtAgentActivitySettlementByIds(ids)
+        return settlementMapper.deleteCtAgentActivitySettlementByIds(ids)
     }
 
     /**
@@ -80,6 +102,6 @@ class CtAgentActivitySettlementServiceImpl : ICtAgentActivitySettlementService {
      * @return 结果
      */
     override fun deleteCtAgentActivitySettlementById(id: String): Int {
-        return ctAgentActivitySettlementMapper.deleteCtAgentActivitySettlementById(id)
+        return settlementMapper.deleteCtAgentActivitySettlementById(id)
     }
 }

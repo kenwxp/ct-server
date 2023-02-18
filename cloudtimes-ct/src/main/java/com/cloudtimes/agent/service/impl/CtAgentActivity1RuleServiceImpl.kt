@@ -1,7 +1,12 @@
 package com.cloudtimes.agent.service.impl
 
 import com.cloudtimes.agent.domain.CtAgentActivity1Rule
+import com.cloudtimes.agent.dto.request.ActivityDetailRequest
+import com.cloudtimes.agent.dto.request.ActivityRuleRequest
+import com.cloudtimes.agent.dto.response.AgentActivity1Detail
 import com.cloudtimes.agent.mapper.CtAgentActivity1RuleMapper
+import com.cloudtimes.agent.mapper.CtAgentActivitySettlementMapper
+import com.cloudtimes.agent.mapper.provider.CtAgentActivity1RuleProvider
 import com.cloudtimes.agent.service.ICtAgentActivity1RuleService
 import com.cloudtimes.common.annotation.DataSource
 import com.cloudtimes.common.enums.DataSourceType
@@ -19,7 +24,25 @@ import org.springframework.stereotype.Service
 @Service
 class CtAgentActivity1RuleServiceImpl : ICtAgentActivity1RuleService {
     @Autowired
-    private lateinit var ctAgentActivity1RuleMapper: CtAgentActivity1RuleMapper
+    private lateinit var activity1RuleMapper: CtAgentActivity1RuleMapper
+
+    @Autowired
+    private lateinit var settlementMapper: CtAgentActivitySettlementMapper
+
+    override fun listAgentActivityDetail(request: ActivityDetailRequest): List<AgentActivity1Detail> {
+        val detailList = activity1RuleMapper.selectAgentActivityDetail(
+            CtAgentActivity1RuleProvider.selectAgentActivityDetailStmt(request)
+        )
+
+        detailList.forEach {
+            it.isFulfilled = it.isFulfilled ?: "0"
+            it.isAgentOk = it.isAgentOk ?: "0"
+            it.isPlatformOk = it.isPlatformOk ?: "0"
+            it.settlementState = it.settlementState ?: "0"
+        }
+
+        return detailList
+    }
 
     /**
      * 查询代理活动1规则
@@ -28,7 +51,7 @@ class CtAgentActivity1RuleServiceImpl : ICtAgentActivity1RuleService {
      * @return 代理活动1规则
      */
     override fun selectCtAgentActivity1RuleById(id: String): CtAgentActivity1Rule? {
-        return ctAgentActivity1RuleMapper.selectCtAgentActivity1RuleById(id)
+        return activity1RuleMapper.selectCtAgentActivity1RuleById(id)
     }
 
     /**
@@ -38,7 +61,7 @@ class CtAgentActivity1RuleServiceImpl : ICtAgentActivity1RuleService {
      * @return 代理活动1规则
      */
     override fun selectCtAgentActivity1RuleList(ctAgentActivity1Rule: CtAgentActivity1Rule): List<CtAgentActivity1Rule> {
-        return ctAgentActivity1RuleMapper.selectCtAgentActivity1RuleList(ctAgentActivity1Rule)
+        return activity1RuleMapper.selectCtAgentActivity1RuleList(ctAgentActivity1Rule)
     }
 
     /**
@@ -49,7 +72,7 @@ class CtAgentActivity1RuleServiceImpl : ICtAgentActivity1RuleService {
      */
     override fun insertCtAgentActivity1Rule(ctAgentActivity1Rule: CtAgentActivity1Rule): Int {
         ctAgentActivity1Rule.createTime = DateUtils.getNowDate()
-        return ctAgentActivity1RuleMapper.insertCtAgentActivity1Rule(ctAgentActivity1Rule)
+        return activity1RuleMapper.insertCtAgentActivity1Rule(ctAgentActivity1Rule)
     }
 
     /**
@@ -60,7 +83,7 @@ class CtAgentActivity1RuleServiceImpl : ICtAgentActivity1RuleService {
      */
     override fun updateCtAgentActivity1Rule(ctAgentActivity1Rule: CtAgentActivity1Rule): Int {
         ctAgentActivity1Rule.updateTime = DateUtils.getNowDate()
-        return ctAgentActivity1RuleMapper.updateCtAgentActivity1Rule(ctAgentActivity1Rule)
+        return activity1RuleMapper.updateCtAgentActivity1Rule(ctAgentActivity1Rule)
     }
 
     /**
@@ -70,7 +93,7 @@ class CtAgentActivity1RuleServiceImpl : ICtAgentActivity1RuleService {
      * @return 结果
      */
     override fun deleteCtAgentActivity1RuleByIds(ids: Array<String>): Int {
-        return ctAgentActivity1RuleMapper.deleteCtAgentActivity1RuleByIds(ids)
+        return activity1RuleMapper.deleteCtAgentActivity1RuleByIds(ids)
     }
 
     /**
@@ -80,6 +103,6 @@ class CtAgentActivity1RuleServiceImpl : ICtAgentActivity1RuleService {
      * @return 结果
      */
     override fun deleteCtAgentActivity1RuleById(id: String): Int {
-        return ctAgentActivity1RuleMapper.deleteCtAgentActivity1RuleById(id)
+        return activity1RuleMapper.deleteCtAgentActivity1RuleById(id)
     }
 }

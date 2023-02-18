@@ -1,6 +1,7 @@
 package com.cloudtimes.agent.service
 
 import com.cloudtimes.agent.domain.CtAgentActivitySettlement
+import com.cloudtimes.agent.dto.request.ActivityRuleRequest
 
 /**
  * 代理活动结算Service接口
@@ -9,6 +10,8 @@ import com.cloudtimes.agent.domain.CtAgentActivitySettlement
  * @date 2023-02-17
  */
 interface ICtAgentActivitySettlementService {
+    fun agentConfirm(request: ActivityRuleRequest): Int
+
     /**
      * 查询代理活动结算
      *

@@ -1,18 +1,23 @@
 package com.cloudtimes.app.controller.agent
 
-import com.cloudtimes.agent.domain.CtUserAgent
-import com.cloudtimes.agent.dto.request.QueryActivityDetailRequest
-import com.cloudtimes.agent.dto.request.QueryActivityRequest
-import com.cloudtimes.account.dto.request.QueryByUserIdRequest
+import com.cloudtimes.agent.dto.request.ActivityListRequest
 import com.cloudtimes.agent.domain.CtAgentActivity
+import com.cloudtimes.agent.dto.request.ActivityStoreRequest
+import com.cloudtimes.agent.dto.request.ActivityDetailRequest
+import com.cloudtimes.agent.dto.request.ActivityRuleRequest
+import com.cloudtimes.agent.dto.response.AgentActivity1Detail
+import com.cloudtimes.agent.dto.response.AgentActivity2Detail
+import com.cloudtimes.agent.dto.response.AgentStoreDetail
+import com.cloudtimes.agent.service.ICtAgentActivity1RuleService
+import com.cloudtimes.agent.service.ICtAgentActivity2RuleService
 import com.cloudtimes.agent.service.ICtAgentActivityService
+import com.cloudtimes.agent.service.ICtAgentActivitySettlementService
 import com.cloudtimes.common.core.controller.BaseController
+import com.cloudtimes.common.core.domain.AjaxResult
 import com.cloudtimes.common.core.domain.RestPageResult
 import com.cloudtimes.common.core.domain.RestResult
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
-import io.swagger.annotations.ApiResponse
-import io.swagger.annotations.ApiResponses
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -21,9 +26,11 @@ import org.springframework.web.bind.annotation.RestController
 import javax.validation.Valid
 
 // 泛型具体化
-class AgentActivityResponse() : RestPageResult<CtAgentActivity>()
-//class Activity1DetailResponse() : RestResult<CtAgentActivity1>()
-//class Activity2DetailResponse() : RestResult<CtAgentActivity2>()
+class AgentActivityListResponse() : RestPageResult<CtAgentActivity>()
+class AgentActivityResponse() : RestResult<CtAgentActivity>()
+class AgentActivity1ListResponse() : RestPageResult<AgentActivity1Detail>()
+class AgentActivity2ListResponse() : RestPageResult<AgentActivity2Detail>()
+class ActivityStoreListResponse() : RestPageResult<AgentStoreDetail>()
 
 
 /**
@@ -35,33 +42,62 @@ class AgentActivityResponse() : RestPageResult<CtAgentActivity>()
 @RestController
 @RequestMapping("/agent/activity")
 @Api(tags = ["代理-活动"])
-class CtAgentActivityController(
-    private val agentActivityService: ICtAgentActivityService,
-//    private val activity1Service: ICtAgentActivity1Service,
-//    private val activity2Service: ICtAgentActivity2Service,
-) : BaseController() {
+class CtAgentActivityController : BaseController() {
+
+    @Autowired
+    private lateinit var activityService: ICtAgentActivityService
+
+    @Autowired
+    private lateinit var activity1RuleService: ICtAgentActivity1RuleService
+
+    @Autowired
+    private lateinit var activity2RuleService: ICtAgentActivity2RuleService
+
+    @Autowired
+    private lateinit var settlementService: ICtAgentActivitySettlementService
 
     @PostMapping(value = ["/list"])
-    @ApiOperation(value = "查询代理参加的全部活动", response = CtUserAgent::class)
-    fun listActivities(@Valid @RequestBody request: QueryActivityRequest): AgentActivityResponse {
-        return AgentActivityResponse().apply {
-            data = agentActivityService.selectAgentActivity(request)
+    @ApiOperation(value = "查询代理参加的全部活动")
+    fun listActivities(@Valid @RequestBody request: ActivityListRequest): AgentActivityListResponse {
+        return AgentActivityListResponse().apply {
+            data = activityService.selectAgentActivity(request)
         }
     }
 
-//    @PostMapping(value = ["/activity1_detail"])
-//    @ApiOperation(value = "查询活动1详情", response = CtUserAgent::class)
-//    fun activity1Detail(@Valid @RequestBody request: QueryActivityDetailRequest): Activity1DetailResponse {
-//        return Activity1DetailResponse().apply {
-//            data = activity1Service.selectCtAgentActivity1ById(request.activityId!!)
-//        }
-//    }
-//
-//    @PostMapping(value = ["/activity2_detail"])
-//    @ApiOperation(value = "查询活动2详情", response = CtUserAgent::class)
-//    fun activity2Detail(@Valid @RequestBody request: QueryActivityDetailRequest): Activity2DetailResponse {
-//        return Activity2DetailResponse().apply {
-//            data = activity2Service.selectCtAgentActivity2ById(request.activityId!!)
-//        }
-//    }
+    @PostMapping(value = ["/detail"])
+    @ApiOperation(value = "查询活动详情")
+    fun activityDetail(@Valid @RequestBody request: ActivityDetailRequest): AgentActivityResponse {
+        return AgentActivityResponse().apply {
+            data = activityService.selectActivityById(request.activityId!!)
+        }
+    }
+
+    @PostMapping(value = ["/list_activity1"])
+    @ApiOperation(value = "查询活动1规则完成情况")
+    fun listActivity1(@Valid @RequestBody request: ActivityDetailRequest): AgentActivity1ListResponse {
+        return AgentActivity1ListResponse().apply {
+            data = activity1RuleService.listAgentActivityDetail(request)
+        }
+    }
+
+    @PostMapping(value = ["/confirm_activity1"])
+    @ApiOperation(value = "代理确认活动1规则达成")
+    fun confirmActivity1(@Valid @RequestBody request: ActivityRuleRequest): AjaxResult {
+        settlementService.agentConfirm(request)
+        return AjaxResult.success()
+    }
+
+    @PostMapping(value = ["/list_activity2"])
+    @ApiOperation(value = "查询活动2规则完成情况")
+    fun listActivity2(@Valid @RequestBody request: ActivityDetailRequest): AgentActivity2ListResponse {
+        return AgentActivity2ListResponse().apply {
+            data = activity2RuleService.listAgentActivityDetail(request)
+        }
+    }
+
+    @PostMapping(value = ["/list_activity_store"])
+    @ApiOperation(value = "查询满足活动规则的店铺")
+    fun listActivityStore(@Valid @RequestBody request: ActivityStoreRequest) : ActivityStoreListResponse {
+        TODO("Unimplemented")
+    }
 }

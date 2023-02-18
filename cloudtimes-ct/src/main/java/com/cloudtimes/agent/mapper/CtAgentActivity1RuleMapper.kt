@@ -1,6 +1,7 @@
 package com.cloudtimes.agent.mapper
 
 import com.cloudtimes.agent.domain.CtAgentActivity1Rule
+import com.cloudtimes.agent.dto.response.AgentActivity1Detail
 
 import org.apache.ibatis.annotations.Mapper
 import org.apache.ibatis.annotations.Result
@@ -47,6 +48,9 @@ interface CtAgentActivity1RuleMapper : CommonCountMapper, CommonDeleteMapper, Co
         ]
     )
     fun selectMany(selectStatement: SelectStatementProvider): List<CtAgentActivity1Rule>
+
+    @SelectProvider(type = SqlProviderAdapter::class, method = "select")
+    fun selectAgentActivityDetail(selectStatement: SelectStatementProvider): List<AgentActivity1Detail>
 
     @SelectProvider(type = SqlProviderAdapter::class, method = "select")
     @ResultMap("CtAgentActivity1RuleResult")

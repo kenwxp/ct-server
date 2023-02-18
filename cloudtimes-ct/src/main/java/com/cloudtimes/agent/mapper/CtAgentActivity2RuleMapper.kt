@@ -1,6 +1,7 @@
 package com.cloudtimes.agent.mapper
 
 import com.cloudtimes.agent.domain.CtAgentActivity2Rule
+import com.cloudtimes.agent.dto.response.AgentActivity2Detail
 
 import org.apache.ibatis.annotations.Mapper
 import org.apache.ibatis.annotations.Result
@@ -51,6 +52,9 @@ interface CtAgentActivity2RuleMapper : CommonCountMapper, CommonDeleteMapper, Co
     @SelectProvider(type = SqlProviderAdapter::class, method = "select")
     @ResultMap("CtAgentActivity2RuleResult")
     fun selectOne(selectStatement: SelectStatementProvider): CtAgentActivity2Rule?
+
+    @SelectProvider(type = SqlProviderAdapter::class, method = "select")
+    fun selectAgentActivityDetail(selectStatement: SelectStatementProvider): List<AgentActivity2Detail>
 
     /**
      * 查询代理活动2规则

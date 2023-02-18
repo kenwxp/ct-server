@@ -25,6 +25,7 @@ class CtAgentActivity1RuleController : BaseController() {
     @Autowired
     private lateinit var ctAgentActivity1RuleService: ICtAgentActivity1RuleService
 
+
     /**
      * 查询代理活动1规则列表
      */

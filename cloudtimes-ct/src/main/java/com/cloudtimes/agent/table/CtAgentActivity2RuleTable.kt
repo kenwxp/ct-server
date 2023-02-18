@@ -19,7 +19,7 @@ class CtAgentActivity2RuleTable :
 
     val activityType = column<String>(name = "activity_type", jdbcType = JDBCType.CHAR)
 
-    val region = column<String>(name = "region", jdbcType = JDBCType.OTHER)
+    val regionCode = column<String>(name = "region_code", jdbcType = JDBCType.OTHER)
 
     val storeCount = column<Int>(name = "store_count", jdbcType = JDBCType.INTEGER)
 

@@ -3,6 +3,8 @@ package com.cloudtimes.agent.domain
 import com.cloudtimes.common.annotation.Excel
 import com.cloudtimes.common.core.domain.BaseEntity
 import com.fasterxml.jackson.annotation.JsonFormat
+import io.swagger.annotations.ApiModel
+import io.swagger.annotations.ApiModelProperty
 import org.apache.commons.lang3.builder.ToStringBuilder
 import org.apache.commons.lang3.builder.ToStringStyle
 import java.util.*
@@ -13,39 +15,42 @@ import java.util.*
  * @author 沈兵
  * @date 2023-02-17
  */
+@ApiModel(value = "CtAgentActivity", description = "代理活动")
 class CtAgentActivity : BaseEntity() {
-    /** 编号  */
+    @ApiModelProperty(value = "编号")
     var id: String? = null
 
-    /** 标题  */
+    @ApiModelProperty(value = "标题")
     @Excel(name = "标题")
     var title: String? = null
 
-    /** 内容  */
+    @ApiModelProperty(value = "内容")
     @Excel(name = "内容")
     var content: String? = null
 
-    /** 活动类型  */
+    @ApiModelProperty(value = "活动类型")
     @Excel(name = "活动类型")
     var activityType: String? = null
 
-    /** 是否启用  */
+    @ApiModelProperty(value = "是否启用")
     @Excel(name = "是否启用")
+    @get:JvmName("getIsEnabled")
+    @set:JvmName("setIsEnabled")
     var isEnabled: String? = null
 
-    /** 活动状态  */
+    @ApiModelProperty(value = "活动状态")
     @Excel(name = "活动状态")
     var state: String? = null
 
-    /** 是否删除  */
+    @ApiModelProperty(value = "是否删除")
     var delFlag: String? = null
 
-    /** 开始时间  */
+    @ApiModelProperty(value = "开始时间")
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "开始时间", width = 30.0, dateFormat = "yyyy-MM-dd")
     var startTime: Date? = null
 
-    /** 结束时间  */
+    @ApiModelProperty(value = "结束时间")
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "结束时间", width = 30.0, dateFormat = "yyyy-MM-dd")
     var endTime: Date? = null

@@ -21,6 +21,7 @@ class CtAgentActivityRel : BaseEntity() {
     /** 活动类型  */
     @Excel(name = "活动类型")
     var activityType: String? = null
+
     override fun toString(): String {
         return ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
             .append("activityId", activityId)

@@ -1,8 +1,9 @@
 package com.cloudtimes.agent.service.impl
 
 import com.cloudtimes.agent.domain.*
-import com.cloudtimes.agent.dto.request.QueryActivityRequest
+import com.cloudtimes.agent.dto.request.ActivityListRequest
 import com.cloudtimes.agent.mapper.*
+import com.cloudtimes.agent.mapper.provider.CtAgentActivityProvider
 import com.cloudtimes.agent.service.*
 import com.cloudtimes.common.annotation.DataSource
 import com.cloudtimes.common.enums.DataSourceType
@@ -20,20 +21,18 @@ import org.springframework.stereotype.Service
 @Service
 class CtAgentActivityServiceImpl : ICtAgentActivityService {
     @Autowired
-    private lateinit var ctAgentActivityMapper: CtAgentActivityMapper
+    private lateinit var activityMapper: CtAgentActivityMapper
 
-    override fun selectAgentActivity(request: QueryActivityRequest): List<CtAgentActivity> {
-        TODO("Not yet implemented")
+    override fun selectAgentActivity(request: ActivityListRequest): List<CtAgentActivity> {
+        return activityMapper.selectMany(
+            CtAgentActivityProvider.selectAgentActivityListStmt(request)
+        )
     }
 
-    /**
-     * 查询代理活动
-     *
-     * @param id 代理活动主键
-     * @return 代理活动
-     */
-    override fun selectCtAgentActivityById(id: String): CtAgentActivity? {
-        return ctAgentActivityMapper.selectCtAgentActivityById(id)
+    override fun selectActivityById(id: String): CtAgentActivity? {
+        return activityMapper.selectOne(
+            CtAgentActivityProvider.selectByIdStmt(id)
+        )
     }
 
     /**
@@ -43,7 +42,7 @@ class CtAgentActivityServiceImpl : ICtAgentActivityService {
      * @return 代理活动
      */
     override fun selectCtAgentActivityList(ctAgentActivity: CtAgentActivity): List<CtAgentActivity> {
-        return ctAgentActivityMapper.selectCtAgentActivityList(ctAgentActivity)
+        return activityMapper.selectCtAgentActivityList(ctAgentActivity)
     }
 
     /**
@@ -54,7 +53,7 @@ class CtAgentActivityServiceImpl : ICtAgentActivityService {
      */
     override fun insertCtAgentActivity(ctAgentActivity: CtAgentActivity): Int {
         ctAgentActivity.createTime = DateUtils.getNowDate()
-        return ctAgentActivityMapper.insertCtAgentActivity(ctAgentActivity)
+        return activityMapper.insertCtAgentActivity(ctAgentActivity)
     }
 
     /**
@@ -65,7 +64,7 @@ class CtAgentActivityServiceImpl : ICtAgentActivityService {
      */
     override fun updateCtAgentActivity(ctAgentActivity: CtAgentActivity): Int {
         ctAgentActivity.updateTime = DateUtils.getNowDate()
-        return ctAgentActivityMapper.updateCtAgentActivity(ctAgentActivity)
+        return activityMapper.updateCtAgentActivity(ctAgentActivity)
     }
 
     /**
@@ -75,7 +74,7 @@ class CtAgentActivityServiceImpl : ICtAgentActivityService {
      * @return 结果
      */
     override fun deleteCtAgentActivityByIds(ids: Array<String>): Int {
-        return ctAgentActivityMapper.deleteCtAgentActivityByIds(ids)
+        return activityMapper.deleteCtAgentActivityByIds(ids)
     }
 
     /**
@@ -85,6 +84,6 @@ class CtAgentActivityServiceImpl : ICtAgentActivityService {
      * @return 结果
      */
     override fun deleteCtAgentActivityById(id: String): Int {
-        return ctAgentActivityMapper.deleteCtAgentActivityById(id)
+        return activityMapper.deleteCtAgentActivityById(id)
     }
 }

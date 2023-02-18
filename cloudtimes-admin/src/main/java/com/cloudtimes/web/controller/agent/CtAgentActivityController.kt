@@ -56,7 +56,7 @@ class CtAgentActivityController : BaseController() {
     @PreAuthorize("@ss.hasPermi('agent:agent_activity:query')")
     @GetMapping(value = ["/{id}"])
     fun getInfo(@PathVariable("id") id: String): AjaxResult {
-        return AjaxResult.success(ctAgentActivityService.selectCtAgentActivityById(id))
+        return AjaxResult.success(ctAgentActivityService.selectActivityById(id))
     }
 
     /**

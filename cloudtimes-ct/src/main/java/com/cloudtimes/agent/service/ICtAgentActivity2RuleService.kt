@@ -1,6 +1,8 @@
 package com.cloudtimes.agent.service
 
 import com.cloudtimes.agent.domain.CtAgentActivity2Rule
+import com.cloudtimes.agent.dto.request.ActivityDetailRequest
+import com.cloudtimes.agent.dto.response.AgentActivity2Detail
 
 /**
  * 代理活动2规则Service接口
@@ -9,6 +11,8 @@ import com.cloudtimes.agent.domain.CtAgentActivity2Rule
  * @date 2023-02-17
  */
 interface ICtAgentActivity2RuleService {
+    fun listAgentActivityDetail(request: ActivityDetailRequest): List<AgentActivity2Detail>
+
     /**
      * 查询代理活动2规则
      *
