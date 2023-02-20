@@ -1,15 +1,13 @@
 package com.cloudtimes.mq.service;
 
-import com.alibaba.fastjson.JSON;
 import com.cloudtimes.common.constant.RocketMQConstants;
 import com.cloudtimes.common.mq.CallDoData;
 import com.cloudtimes.common.mq.CashMqData;
+import com.cloudtimes.common.mq.DutyStatusData;
 import com.cloudtimes.common.mq.SendOrderData;
-import com.cloudtimes.common.utils.HolidayUtil;
 import com.cloudtimes.enums.DeviceType;
 import com.cloudtimes.hardwaredevice.domain.CtDevice;
 import com.cloudtimes.hardwaredevice.mapper.CtDeviceMapper;
-import com.cloudtimes.common.mq.DutyStatusData;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,13 +16,22 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+
 @Service
 public class CashMqSender {
-    static Logger log = LoggerFactory.getLogger(HolidayUtil.class);
+    static Logger log = LoggerFactory.getLogger(CashMqSender.class);
     @Autowired
     private CtDeviceMapper deviceMapper;
     @Autowired
     private RocketMQTemplate mqTemplate;
+    /**
+     * 指令选项
+     */
+
+    public final String SEND_DUTY_STATUS = "DUTY-STATUS";// 收银机值守状态
+    public final String SEND_CALL_DO = "CALL-DO"; // 加入频道
+    public final String SEND_BILL_SERIAL = "BILL-SERIAL"; // 推送单号
+    public final String SEND_SYNC_PRODUCT = "SYNC-PRODUCT";// 同步商品列表
 
     public void notifyCashDutyStatus(String storeId, String isSupervise) {
         log.info("通知收银机切换值守状态: 门店id=" + storeId);
@@ -33,7 +40,7 @@ public class CashMqSender {
                 ctDevices) {
             CashMqData cashMqData = new CashMqData();
             cashMqData.setDeviceId(device.getId());
-            cashMqData.setOption(RocketMQConstants.SEND_DUTY_STATUS);
+            cashMqData.setOption(SEND_DUTY_STATUS);
             DutyStatusData data = new DutyStatusData();
             data.setIsSupervise(isSupervise);
             cashMqData.setData(data);
@@ -49,7 +56,7 @@ public class CashMqSender {
                 ctDevices) {
             CashMqData cashMqData = new CashMqData();
             cashMqData.setDeviceId(device.getId());
-            cashMqData.setOption(RocketMQConstants.SEND_CALL_DO);
+            cashMqData.setOption(SEND_CALL_DO);
             CallDoData data = new CallDoData();
             data.setDoJoin(isSupervise);
             cashMqData.setData(data);
@@ -65,7 +72,7 @@ public class CashMqSender {
                 ctDevices) {
             CashMqData cashMqData = new CashMqData();
             cashMqData.setDeviceId(device.getId());
-            cashMqData.setOption(RocketMQConstants.SEND_BILL_SERIAL);
+            cashMqData.setOption(SEND_BILL_SERIAL);
             SendOrderData data = new SendOrderData();
             data.setOrderId(orderId);
             data.setDynamicQrCode(dynamicQrCode);
@@ -82,7 +89,7 @@ public class CashMqSender {
                 ctDevices) {
             CashMqData cashMqData = new CashMqData();
             cashMqData.setDeviceId(device.getId());
-            cashMqData.setOption(RocketMQConstants.SEND_SYNC_PRODUCT);
+            cashMqData.setOption(SEND_SYNC_PRODUCT);
             log.info("发送mq信息：" + cashMqData);
             mqTemplate.convertAndSend(RocketMQConstants.WS_CASH_DEVICE, cashMqData);
         }

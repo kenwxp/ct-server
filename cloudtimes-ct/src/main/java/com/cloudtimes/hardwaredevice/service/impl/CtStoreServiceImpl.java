@@ -1,7 +1,9 @@
 package com.cloudtimes.hardwaredevice.service.impl;
 
 import java.util.List;
+
 import com.cloudtimes.common.utils.DateUtils;
+import com.cloudtimes.util.NoUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.cloudtimes.common.annotation.DataSource;
@@ -12,88 +14,89 @@ import com.cloudtimes.hardwaredevice.service.ICtStoreService;
 
 /**
  * 门店Service业务层处理
- * 
+ *
  * @author tank
  * @date 2023-01-17
  */
 @DataSource(DataSourceType.CT)
 @Service
-public class CtStoreServiceImpl implements ICtStoreService 
-{
+public class CtStoreServiceImpl implements ICtStoreService {
     @Autowired
     private CtStoreMapper ctStoreMapper;
 
     /**
      * 查询门店
-     * 
+     *
      * @param id 门店主键
      * @return 门店
      */
     @Override
-    public CtStore selectCtStoreById(String id)
-    {
+    public CtStore selectCtStoreById(String id) {
         return ctStoreMapper.selectCtStoreById(id);
     }
 
     /**
      * 查询门店列表
-     * 
+     *
      * @param ctStore 门店
      * @return 门店
      */
     @Override
-    public List<CtStore> selectCtStoreList(CtStore ctStore)
-    {
+    public List<CtStore> selectCtStoreList(CtStore ctStore) {
         return ctStoreMapper.selectCtStoreList(ctStore);
     }
 
     /**
      * 新增门店
-     * 
+     *
      * @param ctStore 门店
      * @return 结果
      */
     @Override
-    public int insertCtStore(CtStore ctStore)
-    {
+    public int insertCtStore(CtStore ctStore) {
+        // 逻辑赋值字段
+        ctStore.setStoreNo(NoUtils.genShopNo());
+        ctStore.setIsSupervise("0");
+        ctStore.setBuildState("0");
+        ctStore.setState("0");
+        ctStore.setDelFlag("0");
+        ctStore.setCreateDate(DateUtils.getNowDate());
         ctStore.setCreateTime(DateUtils.getNowDate());
+        ctStore.setUpdateTime(DateUtils.getNowDate());
         return ctStoreMapper.insertCtStore(ctStore);
     }
 
     /**
      * 修改门店
-     * 
+     *
      * @param ctStore 门店
      * @return 结果
      */
     @Override
-    public int updateCtStore(CtStore ctStore)
-    {
+    public int updateCtStore(CtStore ctStore) {
         ctStore.setUpdateTime(DateUtils.getNowDate());
         return ctStoreMapper.updateCtStore(ctStore);
     }
 
     /**
      * 批量删除门店
-     * 
+     *
      * @param ids 需要删除的门店主键
      * @return 结果
      */
     @Override
-    public int deleteCtStoreByIds(String[] ids)
-    {
+    public int deleteCtStoreByIds(String[] ids) {
         return ctStoreMapper.deleteCtStoreByIds(ids);
     }
 
     /**
      * 删除门店信息
-     * 
+     *
      * @param id 门店主键
      * @return 结果
      */
     @Override
-    public int deleteCtStoreById(String id)
-    {
+    public int deleteCtStoreById(String id) {
         return ctStoreMapper.deleteCtStoreById(id);
     }
 }

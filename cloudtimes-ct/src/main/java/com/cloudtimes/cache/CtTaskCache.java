@@ -11,6 +11,7 @@ import com.cloudtimes.supervise.mapper.CtOrderMapper;
 import com.cloudtimes.supervise.mapper.CtShoppingMapper;
 import com.cloudtimes.supervise.mapper.CtTaskMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -19,7 +20,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-@Service
+@Component
 public class CtTaskCache {
     private static final String STAFF_TASK_REL_CACHE = "staff_task:";//客服任务关联
     private static final String TASK_SHOPPING_REL_CACHE = "task_shopping:";//任务购物关联

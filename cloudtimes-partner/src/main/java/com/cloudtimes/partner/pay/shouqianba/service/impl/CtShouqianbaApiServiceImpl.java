@@ -122,7 +122,7 @@ public class CtShouqianbaApiServiceImpl implements ICtShouqianbaApiService {
      * * * * "reflect"             // N 透传参数    {"tips": "200"}
      */
     @Override
-    public BuzResponse b2cPay(Map<String, Object> params, String terminalKey) {
+    public String b2cPay(Map<String, Object> params, String terminalKey) {
         JSONObject reqObj = new JSONObject(params);
         String terminalSN = reqObj.getString("terminal_sn");
         if ("".equals(terminalSN)) {
@@ -130,7 +130,7 @@ public class CtShouqianbaApiServiceImpl implements ICtShouqianbaApiService {
         }
         String resultStr = sendShouqianbaHttp(ShouqianbaConstant.b2CPay, reqObj, terminalSN, terminalKey);
         log.info(Thread.currentThread().getStackTrace()[1].getMethodName() + ": " + resultStr);
-        return getBuzResponse(resultStr);
+        return resultStr;
     }
 
     /**
@@ -233,10 +233,10 @@ public class CtShouqianbaApiServiceImpl implements ICtShouqianbaApiService {
         ObjectMapper mapper = new ObjectMapper();
         try {
             CommonResp commonResp = mapper.readValue(rawString, CommonResp.class);
-            if (StringUtils.equals(commonResp.getResultCode(), ShouqianbaConstant.response200)) {
-                return commonResp.getBizResponse();
+            if (commonResp == null) {
+                return null;
             }
-            log.error(commonResp.getErrorMessage());
+            return commonResp.getBizResponse();
         } catch (JsonProcessingException e) {
             log.error(e.getMessage());
         }

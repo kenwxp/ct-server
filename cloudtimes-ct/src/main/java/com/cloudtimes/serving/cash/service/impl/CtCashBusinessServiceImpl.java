@@ -2,6 +2,7 @@ package com.cloudtimes.serving.cash.service.impl;
 
 import com.cloudtimes.account.domain.CtUser;
 import com.cloudtimes.account.mapper.CtUserMapper;
+import com.cloudtimes.cache.CtDeviceCache;
 import com.cloudtimes.cache.CtTaskCache;
 import com.cloudtimes.common.exception.ServiceException;
 import com.cloudtimes.common.utils.NumberUtils;
@@ -14,6 +15,7 @@ import com.cloudtimes.hardwaredevice.mapper.CtStoreMapper;
 import com.cloudtimes.partner.agora.service.CtAgoraApiService;
 import com.cloudtimes.partner.config.PartnerConfig;
 import com.cloudtimes.partner.pay.shouqianba.domain.AuthInfoData;
+import com.cloudtimes.partner.pay.shouqianba.domain.CommonResp;
 import com.cloudtimes.partner.pay.shouqianba.service.ICtShouqianbaApiService;
 import com.cloudtimes.partner.weixin.ICtWeixinFaceApiService;
 import com.cloudtimes.partner.weixin.domain.WxpayfaceAuthInfoResp;
@@ -28,17 +30,26 @@ import com.cloudtimes.supervise.domain.CtShopping;
 import com.cloudtimes.supervise.domain.CtTask;
 import com.cloudtimes.supervise.mapper.CtOrderMapper;
 import com.cloudtimes.supervise.mapper.CtShoppingMapper;
+import com.cloudtimes.util.NoUtils;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
+    static Logger log = LoggerFactory.getLogger(CtCashBusinessServiceImpl.class);
     @Autowired
     private ICtWeixinFaceApiService weixinFaceApiService;
     @Autowired
@@ -63,6 +74,8 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
     private CtTaskCache taskCache;
     @Autowired
     private CtAgoraApiService agoraApiService;
+    @Autowired
+    private CtDeviceCache deviceCache;
 
     /**
      * 获取刷脸凭证
@@ -158,7 +171,7 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
         newShopping.setTaskId(taskId);
         newShopping.setStoreId(dbStore.getId());
         newShopping.setStaffCode(task.getStaffCode());
-        newShopping.setShoppingType("0");
+        newShopping.setState("0");
         newShopping.setDescText("刷脸购物");
         newShopping.setStartTime(task.getStartTime());
         newShopping.setEndTime(new Date());
@@ -381,6 +394,59 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
                 orderMapper.deleteCtOrderById(orderId);
             }
         }
+    }
+
+    public void payOrder(String deviceId, String orderId, int payType, String payCode, int totalAmount, int totalNum) {
+        CtOrder cacheOrder = taskCache.getCacheOrder(orderId);
+        if (cacheOrder == null) {
+            throw new ServiceException("无法获取订单信息");
+        }
+        if (StringUtils.equals(cacheOrder.getDeviceCashId(), deviceId)) {
+            throw new ServiceException("该订单不属于当前收银机");
+        }
+        if (StringUtils.equals(cacheOrder.getState(), "2") || StringUtils.equals(cacheOrder.getState(), "1")) {
+            throw new ServiceException("改订单正在支付中或完成支付，请勿重复提交");
+        }
+        CtDeviceCash ctDeviceCash = deviceCashMapper.selectCtDeviceCashById(deviceId);
+        if (ctDeviceCash == null) {
+            throw new ServiceException("收银机未对接");
+        }
+        if (StringUtils.isEmpty(ctDeviceCash.getTerminalSn()) || StringUtils.isEmpty(ctDeviceCash.getTerminalKey())) {
+            throw new ServiceException("支付未对接，无法付款");
+        }
+        if (cacheOrder.getTotalAmount().intValue() != totalAmount || cacheOrder.getItemCount().intValue() != totalNum) {
+            throw new ServiceException("订单总额不一致");
+        }
+        String clientSN = NoUtils.genPayOrderNo(orderId);
+        HashMap<String, Object> reqMap = new HashMap<>();
+        reqMap.put("terminal_sn", ctDeviceCash.getTerminalSn());//收钱吧终端ID	收钱吧终端ID，不超过32位的纯数字
+        reqMap.put("client_sn", clientSN);//商户系统订单号	必须在商户系统内唯一；且长度不超过32字节
+        reqMap.put("total_amount", String.valueOf(totalAmount));//交易总金额	以分为单位,不超过10位纯数字字符串,超过1亿元的收款请使用银行转账
+        reqMap.put("dynamic_id", payCode);//条码内容	不超过32字节
+        reqMap.put("subject", "生活用品");//交易简介	本次交易的简要介绍
+        reqMap.put("operator", cacheOrder.getStoreName());//门店操作员	发起本次交易的操作员
+        //todo 分账参数
+        String result = shouqianbaApiService.b2cPay(reqMap, ctDeviceCash.getTerminalKey());
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            CommonResp commonResp = mapper.readValue(result, CommonResp.class);
+            if (commonResp == null) {
+                throw new ServiceException("支付失败");
+            }
+
+        } catch (JsonProcessingException e) {
+            log.error(e.getMessage());
+        }
+    }
+
+    @Override
+    public String genDynamicQrCodeUrl(String deviceId, String storeNo) {
+        String dynamicStr = NumberUtils.getRandomString(8);
+        deviceCache.put(deviceId, dynamicStr);
+        String dynamicQrCodeUrl =
+                "https://api.htcloud2020.com/mapp/redirect?shopId=" + storeNo + "&dynamicCode=" + dynamicStr + "&did=" + deviceId;
+        log.info("生成新动态码:" + dynamicQrCodeUrl);
+        return dynamicQrCodeUrl;
     }
 
 }

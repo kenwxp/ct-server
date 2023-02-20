@@ -4,9 +4,6 @@ import com.cloudtimes.common.utils.DateUtils;
 import com.cloudtimes.common.utils.NumberUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-
 /**
  * 业务编号生产工具类
  *
@@ -54,12 +51,8 @@ public class NoUtils {
         return "ZD" + StringUtils.upperCase(NumberUtils.getRandomString(4)) + NumberUtils.genRandNum(8);
     }
 
-    public static String genPayBillNo(String billSerial) {
-        return billSerial + "-" + NumberUtils.genRandNum(6);
+    public static String genPayOrderNo(String orderId) {
+        return orderId + "-" + NumberUtils.genRandNum(6);
     }
 
-
-    public static void main(String[] args) {
-        System.out.println(genTaskSerial());
-    }
 }

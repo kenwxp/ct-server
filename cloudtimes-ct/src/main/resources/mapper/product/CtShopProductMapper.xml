@@ -194,47 +194,48 @@
         </foreach>
     </delete>
 
-    <select id="selectCtShopProductListByStore" resultType="CtOrderDetail">
+    <select id="selectCtShopProductListByStore" parameterType="String" resultType="CtShopProduct">
         select
-        p.id,
-        p.shop_no,
-        p.category_id,
-        p.barcode,
-        p.product_name,
-        p.english_name,
-        p.brand,
-        p.label,
-        p.supplier_id,
-        p.supplier,
-        p.specification,
-        p.unit,
-        p.weight,
-        p.color,
-        p.size,
-        p.style,
-        p.purchase_price,
-        p.retail_price,
-        p.wholesale_price,
-        p.vip_price,
-        p.stock,
-        p.max_stock,
-        p.min_stock,
-        p.picture_url,
-        p.production_date,
-        p.quality_period,
-        p.remarks,
-        p.is_enable,
-        p.is_enable_vip_price,
-        p.is_enable_points,
-        p.is_deleted,
-        p.create_time,
-        p.update_time,
-        coalesce(pc.category_name , "")
+        p.id ,
+        p.shop_no ,
+        p.category_id ,
+        p.barcode ,
+        p.product_name ,
+        p.english_name ,
+        p.brand ,
+        p.label ,
+        p.supplier_id ,
+        p.supplier ,
+        p.specification ,
+        p.unit ,
+        p.weight ,
+        p.color ,
+        p.size ,
+        p.style ,
+        p.purchase_price ,
+        p.retail_price ,
+        p.wholesale_price ,
+        p.vip_price ,
+        p.stock ,
+        p.max_stock ,
+        p.min_stock ,
+        p.picture_url ,
+        p.production_date ,
+        p.quality_period ,
+        p.remarks ,
+        p.is_enable ,
+        p.is_enable_vip_price ,
+        p.is_enable_points ,
+        p.is_deleted ,
+        p.create_time ,
+        p.update_time ,
+        coalesce(pc.category_name , "") category_name
         from
         ct_shop_product p
         left join ct_shop_product_category pc
         on
         p.category_id = pc.id
-        and p.shop_no = #{shopNo}
+        and p.shop_no =
+        #{shopNo}
     </select>
 </mapper>

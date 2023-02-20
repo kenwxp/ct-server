@@ -79,6 +79,8 @@ public class CashBusinessController {
             GetProductListResp getProductListResp = new GetProductListResp();
             getProductListResp.setProductUid(dbProduct.getId());
             getProductListResp.setProductName(dbProduct.getProductName());
+            getProductListResp.setCategoryUid(dbProduct.getCategoryId());
+            getProductListResp.setCategoryName(dbProduct.getCategoryName());
             getProductListResp.setBarcode(dbProduct.getBarcode());
             getProductListResp.setImageUrl(dbProduct.getPictureUrl());
             getProductListResp.setBuyPrice(dbProduct.getPurchasePrice().intValue());
@@ -89,6 +91,7 @@ public class CashBusinessController {
                 isCustomerDiscount = 1;
             }
             getProductListResp.setIsCustomerDiscount(isCustomerDiscount);
+            resp.add(getProductListResp);
         }
         return AjaxResult.success(resp);
     }
@@ -154,6 +157,11 @@ public class CashBusinessController {
     @ApiOperation("订单支付")
     @PostMapping(value = "/order/pay")
     public AjaxResult payOrder(@RequestBody OrderPayReq info) {
+        AuthUser authUser = AuthUtils.getObject();
+        if (!StringUtils.equals(authUser.getChannelType(), ChannelType.CASH.getCode())) {
+            return AjaxResult.error("渠道类型错误");
+        }
+        cashBusinessService.payOrder(authUser.getId(), info.getOrderId(), info.getPayType(), info.getPayCode(), info.getTotalAmount(), info.getTotalNum());
         return AjaxResult.success();
     }
 

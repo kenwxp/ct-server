@@ -73,4 +73,14 @@ public interface ICtCashBusinessService {
      * @param orderId
      */
     public void cancelOrder(String deviceId, String orderId);
+
+    /**
+     * 支付订单
+     *
+     * @param orderId
+     */
+    public void payOrder(String deviceId, String orderId, int payType, String payCode, int totalAmount, int totalNum);
+
+
+    public String genDynamicQrCodeUrl(String deviceId, String storeNo);
 }
