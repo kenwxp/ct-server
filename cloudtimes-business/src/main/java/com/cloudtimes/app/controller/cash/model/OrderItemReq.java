@@ -1,20 +1,30 @@
 package com.cloudtimes.app.controller.cash.model;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
-@ApiModel(value = "AddOrderItemResp", description = "订单商品新增接口")
+@ApiModel(value = "OrderItemReq", description = "订单商品新增接口")
 @Data
 @Slf4j
 public class OrderItemReq {
-    private String isDuty;     // 是否值守 0-否 1-是
-    private String orderId; // 	订单序列号（首次调用为空）
-    private String goodId;     // 	商品id
-    private String goodName;   // 	商品名
-    private String categoryId;     // 	商品类别id
-    private String categoryName;   // 	商品类别名
-    private int num;        // 	数量
-    private int buyPrice;   // 	单价 单位：分/件
-    private int sellPrice;  // 	单价 单位：分/件
+    @ApiModelProperty(value = "是否值守 0-否 1-是", required = true)
+    private String isSupervise;
+    @ApiModelProperty(value = "订单号 isSupervise 为1 必填")
+    private String orderId;
+    @ApiModelProperty(value = "商品id")
+    private String goodId;
+    @ApiModelProperty(value = "商品名")
+    private String goodName;
+    @ApiModelProperty(value = "商品类别id")
+    private String categoryId;
+    @ApiModelProperty(value = "商品类别名")
+    private String categoryName;
+    @ApiModelProperty(value = "数量")
+    private int num;
+    @ApiModelProperty(value = "进货价 单位：分/件")
+    private int buyPrice;
+    @ApiModelProperty(value = "售价 单位：分/件 ")
+    private int sellPrice;
 }

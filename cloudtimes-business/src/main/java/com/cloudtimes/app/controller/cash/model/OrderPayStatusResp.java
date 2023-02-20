@@ -1,6 +1,7 @@
 package com.cloudtimes.app.controller.cash.model;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
@@ -8,11 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 @Data
 @Slf4j
 public class OrderPayStatusResp {
-    /**
-     * 0    // 待支付
-     * 1    // 支付中
-     * 2    // 支付成功
-     * -1   // 支付失败
-     */
-    private String status; //支付状态
+    @ApiModelProperty(value = "支付状态 0-待支付 1-支付中 2-支付成功 -1-支付失败", required = true)
+    private String status;
 }

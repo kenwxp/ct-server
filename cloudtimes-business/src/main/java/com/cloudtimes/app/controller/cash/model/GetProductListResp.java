@@ -1,6 +1,7 @@
 package com.cloudtimes.app.controller.cash.model;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
@@ -8,14 +9,25 @@ import lombok.extern.slf4j.Slf4j;
 @Data
 @Slf4j
 public class GetProductListResp {
-    private String productUid;         // 商品的唯一标识
-    private String productName;        // 商品名称
-    private String categoryUid;         // 商品类别的唯一标识
-    private String categoryName;        // 商品类别名称
-    private String barcode;            // 商品条形码
-    private String imageUrl;           // 商品图片的url
-    private int buyPrice;           // 商品进货价
-    private int sellPrice;          // 商品销售价
-    private int customerPrice;      // 商品会员价
-    private int isCustomerDiscount; // 是否开启会员折扣支持，0-否，1-是，
+
+    @ApiModelProperty(value = "商品的唯一标识", required = true)
+    private String productUid;
+    @ApiModelProperty(value = "商品名称", required = true)
+    private String productName;
+    @ApiModelProperty(value = "商品类别的唯一标识", required = true)
+    private String categoryUid;
+    @ApiModelProperty(value = "商品类别名称", required = true)
+    private String categoryName;
+    @ApiModelProperty(value = "商品条形码", required = true)
+    private String barcode;
+    @ApiModelProperty(value = "商品图片的url", required = true)
+    private String imageUrl;
+    @ApiModelProperty(value = "商品进货价", required = true)
+    private int buyPrice;
+    @ApiModelProperty(value = "商品销售价", required = true)
+    private int sellPrice;
+    @ApiModelProperty(value = "商品会员价", required = true)
+    private int customerPrice;
+    @ApiModelProperty(value = "是否开启会员折扣支持，0-否，1-是，", required = true)
+    private int isCustomerDiscount;
 }
