@@ -118,7 +118,7 @@ public class CashBusinessController {
         }
         String newOrderId = cashBusinessService.addOrderItem(authUser.getId(),
                 info.getOrderId(),
-                info.getIsDuty(),
+                info.getIsSupervise(),
                 info.getGoodId(),
                 info.getGoodName(),
                 info.getCategoryId(),
