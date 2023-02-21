@@ -5,8 +5,10 @@ import com.cloudtimes.account.dto.request.VerifyRealNameRequest
 import com.cloudtimes.account.mapper.CtUserMapper
 import com.cloudtimes.account.mapper.provider.CtUserProvider
 import com.cloudtimes.account.service.ICtUserService
+import com.cloudtimes.agent.dto.request.AgentRegisterRequest
 import com.cloudtimes.common.annotation.DataSource
 import com.cloudtimes.common.enums.DataSourceType
+import com.cloudtimes.common.exception.ServiceException
 import com.cloudtimes.common.utils.DateUtils
 import org.mybatis.dynamic.sql.insert.render.DefaultInsertStatementProvider
 import org.springframework.beans.factory.annotation.Autowired
@@ -32,6 +34,12 @@ class CtUserServiceImpl : ICtUserService {
 
         ctUserMapper.insert(CtUserProvider.insertWxUser(loginUser))
         return loginUser
+    }
+
+    override fun agentRegister(request: AgentRegisterRequest): CtUser {
+        val existUser = ctUserMapper.selectOne(CtUserProvider.selectUserByUnionId(request.wxUnionId!!)) ?:
+            throw ServiceException("数据库异常，查询微信用户失败")
+        return existUser
     }
 
     override fun verifyRealName(request: VerifyRealNameRequest): Int {

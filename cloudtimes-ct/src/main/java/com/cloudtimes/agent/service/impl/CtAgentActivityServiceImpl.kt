@@ -2,10 +2,14 @@ package com.cloudtimes.agent.service.impl
 
 import com.cloudtimes.agent.domain.*
 import com.cloudtimes.agent.dto.request.ActivityListRequest
+import com.cloudtimes.agent.dto.request.ActivityStoreRequest
+import com.cloudtimes.agent.dto.response.AgentStoreDetail
 import com.cloudtimes.agent.mapper.*
+import com.cloudtimes.agent.mapper.provider.CtAgentActivity1RuleProvider
 import com.cloudtimes.agent.mapper.provider.CtAgentActivityProvider
 import com.cloudtimes.agent.service.*
 import com.cloudtimes.common.annotation.DataSource
+import com.cloudtimes.common.enums.ActivityType
 import com.cloudtimes.common.enums.DataSourceType
 import com.cloudtimes.common.utils.DateUtils
 import org.springframework.beans.factory.annotation.Autowired
@@ -23,6 +27,9 @@ class CtAgentActivityServiceImpl : ICtAgentActivityService {
     @Autowired
     private lateinit var activityMapper: CtAgentActivityMapper
 
+    @Autowired
+    private lateinit var rule1Mapper: CtAgentActivity1RuleMapper
+
     override fun selectAgentActivity(request: ActivityListRequest): List<CtAgentActivity> {
         return activityMapper.selectMany(
             CtAgentActivityProvider.selectAgentActivityListStmt(request)
@@ -33,6 +40,35 @@ class CtAgentActivityServiceImpl : ICtAgentActivityService {
         return activityMapper.selectOne(
             CtAgentActivityProvider.selectByIdStmt(id)
         )
+    }
+
+    /** 查询满足活动规则的店铺 */
+    override fun selectActivityStores(request: ActivityStoreRequest): List<AgentStoreDetail> {
+        val stores = activityMapper.selectActivityStores(
+            CtAgentActivityProvider.selectActivityStores(request)
+        )
+
+        if ( stores.isEmpty() ) {
+            return emptyList()
+        }
+
+        if (request.activityType == ActivityType.Activity1.code) {
+            val rule1 = rule1Mapper.selectOne(CtAgentActivity1RuleProvider.selectById(request.activityRuleId!!))!!
+
+            stores.forEach {
+                it.activityType = request.activityType
+                it.activityRuleId = request.activityRuleId
+                it.fulfilDate = it.storeOnlineDate?.plusMonths(rule1.timeSpan ?: 0)
+            }
+        } else {
+            stores.forEach {
+                it.activityType = request.activityType
+                it.activityRuleId = request.activityRuleId
+                it.fulfilDate = it.storeOnlineDate
+            }
+        }
+
+        return stores
     }
 
     /**

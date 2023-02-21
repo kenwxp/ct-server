@@ -11,6 +11,13 @@ object CtAgentActivity1RuleProvider {
     private val rule1Table = CtAgentActivity1RuleTable().withAlias("rule1")
     private val settlementTable = CtAgentActivitySettlementTable().withAlias("st")
 
+    fun selectById(ruleId: String): SelectStatementProvider {
+        return select(rule1Table.allColumns()) {
+            from(rule1Table)
+            where { rule1Table.id isEqualTo ruleId }
+        }
+    }
+
     fun selectAgentActivityDetailStmt(request: ActivityDetailRequest):  SelectStatementProvider {
        return select(
            rule1Table.allColumns(),

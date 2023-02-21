@@ -3,6 +3,8 @@ package com.cloudtimes.account.domain
 import com.cloudtimes.common.annotation.Excel
 import com.cloudtimes.common.core.domain.BaseEntity
 import com.fasterxml.jackson.annotation.JsonFormat
+import io.swagger.annotations.ApiModel
+import io.swagger.annotations.ApiModelProperty
 import java.util.*
 
 /**
@@ -11,74 +13,53 @@ import java.util.*
  * @author 沈兵
  * @date 2023-01-17
  */
+@ApiModel(value = "CtUser", description = "用户信息")
 class CtUser : BaseEntity() {
-    /**
-     * 序列号
-     */
+    @ApiModelProperty(value = "序列号")
     var id: String? = null
 
-    /**
-     * 登录账号
-     */
+    @ApiModelProperty(value = "登录账号")
     @Excel(name = "登录账号")
     var account: String? = null
 
-    /**
-     * 微信openId
-     */
+    @ApiModelProperty(value = "微信openId")
     @Excel(name = "微信openId")
     var wxOpenId: String? = null
 
-    /**
-     * 微信unionId
-     */
+    @ApiModelProperty(value = "微信unionId")
     @Excel(name = "微信unionId")
     var wxUnionId: String? = null
 
-    /**
-     * 微信头像
-     */
+    @ApiModelProperty(value = "微信头像")
     @Excel(name = "微信头像")
     var wxAvatar: String? = null
 
-    /**
-     * 登录密码
-     */
+    @ApiModelProperty(value = "登录密码")
     @Excel(name = "登录密码")
     var password: String? = null
 
-    /**
-     * 电话号码
-     */
+    @ApiModelProperty(value = "电话号码")
     @Excel(name = "电话号码")
     var mobile: String? = null
 
-    /**
-     * 昵称
-     */
+    @ApiModelProperty(value = "昵称")
     var nickName: String? = null
 
-    /**
-     * 真实姓名
-     */
+    @ApiModelProperty(value = "真实姓名")
     @Excel(name = "真实姓名")
     var realName: String? = null
 
-    /**
-     * 性别
-     */
+    @ApiModelProperty(value = "性别")
     @Excel(name = "性别")
     var sex: String? = null
 
-    /**
-     * 生日
-     */
+    @ApiModelProperty(value = "生日")
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "生日", width = 30.0, dateFormat = "yyyy-MM-dd")
     var birthday: Date? = null
 
+    @ApiModelProperty(value = "是否实名")
     /**
-     * 是否实名
      * 否	0
      * 是	1
      */
@@ -87,20 +68,16 @@ class CtUser : BaseEntity() {
     @set:JvmName("setIsReal")
     var isReal: String? = null
 
-    /**
-     * 违规次数
-     */
+    @ApiModelProperty(value = "违规次数")
     @Excel(name = "违规次数")
     var violationCount: Long? = null
 
-    /**
-     * 身份证号
-     */
+    @ApiModelProperty(value = "身份证号")
     @Excel(name = "身份证号")
     var idNo: String? = null
 
+    @ApiModelProperty(value = "是否代理")
     /**
-     * 是否代理
      * 否	0
      * 是	1
      */
@@ -109,14 +86,12 @@ class CtUser : BaseEntity() {
     @get:JvmName("getIsAgent")
     var isAgent: String? = null
 
-    /**
-     * 注册门店编号
-     */
+    @ApiModelProperty(value = "注册门店编号")
     @Excel(name = "注册门店编号")
     var registerStoreId: String? = null
 
+    @ApiModelProperty(value = "是否店老板")
     /**
-     * 是否店老板
      * 否	0
      * 是	1
      */
@@ -125,35 +100,27 @@ class CtUser : BaseEntity() {
     @set:JvmName("setIsShopBoss")
     var isShopBoss: String? = null
 
-    /**
-     * 最近登录IP
-     */
+    @ApiModelProperty(value = "最近登录IP")
     @Excel(name = "最近登录IP")
     var lastLoginIp: String? = null
 
-    /**
-     * 最近登录时间
-     */
+    @ApiModelProperty(value = "最近登录时间")
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "最近登录时间", width = 30.0, dateFormat = "yyyy-MM-dd")
     var lastLoginTime: Date? = null
 
-    /**
-     * 成为店主时间
-     */
+    @ApiModelProperty(value = "成为店主时间")
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "成为店主时间", width = 30.0, dateFormat = "yyyy-MM-dd")
     var createBossTime: Date? = null
 
-    /**
-     * 成为代理时间
-     */
+    @ApiModelProperty(value = "成为代理时间")
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "成为代理时间", width = 30.0, dateFormat = "yyyy-MM-dd")
     var createAgentTime: Date? = null
 
+    @ApiModelProperty(value = "代理状态")
     /**
-     * 代理状态
      * 未开通	0
      * 签约中	1
      * 已开通	2
@@ -162,8 +129,8 @@ class CtUser : BaseEntity() {
     @Excel(name = "代理状态")
     var agentState: String? = null
 
+    @ApiModelProperty(value = "代理类型")
     /**
-     * 代理类型
      * 城市合伙人	0
      * 特约合伙人	1
      * 普通代理	2
@@ -171,8 +138,8 @@ class CtUser : BaseEntity() {
     @Excel(name = "代理类型")
     var agentType: String? = null
 
+    @ApiModelProperty(value = "店主状态")
     /**
-     * 店主状态
      * 未开通	0
      * 签约中	1
      * 已开通	2
@@ -181,8 +148,8 @@ class CtUser : BaseEntity() {
     @Excel(name = "店主状态")
     var bossState: String? = null
 
+    @ApiModelProperty(value = "顾客状态")
     /**
-     * 顾客状态
      * 正常	0
      * 违规	1
      * 禁用	2
@@ -190,21 +157,17 @@ class CtUser : BaseEntity() {
     @Excel(name = "顾客状态")
     var customerState: String? = null
 
-    /**
-     * 操作管理员
-     */
+    @ApiModelProperty(value = "操作管理员")
     @Excel(name = "操作管理员")
     var operator: String? = null
 
-    /**
-     * 注册日期
-     */
+    @ApiModelProperty(value = "注册日期")
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "注册日期", width = 30.0, dateFormat = "yyyy-MM-dd")
     var createDate: Date? = null
 
+    @ApiModelProperty(value = "是否删除")
     /**
-     * 是否删除
      * 否	0
      * 是	1
      */

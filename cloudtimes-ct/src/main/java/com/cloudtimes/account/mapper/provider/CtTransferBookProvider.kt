@@ -8,6 +8,11 @@ import org.mybatis.dynamic.sql.insert.render.GeneralInsertStatementProvider
 import org.mybatis.dynamic.sql.select.render.SelectStatementProvider
 import org.mybatis.dynamic.sql.util.kotlin.mybatis3.insertInto
 import org.mybatis.dynamic.sql.util.kotlin.mybatis3.select
+import org.mybatis.dynamic.sql.util.kotlin.elements.column
+import org.mybatis.dynamic.sql.util.kotlin.elements.sortColumn
+
+import java.sql.JDBCType
+import java.util.Date
 
 
 object CtTransferBookProvider {
@@ -28,6 +33,8 @@ object CtTransferBookProvider {
     }
 
     fun selectTransferRecordsStmt(userId: String) : SelectStatementProvider {
+        val orderByCol = transferTable.column<Date>("tsf.order_by", jdbcType = JDBCType.DATE)
+
         return select(
             transferTable.id.`as`("transferId"),
             transferTable.createTime.`as`("transferTime"),
@@ -50,8 +57,7 @@ object CtTransferBookProvider {
             where {
                 transferTable.payer isEqualTo userId
             }
-            // :TODO: mybatis orderBy语句有bug，暂时不按日期倒序
-            // orderBy(transferTable.createTime.descending())
+            orderBy(sortColumn("transferTime").descending())
         }
     }
 }
