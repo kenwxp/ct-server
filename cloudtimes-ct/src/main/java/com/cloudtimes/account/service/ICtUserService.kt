@@ -1,8 +1,10 @@
 package com.cloudtimes.account.service
 
 import com.cloudtimes.account.domain.CtUser
+import com.cloudtimes.account.dto.request.QueryByUserIdRequest
 import com.cloudtimes.account.dto.request.VerifyRealNameRequest
 import com.cloudtimes.agent.dto.request.AgentRegisterRequest
+import com.cloudtimes.agent.dto.response.InviteResponse
 
 /**
  * 用户Service接口
@@ -22,6 +24,12 @@ interface ICtUserService {
 
     /** 根据SSN查询用户信息 */
     fun selectCtUserBySsn(ssn: String): CtUser?
+
+    /** 代理邀请 */
+    fun inviteAgent(request: QueryByUserIdRequest): InviteResponse
+
+    /** 门店邀请 */
+    fun inviteStore(request: QueryByUserIdRequest): InviteResponse
 
     /**
      * 查询用户

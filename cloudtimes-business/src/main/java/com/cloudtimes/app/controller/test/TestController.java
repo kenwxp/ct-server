@@ -201,7 +201,7 @@ public class TestController extends BaseController {
     @ApiOperation("微信公众号授权登录")
     @GetMapping(value = "/official/wxAuth")
     public void testOfficialAuth(HttpServletResponse response) {
-        String url = weixinOfficialApiService.getWXAuthURL();
+        String url = weixinOfficialApiService.getWXAuthURL(null, null);
         try {
             response.sendRedirect(url);
         } catch (Exception ex) {

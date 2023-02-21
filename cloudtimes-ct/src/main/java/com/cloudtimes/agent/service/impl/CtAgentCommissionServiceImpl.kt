@@ -43,7 +43,7 @@ class CtAgentCommissionServiceImpl : ICtAgentCommissionService {
         val agent = agentMapper.selectOne(CtUserAgentProvider.selectById(userId)) ?:
             throw ServiceException("数据库异常，查询代理信息失败")
 
-        if (agent.agentType != AgentType.GeneralAgent.code) {
+        if (agent.agentType != AgentType.SubAgent.code) {
             throw ServiceException("数据库异常，代理佣金参数未配置")
         }
 

@@ -1,10 +1,12 @@
 package com.cloudtimes.app.controller.agent
 
 import com.cloudtimes.account.dto.request.QueryBySubUserIdRequest
+import com.cloudtimes.account.dto.request.QueryByUserIdRequest
 import javax.validation.Valid
 
 import com.cloudtimes.account.dto.request.QueryByUserIdWithPageRequest
 import com.cloudtimes.account.dto.response.TeamMember
+import com.cloudtimes.account.service.ICtUserService
 import com.cloudtimes.agent.service.ICtUserAgentService
 import com.cloudtimes.common.core.controller.BaseController
 import com.cloudtimes.common.core.domain.RestPageResult
@@ -35,6 +37,10 @@ class TeamMemberDetail() : RestResult<TeamMember>()
 class CtAgentTeamController : BaseController() {
     @Autowired
     private lateinit var agentService: ICtUserAgentService
+
+    @Autowired
+    private lateinit var userService: ICtUserService
+
     @PostMapping(value = ["/list_members"])
     @ApiOperation(value = "查询团队成员列表")
     fun listMembers(@Valid @RequestBody request: QueryByUserIdWithPageRequest): TeamMemberPage {
@@ -53,6 +59,22 @@ class CtAgentTeamController : BaseController() {
         val member = agentService.selectTeamMember(request.subUserId!!)
         return TeamMemberDetail().apply {
             data = member
+        }
+    }
+
+    @PostMapping(value = ["/invite_agent"])
+    @ApiOperation("获取团队拓展邀请码和邀请地址")
+    fun inviteAgent(@Valid @RequestBody request: QueryByUserIdRequest): InviteAgentResponse {
+        return InviteAgentResponse().apply {
+            data = userService.inviteAgent(request)
+        }
+    }
+
+    @PostMapping(value = ["/invite_store"])
+    @ApiOperation("获取门店拓展邀请码和邀请地址")
+    fun inviteStore(@Valid @RequestBody request: QueryByUserIdRequest): InviteStoreResponse {
+        return InviteStoreResponse().apply {
+            data = userService.inviteStore(request)
         }
     }
 }

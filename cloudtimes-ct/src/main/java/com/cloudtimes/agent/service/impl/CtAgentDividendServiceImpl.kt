@@ -47,7 +47,7 @@ class CtAgentDividendServiceImpl : ICtAgentDividendService {
         var dividendList = dividendMapper.selectMany(CtAgentDividendProvider.selectManyByUserId(userId))
 
         // 3. 普通代理要判断是否有配置信息，没有先初始化配置信息
-        if ( agent.agentType == AgentType.GeneralAgent.code && dividendList.isEmpty()) {
+        if ( agent.agentType == AgentType.SubAgent.code && dividendList.isEmpty()) {
             val parentAgent = agent.parentUserId ?: throw ServiceException("数控库异常，上级代理为空")
 
             // 3.1 查询出上级代理的配置

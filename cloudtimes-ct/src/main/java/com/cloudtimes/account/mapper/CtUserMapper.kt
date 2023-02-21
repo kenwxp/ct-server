@@ -83,7 +83,7 @@ interface CtUserMapper : CommonCountMapper, CommonDeleteMapper, CommonInsertMapp
      * @param account
      * @return
      */
-    fun selectCtUserByAccount(account: String): CtUser
+    fun selectCtUserByAccount(account: String): CtUser?
 
     /**
      * 通过wxOpenId查询用户
@@ -91,7 +91,7 @@ interface CtUserMapper : CommonCountMapper, CommonDeleteMapper, CommonInsertMapp
      * @param wxOpenId
      * @return
      */
-    fun selectCtUserByWxOpenId(wxOpenId: String): CtUser
+    fun selectCtUserByWxOpenId(wxOpenId: String): CtUser?
 
     /**
      * 通过wxUnionId查询用户
@@ -99,7 +99,7 @@ interface CtUserMapper : CommonCountMapper, CommonDeleteMapper, CommonInsertMapp
      * @param wxUnionId
      * @return
      */
-    fun selectCtUserByWxUnionId(wxUnionId: String): CtUser
+    fun selectCtUserByWxUnionId(wxUnionId: String): CtUser?
 
     /**
      * 通过mobile查询用户
@@ -107,7 +107,7 @@ interface CtUserMapper : CommonCountMapper, CommonDeleteMapper, CommonInsertMapp
      * @param mobile
      * @return
      */
-    fun selectCtUserByMobile(mobile: String): CtUser
+    fun selectCtUserByMobile(mobile: String): CtUser?
 
     /**
      * 查询用户列表

@@ -30,27 +30,41 @@ public class CtWeixinOfficialApiServiceImpl implements ICtWeixinOfficialApiServi
     private PartnerConfig partnerConfig;
 
     @Override
-    public String getWXAuthURL() {
-        AuthRequest authRequest = createAuthRequest();
+    public String getWXAuthURL(String type, String inviteCode) {
+        AuthRequest authRequest = createAuthRequest(type, inviteCode);
         return authRequest.authorize(AuthStateUtils.createState());
     }
 
-    private AuthRequest createAuthRequest() {
+    private AuthRequest createAuthRequest(String type, String inviteCode) {
+        String redirectUrl = partnerConfig.getLoginCallbackApiUrl();
+        String params = "";
+        if ( type != null) params += "ty=" + type;
+        if ( inviteCode != null) {
+            if (params.isEmpty()) {
+                params += "ic=" + inviteCode;
+            } else {
+                params += "&ic=" + inviteCode;
+            }
+        }
+        if (!params.isEmpty()) {
+            redirectUrl += "?" + params;
+        }
+
         return new AuthWeChatMpRequest(AuthConfig.builder()
                 .clientId(partnerConfig.getWxOfficialAppid())
                 .clientSecret(partnerConfig.getWxOfficialSecret())
-                .redirectUri(partnerConfig.getLoginCallbackApiUrl())
+                .redirectUri(redirectUrl)
                 .build());
     }
 
     @Override
     public AuthResponse login(AuthCallback callback) {
-        AuthRequest authRequest = createAuthRequest();
+        AuthRequest authRequest = createAuthRequest(null, null);
         return authRequest.login(callback);
     }
 
     @Override
-    public String getJSSDKSgin(String accessToken) {
+    public String getJSSDKSign(String accessToken) {
         String apiURL = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=" + accessToken + "&type=jsapi";
         String result = HttpUtils.sendGet(apiURL);
         return result;

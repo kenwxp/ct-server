@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Mapper
 import org.apache.ibatis.annotations.Result
 import org.apache.ibatis.annotations.ResultMap
 import org.apache.ibatis.annotations.Results
+import org.apache.ibatis.annotations.Select
 import org.apache.ibatis.annotations.SelectProvider
 import org.apache.ibatis.type.JdbcType
 import org.mybatis.dynamic.sql.select.render.SelectStatementProvider
@@ -57,6 +58,9 @@ interface CtStoreMapper : CommonCountMapper, CommonDeleteMapper, CommonInsertMap
     @SelectProvider(type=SqlProviderAdapter::class, method="select")
     @ResultMap("CtStoreResult")
     fun selectOne(selectStatement: SelectStatementProvider): CtStore?
+
+    @Select("SELECT NEXTVAL(ct_seq_store_no) FROM DUAL")
+    fun selectNextStoreNo(): Long
 
     /**
      * 查询门店

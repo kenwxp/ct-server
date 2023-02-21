@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.*
 import java.util.concurrent.TimeUnit
 import javax.servlet.http.HttpServletResponse
 import javax.validation.Valid
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestParam
 
 
 class WxLoginResponse(override var data: CtUser?) : RestResult<CtUser>(data)
@@ -49,8 +51,12 @@ class WxAuthController {
 
     @GetMapping()
     @ApiOperation(value = "微信授权")
-    fun mpAuth(response: HttpServletResponse) {
-        val url = weixinOfficialApiService.wxAuthURL;
+    fun mpAuth(
+        @RequestParam(name = "ty")  type: String?,
+        @RequestParam(name = "ic") inviteCode: String?,
+        response: HttpServletResponse
+    ) {
+        val url = weixinOfficialApiService.getWXAuthURL(type, inviteCode);
         response.sendRedirect(url);
     }
 
@@ -108,13 +114,12 @@ class WxAuthController {
         if (redisCache.hasKey(CacheConstants.WX_TICKET_KEY)) {
             ticket = redisCache.getCacheObject(CacheConstants.WX_TICKET_KEY);
         } else {
-            var wxResult = weixinOfficialApiService.getJSSDKSgin(accessToken)
+            var wxResult = weixinOfficialApiService.getJSSDKSign(accessToken)
             var wxResultObj = JSONObject.parseObject(wxResult);
             ticket = wxResultObj.getString("ticket")
             redisCache.setCacheObject(CacheConstants.WX_TICKET_KEY, ticket, 7200, TimeUnit.SECONDS);
         }
         return weixinOfficialApiService.getJSSDKSign(accessToken, ticket, url)
     }
-
 
 }

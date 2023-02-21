@@ -3,11 +3,15 @@ package com.cloudtimes.app.controller.agent
 import com.cloudtimes.agent.dto.request.AgentStoreRequest
 import com.cloudtimes.account.dto.response.StoreAndCommission
 import com.cloudtimes.agent.service.ICtUserAgentService
+import com.cloudtimes.app.controller.system.SmsController
 import com.cloudtimes.common.core.controller.BaseController
 import com.cloudtimes.common.core.domain.AjaxResult
 import com.cloudtimes.common.core.domain.RestPageResult
 import com.cloudtimes.common.core.page.TableDataInfo
+import com.cloudtimes.common.exception.ServiceException
+import com.cloudtimes.hardwaredevice.dto.request.RegisterStoreRequest
 import com.cloudtimes.hardwaredevice.dto.request.ShopOrderByMonthRequest
+import com.cloudtimes.hardwaredevice.service.ICtStoreService
 import com.cloudtimes.supervise.domain.CtOrder
 import com.cloudtimes.supervise.service.ICtOrderService
 import io.swagger.annotations.Api
@@ -35,6 +39,12 @@ class CtStoreController : BaseController() {
 
     @Autowired
     private lateinit var ctOrderService: ICtOrderService
+
+    @Autowired
+    private lateinit var ctStoreService: ICtStoreService
+
+    @Autowired
+    private lateinit var smsController: SmsController
 
     /**
      * 查询代理门店
@@ -76,4 +86,17 @@ class CtStoreController : BaseController() {
         val list = ctUserAgentService.selectCtAgentShopStats(userId)
         return AjaxResult.success(list)
     }
+
+    @ApiOperation("门店注册")
+    @PostMapping("/register")
+    fun register(@Valid @RequestBody request: RegisterStoreRequest): AjaxResult {
+        // Step 1. 校验手机验证码
+        // :TODO: 放开手机校验
+        // smsController.validateSMS(request.mobile, request.verifyCode, request.verifyUUID)
+
+        // Step 2. 业务处理
+        ctStoreService.registerStore(request)
+        return AjaxResult.success()
+    }
+
 }

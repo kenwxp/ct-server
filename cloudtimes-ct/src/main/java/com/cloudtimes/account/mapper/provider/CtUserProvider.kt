@@ -3,6 +3,9 @@ package com.cloudtimes.account.mapper.provider
 import com.cloudtimes.account.domain.CtUser
 import com.cloudtimes.account.dto.request.VerifyRealNameRequest
 import com.cloudtimes.account.table.userTable
+import com.cloudtimes.agent.dto.request.AgentRegisterRequest
+import com.cloudtimes.common.enums.AgentState
+import com.cloudtimes.common.enums.YesNoState
 import org.mybatis.dynamic.sql.util.kotlin.mybatis3.select
 import org.mybatis.dynamic.sql.select.render.SelectStatementProvider
 import org.mybatis.dynamic.sql.insert.render.InsertStatementProvider
@@ -12,10 +15,25 @@ import org.mybatis.dynamic.sql.util.kotlin.mybatis3.insert
 import java.util.Date
 
 object CtUserProvider {
+    fun selectUserById(userId: String): SelectStatementProvider {
+        return select(userTable.allColumns()) {
+            from(userTable)
+            where { userTable.id isEqualTo userId }
+        }
+    }
+
     fun selectUserByUnionId(unionId: String): SelectStatementProvider {
         return select(userTable.allColumns()) {
             from(userTable)
             where { userTable.wxUnionId isEqualTo unionId }
+        }
+    }
+
+    fun selectAgentByInviteCode(inviteCode: String): SelectStatementProvider {
+        return select(userTable.allColumns()) {
+            from(userTable)
+            where { userTable.id isLike "${inviteCode}%" }
+            and { userTable.isAgent isEqualTo YesNoState.Yes.code }
         }
     }
 
@@ -46,6 +64,21 @@ object CtUserProvider {
                 set(updateTime).equalTo(Date())
                 where {
                     id isEqualTo request.userId!!
+                }
+            }
+        }
+    }
+
+    fun agentRegister(request: AgentRegisterRequest): UpdateStatementProvider {
+        return with(userTable) {
+            update(userTable) {
+                set(mobile) equalTo request.mobile!!
+                set(agentState) equalTo AgentState.Signing.code
+                set(isAgent) equalTo YesNoState.Yes.code
+                set(updateTime).equalTo(Date())
+                set(isAgent)
+                where {
+                    wxUnionId isEqualTo request.wxUnionId!!
                 }
             }
         }

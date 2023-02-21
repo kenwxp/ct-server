@@ -1,7 +1,9 @@
 package com.cloudtimes.common.enums
 
 enum class AgentType(val code: String, val info: String) {
-    CityPartner("0", "城市合伙人"),
-    SpecialPartner("1", "特约合伙人"),
-    GeneralAgent("2", "普通代理"),
+    None("0", "未指定"),
+    GeneralAgent("1", "普通代理"),
+    CityPartner("2", "城市合伙人"),
+    SpecialPartner("3", "特约合伙人"),
+    SubAgent("9", "下级代理"),
 }

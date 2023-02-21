@@ -285,7 +285,11 @@
                     <compilerPlugins>
                         <plugin>spring</plugin>
                         <plugin>jpa</plugin>
+                        <plugin>no-arg</plugin>
                     </compilerPlugins>
+                    <pluginOptions>
+                        <option>no-arg:annotation=com.cloudtimes.common.annotation.NoArgs</option>
+                    </pluginOptions>
                 </configuration>
                 <dependencies>
                     <dependency>

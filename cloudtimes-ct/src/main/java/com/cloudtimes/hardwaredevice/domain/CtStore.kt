@@ -69,6 +69,14 @@ class CtStore : BaseEntity() {
     @Excel(name = "开店费用")
     var saleAmount: BigDecimal? = null
 
+    @ApiModelProperty(value = "扣减比例(单位%)')")
+    @Excel(name = "扣减比例")
+    var dividendRate: BigDecimal? = null
+
+    @ApiModelProperty(value = "扫码有效距离(单位米)")
+    @Excel(name = "扫码有效距离(单位米)")
+    var validDistance: BigDecimal? = null
+
     @ApiModelProperty(value = "最大购物人数")
     @Excel(name = "最大购物人数")
     var maxBuyPerson: Long? = null
