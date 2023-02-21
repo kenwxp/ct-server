@@ -159,6 +159,11 @@ public class CtShopProduct extends BaseEntity {
      */
     @Excel(name = "库存下限")
     private Long minStock;
+    /**
+     * 累计售出
+     */
+    @Excel(name = "累计售出")
+    private Long totalSold;
 
     /**
      * 商品图片地址
