@@ -3,21 +3,8 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.cloudtimes.resources.mapper.CtRegionMapper">
-    
-    <resultMap type="CtRegion" id="CtRegionResult">
-        <result property="id"    column="id"    />
-        <result property="regionName"    column="region_name"    />
-        <result property="regionShortName"    column="region_short_name"    />
-        <result property="regionCode"    column="region_code"    />
-        <result property="regionParentId"    column="region_parent_id"    />
-        <result property="regionLevel"    column="region_level"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateTime"    column="update_time"    />
-        <result property="delFlag"    column="del_flag"    />
-    </resultMap>
-
     <sql id="selectCtRegionVo">
-        select id, region_name, region_short_name, region_code, region_parent_id, region_level, create_time, update_time, del_flag from ct_region
+        select * from ct_region
     </sql>
 
     <select id="selectCtRegionList" parameterType="CtRegion" resultMap="CtRegionResult">

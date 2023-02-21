@@ -1,10 +1,10 @@
 package com.cloudtimes.app.controller.agent
 
-import com.cloudtimes.agent.dto.request.ActivityListRequest
 import com.cloudtimes.agent.domain.CtAgentActivity
-import com.cloudtimes.agent.dto.request.ActivityStoreRequest
 import com.cloudtimes.agent.dto.request.ActivityDetailRequest
+import com.cloudtimes.agent.dto.request.ActivityListRequest
 import com.cloudtimes.agent.dto.request.ActivityRuleRequest
+import com.cloudtimes.agent.dto.request.ActivityStoreRequest
 import com.cloudtimes.agent.dto.response.AgentActivity1Detail
 import com.cloudtimes.agent.dto.response.AgentActivity2Detail
 import com.cloudtimes.agent.dto.response.AgentStoreDetail
@@ -12,12 +12,15 @@ import com.cloudtimes.agent.service.ICtAgentActivity1RuleService
 import com.cloudtimes.agent.service.ICtAgentActivity2RuleService
 import com.cloudtimes.agent.service.ICtAgentActivityService
 import com.cloudtimes.agent.service.ICtAgentActivitySettlementService
+import com.cloudtimes.app.controller.auth.UserLoginAndRegisterController
 import com.cloudtimes.common.core.controller.BaseController
 import com.cloudtimes.common.core.domain.AjaxResult
 import com.cloudtimes.common.core.domain.RestPageResult
 import com.cloudtimes.common.core.domain.RestResult
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -43,6 +46,8 @@ class ActivityStoreListResponse() : RestPageResult<AgentStoreDetail>()
 @RequestMapping("/agent/activity")
 @Api(tags = ["代理-活动"])
 class CtAgentActivityController : BaseController() {
+
+    private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
     @Autowired
     private lateinit var activityService: ICtAgentActivityService
@@ -98,6 +103,13 @@ class CtAgentActivityController : BaseController() {
     @PostMapping(value = ["/list_activity_store"])
     @ApiOperation(value = "查询满足活动规则的店铺")
     fun listActivityStore(@Valid @RequestBody request: ActivityStoreRequest) : ActivityStoreListResponse {
-        TODO("Unimplemented")
+        logger.info("list_activity_store: pageNum ${request.pageNum}, pageSize ${request.pageSize}")
+        startPage(request.pageNum, request.pageSize)
+        val stores = activityService.selectActivityStores(request)
+        val page = getDataTable(stores)
+        return ActivityStoreListResponse().apply {
+            data = stores
+            total = page.total
+        }
     }
 }

@@ -150,7 +150,7 @@
             <if test="createTime != null">#{createTime},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="delFlag != null">#{delFlag},</if>
-            <if test="yearMonth != null">yearMonth,</if>
+            <if test="yearMonth != null">#{yearMonth},</if>
             <if test="createDate != null">#{createDate},</if>
         </trim>
     </insert>

@@ -17,7 +17,7 @@
                specification,
                unit,
                weight,
-               color, size, style, purchase_price, retail_price, wholesale_price, vip_price, stock, max_stock, min_stock, picture_url, production_date, quality_period, remarks, is_enable, is_enable_vip_price, is_enable_points, is_deleted, create_time, update_time
+               color, size, style, purchase_price, retail_price, wholesale_price, vip_price, stock, max_stock, min_stock,total_sold, picture_url, production_date, quality_period, remarks, is_enable, is_enable_vip_price, is_enable_points, is_deleted, create_time, update_time
         from ct_shop_product
     </sql>
 
@@ -50,6 +50,7 @@
             <if test="stock != null ">and stock = #{stock}</if>
             <if test="maxStock != null ">and max_stock = #{maxStock}</if>
             <if test="minStock != null ">and min_stock = #{minStock}</if>
+            <if test="totalSold != null ">and total_sold = #{totalSold}</if>
             <if test="pictureUrl != null  and pictureUrl != ''">and picture_url = #{pictureUrl}</if>
             <if test="productionDate != null ">and production_date = #{productionDate}</if>
             <if test="qualityPeriod != null  and qualityPeriod != ''">and quality_period = #{qualityPeriod}</if>
@@ -94,6 +95,7 @@
             <if test="stock != null">stock,</if>
             <if test="maxStock != null">max_stock,</if>
             <if test="minStock != null">min_stock,</if>
+            <if test="totalSold != null">total_sold,</if>
             <if test="pictureUrl != null">picture_url,</if>
             <if test="productionDate != null">production_date,</if>
             <if test="qualityPeriod != null">quality_period,</if>
@@ -167,6 +169,7 @@
             <if test="stock != null">stock = #{stock},</if>
             <if test="maxStock != null">max_stock = #{maxStock},</if>
             <if test="minStock != null">min_stock = #{minStock},</if>
+            <if test="totalSold != null">total_sold = #{totalSold},</if>
             <if test="pictureUrl != null">picture_url = #{pictureUrl},</if>
             <if test="productionDate != null">production_date = #{productionDate},</if>
             <if test="qualityPeriod != null">quality_period = #{qualityPeriod},</if>
@@ -194,47 +197,58 @@
         </foreach>
     </delete>
 
-    <select id="selectCtShopProductListByStore" resultType="CtOrderDetail">
+    <select id="selectCtShopProductListByStore" parameterType="String" resultType="CtShopProduct">
         select
-        p.id,
-        p.shop_no,
-        p.category_id,
-        p.barcode,
-        p.product_name,
-        p.english_name,
-        p.brand,
-        p.label,
-        p.supplier_id,
-        p.supplier,
-        p.specification,
-        p.unit,
-        p.weight,
-        p.color,
-        p.size,
-        p.style,
-        p.purchase_price,
-        p.retail_price,
-        p.wholesale_price,
-        p.vip_price,
-        p.stock,
-        p.max_stock,
-        p.min_stock,
-        p.picture_url,
-        p.production_date,
-        p.quality_period,
-        p.remarks,
-        p.is_enable,
-        p.is_enable_vip_price,
-        p.is_enable_points,
-        p.is_deleted,
-        p.create_time,
-        p.update_time,
-        coalesce(pc.category_name , "")
+        p.id ,
+        p.shop_no ,
+        p.category_id ,
+        p.barcode ,
+        p.product_name ,
+        p.english_name ,
+        p.brand ,
+        p.label ,
+        p.supplier_id ,
+        p.supplier ,
+        p.specification ,
+        p.unit ,
+        p.weight ,
+        p.color ,
+        p.size ,
+        p.style ,
+        p.purchase_price ,
+        p.retail_price ,
+        p.wholesale_price ,
+        p.vip_price ,
+        p.stock ,
+        p.max_stock ,
+        p.min_stock ,
+        p.total_sold ,
+        p.picture_url ,
+        p.production_date ,
+        p.quality_period ,
+        p.remarks ,
+        p.is_enable ,
+        p.is_enable_vip_price ,
+        p.is_enable_points ,
+        p.is_deleted ,
+        p.create_time ,
+        p.update_time ,
+        coalesce(pc.category_name , "") category_name
         from
         ct_shop_product p
         left join ct_shop_product_category pc
         on
         p.category_id = pc.id
-        and p.shop_no = #{shopNo}
+        and p.shop_no =
+        #{shopNo}
     </select>
+
+    <update id="updateCtShopProductStock" parameterType="CtShopProduct">
+        update ct_shop_product
+        set
+        stock = stock - #{stock},
+        total_sold = total_sold + #{totalSold},
+        update_time = #{updateTime}
+        where id = #{id}
+    </update>
 </mapper>

@@ -2,11 +2,10 @@ package com.cloudtimes.common.constant;
 
 /**
  * 返回状态码
- * 
+ *
  * @author tank
  */
-public class HttpStatus
-{
+public class HttpStatus {
     /**
      * 操作成功
      */
@@ -23,9 +22,18 @@ public class HttpStatus
     public static final int ACCEPTED = 202;
 
     /**
+     * 处理超时可重试
+     */
+    public static final int TIMEOUT = 203;
+
+    /**
      * 操作已经执行成功，但是没有返回数据
      */
     public static final int NO_CONTENT = 204;
+    /**
+     * 处理成功，结果为失败
+     */
+    public static final int BUSINESS_FAIL = 205;
 
     /**
      * 资源已被移除

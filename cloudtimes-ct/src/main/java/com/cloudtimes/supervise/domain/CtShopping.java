@@ -55,7 +55,7 @@ public class CtShopping extends BaseEntity {
      * 购物结束	2
      */
     @Excel(name = "购物状态")
-    private String shoppingType;
+    private String state;
 
     /**
      * 备注

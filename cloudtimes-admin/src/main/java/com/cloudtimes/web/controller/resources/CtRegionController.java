@@ -68,37 +68,4 @@ public class CtRegionController extends BaseController
     {
         return AjaxResult.success(ctRegionService.selectCtRegionById(id));
     }
-
-    /**
-     * 新增地区信息
-     */
-    @PreAuthorize("@ss.hasPermi('resources:ctregion:add')")
-    @Log(title = "地区信息", businessType = BusinessType.INSERT)
-    @PostMapping
-    public AjaxResult add(@RequestBody CtRegion ctRegion)
-    {
-        return toAjax(ctRegionService.insertCtRegion(ctRegion));
-    }
-
-    /**
-     * 修改地区信息
-     */
-    @PreAuthorize("@ss.hasPermi('resources:ctregion:edit')")
-    @Log(title = "地区信息", businessType = BusinessType.UPDATE)
-    @PutMapping
-    public AjaxResult edit(@RequestBody CtRegion ctRegion)
-    {
-        return toAjax(ctRegionService.updateCtRegion(ctRegion));
-    }
-
-    /**
-     * 删除地区信息
-     */
-    @PreAuthorize("@ss.hasPermi('resources:ctregion:remove')")
-    @Log(title = "地区信息", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable String[] ids)
-    {
-        return toAjax(ctRegionService.deleteCtRegionByIds(ids));
-    }
 }

@@ -2,6 +2,8 @@ package com.cloudtimes.agent.service
 
 import com.cloudtimes.agent.domain.CtAgentActivity
 import com.cloudtimes.agent.dto.request.ActivityListRequest
+import com.cloudtimes.agent.dto.request.ActivityStoreRequest
+import com.cloudtimes.agent.dto.response.AgentStoreDetail
 
 /**
  * 代理活动Service接口
@@ -12,6 +14,8 @@ import com.cloudtimes.agent.dto.request.ActivityListRequest
 interface ICtAgentActivityService {
     fun selectAgentActivity(request: ActivityListRequest): List<CtAgentActivity>
     fun selectActivityById(id: String): CtAgentActivity?
+
+    fun selectActivityStores(request: ActivityStoreRequest): List<AgentStoreDetail>
 
     /**
      * 查询代理活动列表

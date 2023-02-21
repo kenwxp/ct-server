@@ -1,6 +1,7 @@
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.cloudtimes.partner.pay.shouqianba.domain.BuzResponse;
+import com.cloudtimes.partner.pay.shouqianba.domain.CommonResp;
 import com.cloudtimes.partner.pay.shouqianba.domain.PayOrderData;
 import com.cloudtimes.partner.pay.shouqianba.service.ICtShouqianbaApiService;
 import com.cloudtimes.partner.pay.shouqianba.service.ICtShouqianbaCisApiService;
@@ -53,9 +54,9 @@ public class TestShouqianba {
         paramMap.put("subject", "测试"); //交易简介	本次交易的简要介绍
         paramMap.put("operator", "0001"); //门店操作员	发起本次交易的操作员
         paramMap.put("notify_url", ""); //回调	支付回调的地址
-        BuzResponse bz = service.b2cPay(paramMap, "aeee41ee3f908d9d1f9bb5a0dcae03e7");
+        CommonResp bz = service.b2cPay(paramMap, "aeee41ee3f908d9d1f9bb5a0dcae03e7");
         if (bz != null) {
-            System.out.println(bz.getData());
+            System.out.println(bz);
         }
     }
 

@@ -19,8 +19,13 @@ open class ActivityStoreRequest : PageRequest {
     @field:NotNull(message =  "用户编号不能为空")
     var userId: String? = null
 
-    @ApiModelProperty(value = "活动编号", required = true)
-    @field:NotEmpty(message =  "活动编号不能为空")
-    @field:NotNull(message =  "活动编号不能为空")
-    var activityId: String? = null
+    @ApiModelProperty(value = "活动类型", required = true)
+    @field:NotEmpty(message =  "活动类型不能为空")
+    @field:NotNull(message =  "活动类型不能为空")
+    var activityType: String? = null
+
+    @ApiModelProperty(value = "活动规则编号", required = true)
+    @field:NotEmpty(message =  "活动规则编号不能为空")
+    @field:NotNull(message =  "活动规则编号不能为空")
+    var activityRuleId: String? = null
 }

@@ -29,8 +29,10 @@ class CtAgentActivity2RuleServiceImpl : ICtAgentActivity2RuleService {
             CtAgentActivity2RuleProvider.selectAgentActivityDetailStmt(request)
         )
 
+        // :TODO: 统计完成数
         detailList.forEach {
             it.agentStoreCount = it.agentStoreCount ?: 0
+            it.subAgentStoreCount = it.subAgentStoreCount ?: 0
         }
 
         return detailList

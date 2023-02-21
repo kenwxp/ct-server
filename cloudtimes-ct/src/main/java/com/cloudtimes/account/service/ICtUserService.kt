@@ -2,6 +2,7 @@ package com.cloudtimes.account.service
 
 import com.cloudtimes.account.domain.CtUser
 import com.cloudtimes.account.dto.request.VerifyRealNameRequest
+import com.cloudtimes.agent.dto.request.AgentRegisterRequest
 
 /**
  * 用户Service接口
@@ -12,6 +13,9 @@ import com.cloudtimes.account.dto.request.VerifyRealNameRequest
 interface ICtUserService {
     /** 微信登陆或创建新用户 */
     fun wxLoginOrCreateNewUser(loginUser: CtUser): CtUser
+
+    /** 代理用户注册 */
+    fun agentRegister(request: AgentRegisterRequest): CtUser
 
     /** 实名认证 */
     fun verifyRealName(request: VerifyRealNameRequest): Int

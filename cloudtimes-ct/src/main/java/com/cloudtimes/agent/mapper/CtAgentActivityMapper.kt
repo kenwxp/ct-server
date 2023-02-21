@@ -1,6 +1,7 @@
 package com.cloudtimes.agent.mapper
 
 import com.cloudtimes.agent.domain.CtAgentActivity
+import com.cloudtimes.agent.dto.response.AgentStoreDetail
 
 import org.apache.ibatis.annotations.Mapper
 import org.apache.ibatis.annotations.Result
@@ -44,6 +45,9 @@ interface CtAgentActivityMapper : CommonCountMapper, CommonDeleteMapper, CommonI
     @SelectProvider(type = SqlProviderAdapter::class, method = "select")
     @ResultMap("CtAgentActivityResult")
     fun selectOne(selectStatement: SelectStatementProvider): CtAgentActivity?
+
+    @SelectProvider(type = SqlProviderAdapter::class, method = "select")
+    fun selectActivityStores(selectStatement: SelectStatementProvider): List<AgentStoreDetail>
 
     /**
      * 查询代理活动

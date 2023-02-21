@@ -97,7 +97,7 @@ public class CtDeviceCashController extends BaseController
     @PreAuthorize("@ss.hasPermi('hardwaredevice:ctdevicecash:remove')")
     @Log(title = "收银机特有信息", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
+    public AjaxResult remove(@PathVariable String[] ids)
     {
         return toAjax(ctDeviceCashService.deleteCtDeviceCashByIds(ids));
     }
