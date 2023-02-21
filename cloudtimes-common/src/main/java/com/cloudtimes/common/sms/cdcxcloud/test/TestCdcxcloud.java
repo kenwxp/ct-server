@@ -15,8 +15,8 @@ public class TestCdcxcloud {
         Map<String, Object> p = new HashMap<String, Object>();
         p.put("account", "922459");
         p.put("password", "8eYtxi");
-        p.put("mobile", "18316699739");
-        p.put("content", "【云时代】你的验证码是2386,3分钟内有效！");
+        p.put("mobile", "13544117721");
+        p.put("content", "你好，顾客，昨日我们发现您有未支付的三件商品，请支付，监控收集了您的异常行为，请回复，门店24小时警方联网。");
         p.put("extno", "10690468");
         //接入码
         SmsHttpApi smsHttpApi = new SmsHttpApi(ApiRequestMethodEnum.get);

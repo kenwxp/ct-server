@@ -18,7 +18,6 @@ import com.cloudtimes.hardwaredevice.domain.CtDevice;
 import com.cloudtimes.hardwaredevice.domain.CtDeviceDoor;
 import com.cloudtimes.hardwaredevice.mapper.CtDeviceDoorMapper;
 import com.cloudtimes.mq.service.CashMqSender;
-import com.cloudtimes.partner.agora.service.CtAgoraApiService;
 import com.cloudtimes.partner.config.PartnerConfig;
 import com.cloudtimes.partner.hik.service.ICtHikApiService;
 import com.cloudtimes.partner.pay.shouqianba.domain.AuthInfoData;
@@ -233,16 +232,6 @@ public class TestController extends BaseController {
             return AjaxResult.success(order);
         }
         return AjaxResult.success();
-    }
-
-    @Autowired
-    private CtAgoraApiService agoraApiService;
-
-    @ApiOperation("获取语音token")
-    @PostMapping(value = "/voice/token")
-    public AjaxResult testVoiceToken() {
-        String test111 = agoraApiService.getAgoraToken(123135, "test111");
-        return AjaxResult.success(test111);
     }
 }
 

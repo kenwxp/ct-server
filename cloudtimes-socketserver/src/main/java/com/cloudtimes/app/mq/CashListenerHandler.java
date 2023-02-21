@@ -5,6 +5,7 @@ import com.cloudtimes.app.manager.SingletonWsSessionManager;
 import com.cloudtimes.common.constant.RocketMQConstants;
 import com.cloudtimes.common.mq.CashMqData;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.rocketmq.common.message.Message;
 import org.apache.rocketmq.spring.annotation.MessageModel;
 import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
 import org.apache.rocketmq.spring.core.RocketMQListener;
@@ -28,6 +29,7 @@ public class CashListenerHandler implements RocketMQListener<CashMqData> {
         log.info("接收到MQ消息：" + JSONObject.toJSONString(cashMqData));
         String option = cashMqData.getOption();
         try {
+
             wsSessionManager.sendSuccess(cashMqData.getDeviceId(), cashMqData);
         } catch (Exception ex) {
             log.error("执行指令[" + option + "]异常：" + ex.getMessage());

@@ -17,7 +17,6 @@ public class AuthConfig implements WebMvcConfigurer {
                 .addPathPatterns("/**")
                 //放行
                 .excludePathPatterns(
-                        "/agent/**",
                         "/auth/device/test",
                         "/auth/device/login",
                         "/auth/user/**",
@@ -33,7 +32,8 @@ public class AuthConfig implements WebMvcConfigurer {
                         "/auth/shopBoss/login",
                         "/system/**",
                         "/test/**",
-                        "/sms/**"
+                        "/sms/**",
+                        "/agent/wx_auth"
                 )
                 .excludePathPatterns("/js/**", "/css/**", "/images/**", "/lib/**",
                         "/fonts/**")

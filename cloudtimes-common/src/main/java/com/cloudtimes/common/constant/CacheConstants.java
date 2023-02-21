@@ -71,4 +71,14 @@ public class CacheConstants {
      * 登录账户密码错误次数 redis key
      */
     public static final String PWD_ERR_CNT_KEY = "pwd_err_cnt:";
+
+    /**
+     * WX授权登录ACCESSTOKEN redis key
+     */
+    public static final String WX_LOGIN_ACCESS_TOKEN_KEY = "wx_login_access_token_key:";
+
+
+    public static final String WX_ACCESS_TOKEN_KEY = "wx_access_token_key:";
+
+    public static final String WX_TICKET_KEY = "wx_ticket_token_key";
 }
