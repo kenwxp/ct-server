@@ -80,7 +80,7 @@ public class CtDeviceCashServiceImpl implements ICtDeviceCashService
      * @return 结果
      */
     @Override
-    public int deleteCtDeviceCashByIds(Long[] ids)
+    public int deleteCtDeviceCashByIds(String[] ids)
     {
         return ctDeviceCashMapper.deleteCtDeviceCashByIds(ids);
     }
@@ -92,7 +92,7 @@ public class CtDeviceCashServiceImpl implements ICtDeviceCashService
      * @return 结果
      */
     @Override
-    public int deleteCtDeviceCashById(Long id)
+    public int deleteCtDeviceCashById(String id)
     {
         return ctDeviceCashMapper.deleteCtDeviceCashById(id);
     }

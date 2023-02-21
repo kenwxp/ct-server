@@ -102,20 +102,18 @@ public class CtCustomerBusinessServiceImpl implements ICtCustomerBusinessService
                 throw new ServiceException("二维码失效，请重试");
             }
         }
+        CtShopping newShopping = new CtShopping();
         //获取任务
         CtTask task = taskInnerService.distributeTask(dbStore.getId());
-        String taskId = "";
-        if (taskId != null) {
-            taskId = task.getId();
+        if (task != null) {
+            newShopping.setTaskId(task.getId());
+            newShopping.setStaffCode(task.getStaffCode());
+            newShopping.setStartTime(task.getStartTime());
         }
-        CtShopping newShopping = new CtShopping();
         newShopping.setUserId(userId);
-        newShopping.setTaskId(taskId);
         newShopping.setStoreId(dbStore.getId());
-        newShopping.setStaffCode(task.getStaffCode());
         newShopping.setState("0");
         newShopping.setDescText("扫码购物");
-        newShopping.setStartTime(task.getStartTime());
         newShopping.setEndTime(new Date());
         newShopping.setExceptionalState("0");
         newShopping.setIsApprove("0");
@@ -127,17 +125,18 @@ public class CtCustomerBusinessServiceImpl implements ICtCustomerBusinessService
         if (shoppingMapper.insertCtShopping(newShopping) < 1) {
             throw new ServiceException("新增购物失败");
         }
-        if (StringUtils.isNotEmpty(taskId)) {
-            //加入内存
-            taskCache.setCacheShopping(newShopping);
-        }
+        //加入内存
+        taskCache.setCacheShopping(newShopping);
         retMap.put("shoppingId", newShopping.getId());
 
         if (!StringUtils.isEmpty(dynamicCode)) {
             //扫动态码流程，新增订单
             //新增购物记录，开始时间设置成任务开始时间
             CtOrder newOrder = new CtOrder();
-            newOrder.setTaskId(task.getId());
+            if (task != null) {
+                newOrder.setTaskId(task.getId());
+                newOrder.setStaffCode(task.getStaffCode());
+            }
             newOrder.setStoreId(dbStore.getId());
             newOrder.setStoreName(dbStore.getName());
             newOrder.setStoreProvince(dbStore.getRegionCode());
@@ -145,7 +144,6 @@ public class CtCustomerBusinessServiceImpl implements ICtCustomerBusinessService
             newOrder.setAgentId(dbStore.getAgentId());
             newOrder.setBossUserId(dbStore.getBossId());
             newOrder.setShoppingId(newShopping.getId());
-            newOrder.setStaffCode(task.getStaffCode());
             newOrder.setUserId(userId);
             newOrder.setDeviceCashId(deviceId);
             newOrder.setDescText("扫码订单");
@@ -161,9 +159,8 @@ public class CtCustomerBusinessServiceImpl implements ICtCustomerBusinessService
             if (orderMapper.insertCtOrder(newOrder) < 1) {
                 throw new ServiceException("新增订单失败");
             }
-            if (StringUtils.isNotEmpty(taskId)) {
-                taskCache.setCacheOrder(newOrder);
-            }
+            // 订单加入内存
+            taskCache.setCacheOrder(newOrder);
             String newUrl = cashBusinessService.genDynamicQrCodeUrl(deviceId, dbStore.getStoreNo());
             // 推送收银机单号
             cashMqSender.sendBillSerial(dbStore.getId(), newOrder.getId(), newUrl);

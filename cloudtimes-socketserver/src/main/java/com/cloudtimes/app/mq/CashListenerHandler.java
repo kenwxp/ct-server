@@ -16,8 +16,6 @@ import org.springframework.stereotype.Service;
  * 处理收银机模块信息
  */
 @Slf4j
-@Service
-@Component
 @RocketMQMessageListener(consumerGroup = "${rocketmq.consumer.group}", topic = RocketMQConstants.WS_CASH_DEVICE, messageModel = MessageModel.CLUSTERING)
 public class CashListenerHandler implements RocketMQListener<CashMqData> {
     @Autowired

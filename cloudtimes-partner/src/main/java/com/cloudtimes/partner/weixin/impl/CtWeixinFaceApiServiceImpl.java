@@ -101,9 +101,10 @@ public class CtWeixinFaceApiServiceImpl implements ICtWeixinFaceApiService {
         header.put("Content-Type", "application/json; charset=utf-8");
         header.put("Accept", "application/json; charset=utf-8");
         String authToken = getAuthToken("GET", url, "");
+        System.out.println(authToken);
         header.put("Authorization", "WECHATPAY2-SHA256-RSA2048" + " " + authToken);
         String resultStr = HttpUtils.sendGet(domain + url, "", Constants.UTF8, header);
-        System.out.println(resultStr);
+
         if (StringUtils.isNotBlank(resultStr)) {
             JSONObject jsonObject = JSON.parseObject(resultStr);
             if (jsonObject != null) {

@@ -16,7 +16,6 @@ import com.cloudtimes.hardwaredevice.mapper.CtStoreMapper;
 import com.cloudtimes.partner.wiegand.ICtWiegandApiService;
 import com.cloudtimes.partner.wiegand.WiegandReturning;
 import com.cloudtimes.serving.door.service.ICtDoorGuardOpService;
-import com.cloudtimes.util.NoUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

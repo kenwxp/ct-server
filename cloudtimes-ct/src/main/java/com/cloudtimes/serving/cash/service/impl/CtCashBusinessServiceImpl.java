@@ -1,21 +1,29 @@
 package com.cloudtimes.serving.cash.service.impl;
 
+import cn.hutool.core.date.DateUnit;
+import cn.hutool.core.date.DateUtil;
 import com.cloudtimes.account.domain.CtUser;
 import com.cloudtimes.account.mapper.CtUserMapper;
 import com.cloudtimes.cache.CtDeviceCache;
 import com.cloudtimes.cache.CtTaskCache;
+import com.cloudtimes.common.NoUtils;
+import com.cloudtimes.common.PayOrderUtils;
 import com.cloudtimes.common.exception.ServiceException;
+import com.cloudtimes.common.utils.DateUtils;
 import com.cloudtimes.common.utils.NumberUtils;
+import com.cloudtimes.common.utils.Threads;
+import com.cloudtimes.enums.PayState;
 import com.cloudtimes.hardwaredevice.domain.CtDevice;
 import com.cloudtimes.hardwaredevice.domain.CtDeviceCash;
 import com.cloudtimes.hardwaredevice.domain.CtStore;
 import com.cloudtimes.hardwaredevice.mapper.CtDeviceCashMapper;
 import com.cloudtimes.hardwaredevice.mapper.CtDeviceMapper;
 import com.cloudtimes.hardwaredevice.mapper.CtStoreMapper;
+import com.cloudtimes.mq.domain.MQTopicConstants;
+import com.cloudtimes.mq.domain.PayOrderMsgData;
 import com.cloudtimes.partner.agora.service.CtAgoraApiService;
 import com.cloudtimes.partner.config.PartnerConfig;
-import com.cloudtimes.partner.pay.shouqianba.domain.AuthInfoData;
-import com.cloudtimes.partner.pay.shouqianba.domain.CommonResp;
+import com.cloudtimes.partner.pay.shouqianba.domain.*;
 import com.cloudtimes.partner.pay.shouqianba.service.ICtShouqianbaApiService;
 import com.cloudtimes.partner.weixin.ICtWeixinFaceApiService;
 import com.cloudtimes.partner.weixin.domain.WxpayfaceAuthInfoResp;
@@ -28,16 +36,17 @@ import com.cloudtimes.supervise.domain.CtOrder;
 import com.cloudtimes.supervise.domain.CtOrderDetail;
 import com.cloudtimes.supervise.domain.CtShopping;
 import com.cloudtimes.supervise.domain.CtTask;
+import com.cloudtimes.supervise.mapper.CtOrderDetailMapper;
 import com.cloudtimes.supervise.mapper.CtOrderMapper;
 import com.cloudtimes.supervise.mapper.CtShoppingMapper;
-import com.cloudtimes.util.NoUtils;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.security.NoSuchAlgorithmException;
@@ -71,11 +80,17 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
     @Autowired
     private CtOrderMapper orderMapper;
     @Autowired
+    private CtOrderDetailMapper orderDetailMapper;
+    @Autowired
     private CtTaskCache taskCache;
     @Autowired
     private CtAgoraApiService agoraApiService;
     @Autowired
     private CtDeviceCache deviceCache;
+    @Autowired
+    private PayOrderUtils payOrderUtils;
+    @Autowired
+    private RocketMQTemplate mqTemplate;
 
     /**
      * 获取刷脸凭证
@@ -85,6 +100,7 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
      * @param authType 凭证类型 1-微信 2-收钱吧
      * @return
      */
+
     @Override
     public AuthInfoData getFaceAuthInfo(String deviceId, String rawdata, String authType) {
         CtDevice dbDevice = deviceMapper.selectCtDeviceById(deviceId);
@@ -134,6 +150,7 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
      * orderId
      * phone
      */
+    @Transactional
     @Override
     public Map<String, String> getOrderId(String deviceId, String token) {
         //通过token获取用户union_id
@@ -160,20 +177,19 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
         }
         Map<String, String> retMap = new HashMap<>();
         retMap.put("phone", NumberUtils.getHiddenPhone(ctUser.getMobile()));
+
+        CtShopping newShopping = new CtShopping();
         //获取任务
         CtTask task = taskInnerService.distributeTask(dbStore.getId());
-        String taskId = "";
-        if (taskId != null) {
-            taskId = task.getId();
+        if (task != null) {
+            newShopping.setTaskId(task.getId());
+            newShopping.setStaffCode(task.getStaffCode());
+            newShopping.setStartTime(task.getStartTime());
         }
-        CtShopping newShopping = new CtShopping();
         newShopping.setUserId(ctUser.getId());
-        newShopping.setTaskId(taskId);
         newShopping.setStoreId(dbStore.getId());
-        newShopping.setStaffCode(task.getStaffCode());
-        newShopping.setState("0");
+        newShopping.setState(PayState.READY_TO_PAY.getCode());
         newShopping.setDescText("刷脸购物");
-        newShopping.setStartTime(task.getStartTime());
         newShopping.setEndTime(new Date());
         newShopping.setExceptionalState("0");
         newShopping.setIsApprove("0");
@@ -185,13 +201,14 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
         if (shoppingMapper.insertCtShopping(newShopping) < 1) {
             throw new ServiceException("新增购物失败");
         }
-        if (StringUtils.isNotEmpty(taskId)) {
-            //加入内存
-            taskCache.setCacheShopping(newShopping);
-        }
+        //加入内存
+        taskCache.setCacheShopping(newShopping);
         //新增购物记录，开始时间设置成任务开始时间
         CtOrder newOrder = new CtOrder();
-        newOrder.setTaskId(task.getId());
+        if (task != null) {
+            newOrder.setTaskId(task.getId());
+            newOrder.setStaffCode(task.getStaffCode());
+        }
         newOrder.setStoreId(dbStore.getId());
         newOrder.setStoreName(dbStore.getName());
         newOrder.setStoreProvince(dbStore.getRegionCode());
@@ -199,12 +216,11 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
         newOrder.setAgentId(dbStore.getAgentId());
         newOrder.setBossUserId(dbStore.getBossId());
         newOrder.setShoppingId(newShopping.getId());
-        newOrder.setStaffCode(task.getStaffCode());
         newOrder.setUserId(ctUser.getId());
         newOrder.setDeviceCashId(deviceId);
         newOrder.setDescText("刷脸订单");
         newOrder.setIsExceptional("0");
-        newOrder.setState("0");
+        newOrder.setState(PayState.READY_TO_PAY.getCode());
         newOrder.setDelFlag("0");
         Date now = new Date();
         newOrder.setYearMonth(now.getYear() * 100 + now.getMonth());
@@ -215,9 +231,8 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
         if (orderMapper.insertCtOrder(newOrder) < 1) {
             throw new ServiceException("新增订单失败");
         }
-        if (StringUtils.isNotEmpty(taskId)) {
-            taskCache.setCacheOrder(newOrder);
-        }
+        taskCache.setCacheOrder(newOrder);
+        retMap.put("orderId", newOrder.getId());
         return retMap;
     }
 
@@ -267,6 +282,7 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
     }
 
     @Override
+    @Transactional
     public String addOrderItem(String deviceId, String orderId, String isSupervise, String goodId, String goodName, String categoryId, String categoryName, int num, int buyPrice, int sellPrice) {
         if (StringUtils.isEmpty(orderId)) {
             //只有在非值守状态才能扫商品产生新订单
@@ -287,20 +303,26 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
             }
             //有人模式下直接扫码，则产生新订单
             CtOrder newOrder = new CtOrder();
-            newOrder.setTaskId("");
+//            newOrder.setTaskId(null);
             newOrder.setStoreId(dbStore.getId());
             newOrder.setStoreName(dbStore.getName());
             newOrder.setStoreProvince(dbStore.getRegionCode());
             newOrder.setStoreCity(dbStore.getRegionCode());
             newOrder.setAgentId(dbStore.getAgentId());
             newOrder.setBossUserId(dbStore.getBossId());
-            newOrder.setShoppingId("");
+//            newOrder.setShoppingId(null);
             newOrder.setStaffCode("");
-            newOrder.setUserId("");
+//            newOrder.setUserId(null);
+            newOrder.setMoneyAmount(BigDecimal.valueOf(0));
+            newOrder.setTotalAmount(BigDecimal.valueOf(0));
+            newOrder.setDiscountAmount(BigDecimal.valueOf(0));
+            newOrder.setDeductionAmount(BigDecimal.valueOf(0));
+            newOrder.setActualAmount(BigDecimal.valueOf(0));
+            newOrder.setItemCount(0L);
             newOrder.setDeviceCashId(deviceId);
             newOrder.setDescText("直接扫商品");
             newOrder.setIsExceptional("0");
-            newOrder.setState("0");
+            newOrder.setState(PayState.READY_TO_PAY.getCode());
             newOrder.setDelFlag("0");
             Date now = new Date();
             newOrder.setYearMonth(now.getYear() * 100 + now.getMonth());
@@ -313,12 +335,13 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
             }
             taskCache.setCacheOrder(newOrder);
             orderId = newOrder.getId();
+            System.out.println("产生新订单号：" + orderId);
         }
         CtOrder cacheOrder = taskCache.getCacheOrder(orderId);
         if (cacheOrder == null) {
             throw new ServiceException("无法获取订单信息");
         }
-        if (StringUtils.equals(cacheOrder.getDeviceCashId(), deviceId)) {
+        if (!StringUtils.equals(cacheOrder.getDeviceCashId(), deviceId)) {
             throw new ServiceException("该订单不属于当前收银机");
         }
         int increase = num * buyPrice;
@@ -327,7 +350,7 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
         cacheOrder.setItemCount(cacheOrder.getItemCount() + num);
         taskCache.setCacheOrder(cacheOrder);
 
-        CtOrderDetail od = taskCache.getCacheOrderDetail(goodId);
+        CtOrderDetail od = taskCache.getCacheOrderDetail(orderId, goodId);
         if (od == null) {
             //生产订单物品
             od = new CtOrderDetail();
@@ -353,7 +376,7 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
         if (cacheOrder == null) {
             throw new ServiceException("无法获取订单信息");
         }
-        if (StringUtils.equals(cacheOrder.getDeviceCashId(), deviceId)) {
+        if (!StringUtils.equals(cacheOrder.getDeviceCashId(), deviceId)) {
             throw new ServiceException("该订单不属于当前收银机");
         }
         CtOrderDetail od = taskCache.getCacheOrderDetail(goodId);
@@ -381,30 +404,34 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
     }
 
     @Override
+    @Transactional
     public void cancelOrder(String deviceId, String orderId) {
         CtOrder cacheOrder = taskCache.getCacheOrder(orderId);
         if (cacheOrder == null) {
             throw new ServiceException("无法获取订单信息");
         }
-        if (StringUtils.equals(cacheOrder.getDeviceCashId(), deviceId)) {
+        if (!StringUtils.equals(cacheOrder.getDeviceCashId(), deviceId)) {
             throw new ServiceException("该订单不属于当前收银机");
         }
-        if (StringUtils.equals(cacheOrder.getState(), "0")) {
+        if (StringUtils.equals(cacheOrder.getState(), PayState.READY_TO_PAY.getCode())) {
             if (taskCache.deleteCacheOrder(orderId)) {
                 orderMapper.deleteCtOrderById(orderId);
             }
         }
     }
 
-    public void payOrder(String deviceId, String orderId, int payType, String payCode, int totalAmount, int totalNum) {
+    @Override
+    @Transactional
+    public String payOrder(String deviceId, String orderId, int payType, String payCode, int totalAmount, int totalNum) {
         CtOrder cacheOrder = taskCache.getCacheOrder(orderId);
         if (cacheOrder == null) {
             throw new ServiceException("无法获取订单信息");
         }
-        if (StringUtils.equals(cacheOrder.getDeviceCashId(), deviceId)) {
+        if (!StringUtils.equals(cacheOrder.getDeviceCashId(), deviceId)) {
             throw new ServiceException("该订单不属于当前收银机");
         }
-        if (StringUtils.equals(cacheOrder.getState(), "2") || StringUtils.equals(cacheOrder.getState(), "1")) {
+        if (StringUtils.equals(cacheOrder.getState(), PayState.PAY_SUCCESS.getCode())
+                || StringUtils.equals(cacheOrder.getState(), PayState.PAID_THEN_CONFIRM.getCode())) {
             throw new ServiceException("改订单正在支付中或完成支付，请勿重复提交");
         }
         CtDeviceCash ctDeviceCash = deviceCashMapper.selectCtDeviceCashById(deviceId);
@@ -417,6 +444,16 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
         if (cacheOrder.getTotalAmount().intValue() != totalAmount || cacheOrder.getItemCount().intValue() != totalNum) {
             throw new ServiceException("订单总额不一致");
         }
+        // 持久化订单
+        cacheOrder.setState(PayState.PAID_THEN_CONFIRM.getCode());
+        cacheOrder.setUpdateTime(DateUtils.getNowDate());
+        orderMapper.updateCtOrder(cacheOrder);
+        Map<String, CtOrderDetail> cacheOrderDetails = taskCache.getCacheOrderDetails(orderId);
+        for (CtOrderDetail item :
+                cacheOrderDetails.values()) {
+            orderDetailMapper.insertCtOrderDetail(item);
+        }
+
         String clientSN = NoUtils.genPayOrderNo(orderId);
         HashMap<String, Object> reqMap = new HashMap<>();
         reqMap.put("terminal_sn", ctDeviceCash.getTerminalSn());//收钱吧终端ID	收钱吧终端ID，不超过32位的纯数字
@@ -426,16 +463,83 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
         reqMap.put("subject", "生活用品");//交易简介	本次交易的简要介绍
         reqMap.put("operator", cacheOrder.getStoreName());//门店操作员	发起本次交易的操作员
         //todo 分账参数
-        String result = shouqianbaApiService.b2cPay(reqMap, ctDeviceCash.getTerminalKey());
+        CommonResp commonResp = shouqianbaApiService.b2cPay(reqMap, ctDeviceCash.getTerminalKey());
+        if (commonResp == null) {
+            throw new ServiceException("支付失败");
+        }
         ObjectMapper mapper = new ObjectMapper();
-        try {
-            CommonResp commonResp = mapper.readValue(result, CommonResp.class);
-            if (commonResp == null) {
-                throw new ServiceException("支付失败");
+        if (StringUtils.equals(commonResp.getResultCode(), ShouqianbaConstant.response200)) {
+            BuzResponse bizResponse = commonResp.getBizResponse();
+            if (bizResponse != null) {
+                if (StringUtils.equals(bizResponse.getResultCode(), ShouqianbaConstant.busiPayInProgress)) {
+                    //发起订单查询轮询
+                    String payOrderSerial = "";
+                    if (bizResponse.getData() != null) {
+                        PayOrderData payOrderData = mapper.convertValue(bizResponse.getData(), PayOrderData.class);
+                        payOrderSerial = payOrderData.getSn();
+                    }
+                    PayOrderMsgData payOrderMsgData = new PayOrderMsgData();
+                    payOrderMsgData.setTerminalSN(ctDeviceCash.getTerminalSn());
+                    payOrderMsgData.setTerminalKey(ctDeviceCash.getTerminalKey());
+                    payOrderMsgData.setPaySn(payOrderSerial);
+                    payOrderMsgData.setRawOrderId(clientSN);
+                    payOrderMsgData.setCreateTime(DateUtils.getNowDate());
+                    payOrderMsgData.setCancelFlag(false);
+                    mqTemplate.convertAndSend(MQTopicConstants.QUERY_PAY_ORDER, payOrderMsgData);
+                } else if (StringUtils.equals(bizResponse.getErrorCodeStandard(), "EP104")) {
+                    //输入密码超时
+                    return "输入密码确认超时";
+                } else {
+                    if (!StringUtils.isEmpty(bizResponse.getErrorMessage())) {
+                        return bizResponse.getErrorMessage();
+                    }
+                    if (bizResponse.getData() != null) {
+                        PayOrderData payOrderData = mapper.convertValue(bizResponse.getData(), PayOrderData.class);
+                        int confirm = payOrderUtils.handlePayOrder(payOrderData);
+                        if (confirm == 1) {
+                            //  发送库存维护
+                            PayOrderMsgData payOrderMsgData = new PayOrderMsgData();
+                            payOrderMsgData.setRawOrderId(clientSN);
+                            mqTemplate.convertAndSend(MQTopicConstants.MAINTAIN_STOCK, payOrderMsgData);
+                        }
+                    }
+                }
             }
-
-        } catch (JsonProcessingException e) {
-            log.error(e.getMessage());
+        } else if (StringUtils.equals(commonResp.getResultCode(), ShouqianbaConstant.response400)) {
+            //一般为二维码错误
+            return commonResp.getErrorMessage();
+        } else {
+            throw new ServiceException(commonResp.getResultCode() + ": " + commonResp.getErrorMessage());
+        }
+        return "";
+    }
+    /**
+     * 查询订单状态
+     * 0-超时未确认 1-确认成功 2-确认失败 3-订单异常
+     *
+     * @param orderId
+     */
+    @Override
+    public int payOrderStatus(String deviceId, String orderId) {
+        CtOrder cacheOrder;
+        Date start = DateUtils.getNowDate();
+        while (true) {
+            Date now = DateUtils.getNowDate();
+            if (DateUtil.between(now, start, DateUnit.SECOND) > 10) {
+                return 0;
+            }
+            cacheOrder = taskCache.getCacheOrder(orderId);
+            if (cacheOrder != null) {
+                if (StringUtils.equals(cacheOrder.getState(), PayState.PAID_THEN_CONFIRM.getCode())) {
+                    Threads.sleep(1000);
+                    continue;
+                } else if (StringUtils.equals(cacheOrder.getState(), PayState.PAY_SUCCESS.getCode())) {
+                    return 1;
+                } else if (StringUtils.equals(cacheOrder.getState(), PayState.PAY_FAIL.getCode())) {
+                    return 2;
+                }
+            }
+            return 3;
         }
     }
 
@@ -448,5 +552,6 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
         log.info("生成新动态码:" + dynamicQrCodeUrl);
         return dynamicQrCodeUrl;
     }
+
 
 }

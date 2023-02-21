@@ -3,7 +3,7 @@ package com.cloudtimes.hardwaredevice.service.impl;
 import java.util.List;
 
 import com.cloudtimes.common.utils.DateUtils;
-import com.cloudtimes.util.NoUtils;
+import com.cloudtimes.common.NoUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.cloudtimes.common.annotation.DataSource;

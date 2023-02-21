@@ -26,7 +26,7 @@ public class CtTaskCache {
     private static final String TASK_SHOPPING_REL_CACHE = "task_shopping:";//任务购物关联
     private static final String TASK_ORDER_REL_CACHE = "task_order:";//任务订单关联
     private static final String ORDER_DETAIL_CACHE = "order_detail:";//订单详情关联
-    private static final String OUT_SUPERVISE_TASK_ID = "out_supervise_task_id:123456"; //无任务ID
+    private static final String OUT_SUPERVISE_TASK_ID = "out_supervise_task_orders"; //无任务ID
     //读写锁
     private final ReadWriteLock rwLock = new ReentrantReadWriteLock();
     //获取写锁
@@ -108,12 +108,16 @@ public class CtTaskCache {
         try {
             String cacheKey = getCacheKey(STAFF_TASK_REL_CACHE, taskId);
             if (!StringUtils.isEmpty(cacheKey)) {
-                return redisCache.deleteCacheMapValue(cacheKey, taskId);
+                if (redisCache.deleteCacheMapValue(cacheKey, taskId)) {
+                    // 删除关联交易
+                    redisCache.deleteObject(TASK_SHOPPING_REL_CACHE + taskId);
+                    // 删除关联订单
+                    redisCache.deleteObject(TASK_ORDER_REL_CACHE + taskId);
+                } else {
+                    return false;
+                }
             }
-            // 删除关联交易
-            redisCache.deleteObject(TASK_SHOPPING_REL_CACHE + taskId);
-            // 删除关联订单
-            redisCache.deleteObject(TASK_ORDER_REL_CACHE + taskId);
+
         } finally {
             wLock.unlock();
         }
@@ -164,10 +168,13 @@ public class CtTaskCache {
             //从任务订单关联表中删除订单
             String cacheKey = getCacheKey(TASK_ORDER_REL_CACHE, orderId);
             if (!StringUtils.isEmpty(cacheKey)) {
-                return redisCache.deleteCacheMapValue(cacheKey, orderId);
+                if (redisCache.deleteCacheMapValue(cacheKey, orderId)) {
+                    //删除物品清单
+                    return redisCache.deleteObject(ORDER_DETAIL_CACHE + orderId);
+                } else {
+                    return false;
+                }
             }
-            //删除物品清单
-            redisCache.deleteObject(ORDER_DETAIL_CACHE + orderId);
         } finally {
             wLock.unlock();
         }
@@ -282,7 +289,7 @@ public class CtTaskCache {
 
     private String getCacheKey(String prefix, String orderId) {
         // 获取全部前缀匹配的key
-        Set<String> keys = (Set<String>) redisCache.keys(prefix);
+        Set<String> keys = (Set<String>) redisCache.keys(prefix + "*");
         //遍历查找相关hkey是否存在
         for (String key :
                 keys) {

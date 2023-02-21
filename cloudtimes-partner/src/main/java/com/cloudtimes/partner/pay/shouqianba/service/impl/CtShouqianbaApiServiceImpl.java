@@ -122,7 +122,7 @@ public class CtShouqianbaApiServiceImpl implements ICtShouqianbaApiService {
      * * * * "reflect"             // N 透传参数    {"tips": "200"}
      */
     @Override
-    public String b2cPay(Map<String, Object> params, String terminalKey) {
+    public CommonResp b2cPay(Map<String, Object> params, String terminalKey) {
         JSONObject reqObj = new JSONObject(params);
         String terminalSN = reqObj.getString("terminal_sn");
         if ("".equals(terminalSN)) {
@@ -130,7 +130,7 @@ public class CtShouqianbaApiServiceImpl implements ICtShouqianbaApiService {
         }
         String resultStr = sendShouqianbaHttp(ShouqianbaConstant.b2CPay, reqObj, terminalSN, terminalKey);
         log.info(Thread.currentThread().getStackTrace()[1].getMethodName() + ": " + resultStr);
-        return resultStr;
+        return getCommonResp(resultStr);
     }
 
     /**
@@ -229,14 +229,28 @@ public class CtShouqianbaApiServiceImpl implements ICtShouqianbaApiService {
      * @return error
      * buzResponse
      */
+    private CommonResp getCommonResp(String rawString) {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.readValue(rawString, CommonResp.class);
+        } catch (JsonProcessingException e) {
+            log.error(e.getMessage());
+        }
+        return null;
+    }
+
+    /**
+     * @param rawString
+     * @return error
+     * buzResponse
+     */
     private BuzResponse getBuzResponse(String rawString) {
         ObjectMapper mapper = new ObjectMapper();
         try {
             CommonResp commonResp = mapper.readValue(rawString, CommonResp.class);
-            if (commonResp == null) {
-                return null;
+            if (commonResp != null) {
+                return commonResp.getBizResponse();
             }
-            return commonResp.getBizResponse();
         } catch (JsonProcessingException e) {
             log.error(e.getMessage());
         }
@@ -248,11 +262,13 @@ public class CtShouqianbaApiServiceImpl implements ICtShouqianbaApiService {
         ObjectMapper mapper = new ObjectMapper();
         try {
             CommonResp commonResp = mapper.readValue(rawString, CommonResp.class);
-            if (StringUtils.equals(commonResp.getResultCode(), ShouqianbaConstant.response200)) {
+            if (commonResp != null) {
                 BuzResponse bizResponse = commonResp.getBizResponse();
-                Object data = bizResponse.getData();
-                if (data != null) {
-                    return mapper.convertValue(bizResponse.getData(), tClass);
+                if (bizResponse != null) {
+                    Object data = bizResponse.getData();
+                    if (data != null) {
+                        return mapper.convertValue(bizResponse.getData(), tClass);
+                    }
                 }
             }
             log.error(commonResp.getErrorMessage());

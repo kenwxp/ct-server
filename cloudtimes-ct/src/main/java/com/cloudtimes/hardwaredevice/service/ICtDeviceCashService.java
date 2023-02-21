@@ -49,7 +49,7 @@ public interface ICtDeviceCashService
      * @param ids 需要删除的收银机特有信息主键集合
      * @return 结果
      */
-    public int deleteCtDeviceCashByIds(Long[] ids);
+    public int deleteCtDeviceCashByIds(String[] ids);
 
     /**
      * 删除收银机特有信息信息
@@ -57,5 +57,5 @@ public interface ICtDeviceCashService
      * @param id 收银机特有信息主键
      * @return 结果
      */
-    public int deleteCtDeviceCashById(Long id);
+    public int deleteCtDeviceCashById(String id);
 }

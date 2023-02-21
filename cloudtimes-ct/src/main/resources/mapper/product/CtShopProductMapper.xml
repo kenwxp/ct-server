@@ -242,4 +242,13 @@
         and p.shop_no =
         #{shopNo}
     </select>
+
+    <update id="updateCtShopProductStock" parameterType="CtShopProduct">
+        update ct_shop_product
+        set
+        stock = stock - #{stock},
+        total_sold = total_sold + #{totalSold},
+        update_time = #{updateTime}
+        where id = #{id}
+    </update>
 </mapper>

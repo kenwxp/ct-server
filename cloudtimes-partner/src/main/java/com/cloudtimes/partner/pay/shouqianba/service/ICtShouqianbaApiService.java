@@ -2,6 +2,7 @@ package com.cloudtimes.partner.pay.shouqianba.service;
 
 import com.cloudtimes.partner.pay.shouqianba.domain.AuthInfoData;
 import com.cloudtimes.partner.pay.shouqianba.domain.BuzResponse;
+import com.cloudtimes.partner.pay.shouqianba.domain.CommonResp;
 import com.cloudtimes.partner.pay.shouqianba.domain.PayOrderData;
 
 import java.util.Map;
@@ -92,7 +93,7 @@ public interface ICtShouqianbaApiService {
      * * * * "operator"            // Y 门店操作员    "张三丰"
      * * * * "reflect"             // N 透传参数    {"tips": "200"}
      */
-    public String b2cPay(Map<String, Object> params, String terminalKey);
+    public CommonResp b2cPay(Map<String, Object> params, String terminalKey);
 
     /**
      * 查询支付订单信息接口

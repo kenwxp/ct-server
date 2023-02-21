@@ -1,7 +1,8 @@
 package com.cloudtimes.app.controller.cash;
 
 import com.cloudtimes.app.controller.cash.model.*;
-import com.cloudtimes.common.core.domain.AjaxResult;
+import com.cloudtimes.app.models.ApiResult;
+import com.cloudtimes.common.constant.HttpStatus;
 import com.cloudtimes.common.core.domain.entity.AuthUser;
 import com.cloudtimes.common.enums.ChannelType;
 import com.cloudtimes.common.utils.AuthUtils;
@@ -38,39 +39,39 @@ public class CashBusinessController {
 
     @ApiOperation("获取刷脸凭证")
     @PostMapping(value = "/face/authinfo")
-    public AjaxResult getFaceAuthInfo(@RequestBody GetFaceAuthInfoReq info) {
+    public ApiResult<AuthInfoData> getFaceAuthInfo(@RequestBody GetFaceAuthInfoReq info) {
         AuthUser authUser = AuthUtils.getObject();
         if (!StringUtils.equals(authUser.getChannelType(), ChannelType.CASH.getCode())) {
-            return AjaxResult.error("渠道类型错误");
+            return new ApiResult().error("渠道类型错误");
         }
         AuthInfoData faceAuthInfo = cashBusinessService.getFaceAuthInfo(authUser.getId(), info.getRawdata(), info.getAuthType());
         if (faceAuthInfo == null) {
-            return AjaxResult.error();
+            return new ApiResult().error();
         } else {
-            return AjaxResult.success(faceAuthInfo);
+            return new ApiResult().success(faceAuthInfo);
         }
     }
 
     @ApiOperation("根据刷脸token获取订单号")
     @PostMapping(value = "/face/order")
-    public AjaxResult getOrderId(@RequestBody GetOrderIdReq info) {
+    public ApiResult<GetOrderIdResp> getOrderId(@RequestBody GetOrderIdReq info) {
         AuthUser authUser = AuthUtils.getObject();
         if (!StringUtils.equals(authUser.getChannelType(), ChannelType.CASH.getCode())) {
-            return AjaxResult.error("渠道类型错误");
+            return new ApiResult().error("渠道类型错误");
         }
         Map<String, String> orderInfo = cashBusinessService.getOrderId(authUser.getId(), info.getToken());
         GetOrderIdResp resp = new GetOrderIdResp();
         resp.setOrderId(orderInfo.get("orderId"));
         resp.setCustomerPhone(orderInfo.get("phone"));
-        return AjaxResult.success(resp);
+        return new ApiResult().success(resp);
     }
 
     @ApiOperation("拉取商品列表")
     @PostMapping(value = "/product/fetch")
-    public AjaxResult getProductList() {
+    public ApiResult<List<GetProductListResp>> getProductList() {
         AuthUser authUser = AuthUtils.getObject();
         if (!StringUtils.equals(authUser.getChannelType(), ChannelType.CASH.getCode())) {
-            return AjaxResult.error("渠道类型错误");
+            return new ApiResult().error("渠道类型错误");
         }
         List<CtShopProduct> productList = cashBusinessService.getProductList(authUser.getId());
         List<GetProductListResp> resp = new ArrayList<>();
@@ -93,15 +94,15 @@ public class CashBusinessController {
             getProductListResp.setIsCustomerDiscount(isCustomerDiscount);
             resp.add(getProductListResp);
         }
-        return AjaxResult.success(resp);
+        return new ApiResult().success(resp);
     }
 
     @ApiOperation("获取语音token")
     @PostMapping(value = "/voice/token")
-    public AjaxResult getVoiceToken() {
+    public ApiResult<GetVoiceTokenResp> getVoiceToken() {
         AuthUser authUser = AuthUtils.getObject();
         if (!StringUtils.equals(authUser.getChannelType(), ChannelType.CASH.getCode())) {
-            return AjaxResult.error("渠道类型错误");
+            return new ApiResult().error("渠道类型错误");
         }
         VoiceTokenData voiceToken = cashBusinessService.getVoiceToken(authUser.getId());
         GetVoiceTokenResp resp = new GetVoiceTokenResp();
@@ -109,15 +110,15 @@ public class CashBusinessController {
         resp.setVoiceToken(voiceToken.getVoiceToken());
         resp.setChannelName(voiceToken.getChannelName());
         resp.setUid(voiceToken.getUid());
-        return AjaxResult.success(resp);
+        return new ApiResult().success(resp);
     }
 
     @ApiOperation("订单加商品")
     @PostMapping(value = "/order/item/add")
-    public AjaxResult addOrderItem(@RequestBody OrderItemReq info) {
+    public ApiResult<OrderItemResp> addOrderItem(@RequestBody OrderItemReq info) {
         AuthUser authUser = AuthUtils.getObject();
         if (!StringUtils.equals(authUser.getChannelType(), ChannelType.CASH.getCode())) {
-            return AjaxResult.error("渠道类型错误");
+            return new ApiResult().error("渠道类型错误");
         }
         String newOrderId = cashBusinessService.addOrderItem(authUser.getId(),
                 info.getOrderId(),
@@ -129,45 +130,66 @@ public class CashBusinessController {
                 info.getNum(),
                 info.getBuyPrice(),
                 info.getSellPrice());
-        return AjaxResult.success(new OrderItemResp(newOrderId));
+        return new ApiResult().success(new OrderItemResp(newOrderId));
     }
 
     @ApiOperation("订单减商品")
     @PostMapping(value = "/order/item/delete")
-    public AjaxResult deleteOrderItem(@RequestBody OrderItemReq info) {
+    public ApiResult<OrderItemResp> deleteOrderItem(@RequestBody OrderItemReq info) {
         AuthUser authUser = AuthUtils.getObject();
         if (!StringUtils.equals(authUser.getChannelType(), ChannelType.CASH.getCode())) {
-            return AjaxResult.error("渠道类型错误");
+            return new ApiResult().error("渠道类型错误");
         }
         cashBusinessService.deleteOrderItem(authUser.getId(), info.getOrderId(), info.getGoodId(), info.getNum());
-        return AjaxResult.success(new OrderItemResp(info.getOrderId()));
+        return new ApiResult().success(new OrderItemResp(info.getOrderId()));
     }
 
     @ApiOperation("取消订单")
     @PostMapping(value = "/order/cancel")
-    public AjaxResult cancelOrder(@RequestBody OrderItemReq info) {
+    public ApiResult<OrderItemResp> cancelOrder(@RequestBody OrderItemReq info) {
         AuthUser authUser = AuthUtils.getObject();
         if (!StringUtils.equals(authUser.getChannelType(), ChannelType.CASH.getCode())) {
-            return AjaxResult.error("渠道类型错误");
+            return new ApiResult().error("渠道类型错误");
         }
         cashBusinessService.cancelOrder(authUser.getId(), info.getOrderId());
-        return AjaxResult.success(new OrderItemResp(info.getOrderId()));
+        return new ApiResult().success(new OrderItemResp(info.getOrderId()));
     }
 
     @ApiOperation("订单支付")
     @PostMapping(value = "/order/pay")
-    public AjaxResult payOrder(@RequestBody OrderPayReq info) {
+    public ApiResult payOrder(@RequestBody OrderPayReq info) {
         AuthUser authUser = AuthUtils.getObject();
         if (!StringUtils.equals(authUser.getChannelType(), ChannelType.CASH.getCode())) {
-            return AjaxResult.error("渠道类型错误");
+            return new ApiResult().error("渠道类型错误");
         }
-        cashBusinessService.payOrder(authUser.getId(), info.getOrderId(), info.getPayType(), info.getPayCode(), info.getTotalAmount(), info.getTotalNum());
-        return AjaxResult.success();
+        String errorMsg = cashBusinessService.payOrder(authUser.getId(), info.getOrderId(), info.getPayType(), info.getPayCode(), info.getTotalAmount(), info.getTotalNum());
+        if (StringUtils.isEmpty(errorMsg)) {
+            return new ApiResult().success();
+        } else {
+            return new ApiResult().error(HttpStatus.BAD_REQUEST, errorMsg);
+        }
     }
 
     @ApiOperation("查询订单状态")
     @PostMapping(value = "/order/status")
-    public AjaxResult payOrderStatus(@RequestBody OrderPayReq info) {
-        return AjaxResult.success();
+    public ApiResult<OrderPayStatusResp> payOrderStatus(@RequestBody OrderPayReq info) {
+        AuthUser authUser = AuthUtils.getObject();
+        if (!StringUtils.equals(authUser.getChannelType(), ChannelType.CASH.getCode())) {
+            return new ApiResult().error("渠道类型错误");
+        }
+        int retCode = cashBusinessService.payOrderStatus(authUser.getId(), info.getOrderId());
+        if (retCode == 0) {
+            //超时
+            return new ApiResult().error(HttpStatus.TIMEOUT, "处理超时请重试");
+        } else if (retCode == 1) {
+            //成功
+            return new ApiResult().success(new OrderPayStatusResp("2"));
+        } else if (retCode == 2) {
+            //失败
+            return new ApiResult().success(new OrderPayStatusResp("3"));
+        } else {
+            //异常
+            return new ApiResult().error("订单异常");
+        }
     }
 }
