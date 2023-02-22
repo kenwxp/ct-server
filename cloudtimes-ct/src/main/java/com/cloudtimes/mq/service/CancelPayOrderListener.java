@@ -1,6 +1,7 @@
 package com.cloudtimes.mq.service;
 
 import com.cloudtimes.cache.CtTaskCache;
+import com.cloudtimes.common.mq.RocketMqProducer;
 import com.cloudtimes.common.utils.DateUtils;
 import com.cloudtimes.common.utils.StringUtils;
 import com.cloudtimes.enums.PayState;
@@ -15,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.spring.annotation.MessageModel;
 import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
 import org.apache.rocketmq.spring.core.RocketMQListener;
-import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Slf4j
@@ -28,7 +28,7 @@ public class CancelPayOrderListener implements RocketMQListener<PayOrderMsgData>
     @Autowired
     private CtOrderMapper orderMapper;
     @Autowired
-    private RocketMQTemplate mqTemplate;
+    private RocketMqProducer mqProducer;
 
     @Override
     public void onMessage(PayOrderMsgData data) {
@@ -37,7 +37,7 @@ public class CancelPayOrderListener implements RocketMQListener<PayOrderMsgData>
         if (buzResponse != null) {
             if (StringUtils.equals(buzResponse.getResultCode(), ShouqianbaConstant.busiCancelInProgress)) {
                 //发起订单查询
-                mqTemplate.convertAndSend(CtMQConstants.QUERY_PAY_ORDER, data);
+                mqProducer.send(CtMQConstants.QUERY_PAY_ORDER, data);
             } else if (StringUtils.equals(buzResponse.getResultCode(), ShouqianbaConstant.busiCancelSuccess)) {
 //                String orderId = NoUtils.parseOrderNo(data.getOrderId());
                 // 更新订单状态

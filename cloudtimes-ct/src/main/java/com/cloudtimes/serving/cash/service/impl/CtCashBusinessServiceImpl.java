@@ -9,6 +9,7 @@ import com.cloudtimes.cache.CtTaskCache;
 import com.cloudtimes.common.OrderUtil;
 import com.cloudtimes.common.PayOrderUtils;
 import com.cloudtimes.common.exception.ServiceException;
+import com.cloudtimes.common.mq.RocketMqProducer;
 import com.cloudtimes.common.utils.DateUtils;
 import com.cloudtimes.common.utils.JacksonUtils;
 import com.cloudtimes.common.utils.NumberUtils;
@@ -41,7 +42,6 @@ import com.cloudtimes.supervise.mapper.CtOrderDetailMapper;
 import com.cloudtimes.supervise.mapper.CtOrderMapper;
 import com.cloudtimes.supervise.mapper.CtShoppingMapper;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,7 +90,7 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
     @Autowired
     private PayOrderUtils payOrderUtils;
     @Autowired
-    private RocketMQTemplate mqTemplate;
+    private RocketMqProducer mqProducer;
 
     /**
      * 获取刷脸凭证
@@ -315,7 +315,7 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
         if (!StringUtils.equals(cacheOrder.getDeviceCashId(), deviceId)) {
             throw new ServiceException("该订单不属于当前收银机");
         }
-        int increase = num * buyPrice;
+        int increase = num * sellPrice;
         //更新订单中的价格参数
         cacheOrder.setTotalAmount(cacheOrder.getTotalAmount().add(BigDecimal.valueOf(increase)));
         cacheOrder.setItemCount(cacheOrder.getItemCount() + num);
@@ -332,8 +332,9 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
             od.setItemTypeId(categoryId);
             od.setItemTypeName(categoryName);
             od.setItemCount(BigDecimal.valueOf(num));
-            od.setItemPrice(BigDecimal.valueOf(buyPrice));
-            od.setItemSum(BigDecimal.valueOf(num * buyPrice));
+            od.setItemPrice(BigDecimal.valueOf(sellPrice));
+            od.setItemPrimePrice(BigDecimal.valueOf(buyPrice));
+            od.setItemSum(BigDecimal.valueOf(num * sellPrice));
             od.setDelFlag("0");
             od.setYearMonth(Long.valueOf(DateUtils.getYearMonth()));
         } else {
@@ -460,7 +461,7 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
                     payOrderMsgData.setOrderId(clientSN);
                     payOrderMsgData.setCreateTime(DateUtils.getNowDate());
                     payOrderMsgData.setCancelFlag(false);
-                    mqTemplate.convertAndSend(CtMQConstants.QUERY_PAY_ORDER, payOrderMsgData);
+                    mqProducer.send(CtMQConstants.QUERY_PAY_ORDER, payOrderMsgData);
                 } else if (StringUtils.equals(bizResponse.getErrorCodeStandard(), "EP104")) {
                     //输入密码超时
                     return "输入密码确认超时";
@@ -475,7 +476,7 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
                             //  发送库存维护
                             PayOrderMsgData payOrderMsgData = new PayOrderMsgData();
                             payOrderMsgData.setOrderId(orderId);
-                            mqTemplate.convertAndSend(CtMQConstants.MAINTAIN_STOCK, payOrderMsgData);
+                            mqProducer.send(CtMQConstants.MAINTAIN_STOCK, payOrderMsgData);
                         }
                     }
                 }
@@ -488,6 +489,7 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
         }
         return "";
     }
+
     /**
      * 查询订单状态
      * 0-超时未确认 1-确认成功 2-确认失败 3-订单异常

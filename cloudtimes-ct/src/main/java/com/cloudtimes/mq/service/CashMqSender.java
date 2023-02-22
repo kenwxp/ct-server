@@ -1,14 +1,10 @@
 package com.cloudtimes.mq.service;
 
 import com.cloudtimes.common.constant.RocketMQConstants;
-import com.cloudtimes.common.mq.CallDoData;
-import com.cloudtimes.common.mq.CashMqData;
-import com.cloudtimes.common.mq.DutyStatusData;
-import com.cloudtimes.common.mq.SendOrderData;
+import com.cloudtimes.common.mq.*;
 import com.cloudtimes.enums.DeviceType;
 import com.cloudtimes.hardwaredevice.domain.CtDevice;
 import com.cloudtimes.hardwaredevice.mapper.CtDeviceMapper;
-import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +19,7 @@ public class CashMqSender {
     @Autowired
     private CtDeviceMapper deviceMapper;
     @Autowired
-    private RocketMQTemplate mqTemplate;
+    private RocketMqProducer mqProducer;
     /**
      * 指令选项
      */
@@ -45,7 +41,7 @@ public class CashMqSender {
             data.setIsSupervise(isSupervise);
             cashMqData.setData(data);
             log.info("发送mq信息：" + cashMqData.toString());
-            mqTemplate.convertAndSend(RocketMQConstants.WS_CASH_DEVICE, cashMqData);
+            mqProducer.send(RocketMQConstants.WS_CASH_DEVICE, cashMqData);
         }
     }
 
@@ -61,7 +57,7 @@ public class CashMqSender {
             data.setDoJoin(isSupervise);
             cashMqData.setData(data);
             log.info("发送mq信息：" + cashMqData);
-            mqTemplate.convertAndSend(RocketMQConstants.WS_CASH_DEVICE, cashMqData);
+            mqProducer.send(RocketMQConstants.WS_CASH_DEVICE, cashMqData);
         }
     }
 
@@ -78,7 +74,7 @@ public class CashMqSender {
             data.setDynamicQrCode(dynamicQrCode);
             cashMqData.setData(data);
             log.info("发送mq信息：" + cashMqData);
-            mqTemplate.convertAndSend(RocketMQConstants.WS_CASH_DEVICE, cashMqData);
+            mqProducer.send(RocketMQConstants.WS_CASH_DEVICE, cashMqData);
         }
     }
 
@@ -91,7 +87,7 @@ public class CashMqSender {
             cashMqData.setDeviceId(device.getId());
             cashMqData.setOption(SEND_SYNC_PRODUCT);
             log.info("发送mq信息：" + cashMqData);
-            mqTemplate.convertAndSend(RocketMQConstants.WS_CASH_DEVICE, cashMqData);
+            mqProducer.send(RocketMQConstants.WS_CASH_DEVICE, cashMqData);
         }
     }
 

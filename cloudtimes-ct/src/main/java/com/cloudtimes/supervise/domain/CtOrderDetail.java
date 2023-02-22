@@ -72,6 +72,12 @@ public class CtOrderDetail extends BaseEntity {
     private BigDecimal itemPrice;
 
     /**
+     * 物品进货价
+     */
+    @Excel(name = "物品进货价")
+    private BigDecimal itemPrimePrice;
+
+    /**
      * 小计
      */
     @Excel(name = "小计")

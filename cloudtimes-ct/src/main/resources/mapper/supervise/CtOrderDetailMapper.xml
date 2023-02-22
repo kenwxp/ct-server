@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.cloudtimes.supervise.mapper.CtOrderDetailMapper">
     <sql id="selectCtOrderDetailVo">
-        select id, order_id, store_id, item_id, item_name, item_type_id, item_type_name, item_count, item_price,
+        select id, order_id, store_id, item_id, item_name, item_type_id, item_type_name, item_count, item_price, item_prime_price,
         item_sum, create_time, update_time, del_flag, `year_month`, create_date from ct_order_detail
     </sql>
 
@@ -21,6 +21,7 @@
             </if>
             <if test="itemCount != null ">and item_count = #{itemCount}</if>
             <if test="itemPrice != null ">and item_price = #{itemPrice}</if>
+            <if test="itemPrimePrice != null ">and item_prime_price = #{itemPrimePrice}</if>
             <if test="itemSum != null ">and item_sum = #{itemSum}</if>
             <if test="createDate != null ">and create_date = #{createDate}</if>
         </where>
@@ -42,6 +43,7 @@
             <if test="itemTypeName != null">item_type_name,</if>
             <if test="itemCount != null">item_count,</if>
             <if test="itemPrice != null">item_price,</if>
+            <if test="itemPrimePrice != null">item_prime_price,</if>
             <if test="itemSum != null">item_sum,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
@@ -58,6 +60,7 @@
             <if test="itemTypeName != null">#{itemTypeName},</if>
             <if test="itemCount != null">#{itemCount},</if>
             <if test="itemPrice != null">#{itemPrice},</if>
+            <if test="itemPrimePrice != null">#{itemPrimePrice},</if>
             <if test="itemSum != null">#{itemSum},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateTime != null">#{updateTime},</if>
@@ -78,6 +81,7 @@
             <if test="itemTypeName != null">item_type_name = #{itemTypeName},</if>
             <if test="itemCount != null">item_count = #{itemCount},</if>
             <if test="itemPrice != null">item_price = #{itemPrice},</if>
+            <if test="itemPrimePrice != null">item_prime_price = #{itemPrimePrice},</if>
             <if test="itemSum != null">item_sum = #{itemSum},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
@@ -109,6 +113,7 @@
         od.item_name,
         od.item_count,
         od.item_price,
+        od.itemPrimePrice,
         od.create_time
         from ct_order_detail od, ct_order o, ct_task t
         <where>
