@@ -113,7 +113,7 @@
         od.item_name,
         od.item_count,
         od.item_price,
-        od.itemPrimePrice,
+        od.item_prime_price,
         od.create_time
         from ct_order_detail od, ct_order o, ct_task t
         <where>
