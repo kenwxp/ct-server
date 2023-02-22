@@ -7,8 +7,8 @@ import java.util.List;
 /**
  * 支付渠道Service接口
  * 
- * @author wangxp
- * @date 2023-02-07
+ * @author tank
+ * @date 2023-02-22
  */
 public interface ICtPaymentService 
 {

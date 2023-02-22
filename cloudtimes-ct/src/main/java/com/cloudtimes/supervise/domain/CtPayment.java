@@ -1,15 +1,17 @@
 package com.cloudtimes.supervise.domain;
 
-import com.cloudtimes.common.annotation.Excel;
-import com.cloudtimes.common.core.domain.BaseEntity;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import com.cloudtimes.common.annotation.Excel;
+import com.cloudtimes.common.core.domain.BaseEntity;
 
 /**
  * 支付渠道对象 ct_payment
  *
- * @author wangxp
- * @date 2023-02-07
+ * @author tank
+ * @date 2023-02-22
  */
 @Data
 @Slf4j
@@ -22,40 +24,34 @@ public class CtPayment extends BaseEntity {
     private String id;
 
     /**
-     * 支付流水号
+     * 收款主体id
      */
-    @Excel(name = "支付流水号")
-    private String paymentCode;
+    @Excel(name = "收款主体id")
+    private String payeeId;
 
     /**
-     * 门店号
+     * 收款主体类型  1-收银机 2-门店 3-店老板 4-会员
      */
-    @Excel(name = "门店号")
-    private String storeNo;
+    @Excel(name = "收款主体类型")
+    private String payeeType;
 
     /**
-     * 商户号
+     * 支付渠道类型 1-微信 2-支付宝 3-收钱吧 4-汇天下
      */
-    @Excel(name = "商户号")
-    private String merchantId;
+    @Excel(name = "支付渠道类型")
+    private String payWay;
 
     /**
      * 渠道参数
      */
     @Excel(name = "渠道参数")
-    private String paramsJson;
+    private String payParams;
 
     /**
-     * 渠道图标地址
+     * 备注
      */
-    @Excel(name = "渠道图标地址")
-    private String photoUrl;
-
-    /**
-     * 支付类型
-     */
-    @Excel(name = "支付类型")
-    private String paymentType;
+    @Excel(name = "备注")
+    private String payDesc;
 
     /**
      * 是否启用
@@ -67,5 +63,4 @@ public class CtPayment extends BaseEntity {
      * 是否删除
      */
     private String delFlag;
-
 }
