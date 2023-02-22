@@ -45,7 +45,7 @@ public class CtWeixinFaceApiServiceImpl implements ICtWeixinFaceApiService {
         reqParams.setNow((int) (new Date().getTime() / 1000));
         reqParams.setVersion("1");
         reqParams.setSignType("MD5");
-        reqParams.setNonceStr(NumberUtils.getRandomString(32));
+        reqParams.setNonceStr(NumberUtils.getRandomENString(32));
         String sign = getFaceSign(reqParams);
         reqParams.setSign(sign);
         String xmlParams = XmlUtils.formatXml(reqParams);
@@ -115,7 +115,7 @@ public class CtWeixinFaceApiServiceImpl implements ICtWeixinFaceApiService {
     }
 
     private String getAuthToken(String method, String url, String body) {
-        String nonceStr = NumberUtils.getRandomString(32);
+        String nonceStr = NumberUtils.getRandomENString(32);
         long timestamp = System.currentTimeMillis() / 1000;
         String message = buildMessage(method, url, timestamp, nonceStr, body);
         String signature = getSign(message);

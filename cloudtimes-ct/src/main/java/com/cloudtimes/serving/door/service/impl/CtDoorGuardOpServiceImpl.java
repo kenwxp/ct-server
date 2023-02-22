@@ -4,7 +4,7 @@ import com.cloudtimes.common.enums.ChannelType;
 import com.cloudtimes.common.utils.NumberUtils;
 import com.cloudtimes.common.utils.StringUtils;
 import com.cloudtimes.enums.DeviceType;
-import com.cloudtimes.enums.DoorOpenType;
+import com.cloudtimes.enums.DoorOpType;
 import com.cloudtimes.hardwaredevice.domain.CtDevice;
 import com.cloudtimes.hardwaredevice.domain.CtDeviceDoor;
 import com.cloudtimes.hardwaredevice.domain.CtOpenDoorLogs;
@@ -49,7 +49,7 @@ public class CtDoorGuardOpServiceImpl implements ICtDoorGuardOpService {
      */
     @Override
     public boolean transOpen(String storeId, String userId, ChannelType channelType) {
-        CtOpenDoorLogs initLog = initInsertLog(storeId, userId, channelType, DoorOpenType.TRANS_OPEN_DOOR);
+        CtOpenDoorLogs initLog = initInsertLog(storeId, userId, channelType, DoorOpType.TRANS_OPEN_DOOR);
         CtStore dbStore = storeMapper.selectCtStoreById(storeId);
         if (dbStore == null) {
             logFail(initLog, "", "无法获取门店信息");
@@ -113,7 +113,7 @@ public class CtDoorGuardOpServiceImpl implements ICtDoorGuardOpService {
      */
     @Override
     public boolean emergentOpen(String storeId, String userId) {
-        CtOpenDoorLogs initLog = initInsertLog(storeId, userId, ChannelType.WEB, DoorOpenType.EMERGENCY_OPEN_DOOR);
+        CtOpenDoorLogs initLog = initInsertLog(storeId, userId, ChannelType.WEB, DoorOpType.EMERGENCY_OPEN_DOOR);
         CtStore dbStore = storeMapper.selectCtStoreById(storeId);
         if (dbStore == null) {
             logFail(initLog, "", "无法获取门店信息");
@@ -173,7 +173,7 @@ public class CtDoorGuardOpServiceImpl implements ICtDoorGuardOpService {
      */
     @Override
     public boolean ownerOpen(String storeId, String userId) {
-        CtOpenDoorLogs initLog = initInsertLog(storeId, userId, ChannelType.MOBILE, DoorOpenType.OWNER_OPEN_DOOR);
+        CtOpenDoorLogs initLog = initInsertLog(storeId, userId, ChannelType.MOBILE, DoorOpType.OWNER_OPEN_DOOR);
         CtStore dbStore = storeMapper.selectCtStoreById(storeId);
         if (dbStore == null) {
             logFail(initLog, "", "无法获取门店信息");
@@ -230,7 +230,7 @@ public class CtDoorGuardOpServiceImpl implements ICtDoorGuardOpService {
      */
     @Override
     public boolean forceLock(String storeId, String userId, ChannelType channelType) {
-        CtOpenDoorLogs initLog = initInsertLog(storeId, userId, channelType, DoorOpenType.FORCE_LOCK_DOOR);
+        CtOpenDoorLogs initLog = initInsertLog(storeId, userId, channelType, DoorOpType.FORCE_LOCK_DOOR);
         CtDevice queryDevice = new CtDevice();
         queryDevice.setStoreId(storeId);
         queryDevice.setDeviceType(DeviceType.DOOR_GUARD.getCode());
@@ -262,7 +262,7 @@ public class CtDoorGuardOpServiceImpl implements ICtDoorGuardOpService {
      */
     @Override
     public boolean unlock(String storeId, String userId, ChannelType channelType) {
-        CtOpenDoorLogs initLog = initInsertLog(storeId, userId, channelType, DoorOpenType.UNLOCK_DOOR);
+        CtOpenDoorLogs initLog = initInsertLog(storeId, userId, channelType, DoorOpType.UNLOCK_DOOR);
         CtDevice queryDevice = new CtDevice();
         queryDevice.setStoreId(storeId);
         queryDevice.setDeviceType(DeviceType.DOOR_GUARD.getCode());
@@ -294,7 +294,7 @@ public class CtDoorGuardOpServiceImpl implements ICtDoorGuardOpService {
      */
     @Override
     public boolean setDoorAccess(String storeId, String userId, ChannelType channelType, boolean once, String beginTime, String endTime) {
-        CtOpenDoorLogs initLog = initInsertLog(storeId, userId, channelType, DoorOpenType.SETTING_DOOR_ACCESS);
+        CtOpenDoorLogs initLog = initInsertLog(storeId, userId, channelType, DoorOpType.SETTING_DOOR_ACCESS);
         CtDevice queryDevice = new CtDevice();
         queryDevice.setStoreId(storeId);
         queryDevice.setDeviceType(DeviceType.DOOR_GUARD.getCode());
@@ -356,7 +356,7 @@ public class CtDoorGuardOpServiceImpl implements ICtDoorGuardOpService {
      */
     @Override
     public boolean disableDoorAccess(String storeId, String userId, ChannelType channelType) {
-        CtOpenDoorLogs initLog = initInsertLog(storeId, userId, channelType, DoorOpenType.SETTING_DOOR_ACCESS);
+        CtOpenDoorLogs initLog = initInsertLog(storeId, userId, channelType, DoorOpType.SETTING_DOOR_ACCESS);
         CtDevice queryDevice = new CtDevice();
         queryDevice.setStoreId(storeId);
         queryDevice.setDeviceType(DeviceType.DOOR_GUARD.getCode());
@@ -418,7 +418,7 @@ public class CtDoorGuardOpServiceImpl implements ICtDoorGuardOpService {
         return "";
     }
 
-    private CtOpenDoorLogs initInsertLog(String storeId, String userId, ChannelType channelType, DoorOpenType openType) {
+    private CtOpenDoorLogs initInsertLog(String storeId, String userId, ChannelType channelType, DoorOpType openType) {
         CtOpenDoorLogs log = new CtOpenDoorLogs();
         log.setStoreId(storeId);
         log.setMemberId(userId);

@@ -204,6 +204,7 @@ public class HttpUtils {
         StringBuilder result = new StringBuilder();
         try {
             log.info("sendPost - {}", url);
+            log.info("request - {}", param);
             URL realUrl = new URL(url);
             URLConnection conn = realUrl.openConnection();
             //设置请求头

@@ -1,11 +1,10 @@
 package com.cloudtimes.mq.service;
 
 import com.cloudtimes.cache.CtTaskCache;
-import com.cloudtimes.common.NoUtils;
 import com.cloudtimes.common.utils.DateUtils;
 import com.cloudtimes.common.utils.StringUtils;
 import com.cloudtimes.enums.PayState;
-import com.cloudtimes.mq.domain.MQTopicConstants;
+import com.cloudtimes.mq.domain.CtMQConstants;
 import com.cloudtimes.mq.domain.PayOrderMsgData;
 import com.cloudtimes.partner.pay.shouqianba.domain.BuzResponse;
 import com.cloudtimes.partner.pay.shouqianba.domain.ShouqianbaConstant;
@@ -20,7 +19,7 @@ import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Slf4j
-@RocketMQMessageListener(consumerGroup = "${rocketmq.consumer.group}", topic = MQTopicConstants.CANCEL_PAY_ORDER, messageModel = MessageModel.CLUSTERING)
+@RocketMQMessageListener(consumerGroup = "${rocketmq.consumer.group}", topic = CtMQConstants.CANCEL_PAY_ORDER, messageModel = MessageModel.CLUSTERING)
 public class CancelPayOrderListener implements RocketMQListener<PayOrderMsgData> {
     @Autowired
     private CtShouqianbaApiServiceImpl shouqianbaApiService;
@@ -34,15 +33,15 @@ public class CancelPayOrderListener implements RocketMQListener<PayOrderMsgData>
     @Override
     public void onMessage(PayOrderMsgData data) {
 //        PayOrderMsgData data = JSON.parseObject(msgData.getBody(), PayOrderMsgData.class);
-        BuzResponse buzResponse = shouqianbaApiService.cancelPayOrder(data.getPaySn(), data.getRawOrderId(), data.getTerminalSN(), data.getTerminalKey());
+        BuzResponse buzResponse = shouqianbaApiService.cancelPayOrder(data.getPaySn(), "", data.getTerminalSN(), data.getTerminalKey());
         if (buzResponse != null) {
             if (StringUtils.equals(buzResponse.getResultCode(), ShouqianbaConstant.busiCancelInProgress)) {
                 //发起订单查询
-                mqTemplate.convertAndSend(MQTopicConstants.QUERY_PAY_ORDER, data);
+                mqTemplate.convertAndSend(CtMQConstants.QUERY_PAY_ORDER, data);
             } else if (StringUtils.equals(buzResponse.getResultCode(), ShouqianbaConstant.busiCancelSuccess)) {
-                String orderId = NoUtils.parseOrderNo(data.getRawOrderId());
+//                String orderId = NoUtils.parseOrderNo(data.getOrderId());
                 // 更新订单状态
-                CtOrder cacheOrder = taskCache.getCacheOrder(orderId);
+                CtOrder cacheOrder = taskCache.getCacheOrder(data.getOrderId());
                 cacheOrder.setState(PayState.PAY_FAIL.getCode());
                 cacheOrder.setUpdateTime(DateUtils.getNowDate());
                 taskCache.setCacheOrder(cacheOrder);

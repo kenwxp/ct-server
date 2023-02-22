@@ -27,7 +27,8 @@ public class PayOrderUtils {
      * @return
      */
     public int handlePayOrder(PayOrderData data) {
-        String orderId = NoUtils.parseOrderNo(data.getClientSn());
+//        String orderId = NoUtils.parseOrderNo(data.getClientSn());
+        String orderId = data.getReflect();// 通过反射
         if (StringUtils.isEmpty(orderId)) {
             throw new ServiceException("订单号异常");
         }
@@ -55,23 +56,22 @@ public class PayOrderUtils {
             CtOrder cacheOrder = taskCache.getCacheOrder(orderId);
             cacheOrder.setState(payStatus);
             cacheOrder.setActualAmount(BigDecimal.valueOf(Long.parseLong(data.getTotalAmount())));
-            taskCache.setCacheOrder(cacheOrder);
-
-            dbOrder.setActualAmount(BigDecimal.valueOf(Long.parseLong(data.getTotalAmount())));
             if (StringUtils.equals(data.getPayway(), "1") || StringUtils.equals(data.getPayway(), "2")) {
-                dbOrder.setPaymentMode("0");
+                cacheOrder.setPaymentMode("0");
             } else if (StringUtils.equals(data.getPayway(), "3")) {
-                dbOrder.setPaymentMode("1");
+                cacheOrder.setPaymentMode("1");
             } else {
-                dbOrder.setPaymentMode("2");
+                cacheOrder.setPaymentMode("2");
             }
-            dbOrder.setUpdateTime(new Date(StringUtils.leftPad(data.getFinishTime(), 13, "0")));
-            dbOrder.setState(payStatus);
-            if (orderMapper.updateCtOrder(dbOrder) < 1) {
+            cacheOrder.setPaymentId(data.getSn());
+            cacheOrder.setUpdateTime(new Date(Long.parseLong(data.getFinishTime())));
+            cacheOrder.setState(payStatus);
+            taskCache.setCacheOrder(cacheOrder);
+            if (orderMapper.updateCtOrder(cacheOrder) < 1) {
                 throw new ServiceException("更新订单信息失败");
             }
+
             //todo 支付成功，发起交易开门
-            //todo 发起订单库存维护
         }
         return confirmFlag;
     }

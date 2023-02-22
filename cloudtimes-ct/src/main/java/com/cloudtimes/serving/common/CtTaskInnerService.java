@@ -3,6 +3,7 @@ package com.cloudtimes.serving.common;
 import com.cloudtimes.cache.CtTaskCache;
 import com.cloudtimes.common.exception.ServiceException;
 import com.cloudtimes.hardwaredevice.domain.CtStore;
+import com.cloudtimes.hardwaredevice.mapper.CtOpenDoorLogsMapper;
 import com.cloudtimes.hardwaredevice.mapper.CtStoreMapper;
 import com.cloudtimes.supervise.domain.CtTask;
 import com.cloudtimes.supervise.mapper.CtTaskMapper;
@@ -21,6 +22,8 @@ public class CtTaskInnerService {
     private CtTaskMapper taskMapper;
     @Autowired
     private CtTaskCache taskCache;
+    @Autowired
+    private CtOpenDoorLogsMapper openDoorLogsMapper;
 
     /**
      * 门店分配任务

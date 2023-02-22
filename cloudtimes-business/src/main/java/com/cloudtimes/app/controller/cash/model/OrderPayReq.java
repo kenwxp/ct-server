@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 @Data
 @Slf4j
 public class OrderPayReq {
-    @ApiModelProperty(value = "支付方式 1-扫码支付 2-刷脸支付", required = true)
+    @ApiModelProperty(value = "支付方式 0-扫码支付 1-刷脸支付", required = true)
     private int payType;
     @ApiModelProperty(value = "支付码（扫码支付时，为动态码，刷脸支付时为face_code）", required = true)
     private String payCode;

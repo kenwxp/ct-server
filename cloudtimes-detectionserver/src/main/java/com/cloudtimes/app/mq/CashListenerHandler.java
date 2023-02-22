@@ -9,15 +9,11 @@ import org.apache.rocketmq.spring.annotation.MessageModel;
 import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
 import org.apache.rocketmq.spring.core.RocketMQListener;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 /**
  * 处理收银机模块信息
  */
 @Slf4j
-@Service
-@Component
 @RocketMQMessageListener(consumerGroup = "${rocketmq.consumer.group}", topic = RocketMQConstants.WS_CASH_DEVICE, messageModel = MessageModel.CLUSTERING)
 public class CashListenerHandler implements RocketMQListener<CashMqData> {
     @Autowired

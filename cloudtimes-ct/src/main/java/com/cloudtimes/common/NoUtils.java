@@ -42,15 +42,15 @@ public class NoUtils {
     }
 
     public static String genMerchantsNo() {
-        return "ZM" + StringUtils.upperCase(NumberUtils.getRandomString(4)) + NumberUtils.genRandNum(8);
+        return "ZM" + StringUtils.upperCase(NumberUtils.getRandomENString(4)) + NumberUtils.genRandNum(8);
     }
 
     public static String genShopNo() {
-        return "ZS" + StringUtils.upperCase(NumberUtils.getRandomString(4)) + NumberUtils.genRandNum(8);
+        return "ZS" + StringUtils.upperCase(NumberUtils.getRandomENString(4)) + NumberUtils.genRandNum(8);
     }
 
     public static String genDeviceCode() {
-        return "ZD" + StringUtils.upperCase(NumberUtils.getRandomString(4)) + NumberUtils.genRandNum(8);
+        return "ZD" + StringUtils.upperCase(NumberUtils.getRandomENString(4)) + NumberUtils.genRandNum(8);
     }
 
     public static String genPayOrderNo(String orderId) {

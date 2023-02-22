@@ -6,11 +6,11 @@ import com.cloudtimes.account.domain.CtUser;
 import com.cloudtimes.account.mapper.CtUserMapper;
 import com.cloudtimes.cache.CtDeviceCache;
 import com.cloudtimes.cache.CtTaskCache;
-import com.cloudtimes.common.NoUtils;
 import com.cloudtimes.common.OrderUtil;
 import com.cloudtimes.common.PayOrderUtils;
 import com.cloudtimes.common.exception.ServiceException;
 import com.cloudtimes.common.utils.DateUtils;
+import com.cloudtimes.common.utils.JacksonUtils;
 import com.cloudtimes.common.utils.NumberUtils;
 import com.cloudtimes.common.utils.Threads;
 import com.cloudtimes.enums.PayState;
@@ -20,7 +20,7 @@ import com.cloudtimes.hardwaredevice.domain.CtStore;
 import com.cloudtimes.hardwaredevice.mapper.CtDeviceCashMapper;
 import com.cloudtimes.hardwaredevice.mapper.CtDeviceMapper;
 import com.cloudtimes.hardwaredevice.mapper.CtStoreMapper;
-import com.cloudtimes.mq.domain.MQTopicConstants;
+import com.cloudtimes.mq.domain.CtMQConstants;
 import com.cloudtimes.mq.domain.PayOrderMsgData;
 import com.cloudtimes.partner.agora.service.CtAgoraApiService;
 import com.cloudtimes.partner.config.PartnerConfig;
@@ -40,7 +40,6 @@ import com.cloudtimes.supervise.domain.CtTask;
 import com.cloudtimes.supervise.mapper.CtOrderDetailMapper;
 import com.cloudtimes.supervise.mapper.CtOrderMapper;
 import com.cloudtimes.supervise.mapper.CtShoppingMapper;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.slf4j.Logger;
@@ -329,6 +328,7 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
             od.setOrderId(orderId);
             od.setItemId(goodId);
             od.setItemName(goodName);
+            od.setStoreId(cacheOrder.getStoreId());
             od.setItemTypeId(categoryId);
             od.setItemTypeName(categoryName);
             od.setItemCount(BigDecimal.valueOf(num));
@@ -419,7 +419,9 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
             throw new ServiceException("订单总额不一致");
         }
         // 持久化订单
+        cacheOrder.setIsCompose("0");//非组合支付
         cacheOrder.setState(PayState.PAID_THEN_CONFIRM.getCode());
+        cacheOrder.setPaymentAction(String.valueOf(payType));
         cacheOrder.setUpdateTime(DateUtils.getNowDate());
         orderMapper.updateCtOrder(cacheOrder);
         Map<String, CtOrderDetail> cacheOrderDetails = taskCache.getCacheOrderDetails(orderId);
@@ -427,21 +429,20 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
                 cacheOrderDetails.values()) {
             orderDetailMapper.insertCtOrderDetail(item);
         }
-
-        String clientSN = NoUtils.genPayOrderNo(orderId);
-        HashMap<String, Object> reqMap = new HashMap<>();
-        reqMap.put("terminal_sn", ctDeviceCash.getTerminalSn());//收钱吧终端ID	收钱吧终端ID，不超过32位的纯数字
-        reqMap.put("client_sn", clientSN);//商户系统订单号	必须在商户系统内唯一；且长度不超过32字节
-        reqMap.put("total_amount", String.valueOf(totalAmount));//交易总金额	以分为单位,不超过10位纯数字字符串,超过1亿元的收款请使用银行转账
-        reqMap.put("dynamic_id", payCode);//条码内容	不超过32字节
-        reqMap.put("subject", "生活用品");//交易简介	本次交易的简要介绍
-        reqMap.put("operator", cacheOrder.getStoreName());//门店操作员	发起本次交易的操作员
+        String clientSN = NumberUtils.getRandomString(32);
+        B2CPayReq b2CPayReq = new B2CPayReq();
+        b2CPayReq.setTerminalSN(ctDeviceCash.getTerminalSn());
+        b2CPayReq.setClientSN(clientSN);
+        b2CPayReq.setTotalAmount(String.valueOf(totalAmount));
+        b2CPayReq.setDynamicId(payCode);
+        b2CPayReq.setSubject("生活用品");
+        b2CPayReq.setOperator(cacheOrder.getStoreName());
+        b2CPayReq.setReflect(orderId);
         //todo 分账参数
-        CommonResp commonResp = shouqianbaApiService.b2cPay(reqMap, ctDeviceCash.getTerminalKey());
+        CommonResp commonResp = shouqianbaApiService.b2cPay(b2CPayReq, ctDeviceCash.getTerminalKey());
         if (commonResp == null) {
             throw new ServiceException("支付失败");
         }
-        ObjectMapper mapper = new ObjectMapper();
         if (StringUtils.equals(commonResp.getResultCode(), ShouqianbaConstant.response200)) {
             BuzResponse bizResponse = commonResp.getBizResponse();
             if (bizResponse != null) {
@@ -449,17 +450,17 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
                     //发起订单查询轮询
                     String payOrderSerial = "";
                     if (bizResponse.getData() != null) {
-                        PayOrderData payOrderData = mapper.convertValue(bizResponse.getData(), PayOrderData.class);
+                        PayOrderData payOrderData = JacksonUtils.convertObject(bizResponse.getData(), PayOrderData.class);
                         payOrderSerial = payOrderData.getSn();
                     }
                     PayOrderMsgData payOrderMsgData = new PayOrderMsgData();
                     payOrderMsgData.setTerminalSN(ctDeviceCash.getTerminalSn());
                     payOrderMsgData.setTerminalKey(ctDeviceCash.getTerminalKey());
                     payOrderMsgData.setPaySn(payOrderSerial);
-                    payOrderMsgData.setRawOrderId(clientSN);
+                    payOrderMsgData.setOrderId(clientSN);
                     payOrderMsgData.setCreateTime(DateUtils.getNowDate());
                     payOrderMsgData.setCancelFlag(false);
-                    mqTemplate.convertAndSend(MQTopicConstants.QUERY_PAY_ORDER, payOrderMsgData);
+                    mqTemplate.convertAndSend(CtMQConstants.QUERY_PAY_ORDER, payOrderMsgData);
                 } else if (StringUtils.equals(bizResponse.getErrorCodeStandard(), "EP104")) {
                     //输入密码超时
                     return "输入密码确认超时";
@@ -468,13 +469,13 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
                         return bizResponse.getErrorMessage();
                     }
                     if (bizResponse.getData() != null) {
-                        PayOrderData payOrderData = mapper.convertValue(bizResponse.getData(), PayOrderData.class);
+                        PayOrderData payOrderData = JacksonUtils.convertObject(bizResponse.getData(), PayOrderData.class);
                         int confirm = payOrderUtils.handlePayOrder(payOrderData);
                         if (confirm == 1) {
                             //  发送库存维护
                             PayOrderMsgData payOrderMsgData = new PayOrderMsgData();
-                            payOrderMsgData.setRawOrderId(clientSN);
-                            mqTemplate.convertAndSend(MQTopicConstants.MAINTAIN_STOCK, payOrderMsgData);
+                            payOrderMsgData.setOrderId(orderId);
+                            mqTemplate.convertAndSend(CtMQConstants.MAINTAIN_STOCK, payOrderMsgData);
                         }
                     }
                 }
@@ -519,7 +520,7 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
 
     @Override
     public String genDynamicQrCodeUrl(String deviceId, String storeNo) {
-        String dynamicStr = NumberUtils.getRandomString(8);
+        String dynamicStr = NumberUtils.getRandomENString(8);
         deviceCache.put(deviceId, dynamicStr);
         String dynamicQrCodeUrl =
                 "https://api.htcloud2020.com/mapp/redirect?shopId=" + storeNo + "&dynamicCode=" + dynamicStr + "&did=" + deviceId;

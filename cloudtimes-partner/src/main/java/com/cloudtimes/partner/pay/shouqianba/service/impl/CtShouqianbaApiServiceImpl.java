@@ -1,15 +1,12 @@
 package com.cloudtimes.partner.pay.shouqianba.service.impl;
 
 import com.alibaba.fastjson2.JSONObject;
-import com.cloudtimes.common.utils.http.HttpHelper;
+import com.cloudtimes.common.utils.JacksonUtils;
 import com.cloudtimes.common.utils.http.HttpUtils;
 import com.cloudtimes.common.utils.sign.Md5Utils;
 import com.cloudtimes.partner.config.PartnerConfig;
 import com.cloudtimes.partner.pay.shouqianba.domain.*;
 import com.cloudtimes.partner.pay.shouqianba.service.ICtShouqianbaApiService;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -122,13 +119,12 @@ public class CtShouqianbaApiServiceImpl implements ICtShouqianbaApiService {
      * * * * "reflect"             // N 透传参数    {"tips": "200"}
      */
     @Override
-    public CommonResp b2cPay(Map<String, Object> params, String terminalKey) {
-        JSONObject reqObj = new JSONObject(params);
-        String terminalSN = reqObj.getString("terminal_sn");
+    public CommonResp b2cPay(B2CPayReq params, String terminalKey) {
+        String terminalSN = params.getTerminalSN();
         if ("".equals(terminalSN)) {
             throw new RuntimeException("终端sn不能为空");
         }
-        String resultStr = sendShouqianbaHttp(ShouqianbaConstant.b2CPay, reqObj, terminalSN, terminalKey);
+        String resultStr = sendShouqianbaHttp(ShouqianbaConstant.b2CPay, JSONObject.parseObject(JacksonUtils.toString(params)), terminalSN, terminalKey);
         log.info(Thread.currentThread().getStackTrace()[1].getMethodName() + ": " + resultStr);
         return getCommonResp(resultStr);
     }
@@ -230,13 +226,7 @@ public class CtShouqianbaApiServiceImpl implements ICtShouqianbaApiService {
      * buzResponse
      */
     private CommonResp getCommonResp(String rawString) {
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            return mapper.readValue(rawString, CommonResp.class);
-        } catch (JsonProcessingException e) {
-            log.error(e.getMessage());
-        }
-        return null;
+        return JacksonUtils.parseObject(rawString, CommonResp.class);
     }
 
     /**
@@ -245,35 +235,24 @@ public class CtShouqianbaApiServiceImpl implements ICtShouqianbaApiService {
      * buzResponse
      */
     private BuzResponse getBuzResponse(String rawString) {
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            CommonResp commonResp = mapper.readValue(rawString, CommonResp.class);
-            if (commonResp != null) {
-                return commonResp.getBizResponse();
-            }
-        } catch (JsonProcessingException e) {
-            log.error(e.getMessage());
+        CommonResp commonResp = JacksonUtils.parseObject(rawString, CommonResp.class);
+        if (commonResp != null) {
+            return commonResp.getBizResponse();
         }
         return null;
     }
 
 
     private <T> T getData(String rawString, Class<T> tClass) {
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            CommonResp commonResp = mapper.readValue(rawString, CommonResp.class);
-            if (commonResp != null) {
-                BuzResponse bizResponse = commonResp.getBizResponse();
-                if (bizResponse != null) {
-                    Object data = bizResponse.getData();
-                    if (data != null) {
-                        return mapper.convertValue(bizResponse.getData(), tClass);
-                    }
+        CommonResp commonResp = JacksonUtils.parseObject(rawString, CommonResp.class);
+        if (commonResp != null) {
+            BuzResponse bizResponse = commonResp.getBizResponse();
+            if (bizResponse != null) {
+                Object data = bizResponse.getData();
+                if (data != null) {
+                    return JacksonUtils.convertObject(bizResponse.getData(), tClass);
                 }
             }
-            log.error(commonResp.getErrorMessage());
-        } catch (JsonProcessingException e) {
-            log.error(e.getMessage());
         }
         return null;
     }

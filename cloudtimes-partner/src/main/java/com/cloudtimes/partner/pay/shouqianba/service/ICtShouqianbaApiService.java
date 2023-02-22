@@ -1,11 +1,6 @@
 package com.cloudtimes.partner.pay.shouqianba.service;
 
-import com.cloudtimes.partner.pay.shouqianba.domain.AuthInfoData;
-import com.cloudtimes.partner.pay.shouqianba.domain.BuzResponse;
-import com.cloudtimes.partner.pay.shouqianba.domain.CommonResp;
-import com.cloudtimes.partner.pay.shouqianba.domain.PayOrderData;
-
-import java.util.Map;
+import com.cloudtimes.partner.pay.shouqianba.domain.*;
 
 /**
  * 收钱吧支付端接口
@@ -53,6 +48,7 @@ public interface ICtShouqianbaApiService {
      *                    * "subject"      String //交易简介	本次交易的简要介绍
      *                    * "operator"     String //门店操作员	发起本次交易的操作员
      *                    * "notify_url"   String //回调	支付回调的地址
+     *                    * "reflect"   String //反射参数
      *                    * "profit_sharing" Map   分账信息
      *                    * * "sharing_flag" String  //分账标识 0: 不分账 1：分账
      *                    * * "sharing_type" String  // 1: 按比例分 3: 按金额分
@@ -93,7 +89,7 @@ public interface ICtShouqianbaApiService {
      * * * * "operator"            // Y 门店操作员    "张三丰"
      * * * * "reflect"             // N 透传参数    {"tips": "200"}
      */
-    public CommonResp b2cPay(Map<String, Object> params, String terminalKey);
+    public CommonResp b2cPay(B2CPayReq params, String terminalKey);
 
     /**
      * 查询支付订单信息接口

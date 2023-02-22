@@ -3,7 +3,7 @@ package com.cloudtimes.mq.service;
 import com.cloudtimes.cache.CtTaskCache;
 import com.cloudtimes.common.NoUtils;
 import com.cloudtimes.common.utils.DateUtils;
-import com.cloudtimes.mq.domain.MQTopicConstants;
+import com.cloudtimes.mq.domain.CtMQConstants;
 import com.cloudtimes.mq.domain.PayOrderMsgData;
 import com.cloudtimes.product.domain.CtShopProduct;
 import com.cloudtimes.product.mapper.CtShopProductMapper;
@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Map;
 
 @Slf4j
-@RocketMQMessageListener(consumerGroup = "${rocketmq.consumer.group}", topic = MQTopicConstants.MAINTAIN_STOCK, messageModel = MessageModel.CLUSTERING)
+@RocketMQMessageListener(consumerGroup = "${rocketmq.consumer.group}", topic = CtMQConstants.MAINTAIN_STOCK, messageModel = MessageModel.CLUSTERING)
 public class MaintainStockListener implements RocketMQListener<PayOrderMsgData> {
     @Autowired
     private CtTaskCache taskCache;
@@ -27,8 +27,8 @@ public class MaintainStockListener implements RocketMQListener<PayOrderMsgData> 
     @Override
     public void onMessage(PayOrderMsgData data) {
 //        PayOrderMsgData data = JSON.parseObject(msgData.getBody(), PayOrderMsgData.class);
-        String orderId = NoUtils.parseOrderNo(data.getRawOrderId());
-        Map<String, CtOrderDetail> cacheOrderDetails = taskCache.getCacheOrderDetails(orderId);
+//        String orderId = NoUtils.parseOrderNo(data.getRawOrderId());
+        Map<String, CtOrderDetail> cacheOrderDetails = taskCache.getCacheOrderDetails(data.getOrderId());
         for (CtOrderDetail item :
                 cacheOrderDetails.values()) {
             CtShopProduct ctShopProduct = new CtShopProduct();

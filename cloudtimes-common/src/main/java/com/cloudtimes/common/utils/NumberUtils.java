@@ -58,13 +58,35 @@ public class NumberUtils {
      * @param length
      * @return
      */
-    public static String getRandomString(int length) {
+    public static String getRandomENString(int length) {
         String str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
         try {
             SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
             StringBuffer sb = new StringBuffer();
             for (int i = 0; i < length; i++) {
                 int number = random.nextInt(52);
+                sb.append(str.charAt(number));
+            }
+            return sb.toString();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    /**
+     * length用户要求产生字符串的长度
+     *
+     * @param length
+     * @return
+     */
+    public static String getRandomString(int length) {
+        String str = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        try {
+            SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
+            StringBuffer sb = new StringBuffer();
+            for (int i = 0; i < length; i++) {
+                int number = random.nextInt(62);
                 sb.append(str.charAt(number));
             }
             return sb.toString();

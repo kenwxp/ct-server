@@ -1,5 +1,6 @@
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.cloudtimes.partner.pay.shouqianba.domain.B2CPayReq;
 import com.cloudtimes.partner.pay.shouqianba.domain.BuzResponse;
 import com.cloudtimes.partner.pay.shouqianba.domain.CommonResp;
 import com.cloudtimes.partner.pay.shouqianba.domain.PayOrderData;
@@ -46,15 +47,15 @@ public class TestShouqianba {
 
     public void test3() {
         ICtShouqianbaApiService service = new CtShouqianbaApiServiceImpl();
-        Map<String, Object> paramMap = new HashMap<>();
-        paramMap.put("terminal_sn", "100051020027440980"); //收钱吧终端ID	收钱吧终端ID，不超过32位的纯数字
-        paramMap.put("client_sn", "testorder0000004"); //商户系统订单号	必须在商户系统内唯一；且长度不超过32字节
-        paramMap.put("total_amount", "2"); //交易总金额	以分为单位,不超过10位纯数字字符串,超过1亿元的收款请使用银行转账
-        paramMap.put("dynamic_id", "134612202685626274"); //条码内容	不超过32字节
-        paramMap.put("subject", "测试"); //交易简介	本次交易的简要介绍
-        paramMap.put("operator", "0001"); //门店操作员	发起本次交易的操作员
-        paramMap.put("notify_url", ""); //回调	支付回调的地址
-        CommonResp bz = service.b2cPay(paramMap, "aeee41ee3f908d9d1f9bb5a0dcae03e7");
+        B2CPayReq b2CPayReq = new B2CPayReq();
+        b2CPayReq.setTerminalSN("100051020027440980"); //收钱吧终端ID	收钱吧终端ID，不超过32位的纯数字
+        b2CPayReq.setClientSN("testorder0000004"); //商户系统订单号	必须在商户系统内唯一；且长度不超过32字节
+        b2CPayReq.setTotalAmount("2"); //交易总金额	以分为单位,不超过10位纯数字字符串,超过1亿元的收款请使用银行转账
+        b2CPayReq.setDynamicId("134612202685626274"); //条码内容	不超过32字节
+        b2CPayReq.setSubject("测试"); //交易简介	本次交易的简要介绍
+        b2CPayReq.setOperator("0001"); //门店操作员	发起本次交易的操作员
+        b2CPayReq.setNotifyUrl(""); //回调	支付回调的地址
+        CommonResp bz = service.b2cPay(b2CPayReq, "aeee41ee3f908d9d1f9bb5a0dcae03e7");
         if (bz != null) {
             System.out.println(bz);
         }
