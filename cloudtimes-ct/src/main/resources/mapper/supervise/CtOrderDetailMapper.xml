@@ -5,7 +5,7 @@
 <mapper namespace="com.cloudtimes.supervise.mapper.CtOrderDetailMapper">
     <sql id="selectCtOrderDetailVo">
         select id, order_id, store_id, item_id, item_name, item_type_id, item_type_name, item_count, item_price,
-        item_sum, create_time, update_time, del_flag, year_month, create_date from ct_order_detail
+        item_sum, create_time, update_time, del_flag, `year_month`, create_date from ct_order_detail
     </sql>
 
     <select id="selectCtOrderDetailList" parameterType="CtOrderDetail" resultType="CtOrderDetail">
@@ -34,7 +34,6 @@
     <insert id="insertCtOrderDetail" parameterType="CtOrderDetail">
         insert into ct_order_detail
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="id != null">id,</if>
             <if test="orderId != null">order_id,</if>
             <if test="storeId != null">store_id,</if>
             <if test="itemId != null">item_id,</if>
@@ -47,11 +46,10 @@
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="delFlag != null">del_flag,</if>
-            <if test="yearMonth != null">year_month,</if>
+            <if test="yearMonth != null">`year_month`,</if>
             <if test="createDate != null">create_date,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="id != null">#{id},</if>
             <if test="orderId != null">#{orderId},</if>
             <if test="storeId != null">#{storeId},</if>
             <if test="itemId != null">#{itemId},</if>
@@ -84,7 +82,7 @@
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="delFlag != null">del_flag = #{delFlag},</if>
-            <if test="yearMonth != null">year_month = #{yearMonth},</if>
+            <if test="yearMonth != null">`year_month` = #{yearMonth},</if>
             <if test="createDate != null">create_date = #{createDate},</if>
         </trim>
         where id = #{id}

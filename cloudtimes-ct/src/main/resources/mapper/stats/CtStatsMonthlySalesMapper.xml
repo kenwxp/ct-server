@@ -31,7 +31,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         insert into ct_stats_monthly_sales
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="storeId != null">store_id,</if>
-            <if test="yearMonth != null">year_month,</if>
+            <if test="yearMonth != null">`year_month`,</if>
             <if test="orderCount != null">order_count,</if>
             <if test="salesMoneyTotals != null">sales_money_totals,</if>
             <if test="createDate != null">create_date,</if>

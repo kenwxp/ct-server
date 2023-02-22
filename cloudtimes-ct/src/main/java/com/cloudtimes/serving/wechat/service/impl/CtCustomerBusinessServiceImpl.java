@@ -4,14 +4,13 @@ import com.cloudtimes.account.domain.CtUser;
 import com.cloudtimes.account.mapper.CtUserMapper;
 import com.cloudtimes.cache.CtDeviceCache;
 import com.cloudtimes.cache.CtTaskCache;
+import com.cloudtimes.common.OrderUtil;
 import com.cloudtimes.common.annotation.DataSource;
 import com.cloudtimes.common.core.redis.RedisCache;
 import com.cloudtimes.common.enums.DataSourceType;
 import com.cloudtimes.common.exception.ServiceException;
-import com.cloudtimes.common.utils.DateUtils;
 import com.cloudtimes.hardwaredevice.domain.CtStore;
 import com.cloudtimes.hardwaredevice.mapper.CtStoreMapper;
-import com.cloudtimes.hardwaredevice.service.ICtDeviceCashService;
 import com.cloudtimes.mq.service.CashMqSender;
 import com.cloudtimes.serving.cash.service.ICtCashBusinessService;
 import com.cloudtimes.serving.common.CtTaskInnerService;
@@ -26,8 +25,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.xml.crypto.Data;
-import java.util.*;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @DataSource(DataSourceType.CT)
 @Service
@@ -102,7 +103,7 @@ public class CtCustomerBusinessServiceImpl implements ICtCustomerBusinessService
                 throw new ServiceException("二维码失效，请重试");
             }
         }
-        CtShopping newShopping = new CtShopping();
+        CtShopping newShopping = OrderUtil.getInitCtShopping();
         //获取任务
         CtTask task = taskInnerService.distributeTask(dbStore.getId());
         if (task != null) {
@@ -112,16 +113,8 @@ public class CtCustomerBusinessServiceImpl implements ICtCustomerBusinessService
         }
         newShopping.setUserId(userId);
         newShopping.setStoreId(dbStore.getId());
-        newShopping.setState("0");
         newShopping.setDescText("扫码购物");
-        newShopping.setEndTime(new Date());
-        newShopping.setExceptionalState("0");
-        newShopping.setIsApprove("0");
-        newShopping.setIsLeadApprove("0");
-        newShopping.setIsBossApprove("0");
-        newShopping.setDelFlag("0");
-        newShopping.setCreateTime(new Date());
-        newShopping.setUpdateTime(new Date());
+
         if (shoppingMapper.insertCtShopping(newShopping) < 1) {
             throw new ServiceException("新增购物失败");
         }
@@ -132,7 +125,7 @@ public class CtCustomerBusinessServiceImpl implements ICtCustomerBusinessService
         if (!StringUtils.isEmpty(dynamicCode)) {
             //扫动态码流程，新增订单
             //新增购物记录，开始时间设置成任务开始时间
-            CtOrder newOrder = new CtOrder();
+            CtOrder newOrder = OrderUtil.getInitCtOrder();
             if (task != null) {
                 newOrder.setTaskId(task.getId());
                 newOrder.setStaffCode(task.getStaffCode());
@@ -147,14 +140,6 @@ public class CtCustomerBusinessServiceImpl implements ICtCustomerBusinessService
             newOrder.setUserId(userId);
             newOrder.setDeviceCashId(deviceId);
             newOrder.setDescText("扫码订单");
-            newOrder.setIsExceptional("0");
-            newOrder.setState("0");
-            newOrder.setDelFlag("0");
-            Date now = new Date();
-            newOrder.setYearMonth(now.getYear() * 100 + now.getMonth());
-            newOrder.setCreateDate(now);
-            newOrder.setCreateTime(now);
-            newOrder.setUpdateTime(now);
             //新增订单，并推送单号，顾客信息，新动态随机数到收银机
             if (orderMapper.insertCtOrder(newOrder) < 1) {
                 throw new ServiceException("新增订单失败");

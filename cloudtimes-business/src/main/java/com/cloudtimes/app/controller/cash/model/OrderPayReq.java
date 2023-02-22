@@ -13,7 +13,7 @@ public class OrderPayReq {
     private int payType;
     @ApiModelProperty(value = "支付码（扫码支付时，为动态码，刷脸支付时为face_code）", required = true)
     private String payCode;
-    @ApiModelProperty(value = "订单序列号（首次调用为空）", required = true)
+    @ApiModelProperty(value = "订单序列号", required = true)
     private String orderId;
     @ApiModelProperty(value = "总计预付金额，单位分", required = true)
     private int totalAmount;

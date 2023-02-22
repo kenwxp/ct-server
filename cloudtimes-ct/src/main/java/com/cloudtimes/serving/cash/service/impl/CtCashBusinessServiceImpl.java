@@ -7,6 +7,7 @@ import com.cloudtimes.account.mapper.CtUserMapper;
 import com.cloudtimes.cache.CtDeviceCache;
 import com.cloudtimes.cache.CtTaskCache;
 import com.cloudtimes.common.NoUtils;
+import com.cloudtimes.common.OrderUtil;
 import com.cloudtimes.common.PayOrderUtils;
 import com.cloudtimes.common.exception.ServiceException;
 import com.cloudtimes.common.utils.DateUtils;
@@ -178,7 +179,7 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
         Map<String, String> retMap = new HashMap<>();
         retMap.put("phone", NumberUtils.getHiddenPhone(ctUser.getMobile()));
 
-        CtShopping newShopping = new CtShopping();
+        CtShopping newShopping = OrderUtil.getInitCtShopping();
         //获取任务
         CtTask task = taskInnerService.distributeTask(dbStore.getId());
         if (task != null) {
@@ -188,23 +189,14 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
         }
         newShopping.setUserId(ctUser.getId());
         newShopping.setStoreId(dbStore.getId());
-        newShopping.setState(PayState.READY_TO_PAY.getCode());
         newShopping.setDescText("刷脸购物");
-        newShopping.setEndTime(new Date());
-        newShopping.setExceptionalState("0");
-        newShopping.setIsApprove("0");
-        newShopping.setIsLeadApprove("0");
-        newShopping.setIsBossApprove("0");
-        newShopping.setDelFlag("0");
-        newShopping.setCreateTime(new Date());
-        newShopping.setUpdateTime(new Date());
         if (shoppingMapper.insertCtShopping(newShopping) < 1) {
             throw new ServiceException("新增购物失败");
         }
         //加入内存
         taskCache.setCacheShopping(newShopping);
         //新增购物记录，开始时间设置成任务开始时间
-        CtOrder newOrder = new CtOrder();
+        CtOrder newOrder = OrderUtil.getInitCtOrder();
         if (task != null) {
             newOrder.setTaskId(task.getId());
             newOrder.setStaffCode(task.getStaffCode());
@@ -219,14 +211,6 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
         newOrder.setUserId(ctUser.getId());
         newOrder.setDeviceCashId(deviceId);
         newOrder.setDescText("刷脸订单");
-        newOrder.setIsExceptional("0");
-        newOrder.setState(PayState.READY_TO_PAY.getCode());
-        newOrder.setDelFlag("0");
-        Date now = new Date();
-        newOrder.setYearMonth(now.getYear() * 100 + now.getMonth());
-        newOrder.setCreateDate(now);
-        newOrder.setCreateTime(now);
-        newOrder.setUpdateTime(now);
         //新增订单，并推送单号，顾客信息，新动态随机数到收银机
         if (orderMapper.insertCtOrder(newOrder) < 1) {
             throw new ServiceException("新增订单失败");
@@ -235,6 +219,7 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
         retMap.put("orderId", newOrder.getId());
         return retMap;
     }
+
 
     @Override
     public List<CtShopProduct> getProductList(String deviceId) {
@@ -302,7 +287,7 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
                 throw new ServiceException("无法获取门店信息");
             }
             //有人模式下直接扫码，则产生新订单
-            CtOrder newOrder = new CtOrder();
+            CtOrder newOrder = OrderUtil.getInitCtOrder();
 //            newOrder.setTaskId(null);
             newOrder.setStoreId(dbStore.getId());
             newOrder.setStoreName(dbStore.getName());
@@ -313,22 +298,9 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
 //            newOrder.setShoppingId(null);
             newOrder.setStaffCode("");
 //            newOrder.setUserId(null);
-            newOrder.setMoneyAmount(BigDecimal.valueOf(0));
-            newOrder.setTotalAmount(BigDecimal.valueOf(0));
-            newOrder.setDiscountAmount(BigDecimal.valueOf(0));
-            newOrder.setDeductionAmount(BigDecimal.valueOf(0));
-            newOrder.setActualAmount(BigDecimal.valueOf(0));
-            newOrder.setItemCount(0L);
             newOrder.setDeviceCashId(deviceId);
             newOrder.setDescText("直接扫商品");
-            newOrder.setIsExceptional("0");
-            newOrder.setState(PayState.READY_TO_PAY.getCode());
-            newOrder.setDelFlag("0");
-            Date now = new Date();
-            newOrder.setYearMonth(now.getYear() * 100 + now.getMonth());
-            newOrder.setCreateDate(now);
-            newOrder.setCreateTime(now);
-            newOrder.setUpdateTime(now);
+
             //新增订单，并推送单号，顾客信息，新动态随机数到收银机
             if (orderMapper.insertCtOrder(newOrder) < 1) {
                 throw new ServiceException("新增订单失败");
@@ -362,6 +334,8 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
             od.setItemCount(BigDecimal.valueOf(num));
             od.setItemPrice(BigDecimal.valueOf(buyPrice));
             od.setItemSum(BigDecimal.valueOf(num * buyPrice));
+            od.setDelFlag("0");
+            od.setYearMonth(Long.valueOf(DateUtils.getYearMonth()));
         } else {
             od.setItemCount(od.getItemCount().add(BigDecimal.valueOf(num)));
             od.setItemSum(od.getItemSum().add(BigDecimal.valueOf(increase)));
