@@ -1,16 +1,16 @@
-package com.cloudtimes.supervise.mapper;
+package com.cloudtimes.hardwaredevice.service;
 
-import com.cloudtimes.supervise.domain.CtPayment;
+import com.cloudtimes.hardwaredevice.domain.CtPayment;
 
 import java.util.List;
 
 /**
- * 支付渠道Mapper接口
+ * 支付渠道Service接口
  * 
  * @author tank
  * @date 2023-02-22
  */
-public interface CtPaymentMapper 
+public interface ICtPaymentService 
 {
     /**
      * 查询支付渠道
@@ -45,18 +45,18 @@ public interface CtPaymentMapper
     public int updateCtPayment(CtPayment ctPayment);
 
     /**
-     * 删除支付渠道
+     * 批量删除支付渠道
+     * 
+     * @param ids 需要删除的支付渠道主键集合
+     * @return 结果
+     */
+    public int deleteCtPaymentByIds(String[] ids);
+
+    /**
+     * 删除支付渠道信息
      * 
      * @param id 支付渠道主键
      * @return 结果
      */
     public int deleteCtPaymentById(String id);
-
-    /**
-     * 批量删除支付渠道
-     * 
-     * @param ids 需要删除的数据主键集合
-     * @return 结果
-     */
-    public int deleteCtPaymentByIds(String[] ids);
 }

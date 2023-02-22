@@ -15,10 +15,12 @@ import com.cloudtimes.common.utils.JacksonUtils;
 import com.cloudtimes.common.utils.NumberUtils;
 import com.cloudtimes.common.utils.Threads;
 import com.cloudtimes.enums.PayState;
+import com.cloudtimes.enums.PayWay;
+import com.cloudtimes.enums.PayeeType;
 import com.cloudtimes.hardwaredevice.domain.CtDevice;
-import com.cloudtimes.hardwaredevice.domain.CtDeviceCash;
+import com.cloudtimes.serving.cash.service.domain.ShouqianbaParam;
+import com.cloudtimes.hardwaredevice.domain.CtPayment;
 import com.cloudtimes.hardwaredevice.domain.CtStore;
-import com.cloudtimes.hardwaredevice.mapper.CtDeviceCashMapper;
 import com.cloudtimes.hardwaredevice.mapper.CtDeviceMapper;
 import com.cloudtimes.hardwaredevice.mapper.CtStoreMapper;
 import com.cloudtimes.mq.domain.CtMQConstants;
@@ -34,12 +36,10 @@ import com.cloudtimes.product.mapper.CtShopProductMapper;
 import com.cloudtimes.serving.cash.service.ICtCashBusinessService;
 import com.cloudtimes.serving.cash.service.domain.VoiceTokenData;
 import com.cloudtimes.serving.common.CtTaskInnerService;
-import com.cloudtimes.supervise.domain.CtOrder;
-import com.cloudtimes.supervise.domain.CtOrderDetail;
-import com.cloudtimes.supervise.domain.CtShopping;
-import com.cloudtimes.supervise.domain.CtTask;
+import com.cloudtimes.supervise.domain.*;
 import com.cloudtimes.supervise.mapper.CtOrderDetailMapper;
 import com.cloudtimes.supervise.mapper.CtOrderMapper;
+import com.cloudtimes.hardwaredevice.mapper.CtPaymentMapper;
 import com.cloudtimes.supervise.mapper.CtShoppingMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -70,7 +70,7 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
     @Autowired
     private CtStoreMapper storeMapper;
     @Autowired
-    private CtDeviceCashMapper deviceCashMapper;
+    private CtPaymentMapper paymentMapper;
     @Autowired
     private CtShopProductMapper shopProductMapper;
     @Autowired
@@ -132,11 +132,16 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
                 throw new ServiceException(resp.getReturnMsg());
             }
         } else {
-            CtDeviceCash dbDeviceCash = deviceCashMapper.selectCtDeviceCashById(deviceId);
-            if (dbDeviceCash == null) {
-                throw new ServiceException("无法获取设备收钱吧参数");
+            // 获取设备收钱吧对接参数
+            CtPayment paymentParam = paymentMapper.selectCtPaymentByUniqueKey(deviceId, PayeeType.CASH.getCode(), PayWay.SHOU_QIAN_BA.getCode());
+            if (paymentParam == null) {
+                throw new ServiceException("无法获取设备支付渠道信息");
             }
-            AuthInfoData wxPayFaceAuthInfo = shouqianbaApiService.getWxPayFaceAuthInfo(rawdata, dbDeviceCash.getTerminalSn(), dbDeviceCash.getTerminalKey());
+            if (StringUtils.isEmpty(paymentParam.getPayParams())) {
+                throw new ServiceException("设备参数未设置");
+            }
+            ShouqianbaParam shouqianbaParam = JacksonUtils.parseObject(paymentParam.getPayParams(), ShouqianbaParam.class);
+            AuthInfoData wxPayFaceAuthInfo = shouqianbaApiService.getWxPayFaceAuthInfo(rawdata, shouqianbaParam.getTerminalSn(), shouqianbaParam.getTerminalKey());
             return wxPayFaceAuthInfo;
         }
     }
@@ -409,11 +414,14 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
                 || StringUtils.equals(cacheOrder.getState(), PayState.PAID_THEN_CONFIRM.getCode())) {
             throw new ServiceException("改订单正在支付中或完成支付，请勿重复提交");
         }
-        CtDeviceCash ctDeviceCash = deviceCashMapper.selectCtDeviceCashById(deviceId);
-        if (ctDeviceCash == null) {
+
+        CtPayment paymentParam = paymentMapper.selectCtPaymentByUniqueKey(deviceId, PayeeType.CASH.getCode(), PayWay.SHOU_QIAN_BA.getCode());
+        if (paymentParam == null || StringUtils.isEmpty(paymentParam.getPayParams())) {
             throw new ServiceException("收银机未对接");
         }
-        if (StringUtils.isEmpty(ctDeviceCash.getTerminalSn()) || StringUtils.isEmpty(ctDeviceCash.getTerminalKey())) {
+        ShouqianbaParam shouqianbaParam = JacksonUtils.parseObject(paymentParam.getPayParams(), ShouqianbaParam.class);
+
+        if (StringUtils.isEmpty(shouqianbaParam.getTerminalSn()) || StringUtils.isEmpty(shouqianbaParam.getTerminalKey())) {
             throw new ServiceException("支付未对接，无法付款");
         }
         if (cacheOrder.getTotalAmount().intValue() != totalAmount || cacheOrder.getItemCount().intValue() != totalNum) {
@@ -421,6 +429,7 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
         }
         // 持久化订单
         cacheOrder.setIsCompose("0");//非组合支付
+        cacheOrder.setPaymentCode(paymentParam.getId());//支付渠道编号
         cacheOrder.setState(PayState.PAID_THEN_CONFIRM.getCode());
         cacheOrder.setPaymentAction(String.valueOf(payType));
         cacheOrder.setUpdateTime(DateUtils.getNowDate());
@@ -432,7 +441,7 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
         }
         String clientSN = NumberUtils.getRandomString(32);
         B2CPayReq b2CPayReq = new B2CPayReq();
-        b2CPayReq.setTerminalSN(ctDeviceCash.getTerminalSn());
+        b2CPayReq.setTerminalSN(shouqianbaParam.getTerminalSn());
         b2CPayReq.setClientSN(clientSN);
         b2CPayReq.setTotalAmount(String.valueOf(totalAmount));
         b2CPayReq.setDynamicId(payCode);
@@ -440,7 +449,7 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
         b2CPayReq.setOperator(cacheOrder.getStoreName());
         b2CPayReq.setReflect(orderId);
         //todo 分账参数
-        CommonResp commonResp = shouqianbaApiService.b2cPay(b2CPayReq, ctDeviceCash.getTerminalKey());
+        CommonResp commonResp = shouqianbaApiService.b2cPay(b2CPayReq, shouqianbaParam.getTerminalKey());
         if (commonResp == null) {
             throw new ServiceException("支付失败");
         }
@@ -455,8 +464,8 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
                         payOrderSerial = payOrderData.getSn();
                     }
                     PayOrderMsgData payOrderMsgData = new PayOrderMsgData();
-                    payOrderMsgData.setTerminalSN(ctDeviceCash.getTerminalSn());
-                    payOrderMsgData.setTerminalKey(ctDeviceCash.getTerminalKey());
+                    payOrderMsgData.setTerminalSN(shouqianbaParam.getTerminalSn());
+                    payOrderMsgData.setTerminalKey(shouqianbaParam.getTerminalKey());
                     payOrderMsgData.setPaySn(payOrderSerial);
                     payOrderMsgData.setOrderId(clientSN);
                     payOrderMsgData.setCreateTime(DateUtils.getNowDate());

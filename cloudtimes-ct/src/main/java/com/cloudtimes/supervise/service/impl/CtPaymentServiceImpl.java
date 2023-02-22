@@ -2,9 +2,9 @@ package com.cloudtimes.supervise.service.impl;
 
 
 import com.cloudtimes.common.utils.DateUtils;
-import com.cloudtimes.supervise.domain.CtPayment;
-import com.cloudtimes.supervise.mapper.CtPaymentMapper;
-import com.cloudtimes.supervise.service.ICtPaymentService;
+import com.cloudtimes.hardwaredevice.domain.CtPayment;
+import com.cloudtimes.hardwaredevice.mapper.CtPaymentMapper;
+import com.cloudtimes.hardwaredevice.service.ICtPaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.cloudtimes.common.annotation.DataSource;

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cloudtimes.hardwaredevice.mapper.CtPaymentMapper">
+
+    <sql id="selectCtPaymentVo">
+        select id, payee_id, payee_type, pay_way, pay_params, pay_desc, enabled, create_time, update_time, del_flag from
+        ct_payment
+    </sql>
+
+    <select id="selectCtPaymentList" parameterType="CtPayment" resultType="CtPayment">
+        <include refid="selectCtPaymentVo"/>
+        <where>
+            <if test="payeeId != null  and payeeId != ''">and payee_id = #{payeeId}</if>
+            <if test="payeeType != null  and payeeType != ''">and payee_type = #{payeeType}</if>
+            <if test="payWay != null  and payWay != ''">and pay_way = #{payWay}</if>
+            <if test="payParams != null  and payParams != ''">and pay_params = #{payParams}</if>
+            <if test="payDesc != null  and payDesc != ''">and pay_desc = #{payDesc}</if>
+            <if test="enabled != null  and enabled != ''">and enabled = #{enabled}</if>
+        </where>
+    </select>
+
+    <select id="selectCtPaymentById" parameterType="String" resultType="CtPayment">
+        <include refid="selectCtPaymentVo"/>
+        where id = #{id}
+    </select>
+    <select id="selectCtPaymentByUniqueKey" resultType="CtPayment">
+        <include refid="selectCtPaymentVo"/>
+        where payee_id = #{payeeId}
+        and payee_type = #{payeeType}
+        and pay_way = #{payWay}
+    </select>
+
+    <insert id="insertCtPayment" parameterType="CtPayment">
+        insert into ct_payment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="payeeId != null">payee_id,</if>
+            <if test="payeeType != null">payee_type,</if>
+            <if test="payWay != null">pay_way,</if>
+            <if test="payParams != null">pay_params,</if>
+            <if test="payDesc != null">pay_desc,</if>
+            <if test="enabled != null">enabled,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="payeeId != null">#{payeeId},</if>
+            <if test="payeeType != null">#{payeeType},</if>
+            <if test="payWay != null">#{payWay},</if>
+            <if test="payParams != null">#{payParams},</if>
+            <if test="payDesc != null">#{payDesc},</if>
+            <if test="enabled != null">#{enabled},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+        </trim>
+    </insert>
+
+    <update id="updateCtPayment" parameterType="CtPayment">
+        update ct_payment
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="payeeId != null">payee_id = #{payeeId},</if>
+            <if test="payeeType != null">payee_type = #{payeeType},</if>
+            <if test="payWay != null">pay_way = #{payWay},</if>
+            <if test="payParams != null">pay_params = #{payParams},</if>
+            <if test="payDesc != null">pay_desc = #{payDesc},</if>
+            <if test="enabled != null">enabled = #{enabled},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCtPaymentById" parameterType="String">
+        delete from ct_payment where id = #{id}
+    </delete>
+
+    <delete id="deleteCtPaymentByIds" parameterType="String">
+        delete from ct_payment where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

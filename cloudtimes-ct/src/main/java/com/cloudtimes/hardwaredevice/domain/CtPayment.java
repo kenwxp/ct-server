@@ -1,11 +1,9 @@
-package com.cloudtimes.supervise.domain;
+package com.cloudtimes.hardwaredevice.domain;
 
-import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import com.cloudtimes.common.annotation.Excel;
 import com.cloudtimes.common.core.domain.BaseEntity;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 支付渠道对象 ct_payment
@@ -36,7 +34,7 @@ public class CtPayment extends BaseEntity {
     private String payeeType;
 
     /**
-     * 支付渠道类型 1-微信 2-支付宝 3-收钱吧 4-汇天下
+     * 支付渠道类型 0-支付宝 1-微信 2-收钱吧 3-汇天下
      */
     @Excel(name = "支付渠道类型")
     private String payWay;

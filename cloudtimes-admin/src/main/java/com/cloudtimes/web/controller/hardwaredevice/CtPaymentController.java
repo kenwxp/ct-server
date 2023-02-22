@@ -1,4 +1,4 @@
-package com.cloudtimes.web.controller.supervise;
+package com.cloudtimes.web.controller.hardwaredevice;
 
 import com.cloudtimes.common.annotation.Log;
 import com.cloudtimes.common.core.controller.BaseController;
@@ -7,8 +7,8 @@ import com.cloudtimes.common.core.page.TableDataInfo;
 import com.cloudtimes.common.enums.BusinessType;
 
 import com.cloudtimes.common.utils.poi.ExcelUtil;
-import com.cloudtimes.supervise.domain.CtPayment;
-import com.cloudtimes.supervise.service.ICtPaymentService;
+import com.cloudtimes.hardwaredevice.domain.CtPayment;
+import com.cloudtimes.hardwaredevice.service.ICtPaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +23,7 @@ import java.util.List;
  * @date 2023-02-22
  */
 @RestController
-@RequestMapping("/system/payment")
+@RequestMapping("/hardwaredevice/payment")
 public class CtPaymentController extends BaseController
 {
     @Autowired
@@ -32,7 +32,7 @@ public class CtPaymentController extends BaseController
     /**
      * 查询支付渠道列表
      */
-    @PreAuthorize("@ss.hasPermi('system:payment:list')")
+    @PreAuthorize("@ss.hasPermi('hardwaredevice:payment:list')")
     @GetMapping("/list")
     public TableDataInfo list(CtPayment ctPayment)
     {
@@ -44,7 +44,7 @@ public class CtPaymentController extends BaseController
     /**
      * 导出支付渠道列表
      */
-    @PreAuthorize("@ss.hasPermi('system:payment:export')")
+    @PreAuthorize("@ss.hasPermi('hardwaredevice:payment:export')")
     @Log(title = "支付渠道", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, CtPayment ctPayment)
@@ -57,7 +57,7 @@ public class CtPaymentController extends BaseController
     /**
      * 获取支付渠道详细信息
      */
-    @PreAuthorize("@ss.hasPermi('system:payment:query')")
+    @PreAuthorize("@ss.hasPermi('hardwaredevice:payment:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") String id)
     {
@@ -67,7 +67,7 @@ public class CtPaymentController extends BaseController
     /**
      * 新增支付渠道
      */
-    @PreAuthorize("@ss.hasPermi('system:payment:add')")
+    @PreAuthorize("@ss.hasPermi('hardwaredevice:payment:add')")
     @Log(title = "支付渠道", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody CtPayment ctPayment)
@@ -78,7 +78,7 @@ public class CtPaymentController extends BaseController
     /**
      * 修改支付渠道
      */
-    @PreAuthorize("@ss.hasPermi('system:payment:edit')")
+    @PreAuthorize("@ss.hasPermi('hardwaredevice:payment:edit')")
     @Log(title = "支付渠道", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody CtPayment ctPayment)
@@ -89,7 +89,7 @@ public class CtPaymentController extends BaseController
     /**
      * 删除支付渠道
      */
-    @PreAuthorize("@ss.hasPermi('system:payment:remove')")
+    @PreAuthorize("@ss.hasPermi('hardwaredevice:payment:remove')")
     @Log(title = "支付渠道", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable String[] ids)

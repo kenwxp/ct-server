@@ -2,6 +2,7 @@ package com.cloudtimes.common;
 
 import com.cloudtimes.cache.CtTaskCache;
 import com.cloudtimes.common.exception.ServiceException;
+import com.cloudtimes.enums.PaymentMode;
 import com.cloudtimes.partner.pay.shouqianba.domain.PayOrderData;
 import com.cloudtimes.partner.pay.shouqianba.domain.ShouqianbaConstant;
 import com.cloudtimes.supervise.domain.CtOrder;
@@ -57,11 +58,11 @@ public class PayOrderUtils {
             cacheOrder.setState(payStatus);
             cacheOrder.setActualAmount(BigDecimal.valueOf(Long.parseLong(data.getTotalAmount())));
             if (StringUtils.equals(data.getPayway(), "1") || StringUtils.equals(data.getPayway(), "2")) {
-                cacheOrder.setPaymentMode("0");
+                cacheOrder.setPaymentMode(PaymentMode.ALI_PAY.getCode());
             } else if (StringUtils.equals(data.getPayway(), "3")) {
-                cacheOrder.setPaymentMode("1");
+                cacheOrder.setPaymentMode(PaymentMode.WECHAT_PAY.getCode());
             } else {
-                cacheOrder.setPaymentMode("2");
+                cacheOrder.setPaymentMode(PaymentMode.E_BANK.getCode());
             }
             cacheOrder.setPaymentId(data.getSn());
             cacheOrder.setUpdateTime(new Date(Long.parseLong(data.getFinishTime())));
