@@ -12,7 +12,7 @@ import java.net.URISyntaxException;
 @Component
 public class WebSocketClientManager {
 
-    @Value("${ysy.server_url}")
+    @Value("${wiegand.server_url}")
     private String serverUrl;
 
     private URI serverUri;
@@ -20,7 +20,7 @@ public class WebSocketClientManager {
 
     private boolean isMonitor = false;
 
-    private MyWebSocketClient webSocketClient;
+    private CtWebSocketClient webSocketClient;
 
     private static WebSocketClientManager instance;
 
@@ -44,7 +44,7 @@ public class WebSocketClientManager {
         try {
             log.info("正在建立连接...");
             if (this.webSocketClient == null || !this.webSocketClient.isOpen()) {
-                this.webSocketClient = new MyWebSocketClient(serverUri);
+                this.webSocketClient = new CtWebSocketClient(serverUri);
                 this.webSocketClient.connectBlocking();
             }
         } catch (Exception ex) {

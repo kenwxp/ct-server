@@ -4,12 +4,12 @@ import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
 import com.cloudtimes.account.domain.CtUser;
 import com.cloudtimes.account.mapper.CtUserMapper;
-import com.cloudtimes.cache.CtDeviceCache;
+import com.cloudtimes.cache.CtCashDynamicCodeCache;
 import com.cloudtimes.cache.CtTaskCache;
 import com.cloudtimes.common.OrderUtil;
 import com.cloudtimes.common.PayOrderUtils;
 import com.cloudtimes.common.exception.ServiceException;
-import com.cloudtimes.common.mq.RocketMqProducer;
+import com.cloudtimes.common.mq.CtRocketMqProducer;
 import com.cloudtimes.common.utils.DateUtils;
 import com.cloudtimes.common.utils.JacksonUtils;
 import com.cloudtimes.common.utils.NumberUtils;
@@ -83,11 +83,11 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
     @Autowired
     private CtAgoraApiService agoraApiService;
     @Autowired
-    private CtDeviceCache deviceCache;
+    private CtCashDynamicCodeCache deviceCache;
     @Autowired
     private PayOrderUtils payOrderUtils;
     @Autowired
-    private RocketMqProducer mqProducer;
+    private CtRocketMqProducer mqProducer;
 
     /**
      * 获取刷脸凭证

@@ -1,6 +1,6 @@
 package com.cloudtimes.app.config;
 
-import com.cloudtimes.app.manager.MyWebSocketClient;
+import com.cloudtimes.app.manager.CtWebSocketClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,13 +12,13 @@ import java.net.URISyntaxException;
 public class WebSocketClientConfig {
 
 
-    @Value("${ysy.server_url}")
+    @Value("${wiegand.server_url}")
     private String serverUrl;
 
     @Bean
-    public MyWebSocketClient createMyWebSocketClient() throws URISyntaxException, InterruptedException {
+    public CtWebSocketClient createMyWebSocketClient() throws URISyntaxException, InterruptedException {
         URI uri = new URI(serverUrl);
-        MyWebSocketClient client = new MyWebSocketClient(uri);
+        CtWebSocketClient client = new CtWebSocketClient(uri);
         return client;
     }
 

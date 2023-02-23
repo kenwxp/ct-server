@@ -1,7 +1,7 @@
-package com.cloudtimes.mq.service;
+package com.cloudtimes.mq.listener;
 
 import com.cloudtimes.cache.CtTaskCache;
-import com.cloudtimes.common.mq.RocketMqProducer;
+import com.cloudtimes.common.mq.CtRocketMqProducer;
 import com.cloudtimes.common.utils.DateUtils;
 import com.cloudtimes.common.utils.StringUtils;
 import com.cloudtimes.enums.PayState;
@@ -28,7 +28,7 @@ public class CancelPayOrderListener implements RocketMQListener<PayOrderMsgData>
     @Autowired
     private CtOrderMapper orderMapper;
     @Autowired
-    private RocketMqProducer mqProducer;
+    private CtRocketMqProducer mqProducer;
 
     @Override
     public void onMessage(PayOrderMsgData data) {

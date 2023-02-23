@@ -1,8 +1,8 @@
-package com.cloudtimes.mq.service;
+package com.cloudtimes.mq.listener;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.cloudtimes.common.PayOrderUtils;
-import com.cloudtimes.common.mq.RocketMqProducer;
+import com.cloudtimes.common.mq.CtRocketMqProducer;
 import com.cloudtimes.common.utils.DateUtils;
 import com.cloudtimes.mq.domain.CtMQConstants;
 import com.cloudtimes.mq.domain.PayOrderMsgData;
@@ -24,7 +24,7 @@ public class QueryPayOrderListener implements RocketMQListener<PayOrderMsgData> 
     @Autowired
     private PayOrderUtils payOrderUtils;
     @Autowired
-    private RocketMqProducer mqProducer;
+    private CtRocketMqProducer mqProducer;
     private final int loopQueryPayOrderTimeOut = 50;
 
     @Override

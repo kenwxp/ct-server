@@ -21,7 +21,7 @@ public class HeartReportEventProcess implements BaseEventProcess {
     @Override
     public Object process(AuthUser authUser, Object object) {
 
-
+        //todo 更新收银机状态
         return AjaxResult.success();
     }
 }

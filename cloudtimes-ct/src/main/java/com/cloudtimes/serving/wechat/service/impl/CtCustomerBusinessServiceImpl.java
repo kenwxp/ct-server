@@ -2,7 +2,7 @@ package com.cloudtimes.serving.wechat.service.impl;
 
 import com.cloudtimes.account.domain.CtUser;
 import com.cloudtimes.account.mapper.CtUserMapper;
-import com.cloudtimes.cache.CtDeviceCache;
+import com.cloudtimes.cache.CtCashDynamicCodeCache;
 import com.cloudtimes.cache.CtTaskCache;
 import com.cloudtimes.common.OrderUtil;
 import com.cloudtimes.common.annotation.DataSource;
@@ -11,7 +11,7 @@ import com.cloudtimes.common.enums.DataSourceType;
 import com.cloudtimes.common.exception.ServiceException;
 import com.cloudtimes.hardwaredevice.domain.CtStore;
 import com.cloudtimes.hardwaredevice.mapper.CtStoreMapper;
-import com.cloudtimes.mq.service.CashMqSender;
+import com.cloudtimes.mq.sender.CashMqSender;
 import com.cloudtimes.serving.cash.service.ICtCashBusinessService;
 import com.cloudtimes.serving.common.CtTaskInnerService;
 import com.cloudtimes.serving.wechat.service.ICtCustomerBusinessService;
@@ -48,7 +48,7 @@ public class CtCustomerBusinessServiceImpl implements ICtCustomerBusinessService
     @Autowired
     private CtTaskCache taskCache;
     @Autowired
-    private CtDeviceCache deviceCache;
+    private CtCashDynamicCodeCache deviceCache;
     @Autowired
     private CashMqSender cashMqSender;
     @Autowired

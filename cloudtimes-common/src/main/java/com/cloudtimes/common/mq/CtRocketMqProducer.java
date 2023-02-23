@@ -1,7 +1,6 @@
 package com.cloudtimes.common.mq;
 
 import com.alibaba.fastjson2.JSON;
-import com.cloudtimes.common.constant.RocketMQConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.producer.SendCallback;
 import org.apache.rocketmq.client.producer.SendResult;
@@ -13,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class RocketMqProducer {
+public class CtRocketMqProducer {
     @Value("${rocketmq.producer.send-message-timeout}")
     private Integer messageTimeOut;
     // 建议正常规模项目统一用一个TOPIC
@@ -25,7 +24,7 @@ public class RocketMqProducer {
     /**
      * 普通发送（这里的参数对象User可以随意定义，可以发送个对象，也可以是字符串等）
      */
-    public void send(String topic, Object o) {
+    public <T> void send(String topic, T o) {
         rocketMQTemplate.convertAndSend(topic, o);
     }
 

@@ -49,5 +49,5 @@ token:
     expireTime: 180
 
 # 营石云websocket server 地址
-ysy:
+wiegand:
     server_url: ws://10.1.65.231:61081

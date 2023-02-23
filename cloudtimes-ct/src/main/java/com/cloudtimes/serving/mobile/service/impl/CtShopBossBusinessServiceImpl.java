@@ -11,7 +11,7 @@ import com.cloudtimes.hardwaredevice.domain.CtStore;
 import com.cloudtimes.hardwaredevice.domain.CtSuperviseLogs;
 import com.cloudtimes.hardwaredevice.mapper.CtStoreMapper;
 import com.cloudtimes.hardwaredevice.mapper.CtSuperviseLogsMapper;
-import com.cloudtimes.mq.service.CashMqSender;
+import com.cloudtimes.mq.sender.CashMqSender;
 import com.cloudtimes.serving.door.service.ICtDoorGuardOpService;
 import com.cloudtimes.serving.mobile.service.ICtShopBossBusinessService;
 import org.springframework.beans.factory.annotation.Autowired;

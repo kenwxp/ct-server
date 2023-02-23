@@ -1,4 +1,4 @@
-package com.cloudtimes.mq.service;
+package com.cloudtimes.mq.listener;
 
 import com.cloudtimes.mq.domain.CtMQConstants;
 import com.cloudtimes.mq.domain.DoorOpData;

@@ -1,4 +1,4 @@
-package com.cloudtimes.mq.service;
+package com.cloudtimes.mq.sender;
 
 import com.cloudtimes.common.constant.RocketMQConstants;
 import com.cloudtimes.common.mq.*;
@@ -19,7 +19,7 @@ public class CashMqSender {
     @Autowired
     private CtDeviceMapper deviceMapper;
     @Autowired
-    private RocketMqProducer mqProducer;
+    private CtRocketMqProducer mqProducer;
     /**
      * 指令选项
      */

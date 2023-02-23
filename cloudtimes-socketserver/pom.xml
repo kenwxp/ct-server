@@ -129,26 +129,11 @@
             <version>5.2.2.RELEASE</version>
         </dependency>
 
-
-        <dependency>
-            <groupId>cloudtimes</groupId>
-            <artifactId>cloudtimes-common</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>cloudtimes</groupId>
             <artifactId>cloudtimes-ct</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>cloudtimes</groupId>
-            <artifactId>cloudtimes-system</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>cloudtimes</groupId>
-            <artifactId>cloudtimes-partner</artifactId>
-        </dependency>
 
         <!-- sharding-jdbc分库分表 -->
         <dependency>

@@ -4,13 +4,14 @@ import com.cloudtimes.common.core.redis.RedisCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 @Component
-public class CtDeviceCache {
-    private static final String CACHE_NAME = "cash_device_dynamic_code";//收银机动态码
+public class CtDoorStateCache {
+    private static final String CACHE_NAME = "door_state";//收银机动态码
     //读写锁
     private final ReadWriteLock rwLock = new ReentrantReadWriteLock();
     //获取写锁
@@ -20,28 +21,28 @@ public class CtDeviceCache {
     @Autowired
     private RedisCache redisCache;
 
-    public String get(String deviceId) {
+    public String get(int deviceSerial) {
         rLock.lock();
         try {
-            return redisCache.getCacheMapValue(CACHE_NAME, deviceId);
+            return redisCache.getCacheMapValue(CACHE_NAME, String.valueOf(deviceSerial));
         } finally {
             rLock.unlock();
         }
     }
 
-    public void put(String deviceId, String code) {
+    public void put(int deviceSerial, Date refreshTime) {
         wLock.lock();
         try {
-            redisCache.setCacheMapValue(CACHE_NAME, deviceId, code);
+            redisCache.setCacheMapValue(CACHE_NAME, String.valueOf(deviceSerial), refreshTime);
         } finally {
             wLock.unlock();
         }
     }
 
-    public boolean delete(String deviceId) {
+    public boolean delete(int deviceSerial) {
         wLock.lock();
         try {
-            return redisCache.deleteCacheMapValue(CACHE_NAME, deviceId);
+            return redisCache.deleteCacheMapValue(CACHE_NAME, String.valueOf(deviceSerial));
         } finally {
             wLock.unlock();
         }
