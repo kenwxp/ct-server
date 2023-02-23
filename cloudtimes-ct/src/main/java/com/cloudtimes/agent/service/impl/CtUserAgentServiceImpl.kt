@@ -204,9 +204,21 @@ class CtUserAgentServiceImpl : ICtUserAgentService {
 
         val transferAmount = transferCashRequest.amount!!
 
-        // Step 1. 登记转账分录
+
+        // Step 1. 登记转账流水
+        val transferBook = CtTransferBook().apply {
+            this.payer = payerId
+            this.payee = payeeId
+            yearMonth = DateUtils.getYearMonth()
+            amount = transferAmount
+            remark = transferCashRequest.remark
+        }
+        transferBookMapper.insert(CtTransferBookProvider.insertOne(transferBook))
+
+        // Step 2. 登记转账分录
         val withdrawCashRecord = CtUserAssetsBook()
         with(withdrawCashRecord) {
+            transferId = transferBook.id
             yearMonth = DateUtils.getYearMonth()
             userId = payerId
             bookType = AssetsBookType.AgentTransfer.code
@@ -222,6 +234,7 @@ class CtUserAgentServiceImpl : ICtUserAgentService {
 
         val depositCashRecord = CtUserAssetsBook()
         with(depositCashRecord) {
+            transferId = transferBook.id
             yearMonth = DateUtils.getYearMonth()
             userId = payeeId
             bookType = AssetsBookType.AgentTransfer.code
@@ -234,16 +247,6 @@ class CtUserAgentServiceImpl : ICtUserAgentService {
             remark = "转账收款"
         }
         assetBookMapper.insertOne(CtUserAssetsBookProvider.insertOne(depositCashRecord))
-
-        // Step 2. 登记转账流水
-        val transferBook = CtTransferBook().apply {
-            this.payer = payerId
-            this.payee = payeeId
-            yearMonth = DateUtils.getYearMonth()
-            amount = transferAmount
-            remark = transferCashRequest.remark
-        }
-        transferBookMapper.generalInsert(CtTransferBookProvider.insertOne(transferBook))
 
         // Step 3. 更新用户资产
         payer.cashAmount = payer.cashAmount!!.minus(transferAmount)

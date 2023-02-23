@@ -12,6 +12,7 @@ object CtUserAssetsBookProvider {
     fun insertOne(row: CtUserAssetsBook): GeneralInsertStatementProvider {
         return with(ctUserAssetsBookTable) {
             insertInto(ctUserAssetsBookTable) {
+                set(transferId) toValueWhenPresent  row.transferId
                 set(yearMonth) toValueWhenPresent row.yearMonth
                 set(userId) toValueWhenPresent row.userId
                 set(cardId) toValueWhenPresent row.cardId

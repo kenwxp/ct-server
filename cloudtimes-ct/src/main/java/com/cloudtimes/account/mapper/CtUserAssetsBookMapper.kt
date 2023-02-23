@@ -1,7 +1,6 @@
 package com.cloudtimes.account.mapper
 
 import com.cloudtimes.account.domain.CtUserAssetsBook
-import com.cloudtimes.account.mapper.provider.CtUserAssetsBookProvider
 
 import org.apache.ibatis.annotations.Mapper
 import org.apache.ibatis.annotations.Result
@@ -15,7 +14,6 @@ import org.mybatis.dynamic.sql.util.SqlProviderAdapter
 import org.apache.ibatis.type.JdbcType
 import org.mybatis.dynamic.sql.util.mybatis3.CommonCountMapper
 import org.mybatis.dynamic.sql.util.mybatis3.CommonDeleteMapper
-import org.mybatis.dynamic.sql.util.mybatis3.CommonInsertMapper
 import org.mybatis.dynamic.sql.util.mybatis3.CommonUpdateMapper
 
 /**
@@ -24,6 +22,7 @@ import org.mybatis.dynamic.sql.util.mybatis3.CommonUpdateMapper
  * @author 沈兵
  * @date 2023-02-07
  */
+@Mapper
 interface CtUserAssetsBookMapper : CommonCountMapper, CommonDeleteMapper, CommonUpdateMapper {
     @SelectProvider(type = SqlProviderAdapter::class, method = "select")
     @Results(
@@ -38,6 +37,7 @@ interface CtUserAssetsBookMapper : CommonCountMapper, CommonDeleteMapper, Common
             Result(column = "before_amount", property = "beforeAmount", jdbcType = JdbcType.DECIMAL),
             Result(column = "alter_amount", property = "alterAmount", jdbcType = JdbcType.DECIMAL),
             Result(column = "amount", property = "amount", jdbcType = JdbcType.DECIMAL),
+            Result(column = "transfer_id", property = "transferId", jdbcType = JdbcType.OTHER),
             Result(column = "create_date", property = "createDate", jdbcType = JdbcType.DATE),
             Result(column = "create_time", property = "createTime", jdbcType = JdbcType.TIMESTAMP),
             Result(column = "update_time", property = "updateTime", jdbcType = JdbcType.TIMESTAMP),

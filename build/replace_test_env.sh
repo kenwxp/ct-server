@@ -3,17 +3,21 @@
 # 1. 开发环境参数配置
 
 DEV_HOST='10.1.65.233'
+DEV_DOMAIN='http://ctdev.htymeta.com'
 DEV_MYSQL_USERNAME='username: root'
 DEV_MYSQL_PASSWORD='password: 123456'
+DEV_REDIS_PASSWORD='# password: ybf@2022'
 
 ADMIN_DEV_PORT='port: 8080'
 ADMIN_DEV_CONTEXT='context-path: /'
 
 # 2. 测试环境参数配置
 
-TEST_HOST='10.1.65.234'
+TEST_HOST='127.0.0.1'
+TEST_DOMAIN='https://cttest.htymeta.com'
 TEST_MYSQL_USERNAME='username: root'
-TEST_MYSQL_PASSWORD='password: hyt@test'
+TEST_MYSQL_PASSWORD='password: hty@test'
+TEST_REDIS_PASSWORD='password: hty@test'
 
 ADMIN_TEST_PORT='port: 8080'
 ADMIN_TEST_CONTEXT='context-path: /'
@@ -29,6 +33,7 @@ function replace_admin_app_config() {
 function replace_app_config() {
     APP_YML=$1
     sed -i -E -e "s#$DEV_HOST#$TEST_HOST#" $APP_YML
+    sed -i -E -e "s#^(\s+)$DEV_REDIS_PASSWORD\$#\1$TEST_REDIS_PASSWORD#" $APP_YML
     diff $(echo $APP_YML | sed 's#resources#classes#') $APP_YML
 }
 

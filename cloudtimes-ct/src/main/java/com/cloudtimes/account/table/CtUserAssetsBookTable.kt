@@ -6,6 +6,7 @@ import java.util.Date
 
 import org.mybatis.dynamic.sql.AliasableSqlTable
 import org.mybatis.dynamic.sql.util.kotlin.elements.column
+import java.time.LocalDate
 
 class CtUserAssetsBookTable : AliasableSqlTable<CtUserAssetsBookTable>("ct_user_assets_book", ::CtUserAssetsBookTable) {
     /** 编号 */
@@ -47,8 +48,11 @@ class CtUserAssetsBookTable : AliasableSqlTable<CtUserAssetsBookTable>("ct_user_
     /** 税前金额 */
     val beforeTaxAmount = column<BigDecimal>(name = "before_tax_amount", jdbcType = JDBCType.DECIMAL)
 
+    /** 转账ID */
+    val transferId = column<String>(name = "transfer_id", jdbcType = JDBCType.OTHER)
+
     /** 创建日期 */
-    val createDate = column<Date>(name = "create_date", jdbcType = JDBCType.DATE)
+    val createDate = column<LocalDate>(name = "create_date", jdbcType = JDBCType.DATE)
 
     /** 创建时间 */
     val createTime = column<Date>(name = "create_time", jdbcType = JDBCType.TIMESTAMP)

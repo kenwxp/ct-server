@@ -4,37 +4,32 @@ import com.cloudtimes.account.domain.CtTransferBook
 import com.cloudtimes.account.table.CtTransferBookTable
 import com.cloudtimes.account.table.CtUserTable
 
-import org.mybatis.dynamic.sql.insert.render.GeneralInsertStatementProvider
+import org.mybatis.dynamic.sql.insert.render.InsertStatementProvider
 import org.mybatis.dynamic.sql.select.render.SelectStatementProvider
-import org.mybatis.dynamic.sql.util.kotlin.mybatis3.insertInto
 import org.mybatis.dynamic.sql.util.kotlin.mybatis3.select
-import org.mybatis.dynamic.sql.util.kotlin.elements.column
 import org.mybatis.dynamic.sql.util.kotlin.elements.sortColumn
-
-import java.sql.JDBCType
-import java.util.Date
-
+import org.mybatis.dynamic.sql.util.kotlin.mybatis3.insert
 
 object CtTransferBookProvider {
     private val userTable1: CtUserTable = CtUserTable().withAlias("u1")
     private val userTable2: CtUserTable = CtUserTable().withAlias("u2")
     private val transferTable: CtTransferBookTable = CtTransferBookTable().withAlias("tsf")
 
-    fun insertOne(row: CtTransferBook) : GeneralInsertStatementProvider {
+    fun insertOne(row: CtTransferBook) : InsertStatementProvider<CtTransferBook> {
         return with(transferTable) {
-            insertInto(transferTable) {
-                set(payer) toValueWhenPresent  row.payer
-                set(payee) toValueWhenPresent  row.payee
-                set(yearMonth) toValueWhenPresent  row.yearMonth
-                set(amount) toValueWhenPresent  row.amount
-                set(remark) toValueWhenPresent  row.remark
+            insert(row) {
+                into(transferTable)
+                map(id) toProperty "id"
+                map(payer) toProperty "payer"
+                map(payee) toProperty "payee"
+                map(yearMonth) toProperty "yearMonth"
+                map(amount) toProperty "amount"
+                map(remark) toProperty "remark"
             }
         }
     }
 
     fun selectTransferRecordsStmt(userId: String) : SelectStatementProvider {
-        val orderByCol = transferTable.column<Date>("tsf.order_by", jdbcType = JDBCType.DATE)
-
         return select(
             transferTable.id.`as`("transferId"),
             transferTable.createTime.`as`("transferTime"),
