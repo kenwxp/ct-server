@@ -1,7 +1,13 @@
 package com.cloudtimes.partner.pay.shouqianba.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 
+@JsonInclude(JsonInclude.Include.NON_NULL) //null的字段不处理
+@JsonIgnoreProperties(ignoreUnknown = true)  //过滤多余json字段
+@Data
 public class B2CProfitSharingReceiver {
     @JsonProperty(value = "id")
     private String id;// 收款方编号		N	id和client_sn二选一，不能同时为空

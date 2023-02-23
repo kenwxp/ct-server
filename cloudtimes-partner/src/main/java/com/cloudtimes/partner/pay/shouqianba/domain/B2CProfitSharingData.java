@@ -1,9 +1,14 @@
 package com.cloudtimes.partner.pay.shouqianba.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 
 import java.util.List;
-
+@JsonInclude(JsonInclude.Include.NON_NULL) //null的字段不处理
+@JsonIgnoreProperties(ignoreUnknown = true)  //过滤多余json字段
+@Data
 public class B2CProfitSharingData {
     @JsonProperty(value = "sharing_flag")
     private String sharingFlag;// 分账标识	string	Y	0: 不分账1：分账

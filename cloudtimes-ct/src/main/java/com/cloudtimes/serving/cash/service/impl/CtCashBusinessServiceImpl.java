@@ -51,10 +51,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
@@ -439,6 +436,11 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
                 cacheOrderDetails.values()) {
             orderDetailMapper.insertCtOrderDetail(item);
         }
+        // 准备支付参数
+        CtStore ctStore = storeMapper.selectCtStoreById(cacheOrder.getStoreId());
+        if (ctStore == null) {
+            throw new ServiceException("无法获取门店信息");
+        }
         String clientSN = NumberUtils.getRandomString(32);
         B2CPayReq b2CPayReq = new B2CPayReq();
         b2CPayReq.setTerminalSN(shouqianbaParam.getTerminalSn());
@@ -448,7 +450,22 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
         b2CPayReq.setSubject("生活用品");
         b2CPayReq.setOperator(cacheOrder.getStoreName());
         b2CPayReq.setReflect(orderId);
-        //todo 分账参数
+        if (ctStore.getDividendRate() != null && ctStore.getDividendRate().intValue() > 0) {
+            String dividendRate = ctStore.getDividendRate().intValue() + "%";
+            // 分账参数
+            B2CProfitSharingData b2CProfitSharingData = new B2CProfitSharingData();
+            b2CProfitSharingData.setSharingFlag("1");//分账
+            b2CProfitSharingData.setSharingType("1");//按比例
+            b2CProfitSharingData.setModelId(cacheOrder.getStoreId());
+//        b2CProfitSharingData.setSharingNotifyUrl("");
+            ArrayList<B2CProfitSharingReceiver> receivers = new ArrayList<>();
+            B2CProfitSharingReceiver receiver = new B2CProfitSharingReceiver();
+            receiver.setId("1680005823147");// 给雅安
+            receiver.setRatio(dividendRate);
+            receivers.add(receiver);
+            b2CProfitSharingData.setReceivers(receivers);
+            b2CPayReq.setProfitSharing(b2CProfitSharingData);
+        }
         CommonResp commonResp = shouqianbaApiService.b2cPay(b2CPayReq, shouqianbaParam.getTerminalKey());
         if (commonResp == null) {
             throw new ServiceException("支付失败");
