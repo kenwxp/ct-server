@@ -13,7 +13,7 @@ ADMIN_DEV_CONTEXT='context-path: /'
 
 # 2. 测试环境参数配置
 
-TEST_HOST='127.0.0.1'
+TEST_HOST='10.1.65.234'
 TEST_DOMAIN='https://cttest.htymeta.com'
 TEST_MYSQL_USERNAME='username: root'
 TEST_MYSQL_PASSWORD='password: hty@test'
@@ -34,7 +34,7 @@ function replace_app_config() {
     APP_YML=$1
     sed -i -E -e "s#$DEV_HOST#$TEST_HOST#" $APP_YML
     sed -i -E -e "s#^(\s+)$DEV_REDIS_PASSWORD\$#\1$TEST_REDIS_PASSWORD#" $APP_YML
-    diff $(echo $APP_YML | sed 's#resources#classes#') $APP_YML
+    # diff $(echo $APP_YML | sed 's#resources#classes#') $APP_YML
 }
 
 function replace_mysql_config() {
@@ -43,14 +43,14 @@ function replace_mysql_config() {
     sed -i -E -e "s#^(\s+)$DEV_MYSQL_USERNAME\$#\1$TEST_MYSQL_USERNAME#" $MYSQL_YML
     sed -i -E -e "s#^(\s+)$DEV_MYSQL_PASSWORD\$#\1$TEST_MYSQL_PASSWORD#" $MYSQL_YML
     echo "========== $MYSQL_YML =========="
-    diff $(echo $MYSQL_YML | sed 's#resources#classes#') $MYSQL_YML
+    # diff $(echo $MYSQL_YML | sed 's#resources#classes#') $MYSQL_YML
 }
 
 function replace_mq_config() {
     MQ_YML=$1
     sed -i -E -e "s#$DEV_HOST#$TEST_HOST#" $MQ_YML
     echo "========== $MQ_YML =========="
-    diff $(echo $MQ_YML | sed 's#resources#classes#') $MQ_YML
+    # diff $(echo $MQ_YML | sed 's#resources#classes#') $MQ_YML
 }
 
 # 4 修改admin服务配置文件

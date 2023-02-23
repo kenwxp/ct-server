@@ -1,6 +1,8 @@
 package com.cloudtimes.account.service
 
 import com.cloudtimes.account.domain.CtUserAssetsBook
+import com.cloudtimes.account.dto.request.QueryAssetsBookRequest
+import com.cloudtimes.account.dto.response.QueryAssetsBookResponse
 
 /**
  * 用户资产簿记Service接口
@@ -9,6 +11,9 @@ import com.cloudtimes.account.domain.CtUserAssetsBook
  * @date 2023-02-07
  */
 interface ICtUserAssetsBookService {
+    /** 查询代理账单簿记 */
+    fun selectAgentAssetsBookList(request: QueryAssetsBookRequest): List<QueryAssetsBookResponse>
+
     /**
      * 查询用户资产簿记
      *

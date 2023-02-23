@@ -6,6 +6,7 @@ import org.mybatis.dynamic.sql.util.kotlin.mybatis3.insertInto
 import org.mybatis.dynamic.sql.util.kotlin.mybatis3.select
 
 import com.cloudtimes.account.domain.CtUserAssetsBook
+import com.cloudtimes.account.dto.request.QueryAssetsBookRequest
 import com.cloudtimes.account.table.ctUserAssetsBookTable
 
 object CtUserAssetsBookProvider {
@@ -40,6 +41,19 @@ object CtUserAssetsBookProvider {
                     id isEqualTo id_
                     yearMonth isEqualToWhenPresent yearMonth_
                 }
+            }
+        }
+    }
+
+    /** 按用户查询资产登记簿 */
+    fun selectByUserStmt(request: QueryAssetsBookRequest): SelectStatementProvider {
+        return with(ctUserAssetsBookTable) {
+            select(ctUserAssetsBookTable.allColumns()) {
+                from(ctUserAssetsBookTable)
+                where { userId isEqualTo request.userId }
+                and {createDate isEqualToWhenPresent request.createDate}
+                and { bookType isEqualToWhenPresent request.bookType}
+                orderBy(createTime.descending())
             }
         }
     }

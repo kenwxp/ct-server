@@ -1,12 +1,13 @@
 package com.cloudtimes.account.service.impl
 
 import com.cloudtimes.account.domain.CtUserAssetsBook
+import com.cloudtimes.account.dto.request.QueryAssetsBookRequest
+import com.cloudtimes.account.dto.response.QueryAssetsBookResponse
 import com.cloudtimes.account.mapper.CtUserAssetsBookMapper
 import com.cloudtimes.account.mapper.provider.CtUserAssetsBookProvider
 import com.cloudtimes.account.service.ICtUserAssetsBookService
 import com.cloudtimes.common.annotation.DataSource
 import com.cloudtimes.common.enums.DataSourceType
-import com.cloudtimes.common.utils.DateUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -20,7 +21,14 @@ import org.springframework.stereotype.Service
 @Service
 class CtUserAssetsBookServiceImpl : ICtUserAssetsBookService {
     @Autowired
-    private lateinit var ctUserAssetsBookMapper: CtUserAssetsBookMapper
+    private lateinit var assetsBookMapper: CtUserAssetsBookMapper
+
+    /** 查询代理账单簿记 */
+    override fun selectAgentAssetsBookList(request: QueryAssetsBookRequest): List<QueryAssetsBookResponse> {
+        return assetsBookMapper.selectManyEnhanced(
+            CtUserAssetsBookProvider.selectByUserStmt(request)
+        )
+    }
 
     /**
      * 查询用户资产簿记
@@ -29,7 +37,7 @@ class CtUserAssetsBookServiceImpl : ICtUserAssetsBookService {
      * @return 用户资产簿记
      */
     override fun selectCtUserAssetsBookById(id: String): CtUserAssetsBook? {
-        return ctUserAssetsBookMapper.selectOne(CtUserAssetsBookProvider.selectByPrimaryKey(id))
+        return assetsBookMapper.selectOne(CtUserAssetsBookProvider.selectByPrimaryKey(id))
     }
 
     /**
@@ -39,6 +47,6 @@ class CtUserAssetsBookServiceImpl : ICtUserAssetsBookService {
      * @return 用户资产簿记
      */
     override fun selectCtUserAssetsBookList(ctUserAssetsBook: CtUserAssetsBook): List<CtUserAssetsBook> {
-        return ctUserAssetsBookMapper.selectMany(CtUserAssetsBookProvider.selectMany(ctUserAssetsBook))
+        return assetsBookMapper.selectMany(CtUserAssetsBookProvider.selectMany(ctUserAssetsBook))
     }
 }

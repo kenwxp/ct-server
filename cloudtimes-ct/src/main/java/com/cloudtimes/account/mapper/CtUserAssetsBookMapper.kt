@@ -1,6 +1,7 @@
 package com.cloudtimes.account.mapper
 
 import com.cloudtimes.account.domain.CtUserAssetsBook
+import com.cloudtimes.account.dto.response.QueryAssetsBookResponse
 
 import org.apache.ibatis.annotations.Mapper
 import org.apache.ibatis.annotations.Result
@@ -46,6 +47,9 @@ interface CtUserAssetsBookMapper : CommonCountMapper, CommonDeleteMapper, Common
         ]
     )
     fun selectMany(selectStatement: SelectStatementProvider): List<CtUserAssetsBook>
+
+    @SelectProvider(type = SqlProviderAdapter::class, method = "select")
+    fun selectManyEnhanced(selectStatement: SelectStatementProvider): List<QueryAssetsBookResponse>
 
     @SelectProvider(type = SqlProviderAdapter::class, method = "select")
     @ResultMap("CtUserAssetsBookResult")

@@ -2,12 +2,14 @@ package com.cloudtimes.app.controller.agent
 
 import com.cloudtimes.account.domain.CtWithdrawalBook
 import com.cloudtimes.account.dto.request.*
+import com.cloudtimes.account.dto.response.QueryAssetsBookResponse
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 import com.cloudtimes.agent.domain.CtUserAgent
 import com.cloudtimes.account.dto.response.TransferRecord
 import com.cloudtimes.account.service.ICtTransferBookService
+import com.cloudtimes.account.service.ICtUserAssetsBookService
 import com.cloudtimes.agent.service.ICtUserAgentService
 import com.cloudtimes.account.service.ICtUserService
 import com.cloudtimes.account.service.ICtWithdrawalBookService
@@ -33,6 +35,7 @@ import javax.validation.Valid
 class AgentAssetsResponse(override var data: CtUserAgent? = null) : RestResult<CtUserAgent>(data)
 class TransferRecordPage() : RestPageResult<TransferRecord>()
 class WithdrawalRecordPage() : RestPageResult<CtWithdrawalBook>()
+class AssetsBookPage() : RestPageResult<QueryAssetsBookResponse>()
 
 /**
  * 代理Controller
@@ -60,6 +63,9 @@ class CtAgentAssetsController : BaseController() {
 
     @Autowired
     private lateinit var withdrawalBookService: ICtWithdrawalBookService
+
+    @Autowired
+    private lateinit var assetsBookService: ICtUserAssetsBookService
 
     /** 获取代理资产详细信息 */
     @PostMapping()
@@ -109,14 +115,27 @@ class CtAgentAssetsController : BaseController() {
         }
     }
 
+    @Log(title = "查询代理账单", businessType = BusinessType.OTHER)
+    @PostMapping("/list_assets_book")
+    @ApiOperation("查询代理账单")
+    fun listAssetsBook(@Valid @RequestBody request: QueryAssetsBookRequest): AssetsBookPage {
+        startPage(request.pageNum, request.pageSize)
+
+        logger.info("request: $request")
+
+        val records = assetsBookService.selectAgentAssetsBookList(request)
+
+        return AssetsBookPage().apply {
+            total = getDataTable(records).total
+            data = records
+        }
+    }
 
     @Log(title = "代理提现记录", businessType = BusinessType.UPDATE)
     @PostMapping("/list_withdrawal_records")
     @ApiOperation("查询代理提现记录")
     fun listWithdrawalRecords(@Valid @RequestBody request: QueryAgentWithdrawalRequest): WithdrawalRecordPage {
         startPage(request.pageNum, request.pageSize)
-
-        logger.info("request: $request")
 
         val records = withdrawalBookService.selectAgentWithdrawalList(request)
 

@@ -11,5 +11,5 @@ function restart_service() {
 
 restart_service admin
 restart_service business
-restart_service socketserver
-restart_service detectionserver
+# restart_service socketserver
+# restart_service detectionserver
