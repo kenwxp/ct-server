@@ -17,15 +17,20 @@ def remote234 = [
 pipeline {
     agent { label 'java' }
 
-    // :TODO: 停止所有服务
+
+    // 自动丢弃历史构建记录
+    options {
+      buildDiscarder logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '6', daysToKeepStr: '7', numToKeepStr: '6')
+    }
 
     stages {
-        stage("Stop Services") {
-            steps {
-                // 执行脚本, 创建目录
-                sshScript remote: remote234, script: 'build/stop_all.sh'
-            }
-        }
+        // :TODO: 停止所有服务
+        // stage("Stop Services") {
+        //     steps {
+        //         // 执行脚本, 创建目录
+        //         sshScript remote: remote234, script: 'build/stop_all.sh'
+        //     }
+        // }
 
         // 1. 拉最新的代码
         stage('Git CLone') {
@@ -43,7 +48,14 @@ pipeline {
             }
         }
 
-        // 3. 上传部署
+        // 3. 替换环境变量
+        stage('Replace Env') {
+            steps {
+                sh './build/replace_test_env.sh'
+            }
+        }
+
+        // 4. 上传部署
         stage('Update Results') {
             steps {
                 // 1. 执行脚本, 创建目录
