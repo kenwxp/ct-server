@@ -105,7 +105,7 @@ public class CtCustomerBusinessServiceImpl implements ICtCustomerBusinessService
         }
         CtShopping newShopping = OrderUtil.getInitCtShopping();
         //获取任务
-        CtTask task = taskInnerService.distributeTask(dbStore.getId());
+        CtTask task = taskInnerService.distributeTask(dbStore.getId(), "");
         if (task != null) {
             newShopping.setTaskId(task.getId());
             newShopping.setStaffCode(task.getStaffCode());

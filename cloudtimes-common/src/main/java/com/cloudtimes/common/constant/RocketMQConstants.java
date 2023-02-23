@@ -14,6 +14,6 @@ public class RocketMQConstants {
     public static final String WS_CASH_DEVICE = "WS_CASH_DEVICE";
 
     //门禁相关模块
-    public static final String TRIGGER_MESSAGE = "TRIGGER_MESSAGE";
-    public static final String STATE_MESSAGE = "STATE_MESSAGE";
+    public static final String DOOR_TRIGGER_MESSAGE = "DOOR_TRIGGER_MESSAGE";
+    public static final String DOOR_STATE_MESSAGE = "DOOR_STATE_MESSAGE";
 }

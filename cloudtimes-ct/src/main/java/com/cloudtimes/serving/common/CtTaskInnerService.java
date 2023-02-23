@@ -2,6 +2,8 @@ package com.cloudtimes.serving.common;
 
 import com.cloudtimes.cache.CtTaskCache;
 import com.cloudtimes.common.exception.ServiceException;
+import com.cloudtimes.enums.DoorOpType;
+import com.cloudtimes.hardwaredevice.domain.CtOpenDoorLogs;
 import com.cloudtimes.hardwaredevice.domain.CtStore;
 import com.cloudtimes.hardwaredevice.mapper.CtOpenDoorLogsMapper;
 import com.cloudtimes.hardwaredevice.mapper.CtStoreMapper;
@@ -31,7 +33,7 @@ public class CtTaskInnerService {
      * @param storeId
      * @return
      */
-    public CtTask distributeTask(String storeId) {
+    public CtTask distributeTask(String storeId, String doorLogId) {
         CtStore dbStore = storeMapper.selectCtStoreById(storeId);
         if (dbStore == null) {
             throw new ServiceException("无法获取门店信息");
@@ -50,14 +52,21 @@ public class CtTaskInnerService {
                 if (StringUtils.isEmpty(staffCode)) {
                     throw new ServiceException("当前无值守员在岗");
                 }
-                newTask.setStaffCode("");
+                newTask.setStaffCode(staffCode);
                 newTask.setTaskType("0");
-                newTask.setDescText("");
+                newTask.setDescText("门禁触发产生任务");
                 newTask.setStartTime(new Date());
                 newTask.setEndTime(new Date());
                 newTask.setIsExceptional("0");
-                // todo 开门日志获取
-                newTask.setDoorLogId("");
+                if (StringUtils.isEmpty(doorLogId)) {
+                    newTask.setDescText("顾客扫码或扫脸生产任务");
+                    // 开门日志获取
+                    CtOpenDoorLogs openLog = openDoorLogsMapper.selectLatestOpenDoorLogByStore(storeId, DoorOpType.TRIGGER_OPEN_DOOR.getCode());
+                    if (openLog != null) {
+                        doorLogId = openLog.getId();
+                    }
+                }
+                newTask.setDoorLogId(doorLogId);
                 newTask.setSuperviseArea("");
                 newTask.setState("0");
                 newTask.setDelFlag("0");
@@ -70,8 +79,10 @@ public class CtTaskInnerService {
                 }
                 // 放入内存
                 taskCache.setCacheTask(newTask);
+                // todo 发送新任务提醒给客服
                 return newTask;
             } else {
+                // todo 发送进客提醒给客服
                 return dbTasks.get(0);
             }
         }

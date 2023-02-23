@@ -32,6 +32,15 @@
         </where>
     </select>
 
+    <select id="selectLatestOpenDoorLogByStore" resultType="CtOpenDoorLogs">
+        <include refid="selectCtOpenDoorLogsVo"/>
+        where  store_id = #{storeId}
+        and opt_type = #{optType}
+        and state = '0'
+        order by create_time desc
+        limit 1
+    </select>
+
     <select id="selectCtOpenDoorLogsById" parameterType="String" resultType="CtOpenDoorLogs">
         <include refid="selectCtOpenDoorLogsVo"/>
         where id = #{id}

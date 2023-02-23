@@ -47,11 +47,11 @@ public class CtWebSocketClient extends WebSocketClient {
                     int serial = node.get("SN").asInt();
                     if (node.get("刷新时间") != null) {
                         //发送消息
-                        producer.send(RocketMQConstants.STATE_MESSAGE, new DoorStateData(serial, node.get("刷新时间").asText()));
+                        producer.send(RocketMQConstants.DOOR_STATE_MESSAGE, new DoorStateData(serial, node.get("刷新时间").asText()));
                         return;
                     }
                     if (node.get("描述") != null && StringUtils.equals(node.get("描述").asText(), "按钮开门")) {
-                        producer.send(RocketMQConstants.TRIGGER_MESSAGE, new DoorStateData(serial, node.get("时间").asText()));
+                        producer.send(RocketMQConstants.DOOR_TRIGGER_MESSAGE, new DoorStateData(serial, node.get("时间").asText()));
                         return;
                     }
                 }
