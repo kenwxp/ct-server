@@ -76,9 +76,7 @@ replace_mq_config     $SOCKETSERVER_ROCKETMQ_YML
 
 # 7 修改detectionserver服务配置文件
 DETECTIONSERVER_APP_YML='./cloudtimes-detectionserver/target/resources/application.yml'
-DETECTIONSERVER_DRUID_YML='./cloudtimes-detectionserver/target/resources/application-druid.yml'
 DETECTIONSERVER_ROCKETMQ_YML='./cloudtimes-detectionserver/target/resources/application-rocketmq.yml'
 replace_app_config    $DETECTIONSERVER_APP_YML
-replace_mysql_config  $DETECTIONSERVER_DRUID_YML
 replace_mq_config     $DETECTIONSERVER_ROCKETMQ_YML
 
