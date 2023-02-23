@@ -3,27 +3,8 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.cloudtimes.account.mapper.CtWithdrawalBookMapper">
-    
-    <resultMap type="CtWithdrawalBook" id="CtWithdrawalBookResult">
-        <result property="id"    column="id"    />
-        <result property="userId"    column="user_id"    />
-        <result property="userType"    column="user_type"    />
-        <result property="amount"    column="amount"    />
-        <result property="paySerial"    column="pay_serial"    />
-        <result property="thirdSerial"    column="third_serial"    />
-        <result property="payState"    column="pay_state"    />
-        <result property="remark"    column="remark"    />
-        <result property="applyDate"    column="apply_date"    />
-        <result property="payDate"    column="pay_date"    />
-        <result property="payTime"    column="pay_time"    />
-        <result property="operator"    column="operator"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateTime"    column="update_time"    />
-        <result property="delFlag"    column="del_flag"    />
-    </resultMap>
-
     <sql id="selectCtWithdrawalBookVo">
-        select id, user_id, user_type, amount, pay_serial, third_serial, pay_state, remark, apply_date, pay_date, pay_time, operator, create_time, update_time, del_flag from ct_withdrawal_book
+        select * from ct_withdrawal_book
     </sql>
 
     <select id="selectCtWithdrawalBookList" parameterType="CtWithdrawalBook" resultMap="CtWithdrawalBookResult">

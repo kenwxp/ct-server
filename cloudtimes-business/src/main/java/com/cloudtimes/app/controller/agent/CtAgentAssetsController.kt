@@ -1,15 +1,16 @@
 package com.cloudtimes.app.controller.agent
 
+import com.cloudtimes.account.domain.CtWithdrawalBook
+import com.cloudtimes.account.dto.request.*
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+
 import com.cloudtimes.agent.domain.CtUserAgent
-import com.cloudtimes.account.dto.request.QueryByUserIdRequest
-import com.cloudtimes.account.dto.request.QueryByUserIdWithPageRequest
-import com.cloudtimes.account.dto.request.TransferCashRequest
-import com.cloudtimes.account.dto.request.WithdrawCashRequest
 import com.cloudtimes.account.dto.response.TransferRecord
 import com.cloudtimes.account.service.ICtTransferBookService
 import com.cloudtimes.agent.service.ICtUserAgentService
 import com.cloudtimes.account.service.ICtUserService
-import com.cloudtimes.account.service.impl.CtTransferBookServiceImpl
+import com.cloudtimes.account.service.ICtWithdrawalBookService
 import com.cloudtimes.app.controller.system.SmsController
 import com.cloudtimes.common.core.controller.BaseController
 import com.cloudtimes.common.core.domain.AjaxResult
@@ -31,6 +32,7 @@ import javax.validation.Valid
 /** 泛型具体化 */
 class AgentAssetsResponse(override var data: CtUserAgent? = null) : RestResult<CtUserAgent>(data)
 class TransferRecordPage() : RestPageResult<TransferRecord>()
+class WithdrawalRecordPage() : RestPageResult<CtWithdrawalBook>()
 
 /**
  * 代理Controller
@@ -42,6 +44,8 @@ class TransferRecordPage() : RestPageResult<TransferRecord>()
 @RequestMapping("/agent/assets")
 @Api(tags = ["代理-资产"])
 class CtAgentAssetsController : BaseController() {
+    private val logger: Logger = LoggerFactory.getLogger(javaClass)
+
     @Autowired
     private lateinit var agentService: ICtUserAgentService
 
@@ -53,6 +57,9 @@ class CtAgentAssetsController : BaseController() {
 
     @Autowired
     private lateinit var transferBookService: ICtTransferBookService
+
+    @Autowired
+    private lateinit var withdrawalBookService: ICtWithdrawalBookService
 
     /** 获取代理资产详细信息 */
     @PostMapping()
@@ -99,6 +106,23 @@ class CtAgentAssetsController : BaseController() {
         return TransferRecordPage().apply {
             total = getDataTable(transferRecords).total
             data = transferRecords
+        }
+    }
+
+
+    @Log(title = "代理提现记录", businessType = BusinessType.UPDATE)
+    @PostMapping("/list_withdrawal_records")
+    @ApiOperation("查询代理提现记录")
+    fun listWithdrawalRecords(@Valid @RequestBody request: QueryAgentWithdrawalRequest): WithdrawalRecordPage {
+        startPage(request.pageNum, request.pageSize)
+
+        logger.info("request: $request")
+
+        val records = withdrawalBookService.selectAgentWithdrawalList(request)
+
+        return WithdrawalRecordPage().apply {
+            total = getDataTable(records).total
+            data = records
         }
     }
 }

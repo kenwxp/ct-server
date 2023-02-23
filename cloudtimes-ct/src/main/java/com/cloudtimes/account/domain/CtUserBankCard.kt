@@ -3,6 +3,7 @@ package com.cloudtimes.account.domain
 import com.cloudtimes.common.annotation.Excel
 import com.cloudtimes.common.core.domain.BaseEntity
 import com.fasterxml.jackson.annotation.JsonFormat
+import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
 import org.apache.commons.lang3.builder.ToStringBuilder
 import org.apache.commons.lang3.builder.ToStringStyle
@@ -16,6 +17,7 @@ import javax.validation.constraints.NotNull
  * @author 沈兵
  * @date 2023-02-03
  */
+@ApiModel(value = "CtUserBankCard", description = "用户银行卡")
 class CtUserBankCard : BaseEntity() {
     @ApiModelProperty(value = "编号")
     var id: String? = null

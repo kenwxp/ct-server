@@ -51,7 +51,7 @@ pipeline {
         // 3. 替换环境变量
         stage('Replace Env') {
             steps {
-                sh './build/replace_test_env.sh'
+                sh 'bash ./build/replace_test_env.sh'
             }
         }
 
@@ -87,6 +87,11 @@ pipeline {
             }
         }
 
-        // :TODO: 启动所有服务
+        // 5. 重启nginx
+        stage('Restart Nginx') {
+            steps {
+                sshCommand remote: remote234, command: 'systemctl restart nginx.service && systemctl status nginx.service'
+            }
+        }
     }
 }

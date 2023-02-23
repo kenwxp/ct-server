@@ -3,10 +3,13 @@ package com.cloudtimes.account.domain
 import com.cloudtimes.common.annotation.Excel
 import com.cloudtimes.common.core.domain.BaseEntity
 import com.fasterxml.jackson.annotation.JsonFormat
+import io.swagger.annotations.ApiModel
+import io.swagger.annotations.ApiModelProperty
 import org.apache.commons.lang3.builder.ToStringBuilder
 import org.apache.commons.lang3.builder.ToStringStyle
 import java.math.BigDecimal
-import java.util.*
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 /**
  * 提现登记薄对象 ct_withdrawal_book
@@ -14,54 +17,55 @@ import java.util.*
  * @author 沈兵
  * @date 2023-02-03
  */
+@ApiModel(value = "CtWithdrawalBook", description = "提现登记薄")
 data class CtWithdrawalBook(
-    /** 编号  */
+    @ApiModelProperty(value = "编号")
     var id: String? = null,
 
-    /** 用户编号  */
+    @ApiModelProperty(value = "用户编号")
     @Excel(name = "用户编号")
     var userId: String? = null,
 
-    /** 用户类型  */
+    @ApiModelProperty(value = "用户类型")
     @Excel(name = "用户类型")
     var userType: String? = null,
 
-    /** 提现金额  */
+    @ApiModelProperty(value = "提现金额")
     @Excel(name = "提现金额")
     var amount: BigDecimal? = null,
 
-    /** 支付序列号  */
+    @ApiModelProperty(value = "支付序列号")
     @Excel(name = "支付序列号")
     var paySerial: String? = null,
 
-    /** 第三方支付序列号  */
+    @ApiModelProperty(value = "第三方支付序列号")
     @Excel(name = "第三方支付序列号")
     var thirdSerial: String? = null,
 
-    /** 支付状态  */
+    @ApiModelProperty(value = "支付状态")
     @Excel(name = "支付状态")
     var payState: String? = null,
 
-    /** 申请日期  */
+    @ApiModelProperty(value = "申请日期")
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "申请日期", width = 30.0, dateFormat = "yyyy-MM-dd")
-    var applyDate: Date? = null,
+    var applyDate: LocalDate? = null,
 
-    /** 支付日期  */
+    @ApiModelProperty(value = "支付日期")
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "支付日期", width = 30.0, dateFormat = "yyyy-MM-dd")
-    var payDate: Date? = null,
+    var payDate: LocalDate? = null,
 
-    /** 支付时间  */
+    @ApiModelProperty(value = "支付时间")
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "支付时间", width = 30.0, dateFormat = "yyyy-MM-dd")
-    var payTime: Date? = null,
+    var payTime: LocalDateTime? = null,
 
-    /** 操作管理员  */
+    @ApiModelProperty(value = "操作管理员")
     @Excel(name = "操作管理员")
     var operator: String? = null,
 
-    /** 是否删除  */
+    @ApiModelProperty(value = "是否删除")
     var delFlag: String? = null,
 ) : BaseEntity()  {
         override fun toString(): String {
