@@ -80,3 +80,4 @@ DETECTIONSERVER_ROCKETMQ_YML='./cloudtimes-detectionserver/target/resources/appl
 replace_app_config    $DETECTIONSERVER_APP_YML
 replace_mq_config     $DETECTIONSERVER_ROCKETMQ_YML
 
+exit 0
