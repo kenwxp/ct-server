@@ -6,13 +6,47 @@ import com.cloudtimes.common.sms.cdcxcloud.constant.SmsActionEnum;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * 创信 短信渠道商
  */
 public class CdcxcloundSMSUtil {
 
-    public static void semdSms(String body, String phone) {
+
+    private static LinkedBlockingQueue<SMSWork> smsQueue = new LinkedBlockingQueue<>();
+
+
+    private static Thread sendThread;
+
+    public static synchronized void semdSms(String body, String phone) {
+        if (sendThread == null || !sendThread.isAlive()) {
+            sendThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    while (true) {
+                        try {
+                            SMSWork task = smsQueue.take();
+                            task.run();
+                        } catch (Exception ex) {
+
+                        }
+                    }
+                }
+            });
+            sendThread.setDaemon(true);
+            sendThread.start();
+        }
+
+        SMSWork smsWork = new SMSWork(body, phone);
+        try {
+            CdcxcloundSMSUtil.smsQueue.put(smsWork);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void sendToSms(String body, String phone) {
         Map<String, Object> p = new HashMap<String, Object>();
         p.put("account", "922425");
         p.put("password", "WERA24");
@@ -33,4 +67,39 @@ public class CdcxcloundSMSUtil {
         }
     }
 
+
+}
+
+
+class SMSWork implements Runnable {
+
+    private String body;
+
+    private String phone;
+
+    public SMSWork(String body, String phone) {
+        this.body = body;
+        this.phone = phone;
+    }
+
+    @Override
+    public void run() {
+        CdcxcloundSMSUtil.sendToSms(this.body, this.phone);
+    }
+
+    public String getBody() {
+        return body;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 }
