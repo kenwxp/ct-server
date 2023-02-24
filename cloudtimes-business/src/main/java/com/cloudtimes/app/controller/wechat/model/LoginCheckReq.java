@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * 小程序登录校验请求体
  */
-@ApiModel(value = "LoginCheckReq", description = "小程序登录校验请求体")
+@ApiModel(description = "请求参数")
 @Data
 @Slf4j
 public class LoginCheckReq {

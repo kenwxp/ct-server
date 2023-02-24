@@ -43,9 +43,6 @@ public class CustomerLoginController {
      */
     @ApiOperation("小程序用户登录校验")
     @PostMapping("/check")
-//    @ApiResponses(
-//            @ApiResponse(code = 200, message = "成功", response = LoginCheckResp.class)
-//    )
     public ApiResult<LoginCheckResp> loginCheck(@RequestBody LoginCheckReq param) {
         boolean isNewCustomer = loginService.checkCustomerNew(param.getLoginCode());
         LoginCheckResp loginCheckResp = new LoginCheckResp();
@@ -61,10 +58,7 @@ public class CustomerLoginController {
      */
     @ApiOperation("小程序用户登录接口")
     @PostMapping("")
-    @ApiResponses(
-            @ApiResponse(code = 200, message = "成功", response = AjaxResult.class)
-    )
-    public AjaxResult login(@RequestBody LoginReq param, HttpServletRequest request) {
+    public ApiResult<LoginResp> login(@RequestBody LoginReq param, HttpServletRequest request) {
         String loginIp = IpUtils.getIpAddr(request);
         CtUser customerInfo = loginService.customerLogin(param.getLoginCode(), param.getPhoneCode(), loginIp);
         LoginResp loginResp = new LoginResp();
@@ -72,7 +66,7 @@ public class CustomerLoginController {
         //获取token
         String token = jwtManager.createToken(new AuthUser(customerInfo.getId(), ChannelType.WECHAT.getCode()));
         loginResp.setAccessToken(token);
-        return AjaxResult.success(loginResp);
+        return new ApiResult().success(loginResp);
     }
 
 }

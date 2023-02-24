@@ -87,7 +87,7 @@ public class CtShopBossBusinessServiceImpl implements ICtShopBossBusinessService
             }
             //通知收银机进行状态转换
             cashMqSender.notifyCashDutyStatus(dbStore.getId(), isSupervise);
-            //todo 发送app客户端消息
+            // todo 发送app客户端消息
             // 解锁门禁
             producer.send(RocketMQConstants.CT_OPEN_DOOR, new OpenDoorMqData(OpenDoorOption.UNLOCK_DOOR, dbStore.getId(), userId, ChannelType.MOBILE));
         } else if (StringUtils.equals(opFlag, "0")) {

@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 
-@ApiModel(value = "RegisterReq", description = "店家app注册请求体")
+@ApiModel(description = "请求参数")
 @Data
 @Slf4j
 public class RegisterReq {

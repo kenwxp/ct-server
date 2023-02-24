@@ -15,7 +15,7 @@ public interface ICtCustomerBusinessService {
      * @param deviceId
      * @return map
      * shoppingId
-     * isSupervice
+     * isSupervise
      */
     public Map<String, String> scanCode(String userId, String storeNo, String dynamicCode, String deviceId);
 }

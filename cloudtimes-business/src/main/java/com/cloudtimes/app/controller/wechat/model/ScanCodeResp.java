@@ -5,7 +5,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
-@ApiModel(value = "ScanCodeReq", description = "扫动态码返回")
+
+@ApiModel(description = "返回参数")
 @Data
 @Slf4j
 public class ScanCodeResp {

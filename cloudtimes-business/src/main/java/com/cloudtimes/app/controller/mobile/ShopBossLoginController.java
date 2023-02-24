@@ -6,6 +6,7 @@ import com.cloudtimes.app.controller.mobile.model.ChangePasswordReq;
 import com.cloudtimes.app.controller.mobile.model.LoginReq;
 import com.cloudtimes.app.controller.mobile.model.LoginResp;
 import com.cloudtimes.app.controller.mobile.model.RegisterReq;
+import com.cloudtimes.app.models.ApiResult;
 import com.cloudtimes.common.utils.JWTManager;
 import com.cloudtimes.common.core.domain.AjaxResult;
 import com.cloudtimes.common.core.domain.entity.AuthUser;
@@ -34,33 +35,38 @@ public class ShopBossLoginController {
 
     @ApiOperation("用户注册")
     @PostMapping("/register")
-    public AjaxResult register(@RequestBody RegisterReq param, HttpServletRequest request) {
+    public ApiResult register(@RequestBody RegisterReq param, HttpServletRequest request) {
         loginService.shopBossRegister(
                 param.getPhone(),
                 param.getPassword(),
                 param.getAccount(),
                 param.getNickName());
-        return AjaxResult.success();
+        return new ApiResult().success();
     }
 
     @ApiOperation("用户登录")
     @PostMapping("/login")
-    public AjaxResult login(@RequestBody LoginReq param, HttpServletRequest request) {
+    public ApiResult<LoginResp> login(@RequestBody LoginReq param, HttpServletRequest request) {
         CtUser ctUser = loginService.shopBossLogin(param.getPhone(), param.getPassword(), IpUtils.getIpAddr(request));
         String token = jwtManager.createToken(new AuthUser(ctUser.getId(), ChannelType.MOBILE.getCode()));
         LoginResp loginResp = new LoginResp();
         loginResp.setToken(token);
-        return AjaxResult.success(loginResp);
+        return new ApiResult().success(loginResp);
     }
 
     @ApiOperation("用户修改密码")
     @PostMapping("/password/change")
-    public AjaxResult changePassword(@RequestBody ChangePasswordReq param) {
+    public ApiResult changePassword(@RequestBody ChangePasswordReq param) {
         AuthUser authUser = AuthUtils.getObject();
         if (StringUtils.equals(authUser.getChannelType(), ChannelType.MOBILE.getCode())) {
-            return AjaxResult.error("渠道类型不匹配");
+            return new ApiResult().error("渠道类型不匹配");
         }
-        return loginService.changePassword(authUser.getId(), param.getPasswordNew(), param.getPasswordOld()) ? AjaxResult.success() : AjaxResult.error();
+        if (loginService.changePassword(authUser.getId(), param.getPasswordNew(), param.getPasswordOld())) {
+            return new ApiResult().success();
+        } else {
+            return new ApiResult().error();
+        }
+
     }
 
 

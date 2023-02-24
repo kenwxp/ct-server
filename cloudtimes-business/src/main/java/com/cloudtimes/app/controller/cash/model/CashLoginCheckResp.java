@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Data
 @Slf4j
-@ApiModel(value = "CashLoginCheckResp", description = "登录校验接口返回体")
+@ApiModel(description = "返回参数")
 public class CashLoginCheckResp {
     /**
      * 是否新设备 0-否 1-是

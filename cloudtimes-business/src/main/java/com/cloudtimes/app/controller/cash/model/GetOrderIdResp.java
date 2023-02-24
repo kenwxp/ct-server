@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
-@ApiModel(value = "GetOrderIdResp", description = "刷脸token获取单号返回体")
+@ApiModel(description = "返回参数")
 @Data
 @Slf4j
 public class GetOrderIdResp {

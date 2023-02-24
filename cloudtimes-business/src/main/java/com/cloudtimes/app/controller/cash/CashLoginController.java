@@ -4,6 +4,7 @@ import com.cloudtimes.app.controller.cash.model.CashLoginCheckReq;
 import com.cloudtimes.app.controller.cash.model.CashLoginCheckResp;
 import com.cloudtimes.app.controller.cash.model.CashLoginReq;
 import com.cloudtimes.app.controller.cash.model.CashLoginResp;
+import com.cloudtimes.app.models.ApiResult;
 import com.cloudtimes.common.utils.JWTManager;
 import com.cloudtimes.common.core.domain.AjaxResult;
 import com.cloudtimes.common.core.domain.entity.AuthUser;
@@ -43,14 +44,14 @@ public class CashLoginController {
      */
     @ApiOperation("收银机登录校验接口")
     @PostMapping("/check")
-    public AjaxResult loginCheck(@RequestBody CashLoginCheckReq param) {
+    public ApiResult<CashLoginCheckResp> loginCheck(@RequestBody CashLoginCheckReq param) {
         if (StringUtils.isEmpty(param.getDeviceSerial())) {
-            return AjaxResult.error("设备序列号不能为空");
+            return new ApiResult().error("设备序列号不能为空");
         }
         boolean isNew = loginService.checkCashNew(param.getDeviceSerial());
         CashLoginCheckResp loginCheckResp = new CashLoginCheckResp();
         loginCheckResp.setIsNew(isNew ? "1" : "0");
-        return AjaxResult.success(loginCheckResp);
+        return new ApiResult().success(loginCheckResp);
     }
 
     /**
@@ -61,9 +62,9 @@ public class CashLoginController {
      */
     @ApiOperation("收银机登录接口")
     @PostMapping("")
-    public AjaxResult login(@RequestBody CashLoginReq param) {
+    public ApiResult<CashLoginResp> login(@RequestBody CashLoginReq param) {
         if (StringUtils.isEmpty(param.getDeviceSerial())) {
-            return AjaxResult.error("设备序列号不能为空");
+            return new ApiResult().error("设备序列号不能为空");
         }
         // 收银机登录服务
         CtDevice deviceInfo = loginService.cashLogin(param.getDeviceSerial(), param.getDeviceName(), param.getShopNo());
@@ -81,6 +82,6 @@ public class CashLoginController {
         loginResp.setContactPhone(ctStore.getContactPhone());
         String qrCodeUrl = cashBusinessService.genDynamicQrCodeUrl(deviceInfo.getId(), ctStore.getStoreNo());
         loginResp.setDynamicQrCode(qrCodeUrl);
-        return AjaxResult.success(loginResp);
+        return new ApiResult().success(loginResp);
     }
 }

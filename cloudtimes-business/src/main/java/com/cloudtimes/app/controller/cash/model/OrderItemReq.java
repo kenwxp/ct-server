@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
-@ApiModel(value = "OrderItemReq", description = "订单商品新增接口")
+@ApiModel(description = "请求参数")
 @Data
 @Slf4j
 public class OrderItemReq {

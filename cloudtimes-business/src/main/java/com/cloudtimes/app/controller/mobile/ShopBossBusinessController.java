@@ -2,6 +2,8 @@ package com.cloudtimes.app.controller.mobile;
 
 import com.alibaba.druid.util.StringUtils;
 import com.cloudtimes.app.controller.mobile.model.ApplySuperviseReq;
+import com.cloudtimes.app.controller.mobile.model.LoginResp;
+import com.cloudtimes.app.models.ApiResult;
 import com.cloudtimes.common.core.domain.AjaxResult;
 import com.cloudtimes.common.core.domain.entity.AuthUser;
 import com.cloudtimes.common.enums.ChannelType;
@@ -24,18 +26,23 @@ public class ShopBossBusinessController {
 
     @ApiOperation("申请云值守")
     @PostMapping("/supervise/apply")
-    public AjaxResult applySupervise(@RequestBody ApplySuperviseReq param) {
+    public ApiResult applySupervise(@RequestBody ApplySuperviseReq param) {
         AuthUser authUser = AuthUtils.getObject();
         if (StringUtils.equals(authUser.getChannelType(), ChannelType.MOBILE.getCode())) {
-            return AjaxResult.error("渠道类型不匹配");
+            return new ApiResult().error("渠道类型不匹配");
         }
         if (StringUtils.isEmpty(param.getStoreId())) {
-            return AjaxResult.error("门店id不能为空");
+            return new ApiResult().error("门店id不能为空");
         }
         String opFlag = param.getOptFlag();
         if (!StringUtils.equals(opFlag, "0") && !StringUtils.equals(opFlag, "1")) {
-            return AjaxResult.error("操作标志非法");
+            return new ApiResult().error("操作标志非法");
         }
-        return shopBossBusinessService.applySupervise(authUser.getId(), param.getStoreId(), param.getOptFlag()) ? AjaxResult.success() : AjaxResult.error();
+        if (shopBossBusinessService.applySupervise(authUser.getId(), param.getStoreId(), param.getOptFlag())) {
+            return new ApiResult().success();
+        } else {
+            return new ApiResult().error();
+        }
+
     }
 }

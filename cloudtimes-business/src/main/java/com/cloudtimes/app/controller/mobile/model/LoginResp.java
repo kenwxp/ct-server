@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 
-@ApiModel(value = "LoginResp", description = "小程序登录校验接口返回体")
+@ApiModel(description = "返回参数")
 @Data
 @Slf4j
 public class LoginResp {

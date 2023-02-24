@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 @Data
 @NoArgsConstructor
 @Accessors(chain = true)
-@ApiModel(value = "LoginCheckResp", description = "小程序登录校验响应体")
+@ApiModel(description = "返回参数")
 public class LoginCheckResp {
     /**
      * 是否新用户 0-否 1-是

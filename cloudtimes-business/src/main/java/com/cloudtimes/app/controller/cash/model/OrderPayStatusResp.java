@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
-@ApiModel(value = "OrderPayStatusResp", description = "查询订单支付状态请求体")
+@ApiModel(description = "返回参数")
 @Data
 @Slf4j
 public class OrderPayStatusResp {

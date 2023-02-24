@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * 设备登录校验请求体
  */
-@ApiModel(value = "CashLoginCheckReq", description = "设备登录校验请求体")
+@ApiModel(description = "请求参数")
 @Data
 @Slf4j
 public class CashLoginCheckReq {

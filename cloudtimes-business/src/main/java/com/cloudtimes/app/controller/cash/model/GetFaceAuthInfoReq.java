@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
-@ApiModel(value = "GetWxFaceAuthInfoReq", description = "获取刷脸凭证请求体")
+@ApiModel(description = "请求参数")
 @Data
 @Slf4j
 public class GetFaceAuthInfoReq {

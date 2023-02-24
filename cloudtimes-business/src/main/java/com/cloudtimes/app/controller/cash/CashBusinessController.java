@@ -3,6 +3,7 @@ package com.cloudtimes.app.controller.cash;
 import com.cloudtimes.app.controller.cash.model.*;
 import com.cloudtimes.app.models.ApiResult;
 import com.cloudtimes.common.constant.HttpStatus;
+import com.cloudtimes.common.core.domain.AjaxResult;
 import com.cloudtimes.common.core.domain.entity.AuthUser;
 import com.cloudtimes.common.enums.ChannelType;
 import com.cloudtimes.common.utils.AuthUtils;
@@ -43,6 +44,12 @@ public class CashBusinessController {
         AuthUser authUser = AuthUtils.getObject();
         if (!StringUtils.equals(authUser.getChannelType(), ChannelType.CASH.getCode())) {
             return new ApiResult().error("渠道类型错误");
+        }
+        if (StringUtils.isEmpty(info.getRawdata())) {
+            return new ApiResult().error("rawdata不能为空");
+        }
+        if (StringUtils.isEmpty(info.getAuthType())) {
+            return new ApiResult().error("凭证类型未设置");
         }
         AuthInfoData faceAuthInfo = cashBusinessService.getFaceAuthInfo(authUser.getId(), info.getRawdata(), info.getAuthType());
         if (faceAuthInfo == null) {

@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
-@ApiModel(value = "GetVoiceTokenResp", description = "获取商品列表返回列表项")
+@ApiModel(description = "返回参数")
 @Data
 @Slf4j
 public class GetVoiceTokenResp {

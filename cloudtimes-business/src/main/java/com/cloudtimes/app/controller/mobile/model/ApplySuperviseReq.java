@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
-@ApiModel(value = "ChangePasswordReq", description = "修改密码请求参数")
+@ApiModel(description = "请求参数")
 @Data
 @Slf4j
 public class ApplySuperviseReq {
