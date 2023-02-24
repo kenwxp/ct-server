@@ -1,15 +1,24 @@
-#!/bin/sh
+#!/usr/bin/bash
+
+WORK_DIR=/home/cloudtimes-server
 
 function restart_service() {
   service=$1
-  cd ~/cloudtimes/$service/
+  cd $WORK_DIR/$service/
   pwd
   sh run.sh restart
   sleep 3
   sh run.sh status
 }
 
-restart_service admin
-restart_service business
-# restart_service socketserver
-# restart_service detectionserver
+# declare an array variable
+# declare -a services=("admin" "business" "socketserver" "detectionserver")
+declare -a services=("admin" "business")
+
+## now loop through the above array
+for i in "${services[@]}"
+do
+  restart_service $i
+done
+
+exit 0
