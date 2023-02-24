@@ -7,9 +7,14 @@ import org.mybatis.dynamic.sql.util.kotlin.mybatis3.select
 
 import com.cloudtimes.account.domain.CtUserAssetsBook
 import com.cloudtimes.account.dto.request.QueryAssetsBookRequest
+import com.cloudtimes.account.table.CtUserTable
 import com.cloudtimes.account.table.ctUserAssetsBookTable
+import com.cloudtimes.account.table.transferBookTable
 
 object CtUserAssetsBookProvider {
+    val user1 = CtUserTable().withAlias("u1")
+    val user2 = CtUserTable().withAlias("u2")
+
     fun insertOne(row: CtUserAssetsBook): GeneralInsertStatementProvider {
         return with(ctUserAssetsBookTable) {
             insertInto(ctUserAssetsBookTable) {
@@ -47,12 +52,35 @@ object CtUserAssetsBookProvider {
 
     /** 按用户查询资产登记簿 */
     fun selectByUserStmt(request: QueryAssetsBookRequest): SelectStatementProvider {
+        var requestYearMonth: Int? = null
+        if ( !request.yearMonth.isNullOrEmpty() ) {
+            requestYearMonth = Integer.parseInt(request.yearMonth)
+        }
+
         return with(ctUserAssetsBookTable) {
-            select(ctUserAssetsBookTable.allColumns()) {
+            select(
+                ctUserAssetsBookTable.allColumns(),
+                transferBookTable.remark.`as`("transfer_remark"),
+                user1.id.`as`("payer_id"),
+                user1.nickName.`as`("payer_nick_name"),
+                user1.realName.`as`("payer_real_name"),
+                user1.wxAvatar.`as`("payer_wx_avatar"),
+                user2.id.`as`("payee_id"),
+                user2.nickName.`as`("payee_nick_name"),
+                user2.realName.`as`("payee_real_name"),
+                user2.wxAvatar.`as`("payee_wx_avatar"),
+            ) {
                 from(ctUserAssetsBookTable)
                 where { userId isEqualTo request.userId }
-                and {createDate isEqualToWhenPresent request.createDate}
-                and { bookType isEqualToWhenPresent request.bookType}
+                leftJoin(transferBookTable) {
+                    on(transferId) equalTo transferBookTable.id
+                }
+                leftJoin(user1) { on(user1.id) equalTo transferBookTable.payer}
+                leftJoin(user2) { on(user2.id) equalTo transferBookTable.payee}
+                and {yearMonth isEqualToWhenPresent requestYearMonth}
+                if (!request.bookType.isNullOrEmpty()) {
+                    and { bookType isEqualToWhenPresent request.bookType}
+                }
                 orderBy(createTime.descending())
             }
         }

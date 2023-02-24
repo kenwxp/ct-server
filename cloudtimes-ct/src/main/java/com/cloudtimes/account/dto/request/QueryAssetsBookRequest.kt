@@ -1,9 +1,9 @@
 package com.cloudtimes.account.dto.request
 
 import com.cloudtimes.common.core.domain.PageRequest
+import com.fasterxml.jackson.annotation.JsonFormat
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
-import java.time.LocalDate
 import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.NotNull
 
@@ -15,7 +15,8 @@ class QueryAssetsBookRequest: PageRequest {
     var userId: String = ""
 
     @ApiModelProperty(value = "交易发生日期")
-    var createDate: LocalDate? = null
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    var yearMonth: String? = null
 
     @ApiModelProperty(value = "账簿类型")
     var bookType: String? = null
@@ -24,6 +25,6 @@ class QueryAssetsBookRequest: PageRequest {
     override var pageSize: Int = 10
 
     override fun toString(): String {
-        return "QueryAssetsBookRequest(userId='$userId', applyDate=$createDate, payState=$bookType, pageNum=$pageNum, pageSize=$pageSize)"
+        return "QueryAssetsBookRequest(userId='$userId', yearMonth=$yearMonth, payState=$bookType, pageNum=$pageNum, pageSize=$pageSize)"
     }
 }

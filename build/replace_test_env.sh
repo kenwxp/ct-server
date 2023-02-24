@@ -33,7 +33,7 @@ function replace_admin_app_config() {
 function replace_app_config() {
     APP_YML=$1
     sed -i -E -e "s#$DEV_HOST#$TEST_HOST#" $APP_YML
-    sed -i -E -e "s#^(\s+)$DEV_REDIS_PASSWORD\$#\1$TEST_REDIS_PASSWORD#" $APP_YML
+    sed -i -E -e "s/^(\s+)$DEV_REDIS_PASSWORD\$/\1$TEST_REDIS_PASSWORD/" $APP_YML
     # diff $(echo $APP_YML | sed 's#resources#classes#') $APP_YML
 }
 

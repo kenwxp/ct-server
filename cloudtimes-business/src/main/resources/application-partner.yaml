@@ -19,10 +19,10 @@ wx:
   cert_private_pem_path: apiclient_key.pem
   cert_public_pem_path: apiclient_cert.pem
   # 公众号appid
-  official_appid: wxbcba794e0e6361a1
-  official_secret: 8910ff4f38a756a693e6941e78569001
+  official_appid: wx29331e0cdcf56bec
+  official_secret: cea61daf6976317b5c6f5fafb9400de8
   # 微信回调地址
-  login_callback_api_url: http://ctdev.htymeta.com/agent#/pages/login/wxLogin
+  login_callback_api_url: http://ctdev.htymeta.com/agent/pages/login/wxLogin
 
 agora:
   appid: 7be11df0b1b547e0b67b7960a4d7ff05
