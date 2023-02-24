@@ -46,6 +46,13 @@ function replace_mysql_config() {
     # diff $(echo $MYSQL_YML | sed 's#resources#classes#') $MYSQL_YML
 }
 
+function replace_wechat_config() {
+    WECHAT_YML=$1
+    sed -i -E -e "s#$DEV_DOMAIN#$TEST_DOMAIN#" $WECHAT_YML
+    echo "========== $WECHAT_YML =========="
+    # diff $(echo $WECHAT_YML | sed 's#resources#classes#') $WECHAT_YML
+}
+
 function replace_mq_config() {
     MQ_YML=$1
     sed -i -E -e "s#$DEV_HOST#$TEST_HOST#" $MQ_YML
@@ -57,18 +64,22 @@ function replace_mq_config() {
 ADMIN_APP_YML='./cloudtimes-admin/target/resources/application.yml'
 ADMIN_DRUID_YML='./cloudtimes-admin/target/resources/application-druid.yml'
 ADMIN_ROCKETMQ_YML='./cloudtimes-admin/target/resources/application-rocketmq.yml'
+ADMIN_WECHAT_YML='./cloudtimes-admin/target/resources/application-partner.yml'
 replace_admin_app_config $ADMIN_APP_YML
 replace_app_config $ADMIN_APP_YML
 replace_mysql_config $ADMIN_DRUID_YML
 replace_mq_config $ADMIN_ROCKETMQ_YML
+replace_wechat_config $ADMIN_WECHAT_YML
 
 # 5 修改business服务配置文件
 BUSINESS_APP_YML='./cloudtimes-business/target/resources/application.yml'
 BUSINESS_DRUID_YML='./cloudtimes-business/target/resources/application-druid.yml'
 BUSINESS_ROCKETMQ_YML='./cloudtimes-business/target/resources/application-rocketmq.yml'
+BUSINESS_WECHAT_YML='./cloudtimes-business/target/resources/application-partner.yml'
 replace_app_config    $BUSINESS_APP_YML
 replace_mysql_config  $BUSINESS_DRUID_YML
 replace_mq_config     $BUSINESS_ROCKETMQ_YML
+replace_wechat_config $BUSINESS_WECHAT_YML
 
 # 6 修改socketserver服务配置文件
 SOCKETSERVER_APP_YML='./cloudtimes-socketserver/target/resources/application.yml'
