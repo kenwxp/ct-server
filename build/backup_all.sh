@@ -2,7 +2,7 @@
 
 WORK_DIR=/home/cloudtimes-server
 BACKUP_TIME=$(date "+%F_%H_%M")
-declare -a SERVICES=("1admin" "business" "socketserver" "detectionserver")
+declare -a SERVICES=("admin" "business" "socketserver" "detectionserver")
 
 # 创建备份目录
 ADMIN_SERVICE="$WORK_DIR/${SERVICES[0]}"
