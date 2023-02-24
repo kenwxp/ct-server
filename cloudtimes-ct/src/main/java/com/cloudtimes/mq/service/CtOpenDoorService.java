@@ -1,10 +1,14 @@
-package com.cloudtimes.serving.door.service.impl;
+package com.cloudtimes.mq.service;
 
+import com.alibaba.fastjson.JSON;
+import com.cloudtimes.common.constant.RocketMQConstants;
 import com.cloudtimes.common.enums.ChannelType;
+import com.cloudtimes.common.mq.CtRocketMqProducer;
+import com.cloudtimes.common.mq.OpenDoorMqData;
 import com.cloudtimes.common.utils.NumberUtils;
 import com.cloudtimes.common.utils.StringUtils;
 import com.cloudtimes.enums.DeviceType;
-import com.cloudtimes.enums.DoorOpType;
+import com.cloudtimes.common.enums.OpenDoorOption;
 import com.cloudtimes.hardwaredevice.domain.CtDevice;
 import com.cloudtimes.hardwaredevice.domain.CtDeviceDoor;
 import com.cloudtimes.hardwaredevice.domain.CtOpenDoorLogs;
@@ -15,7 +19,6 @@ import com.cloudtimes.hardwaredevice.mapper.CtOpenDoorLogsMapper;
 import com.cloudtimes.hardwaredevice.mapper.CtStoreMapper;
 import com.cloudtimes.partner.wiegand.ICtWiegandApiService;
 import com.cloudtimes.partner.wiegand.WiegandReturning;
-import com.cloudtimes.serving.door.service.ICtDoorGuardOpService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,20 +26,19 @@ import java.util.Date;
 import java.util.List;
 
 @Component
-public class CtDoorGuardOpServiceImpl implements ICtDoorGuardOpService {
+public class CtOpenDoorService {
     @Autowired
     private CtStoreMapper storeMapper;
-
     @Autowired
     private CtDeviceMapper deviceMapper;
-
     @Autowired
     private ICtWiegandApiService wiegandApiService;
-
     @Autowired
     private CtOpenDoorLogsMapper openDoorLogsMapper;
     @Autowired
     private CtDeviceDoorMapper deviceDoorMapper;
+    @Autowired
+    private CtRocketMqProducer producer;
 
     /**
      * 交易开门
@@ -47,9 +49,8 @@ public class CtDoorGuardOpServiceImpl implements ICtDoorGuardOpService {
      * @param channelType
      * @return
      */
-    @Override
     public boolean transOpen(String storeId, String userId, ChannelType channelType) {
-        CtOpenDoorLogs initLog = initInsertLog(storeId, userId, channelType, DoorOpType.TRANS_OPEN_DOOR);
+        CtOpenDoorLogs initLog = initInsertLog(storeId, userId, channelType, OpenDoorOption.TRANS_OPEN_DOOR);
         CtStore dbStore = storeMapper.selectCtStoreById(storeId);
         if (dbStore == null) {
             logFail(initLog, "", "无法获取门店信息");
@@ -82,13 +83,6 @@ public class CtDoorGuardOpServiceImpl implements ICtDoorGuardOpService {
                     logFail(initLog, doorGuard.getId(), ret.getMsg());
                     return false;
                 }
-
-                //todo 延迟调用
-//                ret = wiegandApiService.settingParams(doorGuard.getDeviceSerial(), 2, 0);
-//                if (!ret.isSuccess()) {
-//                    logFail(initLog, doorGuard.getId(), ret.getMsg());
-//                    throw new ServiceException(ret.getMsg());
-//                }
             } else {
                 //远程开门
                 ret = wiegandApiService.remoteOpenDoor(deviceSerial);
@@ -99,7 +93,11 @@ public class CtDoorGuardOpServiceImpl implements ICtDoorGuardOpService {
             }
             logOk(initLog, doorGuard.getId());
         }
-
+        // 延迟调用 锁门
+        if (StringUtils.equals(dbStore.getIsSupervise(), "0")) {
+            OpenDoorMqData mqData = new OpenDoorMqData(OpenDoorOption.FORCE_LOCK_DOOR, storeId, userId, ChannelType.WEB);
+            producer.sendDelayMsg(RocketMQConstants.CT_OPEN_DOOR, JSON.toJSONString(mqData), 3);
+        }
         return true;
     }
 
@@ -111,9 +109,8 @@ public class CtDoorGuardOpServiceImpl implements ICtDoorGuardOpService {
      * @param userId
      * @return
      */
-    @Override
     public boolean emergentOpen(String storeId, String userId) {
-        CtOpenDoorLogs initLog = initInsertLog(storeId, userId, ChannelType.WEB, DoorOpType.EMERGENCY_OPEN_DOOR);
+        CtOpenDoorLogs initLog = initInsertLog(storeId, userId, ChannelType.WEB, OpenDoorOption.EMERGENCY_OPEN_DOOR);
         CtStore dbStore = storeMapper.selectCtStoreById(storeId);
         if (dbStore == null) {
             logFail(initLog, "", "无法获取门店信息");
@@ -144,12 +141,7 @@ public class CtDoorGuardOpServiceImpl implements ICtDoorGuardOpService {
                     logFail(initLog, doorGuard.getId(), ret.getMsg());
                     return false;
                 }
-                //todo 延迟调用
-//                ret = wiegandApiService.settingParams(doorGuard.getDeviceSerial(), 2, 0);
-//                if (!ret.isSuccess()) {
-//                    logFail(initLog, doorGuard.getId(), ret.getMsg());
-//                    throw new ServiceException(ret.getMsg());
-//                }
+
             } else {
                 //远程开门
                 ret = wiegandApiService.remoteOpenDoor(deviceSerial);
@@ -159,6 +151,11 @@ public class CtDoorGuardOpServiceImpl implements ICtDoorGuardOpService {
                 }
             }
             logOk(initLog, doorGuard.getId());
+        }
+        // 延迟调用 锁门
+        if (StringUtils.equals(dbStore.getIsSupervise(), "0")) {
+            OpenDoorMqData mqData = new OpenDoorMqData(OpenDoorOption.FORCE_LOCK_DOOR, storeId, userId, ChannelType.WEB);
+            producer.sendDelayMsg(RocketMQConstants.CT_OPEN_DOOR, JSON.toJSONString(mqData), 3);
         }
         return true;
     }
@@ -171,9 +168,8 @@ public class CtDoorGuardOpServiceImpl implements ICtDoorGuardOpService {
      * @param userId
      * @return
      */
-    @Override
     public boolean ownerOpen(String storeId, String userId) {
-        CtOpenDoorLogs initLog = initInsertLog(storeId, userId, ChannelType.MOBILE, DoorOpType.OWNER_OPEN_DOOR);
+        CtOpenDoorLogs initLog = initInsertLog(storeId, userId, ChannelType.MOBILE, OpenDoorOption.OWNER_OPEN_DOOR);
         CtStore dbStore = storeMapper.selectCtStoreById(storeId);
         if (dbStore == null) {
             logFail(initLog, "", "无法获取门店信息");
@@ -207,15 +203,12 @@ public class CtDoorGuardOpServiceImpl implements ICtDoorGuardOpService {
                 logFail(initLog, doorGuard.getId(), ret.getMsg());
                 return false;
             }
-
-            //todo 延迟调用
-//                ret = wiegandApiService.settingParams(doorGuard.getDeviceSerial(), 2, 0);
-//                if (!ret.isSuccess()) {
-//                    logFail(initLog, doorGuard.getId(), ret.getMsg());
-//                    throw new ServiceException(ret.getMsg());
-//                }
             logOk(initLog, doorGuard.getId());
         }
+        // 延迟调用 锁门
+        OpenDoorMqData mqData = new OpenDoorMqData(OpenDoorOption.FORCE_LOCK_DOOR, storeId, userId, ChannelType.WEB);
+        producer.sendDelayMsg(RocketMQConstants.CT_OPEN_DOOR, JSON.toJSONString(mqData), 3);
+
         return true;
     }
 
@@ -228,9 +221,8 @@ public class CtDoorGuardOpServiceImpl implements ICtDoorGuardOpService {
      * @param channelType
      * @return
      */
-    @Override
     public boolean forceLock(String storeId, String userId, ChannelType channelType) {
-        CtOpenDoorLogs initLog = initInsertLog(storeId, userId, channelType, DoorOpType.FORCE_LOCK_DOOR);
+        CtOpenDoorLogs initLog = initInsertLog(storeId, userId, channelType, OpenDoorOption.FORCE_LOCK_DOOR);
         CtDevice queryDevice = new CtDevice();
         queryDevice.setStoreId(storeId);
         queryDevice.setDeviceType(DeviceType.DOOR_GUARD.getCode());
@@ -260,9 +252,8 @@ public class CtDoorGuardOpServiceImpl implements ICtDoorGuardOpService {
      * @param channelType
      * @return
      */
-    @Override
     public boolean unlock(String storeId, String userId, ChannelType channelType) {
-        CtOpenDoorLogs initLog = initInsertLog(storeId, userId, channelType, DoorOpType.UNLOCK_DOOR);
+        CtOpenDoorLogs initLog = initInsertLog(storeId, userId, channelType, OpenDoorOption.UNLOCK_DOOR);
         CtDevice queryDevice = new CtDevice();
         queryDevice.setStoreId(storeId);
         queryDevice.setDeviceType(DeviceType.DOOR_GUARD.getCode());
@@ -292,9 +283,8 @@ public class CtDoorGuardOpServiceImpl implements ICtDoorGuardOpService {
      * @param channelType
      * @return
      */
-    @Override
     public boolean setDoorAccess(String storeId, String userId, ChannelType channelType, boolean once, String beginTime, String endTime) {
-        CtOpenDoorLogs initLog = initInsertLog(storeId, userId, channelType, DoorOpType.SETTING_DOOR_ACCESS);
+        CtOpenDoorLogs initLog = initInsertLog(storeId, userId, channelType, OpenDoorOption.SETTING_DOOR_ACCESS);
         CtDevice queryDevice = new CtDevice();
         queryDevice.setStoreId(storeId);
         queryDevice.setDeviceType(DeviceType.DOOR_GUARD.getCode());
@@ -354,9 +344,8 @@ public class CtDoorGuardOpServiceImpl implements ICtDoorGuardOpService {
      * @param channelType
      * @return
      */
-    @Override
     public boolean disableDoorAccess(String storeId, String userId, ChannelType channelType) {
-        CtOpenDoorLogs initLog = initInsertLog(storeId, userId, channelType, DoorOpType.SETTING_DOOR_ACCESS);
+        CtOpenDoorLogs initLog = initInsertLog(storeId, userId, channelType, OpenDoorOption.SETTING_DOOR_ACCESS);
         CtDevice queryDevice = new CtDevice();
         queryDevice.setStoreId(storeId);
         queryDevice.setDeviceType(DeviceType.DOOR_GUARD.getCode());
@@ -418,7 +407,7 @@ public class CtDoorGuardOpServiceImpl implements ICtDoorGuardOpService {
         return "";
     }
 
-    private CtOpenDoorLogs initInsertLog(String storeId, String userId, ChannelType channelType, DoorOpType openType) {
+    private CtOpenDoorLogs initInsertLog(String storeId, String userId, ChannelType channelType, OpenDoorOption openType) {
         CtOpenDoorLogs log = new CtOpenDoorLogs();
         log.setStoreId(storeId);
         log.setMemberId(userId);

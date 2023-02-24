@@ -17,7 +17,7 @@ import com.cloudtimes.common.utils.sign.Base64;
 import com.cloudtimes.hardwaredevice.domain.CtDevice;
 import com.cloudtimes.hardwaredevice.domain.CtDeviceDoor;
 import com.cloudtimes.hardwaredevice.mapper.CtDeviceDoorMapper;
-import com.cloudtimes.mq.sender.CashMqSender;
+import com.cloudtimes.mq.service.CtCashMqSenderService;
 import com.cloudtimes.partner.config.PartnerConfig;
 import com.cloudtimes.partner.hik.service.ICtHikApiService;
 import com.cloudtimes.partner.pay.shouqianba.domain.AuthInfoData;
@@ -66,7 +66,7 @@ public class TestController extends BaseController {
     @Autowired
     private CtDeviceDoorMapper ctDeviceDoorMapper;
     @Autowired
-    private CashMqSender cashMqSender;
+    private CtCashMqSenderService cashMqSender;
     @Autowired
     private PartnerConfig config;
 

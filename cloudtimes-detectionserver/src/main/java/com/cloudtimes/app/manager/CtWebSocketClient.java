@@ -2,7 +2,7 @@ package com.cloudtimes.app.manager;
 
 import com.cloudtimes.common.constant.RocketMQConstants;
 import com.cloudtimes.common.mq.CtRocketMqProducer;
-import com.cloudtimes.common.mq.DoorStateData;
+import com.cloudtimes.common.mq.DoorMessageMqData;
 import com.cloudtimes.common.utils.StringUtils;
 import com.cloudtimes.common.utils.spring.SpringUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -47,11 +47,11 @@ public class CtWebSocketClient extends WebSocketClient {
                     int serial = node.get("SN").asInt();
                     if (node.get("刷新时间") != null) {
                         //发送消息
-                        producer.send(RocketMQConstants.DOOR_STATE_MESSAGE, new DoorStateData(serial, node.get("刷新时间").asText()));
+                        producer.send(RocketMQConstants.CT_DOOR_MESSAGE, new DoorMessageMqData(0, serial, node.get("刷新时间").asText()));
                         return;
                     }
                     if (node.get("描述") != null && StringUtils.equals(node.get("描述").asText(), "按钮开门")) {
-                        producer.send(RocketMQConstants.DOOR_TRIGGER_MESSAGE, new DoorStateData(serial, node.get("时间").asText()));
+                        producer.send(RocketMQConstants.CT_DOOR_MESSAGE, new DoorMessageMqData(1, serial, node.get("时间").asText()));
                         return;
                     }
                 }

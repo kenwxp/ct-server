@@ -1,6 +1,6 @@
-package com.cloudtimes.enums;
+package com.cloudtimes.common.enums;
 
-public enum DoorOpType {
+public enum OpenDoorOption {
     TRANS_OPEN_DOOR("0"), //交易开门
 
     EMERGENCY_OPEN_DOOR("1"), //应急开门
@@ -17,7 +17,7 @@ public enum DoorOpType {
 
     private String code;
 
-    DoorOpType(String code) {
+    OpenDoorOption(String code) {
         this.code = code;
     }
 

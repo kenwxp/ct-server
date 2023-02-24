@@ -1,4 +1,4 @@
-package com.cloudtimes.mq.sender;
+package com.cloudtimes.app.mq.sender;
 
 import com.cloudtimes.common.constant.RocketMQConstants;
 import com.cloudtimes.common.mq.*;

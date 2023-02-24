@@ -2,7 +2,7 @@ package com.cloudtimes.serving.common;
 
 import com.cloudtimes.cache.CtTaskCache;
 import com.cloudtimes.common.exception.ServiceException;
-import com.cloudtimes.enums.DoorOpType;
+import com.cloudtimes.common.enums.OpenDoorOption;
 import com.cloudtimes.hardwaredevice.domain.CtOpenDoorLogs;
 import com.cloudtimes.hardwaredevice.domain.CtStore;
 import com.cloudtimes.hardwaredevice.mapper.CtOpenDoorLogsMapper;
@@ -61,7 +61,7 @@ public class CtTaskInnerService {
                 if (StringUtils.isEmpty(doorLogId)) {
                     newTask.setDescText("顾客扫码或扫脸生产任务");
                     // 开门日志获取
-                    CtOpenDoorLogs openLog = openDoorLogsMapper.selectLatestOpenDoorLogByStore(storeId, DoorOpType.TRIGGER_OPEN_DOOR.getCode());
+                    CtOpenDoorLogs openLog = openDoorLogsMapper.selectLatestOpenDoorLogByStore(storeId, OpenDoorOption.TRIGGER_OPEN_DOOR.getCode());
                     if (openLog != null) {
                         doorLogId = openLog.getId();
                     }

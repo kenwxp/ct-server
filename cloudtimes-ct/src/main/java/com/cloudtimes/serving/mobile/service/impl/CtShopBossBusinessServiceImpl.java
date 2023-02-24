@@ -3,16 +3,19 @@ package com.cloudtimes.serving.mobile.service.impl;
 import com.cloudtimes.account.domain.CtUser;
 import com.cloudtimes.account.mapper.CtUserMapper;
 import com.cloudtimes.common.annotation.DataSource;
+import com.cloudtimes.common.constant.RocketMQConstants;
 import com.cloudtimes.common.enums.ChannelType;
 import com.cloudtimes.common.enums.DataSourceType;
+import com.cloudtimes.common.enums.OpenDoorOption;
 import com.cloudtimes.common.exception.ServiceException;
+import com.cloudtimes.common.mq.CtRocketMqProducer;
+import com.cloudtimes.common.mq.OpenDoorMqData;
 import com.cloudtimes.common.utils.StringUtils;
 import com.cloudtimes.hardwaredevice.domain.CtStore;
 import com.cloudtimes.hardwaredevice.domain.CtSuperviseLogs;
 import com.cloudtimes.hardwaredevice.mapper.CtStoreMapper;
 import com.cloudtimes.hardwaredevice.mapper.CtSuperviseLogsMapper;
-import com.cloudtimes.mq.sender.CashMqSender;
-import com.cloudtimes.serving.door.service.ICtDoorGuardOpService;
+import com.cloudtimes.mq.service.CtCashMqSenderService;
 import com.cloudtimes.serving.mobile.service.ICtShopBossBusinessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,9 +40,9 @@ public class CtShopBossBusinessServiceImpl implements ICtShopBossBusinessService
     @Autowired
     private CtSuperviseLogsMapper superviseLogsMapper;
     @Autowired
-    private CashMqSender cashMqSender;
+    private CtCashMqSenderService cashMqSender;
     @Autowired
-    private ICtDoorGuardOpService doorGuardOpService;
+    private CtRocketMqProducer producer;
 
     @Transactional
     @Override
@@ -85,9 +88,8 @@ public class CtShopBossBusinessServiceImpl implements ICtShopBossBusinessService
             //通知收银机进行状态转换
             cashMqSender.notifyCashDutyStatus(dbStore.getId(), isSupervise);
             //todo 发送app客户端消息
-            //解锁门禁
-            doorGuardOpService.unlock(dbStore.getId(), userId, ChannelType.MOBILE);
-
+            // 解锁门禁
+            producer.send(RocketMQConstants.CT_OPEN_DOOR, new OpenDoorMqData(OpenDoorOption.UNLOCK_DOOR, dbStore.getId(), userId, ChannelType.MOBILE));
         } else if (StringUtils.equals(opFlag, "0")) {
             //取消云值守
             //获取并更新值守日志
@@ -109,7 +111,7 @@ public class CtShopBossBusinessServiceImpl implements ICtShopBossBusinessService
             cashMqSender.notifyCashDutyStatus(dbStore.getId(), isSupervise);
             //todo 发送值守端结束任务通知
             //强锁门禁
-            doorGuardOpService.forceLock(dbStore.getId(), userId, ChannelType.MOBILE);
+            producer.send(RocketMQConstants.CT_OPEN_DOOR, new OpenDoorMqData(OpenDoorOption.FORCE_LOCK_DOOR, dbStore.getId(), userId, ChannelType.MOBILE));
         }
         return true;
     }

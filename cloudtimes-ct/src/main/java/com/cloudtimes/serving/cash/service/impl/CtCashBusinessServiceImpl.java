@@ -8,8 +8,11 @@ import com.cloudtimes.cache.CtCashDynamicCodeCache;
 import com.cloudtimes.cache.CtTaskCache;
 import com.cloudtimes.common.OrderUtil;
 import com.cloudtimes.common.PayOrderUtils;
+import com.cloudtimes.common.constant.RocketMQConstants;
+import com.cloudtimes.common.enums.PayOrderOption;
 import com.cloudtimes.common.exception.ServiceException;
 import com.cloudtimes.common.mq.CtRocketMqProducer;
+import com.cloudtimes.common.mq.PayOrderMqData;
 import com.cloudtimes.common.utils.DateUtils;
 import com.cloudtimes.common.utils.JacksonUtils;
 import com.cloudtimes.common.utils.NumberUtils;
@@ -23,8 +26,6 @@ import com.cloudtimes.hardwaredevice.domain.CtPayment;
 import com.cloudtimes.hardwaredevice.domain.CtStore;
 import com.cloudtimes.hardwaredevice.mapper.CtDeviceMapper;
 import com.cloudtimes.hardwaredevice.mapper.CtStoreMapper;
-import com.cloudtimes.mq.domain.CtMQConstants;
-import com.cloudtimes.mq.domain.PayOrderMsgData;
 import com.cloudtimes.partner.agora.service.CtAgoraApiService;
 import com.cloudtimes.partner.config.PartnerConfig;
 import com.cloudtimes.partner.pay.shouqianba.domain.*;
@@ -480,14 +481,15 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
                         PayOrderData payOrderData = JacksonUtils.convertObject(bizResponse.getData(), PayOrderData.class);
                         payOrderSerial = payOrderData.getSn();
                     }
-                    PayOrderMsgData payOrderMsgData = new PayOrderMsgData();
-                    payOrderMsgData.setTerminalSN(shouqianbaParam.getTerminalSn());
-                    payOrderMsgData.setTerminalKey(shouqianbaParam.getTerminalKey());
-                    payOrderMsgData.setPaySn(payOrderSerial);
-                    payOrderMsgData.setOrderId(clientSN);
-                    payOrderMsgData.setCreateTime(DateUtils.getNowDate());
-                    payOrderMsgData.setCancelFlag(false);
-                    mqProducer.send(CtMQConstants.QUERY_PAY_ORDER, payOrderMsgData);
+                    PayOrderMqData mqData = new PayOrderMqData();
+                    mqData.setOption(PayOrderOption.QUERY_PAY_ORDER);
+                    mqData.setTerminalSN(shouqianbaParam.getTerminalSn());
+                    mqData.setTerminalKey(shouqianbaParam.getTerminalKey());
+                    mqData.setPaySn(payOrderSerial);
+                    mqData.setOrderId(orderId);// 注意这里传的是真实订单号，非随机数，故不能一次查询支付订单
+                    mqData.setCreateTime(DateUtils.getNowDate());
+                    mqData.setCancelFlag(false);
+                    mqProducer.send(RocketMQConstants.CT_PAY_ORDER, mqData);
                 } else if (StringUtils.equals(bizResponse.getErrorCodeStandard(), "EP104")) {
                     //输入密码超时
                     return "输入密码确认超时";
@@ -500,9 +502,10 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
                         int confirm = payOrderUtils.handlePayOrder(payOrderData);
                         if (confirm == 1) {
                             //  发送库存维护
-                            PayOrderMsgData payOrderMsgData = new PayOrderMsgData();
-                            payOrderMsgData.setOrderId(orderId);
-                            mqProducer.send(CtMQConstants.MAINTAIN_STOCK, payOrderMsgData);
+                            PayOrderMqData mqData = new PayOrderMqData();
+                            mqData.setOption(PayOrderOption.MAINTAIN_STOCK);
+                            mqData.setOrderId(orderId);
+                            mqProducer.send(RocketMQConstants.CT_PAY_ORDER, mqData);
                         }
                     }
                 }
