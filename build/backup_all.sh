@@ -18,6 +18,7 @@ fi
 for service in "${SERVICES[@]}"
 do
   echo mv "$WORK_DIR/$service" "$BACKUP_DIR/"
+  mv "$WORK_DIR/$service" "$BACKUP_DIR/"
 done
 
 exit 0

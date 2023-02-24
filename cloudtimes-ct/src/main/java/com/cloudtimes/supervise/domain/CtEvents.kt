@@ -83,6 +83,7 @@ class CtEvents : BaseEntity() {
 
     @ApiModelProperty(value = "是否删除")
     var delFlag: String? = null
+
     override fun toString(): String {
         return ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
             .append("id", id)

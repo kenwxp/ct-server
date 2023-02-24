@@ -10,5 +10,5 @@ open class QueryBySubUserIdRequest {
     @ApiModelProperty(value = "下级用户编号", required = true)
     @field:NotEmpty(message =  "下级用户编号不能为空")
     @field:NotNull(message =  "下级用户编号不能为空")
-    var subUserId: String? = null;
+    var subUserId: String = ""
 }

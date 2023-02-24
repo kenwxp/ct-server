@@ -37,14 +37,14 @@ class CtAgentCommissionController : BaseController() {
     @PostMapping(value = ["detail"])
     @ApiOperation("获取代理销售佣金设置")
     fun detail(@Valid @RequestBody request: QueryByUserIdRequest): AgentCommissionDetail {
-        val commission = commissionService.selectCtAgentCommissionByUserId(request.userId!!)
+        val commission = commissionService.selectCtAgentCommissionByUserId(request.userId)
         return AgentCommissionDetail().apply { data = commission }
     }
 
     @PostMapping(value = ["sub_detail"])
     @ApiOperation("获取下级代理销售佣金设置")
     fun subDetail(@Valid @RequestBody request: QueryBySubUserIdRequest): AgentCommissionDetail {
-        val commission = commissionService.selectCtAgentCommissionByUserId(request.subUserId!!)
+        val commission = commissionService.selectCtAgentCommissionByUserId(request.subUserId)
         return AgentCommissionDetail().apply { data = commission }
     }
 

@@ -10,5 +10,5 @@ open class QueryByUserIdRequest {
     @ApiModelProperty(value = "用户编号", required = true)
     @field:NotEmpty(message =  "用户编号不能为空")
     @field:NotNull(message =  "用户编号不能为空")
-    var userId: String? = null;
+    var userId: String = ""
 }

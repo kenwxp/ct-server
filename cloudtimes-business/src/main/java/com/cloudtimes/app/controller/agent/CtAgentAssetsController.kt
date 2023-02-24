@@ -71,7 +71,7 @@ class CtAgentAssetsController : BaseController() {
     @PostMapping()
     @ApiOperation(value = "获取代理资产详细信息", response = CtUserAgent::class)
     fun listAssetsByUserId(@Valid @RequestBody request: QueryByUserIdRequest): AgentAssetsResponse {
-        val assets = agentService.selectCtUserAgentByUserId(request.userId!!)
+        val assets = agentService.selectCtUserAgentByUserId(request.userId)
         return if (assets == null) {
             AgentAssetsResponse().apply{
                 notFound("没有获取到代理资产详细信息")

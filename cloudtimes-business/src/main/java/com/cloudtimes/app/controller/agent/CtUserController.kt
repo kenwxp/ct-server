@@ -13,7 +13,6 @@ import com.cloudtimes.common.core.domain.AjaxResult
 import com.cloudtimes.common.core.domain.RestResult
 import com.cloudtimes.common.core.domain.entity.AuthUser
 import com.cloudtimes.common.enums.ChannelType
-import com.cloudtimes.common.exception.ServiceException
 import com.cloudtimes.common.utils.JWTManager
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -52,7 +51,7 @@ class CtUserController : BaseController() {
     @PostMapping(value = ["/detail"])
     @ApiOperation("获取用户详细信息")
     fun getInfo(@Valid @RequestBody request: QueryByUserIdRequest): UserDetailResponse {
-        val user = userService.selectCtUserById(request.userId!!)
+        val user = userService.selectCtUserById(request.userId)
         return UserDetailResponse().apply {
             data = user
         }
