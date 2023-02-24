@@ -107,4 +107,8 @@ public class CtTask extends BaseEntity {
      */
     @Excel(name = "修改时间")
     private Date updateTime;
+    /**
+     * 任务锁（冗余，内存） 锁true 解锁false
+     */
+    private boolean openLock;
 }

@@ -1,6 +1,7 @@
 package com.cloudtimes.mq.service;
 
 import com.alibaba.fastjson.JSON;
+import com.cloudtimes.cache.CtTaskCache;
 import com.cloudtimes.common.constant.RocketMQConstants;
 import com.cloudtimes.common.enums.ChannelType;
 import com.cloudtimes.common.mq.CtRocketMqProducer;
@@ -19,11 +20,14 @@ import com.cloudtimes.hardwaredevice.mapper.CtOpenDoorLogsMapper;
 import com.cloudtimes.hardwaredevice.mapper.CtStoreMapper;
 import com.cloudtimes.partner.wiegand.ICtWiegandApiService;
 import com.cloudtimes.partner.wiegand.WiegandReturning;
+import com.cloudtimes.supervise.domain.CtOrder;
+import com.cloudtimes.supervise.domain.CtTask;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class CtOpenDoorService {
@@ -39,6 +43,8 @@ public class CtOpenDoorService {
     private CtDeviceDoorMapper deviceDoorMapper;
     @Autowired
     private CtRocketMqProducer producer;
+    @Autowired
+    private CtTaskCache taskCache;
 
     /**
      * 交易开门
@@ -56,7 +62,15 @@ public class CtOpenDoorService {
             logFail(initLog, "", "无法获取门店信息");
             return false;
         }
-        // todo 校验门店逻辑锁
+        // 校验门店逻辑锁
+        Map<String, CtTask> tasksOfStore = taskCache.getAllTasksOfStore(storeId);
+        for (CtTask task :
+                tasksOfStore.values()) {
+            if (task.isOpenLock()) {
+                logFail(initLog, "", "任务已加锁，禁止开门");
+                return false;
+            }
+        }
 
         CtDevice queryDevice = new CtDevice();
         queryDevice.setStoreId(storeId);

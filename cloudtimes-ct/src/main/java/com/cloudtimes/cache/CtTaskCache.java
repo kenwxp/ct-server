@@ -23,6 +23,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 @Component
 public class CtTaskCache {
     private static final String STAFF_TASK_REL_CACHE = "staff_task:";//客服任务关联
+    private static final String STORE_TASK_REL_CACHE = "store_task:";//门店任务关联
     private static final String TASK_SHOPPING_REL_CACHE = "task_shopping:";//任务购物关联
     private static final String TASK_ORDER_REL_CACHE = "task_order:";//任务订单关联
     private static final String ORDER_DETAIL_CACHE = "order_detail:";//订单详情关联
@@ -70,10 +71,19 @@ public class CtTaskCache {
         }
     }
 
-    public CtOrder getCacheTask(String staffCode, String taskId) {
+    public CtOrder getCacheTaskOfStaff(String staffCode, String taskId) {
         rLock.lock();
         try {
             return redisCache.getCacheMapValue(STAFF_TASK_REL_CACHE + staffCode, taskId);
+        } finally {
+            rLock.unlock();
+        }
+    }
+
+    public CtOrder getCacheTaskOfStore(String storeId, String taskId) {
+        rLock.lock();
+        try {
+            return redisCache.getCacheMapValue(STORE_TASK_REL_CACHE + storeId, taskId);
         } finally {
             rLock.unlock();
         }
@@ -97,6 +107,10 @@ public class CtTaskCache {
         try {
             if (!StringUtils.isEmpty(task.getStaffCode())) {
                 redisCache.setCacheMapValue(STAFF_TASK_REL_CACHE + task.getStaffCode(), task.getId(), task);
+
+            }
+            if (!StringUtils.isEmpty(task.getStoreId())) {
+                redisCache.setCacheMapValue(STORE_TASK_REL_CACHE + task.getStoreId(), task.getId(), task);
             }
         } finally {
             wLock.unlock();
@@ -108,16 +122,16 @@ public class CtTaskCache {
         try {
             String cacheKey = getCacheKey(STAFF_TASK_REL_CACHE, taskId);
             if (!StringUtils.isEmpty(cacheKey)) {
-                if (redisCache.deleteCacheMapValue(cacheKey, taskId)) {
-                    // 删除关联交易
-                    redisCache.deleteObject(TASK_SHOPPING_REL_CACHE + taskId);
-                    // 删除关联订单
-                    redisCache.deleteObject(TASK_ORDER_REL_CACHE + taskId);
-                } else {
-                    return false;
-                }
+                redisCache.deleteCacheMapValue(cacheKey, taskId);
             }
-
+            String cacheKey2 = getCacheKey(STORE_TASK_REL_CACHE, taskId);
+            if (!StringUtils.isEmpty(cacheKey2)) {
+                redisCache.deleteCacheMapValue(cacheKey2, taskId);
+            }
+            // 删除关联交易
+            redisCache.deleteObject(TASK_SHOPPING_REL_CACHE + taskId);
+            // 删除关联订单
+            redisCache.deleteObject(TASK_ORDER_REL_CACHE + taskId);
         } finally {
             wLock.unlock();
         }
@@ -287,7 +301,7 @@ public class CtTaskCache {
         return true;
     }
 
-    private String getCacheKey(String prefix, String orderId) {
+    public String getCacheKey(String prefix, String orderId) {
         // 获取全部前缀匹配的key
         Set<String> keys = (Set<String>) redisCache.keys(prefix + "*");
         //遍历查找相关hkey是否存在
@@ -300,7 +314,7 @@ public class CtTaskCache {
         return "";
     }
 
-    private Map<String, CtOrder> getTasksByStaff(String staffCode) {
+    public Map<String, CtTask> getAllTasksOfStaff(String staffCode) {
         rLock.lock();
         try {
             return redisCache.getCacheMap(STAFF_TASK_REL_CACHE + staffCode);
@@ -309,7 +323,16 @@ public class CtTaskCache {
         }
     }
 
-    private Map<String, CtOrder> getOutSuperviseOrders() {
+    public Map<String, CtTask> getAllTasksOfStore(String storeId) {
+        rLock.lock();
+        try {
+            return redisCache.getCacheMap(STORE_TASK_REL_CACHE + storeId);
+        } finally {
+            rLock.unlock();
+        }
+    }
+
+    public Map<String, CtOrder> getOutSuperviseOrders() {
         rLock.lock();
         try {
             return redisCache.getCacheMap(TASK_ORDER_REL_CACHE + OUT_SUPERVISE_TASK_ID);

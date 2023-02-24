@@ -74,6 +74,8 @@ public class CtTaskInnerService {
                 newTask.setUpdateTime(new Date());
                 newTask.setCreateTime(new Date());
                 newTask.setUpdateTime(new Date());
+                // 设置任务锁
+                newTask.setOpenLock(false);
                 if (taskMapper.insertCtTask(newTask) < 1) {
                     throw new ServiceException("新增任务失败");
                 }
