@@ -14,6 +14,7 @@ import com.cloudtimes.serving.common.CtTaskInnerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
@@ -31,13 +32,12 @@ public class CtDoorMessageService {
 
     public void handleStateMessage(DoorMessageMqData data) {
         // 处理门禁状态
-        log.info("更新门禁设备刷新时间：{}====>{}", data.getDeviceSerial(), data.getUpdateTime());
         doorStateCache.put(data.getDeviceSerial(), DateUtil.parseDateTime(data.getUpdateTime()));
     }
 
+    @Transactional
     public void handleTriggerMessage(DoorMessageMqData data) {
         // 处理触发开门逻辑状态
-        log.info("触发开门：{}====>{}", data.getDeviceSerial(), data.getUpdateTime());
         CtDevice ctDevice = deviceMapper.selectCtDeviceByDeviceSerial(String.valueOf(data.getDeviceSerial()));
         if (ctDevice == null) {
             log.error("无法获取门禁设备");
@@ -51,13 +51,13 @@ public class CtDoorMessageService {
         CtOpenDoorLogs ctOpenDoorLogs = new CtOpenDoorLogs();
         ctOpenDoorLogs.setStoreId(ctDevice.getStoreId());
         ctOpenDoorLogs.setDeviceId(ctDevice.getId());
-//        ctOpenDoorLogs.setMemberId();
+        ctOpenDoorLogs.setMemberId(ctDevice.getId());//线下场景则记录设备号
         ctOpenDoorLogs.setOptChannel(ChannelType.OFFLINE.getCode());//线下渠道
         ctOpenDoorLogs.setOptType(OpenDoorOption.TRIGGER_OPEN_DOOR.getCode());//触发开门
         ctOpenDoorLogs.setState("0");
         ctOpenDoorLogs.setDelFlag("0");
         ctOpenDoorLogs.setDate(new Date());
-        ctOpenDoorLogs.setCreateTime(DateUtil.parseTime(data.getUpdateTime()));
+        ctOpenDoorLogs.setCreateTime(DateUtil.parseDateTime(data.getUpdateTime()));
         ctOpenDoorLogs.setUpdateTime(new Date());
         ctOpenDoorLogs.setRemark("红外开门");
         if (doorLogsMapper.insertCtOpenDoorLogs(ctOpenDoorLogs) < 1) {

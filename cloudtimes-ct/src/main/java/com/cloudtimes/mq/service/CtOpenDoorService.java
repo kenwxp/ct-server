@@ -379,21 +379,27 @@ public class CtOpenDoorService {
 
 
     private String logOk(CtOpenDoorLogs log, String deviceId) {
-        log.setDeviceId(deviceId);
+        if (!StringUtils.isEmpty(deviceId)) {
+            log.setDeviceId(deviceId);
+        }
         log.setState("0");
         log.setRemark("操作成功");
         return insertLog(log);
     }
 
     private String logFail(CtOpenDoorLogs log, String deviceId, String remark) {
-        log.setDeviceId(deviceId);
+        if (!StringUtils.isEmpty(deviceId)) {
+            log.setDeviceId(deviceId);
+        }
         log.setState("1");
         log.setRemark(remark);
         return insertLog(log);
     }
 
     private String logError(CtOpenDoorLogs log, String deviceId, String remark) {
-        log.setDeviceId(deviceId);
+        if (!StringUtils.isEmpty(deviceId)) {
+            log.setDeviceId(deviceId);
+        }
         log.setState("2");
         log.setRemark(remark);
         return insertLog(log);
@@ -409,7 +415,12 @@ public class CtOpenDoorService {
 
     private CtOpenDoorLogs initInsertLog(String storeId, String userId, ChannelType channelType, OpenDoorOption openType) {
         CtOpenDoorLogs log = new CtOpenDoorLogs();
-        log.setStoreId(storeId);
+        if (!StringUtils.isEmpty(storeId)) {
+            log.setStoreId(storeId);
+        }
+        if (!StringUtils.isEmpty(userId)) {
+            log.setStoreId(userId);
+        }
         log.setMemberId(userId);
         log.setOptChannel(channelType.getCode());
         log.setOptType(openType.getCode());

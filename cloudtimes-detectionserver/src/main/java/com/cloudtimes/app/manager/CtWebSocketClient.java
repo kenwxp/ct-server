@@ -42,15 +42,16 @@ public class CtWebSocketClient extends WebSocketClient {
             Iterator<JsonNode> elements = nodes.elements();
             while (elements.hasNext()) {
                 JsonNode node = elements.next();
-                System.out.println(node.toString());
                 if (node.get("SN") != null) {
                     int serial = node.get("SN").asInt();
                     if (node.get("刷新时间") != null) {
                         //发送消息
+                        log.debug("====>发送mq消息：" + node.toString());
                         producer.send(RocketMQConstants.CT_DOOR_MESSAGE, new DoorMessageMqData(0, serial, node.get("刷新时间").asText()));
                         return;
                     }
                     if (node.get("描述") != null && StringUtils.equals(node.get("描述").asText(), "按钮开门")) {
+                        log.debug("====>发送mq消息：" + node.toString());
                         producer.send(RocketMQConstants.CT_DOOR_MESSAGE, new DoorMessageMqData(1, serial, node.get("时间").asText()));
                         return;
                     }

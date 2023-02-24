@@ -9,8 +9,10 @@ import org.apache.rocketmq.spring.annotation.MessageModel;
 import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
 import org.apache.rocketmq.spring.core.RocketMQListener;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 @Slf4j
+@Component
 @RocketMQMessageListener(consumerGroup = "${rocketmq.consumer.group}", topic = RocketMQConstants.CT_OPEN_DOOR, messageModel = MessageModel.CLUSTERING)
 public class OpenDoorListener implements RocketMQListener<OpenDoorMqData> {
     @Autowired
@@ -18,6 +20,7 @@ public class OpenDoorListener implements RocketMQListener<OpenDoorMqData> {
 
     @Override
     public void onMessage(OpenDoorMqData data) {
+        log.info("======> 接受mq消息：" + data);
         if (data.getOption() == OpenDoorOption.TRANS_OPEN_DOOR) {
             openDoorService.transOpen(data.getStoreId(), data.getUserId(), data.getChannelType());
         } else if (data.getOption() == OpenDoorOption.EMERGENCY_OPEN_DOOR) {

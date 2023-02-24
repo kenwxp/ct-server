@@ -11,8 +11,10 @@ import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
 import org.apache.rocketmq.spring.core.RocketMQListener;
 import org.apache.rocketmq.spring.core.RocketMQPushConsumerLifecycleListener;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 @Slf4j
+@Component
 @RocketMQMessageListener(consumerGroup = "${rocketmq.consumer.group}", topic = RocketMQConstants.CT_PAY_ORDER, messageModel = MessageModel.CLUSTERING)
 public class PayOrderMqListener implements RocketMQListener<PayOrderMqData>, RocketMQPushConsumerLifecycleListener {
     @Autowired
@@ -20,6 +22,7 @@ public class PayOrderMqListener implements RocketMQListener<PayOrderMqData>, Roc
 
     @Override
     public void onMessage(PayOrderMqData data) {
+        log.info("======> 接受mq消息：" + data);
         if (data.getOption() == PayOrderOption.QUERY_PAY_ORDER) {
             mqPayOrderService.queryPayOrderService(data);
         } else if (data.getOption() == PayOrderOption.CANCEL_PAY_ORDER) {
