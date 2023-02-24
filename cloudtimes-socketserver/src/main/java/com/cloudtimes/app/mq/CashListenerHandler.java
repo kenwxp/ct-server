@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.cloudtimes.app.manager.SingletonWsSessionManager;
 import com.cloudtimes.common.constant.RocketMQConstants;
 import com.cloudtimes.common.mq.CashMqData;
-import com.cloudtimes.mq.domain.CtMQConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.spring.annotation.MessageModel;
 import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
