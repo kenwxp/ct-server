@@ -10,6 +10,7 @@ import com.cloudtimes.common.enums.OpenDoorOption;
 import com.cloudtimes.common.exception.ServiceException;
 import com.cloudtimes.common.mq.CtRocketMqProducer;
 import com.cloudtimes.common.mq.OpenDoorMqData;
+import com.cloudtimes.common.utils.SecurityUtils;
 import com.cloudtimes.common.utils.StringUtils;
 import com.cloudtimes.hardwaredevice.domain.CtStore;
 import com.cloudtimes.hardwaredevice.domain.CtSuperviseLogs;
@@ -43,7 +44,23 @@ public class CtShopBossBusinessServiceImpl implements ICtShopBossBusinessService
     private CtCashMqSenderService cashMqSender;
     @Autowired
     private CtRocketMqProducer producer;
-
+    @Override
+    public boolean changePassword(String userId, String newPassword, String oldPassword) {
+        CtUser dbUser = userMapper.selectCtUserById(userId);
+        if (dbUser == null) {
+            throw new ServiceException("无法获取用户信息");
+        }
+        String oldEncrypt = SecurityUtils.encryptPassword(oldPassword);
+        String newEncrypt = SecurityUtils.encryptPassword(newPassword);
+        if (!StringUtils.equals(oldEncrypt, dbUser.getPassword())) {
+            throw new ServiceException("旧密码错误，请确认");
+        }
+        dbUser.setPassword(newEncrypt);
+        if (userMapper.updateCtUser(dbUser) < 1) {
+            return false;
+        }
+        return true;
+    }
     @Transactional
     @Override
     public boolean applySupervise(String userId, String storeId, String opFlag) {
@@ -98,7 +115,7 @@ public class CtShopBossBusinessServiceImpl implements ICtShopBossBusinessService
             updateLog.setEndTime(new Date());
             updateLog.setUpdateTime(new Date());
             if (superviseLogsMapper.updateCtSuperviseLogs(updateLog) < 1) {
-                throw new ServiceException("新增值守日志异常");
+                throw new ServiceException("更新值守日志异常");
             }
             //更新门店值守状态
             String isSupervise = "0";
