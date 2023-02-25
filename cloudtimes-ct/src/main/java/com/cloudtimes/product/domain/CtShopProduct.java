@@ -164,6 +164,21 @@ public class CtShopProduct extends BaseEntity {
      */
     @Excel(name = "累计售出")
     private Long totalSold;
+    /**
+     * 累计供货
+     */
+    @Excel(name = "累计供货")
+    private Long totalSupplied;
+
+    /**
+     * 库存调整量
+     * -- 实际应供货的量，与实际供货量出现差额，且确认抹平后，更新此字段
+     * -- 调整量 = 当前库存量 - 初始库存量（只做参考，实际无法确认这个初始库存量）
+     * -- 确认摸平时 当前调整量 = 累计售出 - 累计供货 - 实际供货量
+     */
+    @Excel(name = "库存调整量")
+    private Long stockDelta;
+
 
     /**
      * 商品图片地址
