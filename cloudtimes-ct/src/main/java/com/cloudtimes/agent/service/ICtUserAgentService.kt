@@ -4,7 +4,7 @@ import com.cloudtimes.agent.domain.CtUserAgent
 import com.cloudtimes.agent.dto.request.AgentStoreRequest
 import com.cloudtimes.account.dto.request.TransferCashRequest
 import com.cloudtimes.account.dto.request.WithdrawCashRequest
-import com.cloudtimes.agent.dto.response.AgentShopStats
+import com.cloudtimes.agent.dto.response.AgentStoreOnlineStats
 import com.cloudtimes.account.dto.response.StoreAndCommission
 import com.cloudtimes.account.dto.response.TeamMember
 
@@ -37,10 +37,13 @@ interface ICtUserAgentService {
 
 
     /** 查询代理门店列表 */
-    fun selectCtAgentShopList(agentStoreRequest: AgentStoreRequest): List<StoreAndCommission>
+    fun selectCtAgentShopList(request: AgentStoreRequest): List<StoreAndCommission>
 
     /** 查询代理门店上线统计 */
-    fun selectCtAgentShopStats(userId: String): List<AgentShopStats>
+    fun selectCtAgentShopOnlineStats(userId: String): List<AgentStoreOnlineStats>
+
+    /** 查询代理门店上线统计 */
+    fun selectCtAgentShopProfitStats(userId: String): List<AgentStoreOnlineStats>
 
     /**
      * 新增代理
@@ -59,14 +62,6 @@ interface ICtUserAgentService {
     fun updateCtUserAgent(ctUserAgent: CtUserAgent): Int
 
     /**
-     * 批量删除代理
-     *
-     * @param userIds 需要删除的代理主键集合
-     * @return 结果
-     */
-    fun deleteCtUserAgentByUserIds(userIds: Array<String>): Int
-
-    /**
      * 删除代理信息
      *
      * @param userId 代理主键
@@ -75,7 +70,7 @@ interface ICtUserAgentService {
     fun deleteCtUserAgentByUserId(userId: String): Int
 
     /** 提现 */
-    fun withdrawCash(withdrawCashRequest: WithdrawCashRequest)
+    fun withdrawCash(request: WithdrawCashRequest)
 
     /** 转账 */
     fun transferCash(transferCashRequest: TransferCashRequest)

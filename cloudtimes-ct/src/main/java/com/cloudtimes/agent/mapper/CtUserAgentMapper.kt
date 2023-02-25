@@ -2,10 +2,8 @@ package com.cloudtimes.agent.mapper
 
 import com.cloudtimes.account.dto.response.StoreAndCommission
 import com.cloudtimes.agent.domain.CtUserAgent
-import com.cloudtimes.agent.dto.request.AgentStoreRequest
-import com.cloudtimes.agent.dto.response.AgentShopStats
+import com.cloudtimes.agent.dto.response.AgentStoreOnlineStats
 import com.cloudtimes.account.dto.response.TeamMember
-import com.cloudtimes.agent.mapper.provider.CtUserAgentProvider
 
 import org.apache.ibatis.annotations.Param
 import org.apache.ibatis.annotations.Select
@@ -76,13 +74,9 @@ interface CtUserAgentMapper : CommonUpdateMapper  {
      */
     fun selectCtUserAgentList(ctUserAgent: CtUserAgent): List<CtUserAgent>
 
-    /**
-     * 查询代理门店列表
-     *
-     * @param agentStoreRequest 代理店铺请求
-     * @return 代理集合
-     */
-    fun selectCtAgentShopList(agentStoreRequest: AgentStoreRequest): List<StoreAndCommission>
+    /** 查询代理门店列表 */
+    @SelectProvider(type=SqlProviderAdapter::class, method="select")
+    fun selectCtAgentShopList(selectStatement: SelectStatementProvider): List<StoreAndCommission>
 
     /**
      * 查询代理门店上线统计
@@ -100,7 +94,7 @@ interface CtUserAgentMapper : CommonUpdateMapper  {
         )
         group by store.build_state
     """)
-    fun selectCtAgentShopStats(@Param("userId") userId: String): List<AgentShopStats>
+    fun selectCtAgentShopStats(@Param("userId") userId: String): List<AgentStoreOnlineStats>
 
     /**
      * 新增代理
@@ -133,16 +127,4 @@ interface CtUserAgentMapper : CommonUpdateMapper  {
      * @return 结果
      */
     fun deleteCtUserAgentByUserId(userId: String): Int
-
-    /**
-     * 批量删除代理
-     *
-     * @param userIds 需要删除的数据主键集合
-     * @return 结果
-     */
-    fun deleteCtUserAgentByUserIds(userIds: Array<String>): Int
-}
-
-fun CtUserAgentMapper.selectById(id: String): CtUserAgent? {
-    return selectOne(CtUserAgentProvider.selectById(id))
 }

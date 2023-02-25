@@ -3,12 +3,14 @@ package com.cloudtimes.app.controller.agent
 import com.cloudtimes.account.dto.request.QueryByUserIdRequest
 import com.cloudtimes.agent.dto.request.AgentStoreRequest
 import com.cloudtimes.account.dto.response.StoreAndCommission
-import com.cloudtimes.agent.dto.response.AgentShopStats
+import com.cloudtimes.agent.dto.response.AgentStoreOnlineStats
+import com.cloudtimes.agent.dto.response.AgentStoreProfitStats
 import com.cloudtimes.agent.service.ICtUserAgentService
 import com.cloudtimes.app.controller.system.SmsController
 import com.cloudtimes.common.core.controller.BaseController
 import com.cloudtimes.common.core.domain.AjaxResult
 import com.cloudtimes.common.core.domain.RestPageResult
+import com.cloudtimes.common.core.domain.RestResult
 import com.cloudtimes.hardwaredevice.dto.request.RegisterStoreRequest
 import com.cloudtimes.hardwaredevice.dto.request.QueryOrdersByMonth
 import com.cloudtimes.hardwaredevice.service.ICtStoreService
@@ -23,8 +25,9 @@ import javax.validation.Valid
 
 // 泛型具体化
 class StoreAndCommissionPage() : RestPageResult<StoreAndCommission>()
-class AgentShopStatsPage() : RestPageResult<AgentShopStats>()
+class AgentShopStatsPage() : RestPageResult<AgentStoreOnlineStats>()
 class MonthlyOrderResponse() : RestPageResult<CtOrder>()
+class StoreProfitResponse() : RestResult<AgentStoreProfitStats>()
 
 /**
  * 用户Controller
@@ -84,12 +87,24 @@ class CtStoreController : BaseController() {
      * 查询代理门店上线统计
      */
     @ApiOperation("查询代理门店上线统计")
-    @PostMapping("/stats")
-    fun stats(@Valid @RequestBody request: QueryByUserIdRequest): AgentShopStatsPage {
-        val list = ctUserAgentService.selectCtAgentShopStats(request.userId)
+    @PostMapping("/online_stats")
+    fun onlineStats(@Valid @RequestBody request: QueryByUserIdRequest): AgentShopStatsPage {
+        val list = ctUserAgentService.selectCtAgentShopOnlineStats(request.userId)
         return AgentShopStatsPage().apply {
             data = list
             total = list.size.toLong()
+        }
+    }
+
+    /**
+     * 查询代理门店收益统计
+     */
+    @ApiOperation("查询代理门店收益统计")
+    @PostMapping("/profit_stats")
+    fun profitStats(@Valid @RequestBody request: QueryByUserIdRequest): StoreProfitResponse {
+        // :TODO:
+        return StoreProfitResponse().apply {
+            data = AgentStoreProfitStats()
         }
     }
 

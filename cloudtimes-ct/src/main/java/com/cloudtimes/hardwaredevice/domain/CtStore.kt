@@ -140,6 +140,7 @@ class CtStore : BaseEntity() {
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "创建日期", width = 30.0, dateFormat = "yyyy-MM-dd")
     var createDate: Date? = null
+
     override fun toString(): String {
         return ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
             .append("id", id)

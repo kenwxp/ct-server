@@ -75,14 +75,20 @@ class CtAgentCommissionSettlement : BaseEntity() {
 
     @ApiModelProperty(value = "店铺是否上线")
     @Excel(name = "店铺是否上线")
+    @get:JvmName("getIsStoreOnline")
+    @set:JvmName("setIsStoreOnline")
     var isStoreOnline: String? = null
 
     @ApiModelProperty(value = "代理是否审核")
     @Excel(name = "代理是否审核")
+    @get:JvmName("getIsAgentOk")
+    @set:JvmName("setIsAgentOk")
     var isAgentOk: String? = null
 
     @ApiModelProperty(value = "平台是否审核")
     @Excel(name = "平台是否审核")
+    @get:JvmName("getIsPlatformOk")
+    @set:JvmName("setIsPlatformOk")
     var isPlatformOk: String? = null
 
     @ApiModelProperty(value = "结算状态")

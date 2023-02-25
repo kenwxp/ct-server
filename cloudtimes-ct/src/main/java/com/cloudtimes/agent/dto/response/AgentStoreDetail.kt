@@ -50,6 +50,4 @@ class AgentStoreDetail {
 
     @ApiModelProperty(value = "门店代理头像")
     var wxAvatar: String? = null
-//    @ApiModelProperty(value = "门店代理手机号")
-//    var mobile: String? = null
 }

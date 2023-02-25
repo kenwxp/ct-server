@@ -3,8 +3,8 @@ package com.cloudtimes.agent.dto.response
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
 
-@ApiModel(value = "AgentShopStats", description = "代理门店统计")
-data class AgentShopStats (
+@ApiModel(value = "AgentStoreOnlineStats", description = "代理门店上线统计")
+data class AgentStoreOnlineStats (
     @ApiModelProperty(value = "店铺开设状态")
     var buildState: String? = "0",
 

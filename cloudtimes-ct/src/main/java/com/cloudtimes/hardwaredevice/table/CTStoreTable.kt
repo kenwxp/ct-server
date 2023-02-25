@@ -83,4 +83,4 @@ class CtStoreTable : AliasableSqlTable<CtStoreTable>("ct_store", ::CtStoreTable)
     val photoUrl = column<String>(name = "photo_url", jdbcType = JDBCType.LONGVARCHAR)
 }
 
-var storeTable = CtStoreTable()
+var storeTable: CtStoreTable = CtStoreTable().withAlias("st")
