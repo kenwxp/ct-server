@@ -19,6 +19,7 @@ for service in "${SERVICES[@]}"
 do
   echo mv "$WORK_DIR/$service" "$BACKUP_DIR/"
   mv "$WORK_DIR/$service" "$BACKUP_DIR/"
+  mkdir -p "$WORK_DIR/$service"
 done
 
 exit 0

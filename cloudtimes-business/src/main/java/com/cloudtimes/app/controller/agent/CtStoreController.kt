@@ -10,7 +10,7 @@ import com.cloudtimes.common.core.controller.BaseController
 import com.cloudtimes.common.core.domain.AjaxResult
 import com.cloudtimes.common.core.domain.RestPageResult
 import com.cloudtimes.hardwaredevice.dto.request.RegisterStoreRequest
-import com.cloudtimes.hardwaredevice.dto.request.ShopOrderByMonthRequest
+import com.cloudtimes.hardwaredevice.dto.request.QueryOrdersByMonth
 import com.cloudtimes.hardwaredevice.service.ICtStoreService
 import com.cloudtimes.supervise.domain.CtOrder
 import com.cloudtimes.supervise.service.ICtOrderService
@@ -68,18 +68,10 @@ class CtStoreController : BaseController() {
      */
     @ApiOperation("查询代理门店每月订单")
     @PostMapping("/monthly_order")
-    fun monthlyOrder(@Valid @RequestBody request: ShopOrderByMonthRequest): MonthlyOrderResponse {
+    fun monthlyOrder(@Valid @RequestBody request: QueryOrdersByMonth): MonthlyOrderResponse {
         startPage(request.pageNum, request.pageSize)
 
-        var requestMonth: Int? = null
-        if (!request.yearMonth.isNullOrEmpty()) {
-            requestMonth = Integer.parseInt(request.yearMonth)
-        }
-
-        val order = CtOrder()
-        order.yearMonth = requestMonth
-        order.storeId = request.storeId
-        val list = ctOrderService.selectCtOrderList(order)
+        val list = ctOrderService.selectMonthlyOrders(request)
         val page = getDataTable(list)
 
         return MonthlyOrderResponse().apply {

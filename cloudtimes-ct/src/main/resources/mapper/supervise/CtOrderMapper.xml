@@ -70,7 +70,7 @@
             <if test="deviceCashId != null  and deviceCashId != ''">and device_cash_id = #{deviceCashId}</if>
             <if test="descText != null  and descText != ''">and desc_text = #{descText}</if>
             <if test="isExceptional != null  and isExceptional != ''">and is_exceptional = #{isExceptional}</if>
-            <if test="yearMonth != null">and `year_month = #{yearMonth}</if>
+            <if test="yearMonth != null">and `year_month` = #{yearMonth}</if>
             <if test="state != null  and state != ''">and state = #{state}</if>
         </where>
     </select>

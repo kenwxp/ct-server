@@ -1,8 +1,7 @@
-package com.cloudtimes.supervise.service;
+package com.cloudtimes.supervise.service
 
-import com.cloudtimes.supervise.domain.CtOrder;
-
-import java.util.List;
+import com.cloudtimes.hardwaredevice.dto.request.QueryOrdersByMonth
+import com.cloudtimes.supervise.domain.CtOrder
 
 /**
  * 购物订单Service接口
@@ -10,14 +9,17 @@ import java.util.List;
  * @author tank
  * @date 2023-02-07
  */
-public interface ICtOrderService {
+interface ICtOrderService {
+    /** 查询代理门店每月订单 */
+    fun selectMonthlyOrders(request: QueryOrdersByMonth): List<CtOrder>
+
     /**
      * 查询购物订单
      *
      * @param id 购物订单主键
      * @return 购物订单
      */
-    public CtOrder selectCtOrderById(String id);
+    fun selectCtOrderById(id: String): CtOrder?
 
     /**
      * 查询购物订单列表
@@ -25,7 +27,7 @@ public interface ICtOrderService {
      * @param ctOrder 购物订单
      * @return 购物订单集合
      */
-    public List<CtOrder> selectCtOrderList(CtOrder ctOrder);
+    fun selectCtOrderList(ctOrder: CtOrder): List<CtOrder>
 
     /**
      * 新增购物订单
@@ -33,7 +35,7 @@ public interface ICtOrderService {
      * @param ctOrder 购物订单
      * @return 结果
      */
-    public int insertCtOrder(CtOrder ctOrder);
+    fun insertCtOrder(ctOrder: CtOrder): Int
 
     /**
      * 修改购物订单
@@ -41,7 +43,7 @@ public interface ICtOrderService {
      * @param ctOrder 购物订单
      * @return 结果
      */
-    public int updateCtOrder(CtOrder ctOrder);
+    fun updateCtOrder(ctOrder: CtOrder): Int
 
     /**
      * 批量删除购物订单
@@ -49,7 +51,7 @@ public interface ICtOrderService {
      * @param ids 需要删除的购物订单主键集合
      * @return 结果
      */
-    public int deleteCtOrderByIds(String[] ids);
+    fun deleteCtOrderByIds(ids: Array<String>): Int
 
     /**
      * 删除购物订单信息
@@ -57,5 +59,5 @@ public interface ICtOrderService {
      * @param id 购物订单主键
      * @return 结果
      */
-    public int deleteCtOrderById(String id);
+    fun deleteCtOrderById(id: String): Int
 }

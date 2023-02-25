@@ -12,7 +12,6 @@ import com.cloudtimes.agent.service.ICtAgentActivity1RuleService
 import com.cloudtimes.agent.service.ICtAgentActivity2RuleService
 import com.cloudtimes.agent.service.ICtAgentActivityService
 import com.cloudtimes.agent.service.ICtAgentActivitySettlementService
-import com.cloudtimes.app.controller.auth.UserLoginAndRegisterController
 import com.cloudtimes.common.core.controller.BaseController
 import com.cloudtimes.common.core.domain.AjaxResult
 import com.cloudtimes.common.core.domain.RestPageResult
