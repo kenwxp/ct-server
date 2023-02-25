@@ -29,15 +29,6 @@ public class ApiResult<T> implements Serializable {
     @ApiModelProperty("状态码")
     public int code;
 
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
-
     /**
      * 返回内容
      */
@@ -47,7 +38,7 @@ public class ApiResult<T> implements Serializable {
      * 总数（列表查询时返回）
      */
     @ApiModelProperty("总数（列表查询时返回）")
-    public int total = 0;
+    public long total = 0L;
     /**
      * 数据对象
      */
@@ -93,7 +84,7 @@ public class ApiResult<T> implements Serializable {
      * @param msg  返回内容
      * @param data 数据对象
      */
-    public ApiResult(int code, String msg,int total, T data) {
+    public ApiResult(int code, String msg, long total, T data) {
         this.code = code;
         this.msg = msg;
         this.total = total;
@@ -182,20 +173,4 @@ public class ApiResult<T> implements Serializable {
         return new ApiResult(code, msg, null);
     }
 
-
-    public int getCode() {
-        return code;
-    }
-
-    public void setCode(int code) {
-        this.code = code;
-    }
-
-    public T getData() {
-        return data;
-    }
-
-    public void setData(T data) {
-        this.data = data;
-    }
 }
