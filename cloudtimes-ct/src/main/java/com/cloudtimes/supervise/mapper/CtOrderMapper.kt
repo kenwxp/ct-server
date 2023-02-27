@@ -1,5 +1,7 @@
 package com.cloudtimes.supervise.mapper
 
+import com.cloudtimes.agent.dto.response.OrderMonthlyStats
+import com.cloudtimes.agent.dto.response.StoreOrderDetail
 import com.cloudtimes.supervise.domain.CtOrder
 import org.apache.ibatis.annotations.Param
 import org.apache.ibatis.annotations.SelectProvider
@@ -22,7 +24,13 @@ interface CtOrderMapper : CommonCountMapper, CommonDeleteMapper, CommonInsertMap
     fun selectMany(selectStatement: SelectStatementProvider): List<CtOrder>
 
     @SelectProvider(type = SqlProviderAdapter::class, method = "select")
+    fun selectMonthlyOrderStats(selectStatement: SelectStatementProvider): List<OrderMonthlyStats>
+
+    @SelectProvider(type = SqlProviderAdapter::class, method = "select")
     fun selectOne(selectStatement: SelectStatementProvider): CtOrder?
+
+    @SelectProvider(type = SqlProviderAdapter::class, method = "select")
+    fun selectAgentStoreOrders(selectStatement: SelectStatementProvider): List<StoreOrderDetail>
 
     /**
      * 查询购物订单

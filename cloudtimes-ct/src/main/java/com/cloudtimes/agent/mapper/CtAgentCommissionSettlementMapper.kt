@@ -105,7 +105,7 @@ interface CtAgentCommissionSettlementMapper : CommonCountMapper, CommonDeleteMap
     @Update(
         """
         UPDATE ct_agent_commission_settlement
-        SET is_agent_ok = '1',
+        SET verify_state = '1',
             agent_approved_time = current_timestamp(),
             update_time = current_timestamp()
         WHERE id = #{id}
@@ -122,7 +122,7 @@ interface CtAgentCommissionSettlementMapper : CommonCountMapper, CommonDeleteMap
     @Update(
         """
         UPDATE ct_agent_commission_settlement
-        SET is_platform_ok = '1',
+        SET verify_state = '2',
             platform_approved_time = current_timestamp(),
             update_time = current_timestamp()
         WHERE id = #{id}

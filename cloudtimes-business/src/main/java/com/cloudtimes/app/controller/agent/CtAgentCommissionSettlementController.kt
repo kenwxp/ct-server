@@ -28,6 +28,6 @@ class CtAgentCommissionSettlementController : BaseController() {
     @ApiOperation("代理佣金结算确认")
     fun confirm(@Valid @RequestBody confirmCommissionRequest: ConfirmCommissionRequest): AjaxResult {
         val id = confirmCommissionRequest.commissionId!!
-        return AjaxResult.success(commissionSettlementService.agentConfirmCtAgentCommissionSettlementById(id))
+        return AjaxResult.success(commissionSettlementService.agentConfirmCtAgentCommissionSettlement(id))
     }
 }

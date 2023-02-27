@@ -2,6 +2,7 @@ package com.cloudtimes.supervise.domain
 
 import com.cloudtimes.common.annotation.Excel
 import com.cloudtimes.common.core.domain.BaseEntity
+import com.fasterxml.jackson.annotation.JsonFormat
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
 import java.math.BigDecimal
@@ -149,6 +150,7 @@ class CtOrder : BaseEntity() {
     var yearMonth: Int? = null
 
     @ApiModelProperty(value = "创建日期")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     var createDate: Date? = null
 
     companion object {

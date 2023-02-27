@@ -47,7 +47,7 @@ interface ICtAgentCommissionSettlementService {
      * @param id 销售佣金结算主键
      * @return 结果
      */
-    fun agentConfirmCtAgentCommissionSettlementById(id: String): Int
+    fun agentConfirmCtAgentCommissionSettlement(id: String): Int
 
     /**
      * 平台佣金确认

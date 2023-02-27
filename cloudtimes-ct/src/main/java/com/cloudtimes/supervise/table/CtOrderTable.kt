@@ -5,6 +5,7 @@ import java.sql.JDBCType
 import java.util.Date
 import org.mybatis.dynamic.sql.AliasableSqlTable
 import org.mybatis.dynamic.sql.util.kotlin.elements.column
+import java.time.LocalDate
 
 class CtOrderTable : AliasableSqlTable<CtOrderTable>("ct_order", ::CtOrderTable) {
     val yearMonth = column<Int>(name = "`year_month`", jdbcType = JDBCType.INTEGER)
@@ -69,5 +70,5 @@ class CtOrderTable : AliasableSqlTable<CtOrderTable>("ct_order", ::CtOrderTable)
 
     val delFlag = column<String>(name = "del_flag", jdbcType = JDBCType.CHAR)
 
-    val createDate = column<Date>(name = "create_date", jdbcType = JDBCType.DATE)
+    val createDate = column<LocalDate>(name = "create_date", jdbcType = JDBCType.DATE)
 }

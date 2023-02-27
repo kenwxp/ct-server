@@ -1,8 +1,11 @@
 package com.cloudtimes.supervise.service.impl
 
+import com.cloudtimes.agent.dto.response.OrderMonthlyStats
+import com.cloudtimes.agent.dto.response.StoreOrderDetail
 import com.cloudtimes.common.annotation.DataSource
 import com.cloudtimes.common.enums.DataSourceType
 import com.cloudtimes.common.utils.DateUtils
+import com.cloudtimes.hardwaredevice.dto.request.QueryOrdersByDate
 import com.cloudtimes.hardwaredevice.dto.request.QueryOrdersByMonth
 import com.cloudtimes.supervise.domain.CtOrder
 import com.cloudtimes.supervise.mapper.CtOrderMapper
@@ -23,9 +26,15 @@ class CtOrderServiceImpl : ICtOrderService {
     @Autowired
     private lateinit var orderMapper: CtOrderMapper
 
-    /** 查询代理门店每月订单 */
-    override fun selectMonthlyOrders(request: QueryOrdersByMonth): List<CtOrder> {
-        return orderMapper.selectMany(CtOrderProvider.selectMonthlyOrdersStmt(request))
+    /** 查询门店每月订单 */
+    override fun selectMonthlyOrderStats(request: QueryOrdersByMonth): List<OrderMonthlyStats> {
+        return orderMapper.selectMonthlyOrderStats(CtOrderProvider.selectMonthlyOrderStatsStmt(request))
+            .filter { it.tranDate != null}
+    }
+
+    /** 查询门店每日订单 */
+    override fun selectDailyOrders(request: QueryOrdersByDate): List<StoreOrderDetail> {
+        return orderMapper.selectAgentStoreOrders(CtOrderProvider.selectOrdersByDateStmt(request))
     }
 
     /**

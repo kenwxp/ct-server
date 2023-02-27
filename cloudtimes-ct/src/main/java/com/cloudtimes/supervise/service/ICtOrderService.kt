@@ -1,5 +1,8 @@
 package com.cloudtimes.supervise.service
 
+import com.cloudtimes.agent.dto.response.OrderMonthlyStats
+import com.cloudtimes.agent.dto.response.StoreOrderDetail
+import com.cloudtimes.hardwaredevice.dto.request.QueryOrdersByDate
 import com.cloudtimes.hardwaredevice.dto.request.QueryOrdersByMonth
 import com.cloudtimes.supervise.domain.CtOrder
 
@@ -10,8 +13,11 @@ import com.cloudtimes.supervise.domain.CtOrder
  * @date 2023-02-07
  */
 interface ICtOrderService {
-    /** 查询代理门店每月订单 */
-    fun selectMonthlyOrders(request: QueryOrdersByMonth): List<CtOrder>
+    /** 查询门店每月订单统计 */
+    fun selectMonthlyOrderStats(request: QueryOrdersByMonth): List<OrderMonthlyStats>
+
+    /** 查询门店每日订单 */
+    fun selectDailyOrders(request: QueryOrdersByDate): List<StoreOrderDetail>
 
     /**
      * 查询购物订单
