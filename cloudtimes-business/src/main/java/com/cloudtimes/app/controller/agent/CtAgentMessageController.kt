@@ -39,7 +39,7 @@ class CtAgentMessageController : BaseController() {
     @PostMapping(value = ["/summary"])
     @ApiOperation(value = "查询代理的消息摘要", response = CtUserAgent::class)
     fun summary(@Valid @RequestBody request: AgentMessageListRequest): AgentMessagePage {
-        val messages = eventsService.selectSummaryByReceiver(request.userId!!)
+        val messages = eventsService.selectSummaryByReceiver(request.userId)
         return AgentMessagePage().apply {
             total = messages.size.toLong()
             data = messages
@@ -50,7 +50,7 @@ class CtAgentMessageController : BaseController() {
     @ApiOperation(value = "按消息类型查询代理消息列表", response = CtUserAgent::class)
     fun listMessageByType(@Valid @RequestBody request: ListMessageByTypeRequest): AgentMessagePage {
         startPage(request.pageNum, request.pageSize)
-        val messages = eventsService.selectByReceiverAndMsgType(request.userId!!, request.msgType!!)
+        val messages = eventsService.selectByReceiverAndMsgType(request.userId, request.msgType!!)
         val pageData = getDataTable(messages)
         return AgentMessagePage().apply {
             total = pageData.total
@@ -62,7 +62,7 @@ class CtAgentMessageController : BaseController() {
     @ApiOperation(value = "查询代理的消息列表", response = CtUserAgent::class)
     fun listMessage(@Valid @RequestBody request: AgentMessageListRequest): AgentMessagePage {
         startPage(request.pageNum, request.pageSize)
-        val messages = eventsService.selectByReceiver(request.userId!!)
+        val messages = eventsService.selectByReceiver(request.userId)
         val pageData = getDataTable(messages)
         return AgentMessagePage().apply {
             total = pageData.total

@@ -5,19 +5,41 @@
 <mapper namespace="com.cloudtimes.product.mapper.CtShopProductMapper">
     <sql id="selectCtShopProductVo">
         select id,
-               shop_no,
-               category_id,
-               barcode,
-               product_name,
-               english_name,
-               brand,
-               label,
-               supplier_id,
-               supplier,
-               specification,
-               unit,
-               weight,
-               color, size, style, purchase_price, retail_price, wholesale_price, vip_price, stock, max_stock, min_stock,total_sold, picture_url, production_date, quality_period, remarks, is_enable, is_enable_vip_price, is_enable_points, is_deleted, create_time, update_time
+        shop_no,
+        category_id,
+        barcode,
+        product_name,
+        english_name,
+        brand,
+        label,
+        supplier_id,
+        supplier,
+        specification,
+        unit,
+        weight,
+        color,
+        size,
+        style,
+        purchase_price,
+        retail_price,
+        wholesale_price,
+        vip_price,
+        stock,
+        max_stock,
+        min_stock,
+        total_sold,
+        total_supplied,
+        stock_delta,
+        picture_url,
+        production_date,
+        quality_period,
+        remarks,
+        is_enable,
+        is_enable_vip_price,
+        is_enable_points,
+        is_deleted,
+        create_time,
+        update_time
         from ct_shop_product
     </sql>
 
@@ -51,6 +73,8 @@
             <if test="maxStock != null ">and max_stock = #{maxStock}</if>
             <if test="minStock != null ">and min_stock = #{minStock}</if>
             <if test="totalSold != null ">and total_sold = #{totalSold}</if>
+            <if test="totalSupplied != null ">and total_supplied = #{totalSupplied}</if>
+            <if test="stockDelta != null ">and stock_delta = #{stockDelta}</if>
             <if test="pictureUrl != null  and pictureUrl != ''">and picture_url = #{pictureUrl}</if>
             <if test="productionDate != null ">and production_date = #{productionDate}</if>
             <if test="qualityPeriod != null  and qualityPeriod != ''">and quality_period = #{qualityPeriod}</if>
@@ -96,6 +120,8 @@
             <if test="maxStock != null">max_stock,</if>
             <if test="minStock != null">min_stock,</if>
             <if test="totalSold != null">total_sold,</if>
+            <if test="totalSupplied != null ">total_supplied,</if>
+            <if test="stockDelta != null ">stock_delta,</if>
             <if test="pictureUrl != null">picture_url,</if>
             <if test="productionDate != null">production_date,</if>
             <if test="qualityPeriod != null">quality_period,</if>
@@ -131,6 +157,9 @@
             <if test="stock != null">#{stock},</if>
             <if test="maxStock != null">#{maxStock},</if>
             <if test="minStock != null">#{minStock},</if>
+            <if test="totalSold != null ">#{totalSold},</if>
+            <if test="totalSupplied != null ">#{totalSupplied},</if>
+            <if test="stockDelta != null ">#{stockDelta},</if>
             <if test="pictureUrl != null">#{pictureUrl},</if>
             <if test="productionDate != null">#{productionDate},</if>
             <if test="qualityPeriod != null">#{qualityPeriod},</if>
@@ -170,6 +199,8 @@
             <if test="maxStock != null">max_stock = #{maxStock},</if>
             <if test="minStock != null">min_stock = #{minStock},</if>
             <if test="totalSold != null">total_sold = #{totalSold},</if>
+            <if test="totalSupplied != null ">total_supplied = #{totalSupplied},</if>
+            <if test="stockDelta != null ">stock_delta = #{stockDelta},</if>
             <if test="pictureUrl != null">picture_url = #{pictureUrl},</if>
             <if test="productionDate != null">production_date = #{productionDate},</if>
             <if test="qualityPeriod != null">quality_period = #{qualityPeriod},</if>
@@ -223,6 +254,8 @@
         p.max_stock ,
         p.min_stock ,
         p.total_sold ,
+        p.total_supplied ,
+        p.stock_delta ,
         p.picture_url ,
         p.production_date ,
         p.quality_period ,

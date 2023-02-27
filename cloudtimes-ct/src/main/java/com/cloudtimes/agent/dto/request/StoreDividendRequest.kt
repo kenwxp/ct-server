@@ -6,8 +6,8 @@ import io.swagger.annotations.ApiModelProperty
 import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.NotNull
 
-@ApiModel(value = "AgentStoreRequest", description = "查询代理门店请求体")
-class AgentStoreRequest : PageRequest {
+@ApiModel(value = "StoreDividendRequest", description = "查询店铺分润")
+open class StoreDividendRequest : PageRequest {
     @ApiModelProperty(value = "分页参数:开始页")
     override var pageNum: Int = 1
 
@@ -19,10 +19,14 @@ class AgentStoreRequest : PageRequest {
     @field:NotNull(message =  "用户编号不能为空")
     var userId: String = ""
 
-    @ApiModelProperty(value = "店铺开设状态")
-    var buildState: String? = null
+    @ApiModelProperty(value = "店铺ID", required = true)
+    @field:NotEmpty(message =  "店铺ID不能为空")
+    @field:NotNull(message =  "店铺ID不能为空")
+    var storeId: String = ""
 
-    @ApiModelProperty(value = "店铺名称")
-    var storeName: String? = null
+    @ApiModelProperty(value = "分润年月", required = true)
+    var yearMonth: String? = null
 
+    @ApiModelProperty(value = "审核状态", required = true)
+    var verifyState: String? = null
 }

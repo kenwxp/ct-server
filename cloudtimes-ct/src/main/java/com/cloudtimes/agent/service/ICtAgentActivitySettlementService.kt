@@ -43,20 +43,4 @@ interface ICtAgentActivitySettlementService {
      * @return 结果
      */
     fun updateCtAgentActivitySettlement(ctAgentActivitySettlement: CtAgentActivitySettlement): Int
-
-    /**
-     * 批量删除代理活动结算
-     *
-     * @param ids 需要删除的代理活动结算主键集合
-     * @return 结果
-     */
-    fun deleteCtAgentActivitySettlementByIds(ids: Array<String>): Int
-
-    /**
-     * 删除代理活动结算信息
-     *
-     * @param id 代理活动结算主键
-     * @return 结果
-     */
-    fun deleteCtAgentActivitySettlementById(id: String): Int
 }

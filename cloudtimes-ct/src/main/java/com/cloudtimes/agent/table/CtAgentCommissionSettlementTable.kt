@@ -55,11 +55,8 @@ class CtAgentCommissionSettlementTable : AliasableSqlTable<CtAgentCommissionSett
     /* 店铺是否上线 */
     val isStoreOnline = column<String>(name = "is_store_online", jdbcType = JDBCType.CHAR)
 
-    /* 代理是否审核 */
-    val isAgentOk = column<String>(name = "is_agent_ok", jdbcType = JDBCType.CHAR)
-
-    /* 平台是否审核 */
-    val isPlatformOk = column<String>(name = "is_platform_ok", jdbcType = JDBCType.CHAR)
+    /* 审核状态 */
+    val verifyState = column<String>(name = "verify_state", jdbcType = JDBCType.CHAR)
 
     /* 结算状态 */
     val state = column<String>(name = "state", jdbcType = JDBCType.CHAR)

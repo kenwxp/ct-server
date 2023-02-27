@@ -71,22 +71,6 @@ public class CtShopBossLoginServiceImpl implements ICtShopBossLoginService {
         return dbUser;
     }
 
-    @Override
-    public boolean changePassword(String userId, String newPassword, String oldPassword) {
-        CtUser dbUser = userMapper.selectCtUserById(userId);
-        if (dbUser == null) {
-            throw new ServiceException("无法获取用户信息");
-        }
-        String oldEncrypt = SecurityUtils.encryptPassword(oldPassword);
-        String newEncrypt = SecurityUtils.encryptPassword(newPassword);
-        if (!StringUtils.equals(oldEncrypt, dbUser.getPassword())) {
-            throw new ServiceException("旧密码错误，请确认");
-        }
-        dbUser.setPassword(newEncrypt);
-        if (userMapper.updateCtUser(dbUser) < 1) {
-            return false;
-        }
-        return true;
-    }
+
 }
 

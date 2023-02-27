@@ -29,21 +29,16 @@ public class ApiResult<T> implements Serializable {
     @ApiModelProperty("状态码")
     public int code;
 
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
-
     /**
      * 返回内容
      */
     @ApiModelProperty("状态消息")
     public String msg = "";
-
+    /**
+     * 总数（列表查询时返回）
+     */
+    @ApiModelProperty("总数（列表查询时返回）")
+    public long total = 0L;
     /**
      * 数据对象
      */
@@ -77,6 +72,22 @@ public class ApiResult<T> implements Serializable {
     public ApiResult(int code, String msg, T data) {
         this.code = code;
         this.msg = msg;
+        if (StringUtils.isNotNull(data)) {
+            this.data = data;
+        }
+    }
+
+    /**
+     * 初始化一个新创建的 AjaxResult 对象
+     *
+     * @param code 状态码
+     * @param msg  返回内容
+     * @param data 数据对象
+     */
+    public ApiResult(int code, String msg, long total, T data) {
+        this.code = code;
+        this.msg = msg;
+        this.total = total;
         if (StringUtils.isNotNull(data)) {
             this.data = data;
         }
@@ -127,7 +138,7 @@ public class ApiResult<T> implements Serializable {
      * @return
      */
     public static ApiResult error() {
-        return new  ApiResult().error("操作失败");
+        return new ApiResult().error("操作失败");
     }
 
     /**
@@ -162,20 +173,4 @@ public class ApiResult<T> implements Serializable {
         return new ApiResult(code, msg, null);
     }
 
-
-    public int getCode() {
-        return code;
-    }
-
-    public void setCode(int code) {
-        this.code = code;
-    }
-
-    public T getData() {
-        return data;
-    }
-
-    public void setData(T data) {
-        this.data = data;
-    }
 }

@@ -4,10 +4,10 @@ import com.cloudtimes.account.domain.CtTransferBook
 import com.cloudtimes.agent.domain.CtUserAgent
 import com.cloudtimes.account.domain.CtUserAssetsBook
 import com.cloudtimes.account.domain.CtWithdrawalBook
-import com.cloudtimes.agent.dto.request.AgentStoreRequest
+import com.cloudtimes.agent.dto.request.AgentStoreListRequest
 import com.cloudtimes.account.dto.request.TransferCashRequest
 import com.cloudtimes.account.dto.request.WithdrawCashRequest
-import com.cloudtimes.agent.dto.response.AgentShopStats
+import com.cloudtimes.agent.dto.response.AgentStoreOnlineStats
 import com.cloudtimes.account.dto.response.StoreAndCommission
 import com.cloudtimes.account.dto.response.TeamMember
 import com.cloudtimes.account.mapper.CtTransferBookMapper
@@ -17,6 +17,7 @@ import com.cloudtimes.account.mapper.CtWithdrawalBookMapper
 import com.cloudtimes.account.mapper.provider.CtTransferBookProvider
 import com.cloudtimes.agent.mapper.provider.CtUserAgentProvider
 import com.cloudtimes.account.mapper.provider.CtUserAssetsBookProvider
+import com.cloudtimes.agent.dto.request.AgentStoreDetailRequest
 import com.cloudtimes.agent.service.ICtUserAgentService
 import com.cloudtimes.common.annotation.DataSource
 import com.cloudtimes.common.enums.*
@@ -82,23 +83,43 @@ class CtUserAgentServiceImpl : ICtUserAgentService {
         return agentMapper.selectCtUserAgentList(ctUserAgent)
     }
 
-
     /** 查询代理门店列表 */
-    override fun selectCtAgentShopList(agentStoreRequest: AgentStoreRequest): List<StoreAndCommission> {
-        return agentMapper.selectCtAgentShopList(agentStoreRequest)
+    override fun selectCtAgentShopList(request: AgentStoreListRequest): List<StoreAndCommission> {
+        val stores = agentMapper.selectCtAgentShopList(
+            CtUserAgentProvider.selectAgentStoresStmt(request)
+        )
+
+        stores.forEach { st ->
+            st.commissionState = st.commissionState ?: SettlementState.None.code
+            st.verifyState = st.verifyState ?: VerifyState.None.code
+        }
+
+        return stores
     }
 
+    /** 查询代理门店详情 */
+    override fun selectCtAgentShopDetail(request: AgentStoreDetailRequest): StoreAndCommission? {
+        val detail = agentMapper.selectCtAgentShopDetail(
+            CtUserAgentProvider.selectAgentStoreStmt(request)
+        )
+
+        return detail
+    }
 
     /** 查询代理门店上线统计 */
-    override fun selectCtAgentShopStats(userId: String): List<AgentShopStats> {
+    override fun selectCtAgentShopOnlineStats(userId: String): List<AgentStoreOnlineStats> {
         val stats = agentMapper.selectCtAgentShopStats(userId)
 
         val allStats = ShopBuildState.values().map { bs ->
             val found = stats.find { st -> st.buildState == bs.code }
-            found ?: AgentShopStats(bs.code, 0)
+            found ?: AgentStoreOnlineStats(bs.code, 0)
         }
 
         return allStats
+    }
+
+    override fun selectCtAgentShopProfitStats(userId: String): List<AgentStoreOnlineStats> {
+        TODO("Not yet implemented")
     }
 
     /**
@@ -124,16 +145,6 @@ class CtUserAgentServiceImpl : ICtUserAgentService {
     }
 
     /**
-     * 批量删除代理
-     *
-     * @param userIds 需要删除的代理主键
-     * @return 结果
-     */
-    override fun deleteCtUserAgentByUserIds(userIds: Array<String>): Int {
-        return agentMapper.deleteCtUserAgentByUserIds(userIds)
-    }
-
-    /**
      * 删除代理信息
      *
      * @param userId 代理主键
@@ -145,25 +156,25 @@ class CtUserAgentServiceImpl : ICtUserAgentService {
 
     /** 代理提现  */
     @Transactional
-    override fun withdrawCash(withdrawRequest: WithdrawCashRequest) {
-        val agentAssets = agentMapper.selectCtUserAgentByUserId(withdrawRequest.userId!!)
-            ?: throw ServiceException("未查询到用户资产信息");
+    override fun withdrawCash(request: WithdrawCashRequest) {
+        val agentAssets = agentMapper.selectCtUserAgentByUserId(request.userId!!)
+            ?: throw ServiceException("未查询到用户资产信息")
 
-        if (agentAssets.cashAmount!! < withdrawRequest.amount!!) {
-            throw ServiceException("用户余额不足");
+        if (agentAssets.cashAmount!! < request.amount!!) {
+            throw ServiceException("用户余额不足")
         }
 
         // Step 1. 登记资产变更
         val decreaseCurrentCashRecord = CtUserAssetsBook()
         with(decreaseCurrentCashRecord) {
             yearMonth = DateUtils.getYearMonth()
-            userId = withdrawRequest.userId
+            userId = request.userId
             bookType = AssetsBookType.AgentCashWithdraw.code
             assetsType = AssetsType.Cash.code
-            amount = withdrawRequest.amount
-            beforeTaxAmount = withdrawRequest.amount
+            amount = request.amount
+            beforeTaxAmount = request.amount
             beforeAmount = agentAssets.cashAmount
-            alterAmount = agentAssets.cashAmount!!.minus(withdrawRequest.amount!!)
+            alterAmount = agentAssets.cashAmount!!.minus(request.amount)
             operateType = AssetsOperateType.Decrease.code
             remark = "提现扣减"
         }
@@ -171,15 +182,15 @@ class CtUserAgentServiceImpl : ICtUserAgentService {
 
         // Step 2. 登陆提现记录
         val withdrawRecord = CtWithdrawalBook(
-            userId = withdrawRequest.userId,
+            userId = request.userId,
             userType = UserType.Agent.code,
-            amount = withdrawRequest.amount,
+            amount = request.amount,
         )
         withdrawalBookMapper.insertCtWithdrawalBook(withdrawRecord)
 
         // Step 3. 扣减现金，增加累计已提现
-        agentAssets.cashAmount = agentAssets.cashAmount!!.minus(withdrawRequest.amount!!)
-        agentAssets.totalWithdrawal = agentAssets.totalWithdrawal!!.add(withdrawRequest.amount)
+        agentAssets.cashAmount = agentAssets.cashAmount!!.minus(request.amount)
+        agentAssets.totalWithdrawal = agentAssets.totalWithdrawal!!.add(request.amount)
         agentAssets.updateTime = Date()
         agentMapper.cashWithdrawCtUserAgent(agentAssets)
     }
@@ -189,10 +200,10 @@ class CtUserAgentServiceImpl : ICtUserAgentService {
     @Transactional
     override fun transferCash(transferCashRequest: TransferCashRequest) {
         val payer = selectCtUserAgentByUserId(transferCashRequest.payerUserId!!)
-            ?: throw ServiceException("查询付款人失败");
+            ?: throw ServiceException("查询付款人失败")
 
         val payee = selectCtUserAgentByUserId(transferCashRequest.payeeUserId!!)
-            ?: throw ServiceException("查询收款人失败");
+            ?: throw ServiceException("查询收款人失败")
 
 
         val payerId = payer.userId!!
@@ -202,7 +213,7 @@ class CtUserAgentServiceImpl : ICtUserAgentService {
             throw ServiceException("余额不足");
         }
 
-        val transferAmount = transferCashRequest.amount!!
+        val transferAmount = transferCashRequest.amount
 
 
         // Step 1. 登记转账流水

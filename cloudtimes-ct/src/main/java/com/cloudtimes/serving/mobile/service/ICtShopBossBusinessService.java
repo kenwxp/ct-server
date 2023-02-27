@@ -8,6 +8,15 @@ package com.cloudtimes.serving.mobile.service;
  */
 public interface ICtShopBossBusinessService {
     /**
+     * 修改密码
+     *
+     * @param userId      用户id
+     * @param newPassword 新密码
+     * @param oldPassword 旧密码
+     * @return
+     */
+    public boolean changePassword(String userId, String newPassword, String oldPassword);
+    /**
      * 申请或取消与值守方法
      *
      * @param userId

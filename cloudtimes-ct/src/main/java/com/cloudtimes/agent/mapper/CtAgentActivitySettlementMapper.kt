@@ -12,7 +12,6 @@ import org.mybatis.dynamic.sql.select.render.SelectStatementProvider
 import org.mybatis.dynamic.sql.util.SqlProviderAdapter
 import org.mybatis.dynamic.sql.util.mybatis3.CommonCountMapper
 import org.mybatis.dynamic.sql.util.mybatis3.CommonUpdateMapper
-import org.mybatis.dynamic.sql.util.mybatis3.CommonDeleteMapper
 import org.mybatis.dynamic.sql.util.mybatis3.CommonInsertMapper
 
 /**
@@ -22,8 +21,7 @@ import org.mybatis.dynamic.sql.util.mybatis3.CommonInsertMapper
  * @date 2023-02-17
  */
 @Mapper
-interface CtAgentActivitySettlementMapper : CommonCountMapper, CommonDeleteMapper,
-    CommonInsertMapper<CtAgentActivitySettlement>, CommonUpdateMapper {
+interface CtAgentActivitySettlementMapper : CommonCountMapper, CommonInsertMapper<CtAgentActivitySettlement>, CommonUpdateMapper {
     @SelectProvider(type = SqlProviderAdapter::class, method = "select")
     @Results(
         id = "CtAgentActivitySettlementResult", value = [
@@ -38,8 +36,7 @@ interface CtAgentActivitySettlementMapper : CommonCountMapper, CommonDeleteMappe
             Result(column = "platform_approved_time", property = "platformApprovedTime", jdbcType = JdbcType.TIMESTAMP),
             Result(column = "agent_approved_time", property = "agentApprovedTime", jdbcType = JdbcType.TIMESTAMP),
             Result(column = "is_fulfilled", property = "isFulfilled", jdbcType = JdbcType.CHAR),
-            Result(column = "is_agent_ok", property = "isAgentOk", jdbcType = JdbcType.CHAR),
-            Result(column = "is_platform_ok", property = "isPlatformOk", jdbcType = JdbcType.CHAR),
+            Result(column = "verify_state", property = "verifyState", jdbcType = JdbcType.CHAR),
             Result(column = "state", property = "state", jdbcType = JdbcType.CHAR),
             Result(column = "del_flag", property = "delFlag", jdbcType = JdbcType.CHAR),
             Result(column = "operator", property = "operator", jdbcType = JdbcType.VARCHAR),
@@ -88,20 +85,4 @@ interface CtAgentActivitySettlementMapper : CommonCountMapper, CommonDeleteMappe
      * @return 结果
      */
     fun updateCtAgentActivitySettlement(ctAgentActivitySettlement: CtAgentActivitySettlement): Int
-
-    /**
-     * 删除代理活动结算
-     *
-     * @param id 代理活动结算主键
-     * @return 结果
-     */
-    fun deleteCtAgentActivitySettlementById(id: String): Int
-
-    /**
-     * 批量删除代理活动结算
-     *
-     * @param ids 需要删除的数据主键集合
-     * @return 结果
-     */
-    fun deleteCtAgentActivitySettlementByIds(ids: Array<String>): Int
 }

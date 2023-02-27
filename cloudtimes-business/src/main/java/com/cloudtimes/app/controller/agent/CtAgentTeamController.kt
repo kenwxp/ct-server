@@ -56,7 +56,7 @@ class CtAgentTeamController : BaseController() {
     @PostMapping(value = ["/member_detail"])
     @ApiOperation(value = "查询团队成员详情")
     fun memberDetail(@Valid @RequestBody request: QueryBySubUserIdRequest): TeamMemberDetail {
-        val member = agentService.selectTeamMember(request.subUserId!!)
+        val member = agentService.selectTeamMember(request.subUserId)
         return TeamMemberDetail().apply {
             data = member
         }

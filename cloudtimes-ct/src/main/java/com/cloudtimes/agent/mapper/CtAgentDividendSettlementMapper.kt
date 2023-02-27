@@ -46,8 +46,7 @@ interface CtAgentDividendSettlementMapper : CommonCountMapper, CommonDeleteMappe
                 property = "parentBeforeTaxAmount",
                 jdbcType = JdbcType.DECIMAL
             ),
-            Result(column = "is_agent_ok", property = "isAgentOk", jdbcType = JdbcType.CHAR),
-            Result(column = "is_platform_ok", property = "isPlatformOk", jdbcType = JdbcType.CHAR),
+            Result(column = "verify_state", property = "verifyState", jdbcType = JdbcType.CHAR),
             Result(column = "state", property = "state", jdbcType = JdbcType.CHAR),
             Result(column = "del_flag", property = "delFlag", jdbcType = JdbcType.CHAR),
             Result(column = "platform_approved_time", property = "platformApprovedTime", jdbcType = JdbcType.TIMESTAMP),
@@ -77,7 +76,7 @@ interface CtAgentDividendSettlementMapper : CommonCountMapper, CommonDeleteMappe
      * @param ctAgentDividendSettlement 分润结算审核
      * @return 分润结算审核集合
      */
-    fun selectCtAgentDividendSettlementList(ctAgentDividendSettlement: CtAgentDividendSettlement): List<CtAgentDividendSettlement?>?
+    fun selectCtAgentDividendSettlementList(ctAgentDividendSettlement: CtAgentDividendSettlement): List<CtAgentDividendSettlement>
 
     /**
      * 新增分润结算审核

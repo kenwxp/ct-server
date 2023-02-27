@@ -55,11 +55,8 @@ class CtAgentDividendSettlementTable : AliasableSqlTable<CtAgentDividendSettleme
     /** 上级稅前结算金额 */
     val parentBeforeTaxAmount = column<BigDecimal>(name = "parent_before_tax_amount", jdbcType = JDBCType.DECIMAL)
 
-    /** 代理是否审核 */
-    val isAgentOk = column<String>(name = "is_agent_ok", jdbcType = JDBCType.CHAR)
-
-    /** 平台是否审核 */
-    val isPlatformOk = column<String>(name = "is_platform_ok", jdbcType = JDBCType.CHAR)
+    /** 审核状态 */
+    val verifyState = column<String>(name = "verify_state", jdbcType = JDBCType.CHAR)
 
     /** 结算状态 */
     val state = column<String>(name = "state", jdbcType = JDBCType.CHAR)

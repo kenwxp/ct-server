@@ -84,24 +84,4 @@ class CtAgentActivitySettlementServiceImpl : ICtAgentActivitySettlementService {
         ctAgentActivitySettlement.updateTime = DateUtils.getNowDate()
         return settlementMapper.updateCtAgentActivitySettlement(ctAgentActivitySettlement)
     }
-
-    /**
-     * 批量删除代理活动结算
-     *
-     * @param ids 需要删除的代理活动结算主键
-     * @return 结果
-     */
-    override fun deleteCtAgentActivitySettlementByIds(ids: Array<String>): Int {
-        return settlementMapper.deleteCtAgentActivitySettlementByIds(ids)
-    }
-
-    /**
-     * 删除代理活动结算信息
-     *
-     * @param id 代理活动结算主键
-     * @return 结果
-     */
-    override fun deleteCtAgentActivitySettlementById(id: String): Int {
-        return settlementMapper.deleteCtAgentActivitySettlementById(id)
-    }
 }

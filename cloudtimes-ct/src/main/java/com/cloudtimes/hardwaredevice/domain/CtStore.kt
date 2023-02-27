@@ -125,6 +125,14 @@ class CtStore : BaseEntity() {
     @Excel(name = "三方门店编号")
     var storeSn: String? = null
 
+    @ApiModelProperty(value = "蓉城易购门店id")
+    @Excel(name = "蓉城易购门店id")
+    var rcygStoreId: String? = null
+
+    @ApiModelProperty(value = "蓉城易购门店手机号")
+    @Excel(name = "蓉城易购门店手机号")
+    var rcygStorePhone: String? = null
+
     @ApiModelProperty(value = "是否删除")
     var delFlag: String? = null
 
@@ -132,6 +140,7 @@ class CtStore : BaseEntity() {
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "创建日期", width = 30.0, dateFormat = "yyyy-MM-dd")
     var createDate: Date? = null
+
     override fun toString(): String {
         return ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
             .append("id", id)

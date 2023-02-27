@@ -20,8 +20,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="platformApprovedTime != null "> and platform_approved_time = #{platformApprovedTime}</if>
             <if test="agentApprovedTime != null "> and agent_approved_time = #{agentApprovedTime}</if>
             <if test="isFulfilled != null  and isFulfilled != ''"> and is_fulfilled = #{isFulfilled}</if>
-            <if test="isAgentOk != null  and isAgentOk != ''"> and is_agent_ok = #{isAgentOk}</if>
-            <if test="isPlatformOk != null  and isPlatformOk != ''"> and is_platform_ok = #{isPlatformOk}</if>
+            <if test="verifyState != null  and verifyState != ''"> and verify_state = #{verifyState}</if>
             <if test="state != null  and state != ''"> and state = #{state}</if>
             <if test="operator != null  and operator != ''"> and operator = #{operator}</if>
             <if test="fulfilledDate != null "> and fulfilled_date = #{fulfilledDate}</if>
@@ -49,8 +48,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="platformApprovedTime != null">platform_approved_time,</if>
             <if test="agentApprovedTime != null">agent_approved_time,</if>
             <if test="isFulfilled != null and isFulfilled != ''">is_fulfilled,</if>
-            <if test="isAgentOk != null and isAgentOk != ''">is_agent_ok,</if>
-            <if test="isPlatformOk != null and isPlatformOk != ''">is_platform_ok,</if>
+            <if test="verifyState != null and verifyState != ''">verify_state</if>
             <if test="state != null and state != ''">state,</if>
             <if test="delFlag != null and delFlag != ''">del_flag,</if>
             <if test="operator != null and operator != ''">operator,</if>
@@ -73,8 +71,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="platformApprovedTime != null">#{platformApprovedTime},</if>
             <if test="agentApprovedTime != null">#{agentApprovedTime},</if>
             <if test="isFulfilled != null and isFulfilled != ''">#{isFulfilled},</if>
-            <if test="isAgentOk != null and isAgentOk != ''">#{isAgentOk},</if>
-            <if test="isPlatformOk != null and isPlatformOk != ''">#{isPlatformOk},</if>
+            <if test="verifyState != null  and verifyState != ''">#{verifyState},</if>
             <if test="state != null and state != ''">#{state},</if>
             <if test="delFlag != null and delFlag != ''">#{delFlag},</if>
             <if test="operator != null and operator != ''">#{operator},</if>
@@ -100,8 +97,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="platformApprovedTime != null">platform_approved_time = #{platformApprovedTime},</if>
             <if test="agentApprovedTime != null">agent_approved_time = #{agentApprovedTime},</if>
             <if test="isFulfilled != null and isFulfilled != ''">is_fulfilled = #{isFulfilled},</if>
-            <if test="isAgentOk != null and isAgentOk != ''">is_agent_ok = #{isAgentOk},</if>
-            <if test="isPlatformOk != null and isPlatformOk != ''">is_platform_ok = #{isPlatformOk},</if>
+            <if test="verifyState != null  and verifyState != ''">verify_state = #{verifyState},</if>
             <if test="state != null and state != ''">state = #{state},</if>
             <if test="delFlag != null and delFlag != ''">del_flag = #{delFlag},</if>
             <if test="operator != null and operator != ''">operator = #{operator},</if>
@@ -114,15 +110,4 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </trim>
         where id = #{id}
     </update>
-
-    <delete id="deleteCtAgentActivitySettlementById" parameterType="String">
-        delete from ct_agent_activity_settlement where id = #{id}
-    </delete>
-
-    <delete id="deleteCtAgentActivitySettlementByIds" parameterType="String">
-        delete from ct_agent_activity_settlement where id in 
-        <foreach item="id" collection="array" open="(" separator="," close=")">
-            #{id}
-        </foreach>
-    </delete>
 </mapper>

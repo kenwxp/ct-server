@@ -47,8 +47,7 @@ interface CtAgentCommissionSettlementMapper : CommonCountMapper, CommonDeleteMap
                 jdbcType = JdbcType.DECIMAL
             ),
             Result(column = "is_store_online", property = "isStoreOnline", jdbcType = JdbcType.CHAR),
-            Result(column = "is_agent_ok", property = "isAgentOk", jdbcType = JdbcType.CHAR),
-            Result(column = "is_platform_ok", property = "isPlatformOk", jdbcType = JdbcType.CHAR),
+            Result(column = "verify_state", property = "verifyState", jdbcType = JdbcType.CHAR),
             Result(column = "state", property = "state", jdbcType = JdbcType.CHAR),
             Result(column = "remark", property = "remark", jdbcType = JdbcType.VARCHAR),
             Result(column = "del_flag", property = "delFlag", jdbcType = JdbcType.CHAR),
@@ -106,7 +105,7 @@ interface CtAgentCommissionSettlementMapper : CommonCountMapper, CommonDeleteMap
     @Update(
         """
         UPDATE ct_agent_commission_settlement
-        SET is_agent_ok = '1',
+        SET verify_state = '1',
             agent_approved_time = current_timestamp(),
             update_time = current_timestamp()
         WHERE id = #{id}
@@ -123,7 +122,7 @@ interface CtAgentCommissionSettlementMapper : CommonCountMapper, CommonDeleteMap
     @Update(
         """
         UPDATE ct_agent_commission_settlement
-        SET is_platform_ok = '1',
+        SET verify_state = '2',
             platform_approved_time = current_timestamp(),
             update_time = current_timestamp()
         WHERE id = #{id}

@@ -69,7 +69,7 @@ class CtAgentCommissionSettlementServiceImpl : ICtAgentCommissionSettlementServi
      * @param id 销售佣金结算主键
      * @return 结果
      */
-    override fun agentConfirmCtAgentCommissionSettlementById(id: String): Int {
+    override fun agentConfirmCtAgentCommissionSettlement(id: String): Int {
         return ctAgentCommissionSettlementMapper.agentConfirmCtAgentCommissionSettlementById(id)
     }
 
