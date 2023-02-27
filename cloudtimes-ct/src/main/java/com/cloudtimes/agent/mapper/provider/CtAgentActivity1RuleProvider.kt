@@ -22,8 +22,7 @@ object CtAgentActivity1RuleProvider {
        return select(
            rule1Table.allColumns(),
            // 结决算信息
-           settlementTable.isAgentOk,
-           settlementTable.isPlatformOk,
+           settlementTable.verifyState,
            settlementTable.isFulfilled,
            settlementTable.state.`as`("settlement_state"),
        ) {

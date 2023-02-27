@@ -79,17 +79,9 @@ class CtAgentCommissionSettlement : BaseEntity() {
     @set:JvmName("setIsStoreOnline")
     var isStoreOnline: String? = null
 
-    @ApiModelProperty(value = "代理是否审核")
-    @Excel(name = "代理是否审核")
-    @get:JvmName("getIsAgentOk")
-    @set:JvmName("setIsAgentOk")
-    var isAgentOk: String? = null
-
-    @ApiModelProperty(value = "平台是否审核")
-    @Excel(name = "平台是否审核")
-    @get:JvmName("getIsPlatformOk")
-    @set:JvmName("setIsPlatformOk")
-    var isPlatformOk: String? = null
+    @ApiModelProperty(value = "审核状态")
+    @Excel(name = "审核状态")
+    var verifyState: String? = null
 
     @ApiModelProperty(value = "结算状态")
     @Excel(name = "结算状态")
@@ -122,8 +114,7 @@ class CtAgentCommissionSettlement : BaseEntity() {
             .append("costPrice", costPrice)
             .append("parentCostPrice", parentCostPrice)
             .append("isStoreOnline", isStoreOnline)
-            .append("isAgentOk", isAgentOk)
-            .append("isPlatformOk", isPlatformOk)
+            .append("verifyState", verifyState)
             .append("state", state)
             .append("remark", remark)
             .append("delFlag", delFlag)

@@ -4,15 +4,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.cloudtimes.agent.mapper.CtAgentCommissionSettlementMapper">
     <sql id="selectCtAgentCommissionSettlementVo">
-        select id, store_id, user_id, cost_price, settle_time, is_agent_ok, is_platform_ok, state, remark, del_flag, platform_approved_time, agent_approved_time, create_date, create_time, update_time from ct_agent_commission_settlement
+        select * from ct_agent_commission_settlement
     </sql>
 
     <select id="selectCtAgentCommissionSettlementList" parameterType="CtAgentCommissionSettlement" resultMap="CtAgentCommissionSettlementResult">
         <include refid="selectCtAgentCommissionSettlementVo"/>
         <where>  
             <if test="userId != null  and userId != ''"> and user_id = #{userId}</if>
-            <if test="isAgentOk != null  and isAgentOk != ''"> and is_agent_ok = #{isAgentOk}</if>
-            <if test="isPlatformOk != null  and isPlatformOk != ''"> and is_platform_ok = #{isPlatformOk}</if>
+            <if test="verifyState != null  and verifyState != ''"> and verify_state = #{verifyState}</if>
             <if test="state != null  and state != ''"> and state = #{state}</if>
             and del_flag = '0'
         </where>
@@ -31,8 +30,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="userId != null">user_id,</if>
             <if test="systemPrice != null">system_price,</if>
             <if test="settleTime != null">settle_time,</if>
-            <if test="isAgentOk != null">is_agent_ok,</if>
-            <if test="isPlatformOk != null">is_platform_ok,</if>
+            <if test="verifyState != null">verify_state</if>
             <if test="state != null">state,</if>
             <if test="remark != null">remark,</if>
             <if test="delFlag != null">del_flag,</if>
@@ -48,8 +46,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="userId != null">#{userId},</if>
             <if test="systemPrice != null">#{systemPrice},</if>
             <if test="settleTime != null">#{settleTime},</if>
-            <if test="isAgentOk != null">#{isAgentOk},</if>
-            <if test="isPlatformOk != null">#{isPlatformOk},</if>
+            <if test="verifyState != null">#{verifyState},</if>
             <if test="state != null">#{state},</if>
             <if test="remark != null">#{remark},</if>
             <if test="delFlag != null">#{delFlag},</if>
@@ -68,8 +65,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="userId != null">user_id = #{userId},</if>
             <if test="systemPrice != null">system_price = #{systemPrice},</if>
             <if test="settleTime != null">settle_time = #{settleTime},</if>
-            <if test="isAgentOk != null">is_agent_ok = #{isAgentOk},</if>
-            <if test="isPlatformOk != null">is_platform_ok = #{isPlatformOk},</if>
+            <if test="verifyState != null  and verifyState != ''">verify_state = #{verifyState},</if>
             <if test="state != null">state = #{state},</if>
             <if test="remark != null">remark = #{remark},</if>
             <if test="delFlag != null">del_flag = #{delFlag},</if>

@@ -2,7 +2,6 @@ package com.cloudtimes.agent.service.impl
 
 import com.cloudtimes.agent.domain.CtAgentActivity1Rule
 import com.cloudtimes.agent.dto.request.ActivityDetailRequest
-import com.cloudtimes.agent.dto.request.ActivityRuleRequest
 import com.cloudtimes.agent.dto.response.AgentActivity1Detail
 import com.cloudtimes.agent.mapper.CtAgentActivity1RuleMapper
 import com.cloudtimes.agent.mapper.CtAgentActivitySettlementMapper
@@ -10,6 +9,7 @@ import com.cloudtimes.agent.mapper.provider.CtAgentActivity1RuleProvider
 import com.cloudtimes.agent.service.ICtAgentActivity1RuleService
 import com.cloudtimes.common.annotation.DataSource
 import com.cloudtimes.common.enums.DataSourceType
+import com.cloudtimes.common.enums.VerifyState
 import com.cloudtimes.common.utils.DateUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -36,8 +36,7 @@ class CtAgentActivity1RuleServiceImpl : ICtAgentActivity1RuleService {
 
         detailList.forEach {
             it.isFulfilled = it.isFulfilled ?: "0"
-            it.isAgentOk = it.isAgentOk ?: "0"
-            it.isPlatformOk = it.isPlatformOk ?: "0"
+            it.verifyState = it.verifyState ?: VerifyState.None.code
             it.settlementState = it.settlementState ?: "0"
         }
 

@@ -6,8 +6,8 @@ import io.swagger.annotations.ApiModelProperty
 import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.NotNull
 
-@ApiModel(value = "AgentStoreRequest", description = "查询代理门店请求体")
-class AgentStoreRequest : PageRequest {
+@ApiModel(value = "AgentStoreListRequest", description = "查询代理门店列表请求体")
+class AgentStoreListRequest : PageRequest {
     @ApiModelProperty(value = "用户编号", required = true)
     @field:NotEmpty(message =  "用户编号不能为空")
     @field:NotNull(message =  "用户编号不能为空")

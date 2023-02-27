@@ -33,9 +33,7 @@ class CtAgentActivitySettlementTable : AliasableSqlTable<CtAgentActivitySettleme
 
     val isFulfilled = column<String>(name = "is_fulfilled", jdbcType = JDBCType.CHAR)
 
-    val isAgentOk = column<String>(name = "is_agent_ok", jdbcType = JDBCType.CHAR)
-
-    val isPlatformOk = column<String>(name = "is_platform_ok", jdbcType = JDBCType.CHAR)
+    val verifyState = column<String>(name = "verify_state", jdbcType = JDBCType.CHAR)
 
     val state = column<String>(name = "state", jdbcType = JDBCType.CHAR)
 

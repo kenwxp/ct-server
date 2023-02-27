@@ -4,7 +4,7 @@ import com.cloudtimes.account.domain.CtTransferBook
 import com.cloudtimes.agent.domain.CtUserAgent
 import com.cloudtimes.account.domain.CtUserAssetsBook
 import com.cloudtimes.account.domain.CtWithdrawalBook
-import com.cloudtimes.agent.dto.request.AgentStoreRequest
+import com.cloudtimes.agent.dto.request.AgentStoreListRequest
 import com.cloudtimes.account.dto.request.TransferCashRequest
 import com.cloudtimes.account.dto.request.WithdrawCashRequest
 import com.cloudtimes.agent.dto.response.AgentStoreOnlineStats
@@ -17,6 +17,7 @@ import com.cloudtimes.account.mapper.CtWithdrawalBookMapper
 import com.cloudtimes.account.mapper.provider.CtTransferBookProvider
 import com.cloudtimes.agent.mapper.provider.CtUserAgentProvider
 import com.cloudtimes.account.mapper.provider.CtUserAssetsBookProvider
+import com.cloudtimes.agent.dto.request.AgentStoreDetailRequest
 import com.cloudtimes.agent.service.ICtUserAgentService
 import com.cloudtimes.common.annotation.DataSource
 import com.cloudtimes.common.enums.*
@@ -82,20 +83,27 @@ class CtUserAgentServiceImpl : ICtUserAgentService {
         return agentMapper.selectCtUserAgentList(ctUserAgent)
     }
 
-
     /** 查询代理门店列表 */
-    override fun selectCtAgentShopList(request: AgentStoreRequest): List<StoreAndCommission> {
+    override fun selectCtAgentShopList(request: AgentStoreListRequest): List<StoreAndCommission> {
         val stores = agentMapper.selectCtAgentShopList(
             CtUserAgentProvider.selectAgentStoresStmt(request)
         )
 
         stores.forEach { st ->
             st.commissionState = st.commissionState ?: SettlementState.None.code
-            st.isAgentOk = st.isAgentOk ?: YesNoState.No.code
-            st.isPlatformOk = st.isPlatformOk ?: YesNoState.No.code
+            st.verifyState = st.verifyState ?: VerifyState.None.code
         }
 
         return stores
+    }
+
+    /** 查询代理门店详情 */
+    override fun selectCtAgentShopDetail(request: AgentStoreDetailRequest): StoreAndCommission? {
+        val detail = agentMapper.selectCtAgentShopDetail(
+            CtUserAgentProvider.selectAgentStoreStmt(request)
+        )
+
+        return detail
     }
 
     /** 查询代理门店上线统计 */

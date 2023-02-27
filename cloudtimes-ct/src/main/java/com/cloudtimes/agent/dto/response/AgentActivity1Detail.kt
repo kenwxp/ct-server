@@ -12,14 +12,8 @@ class AgentActivity1Detail : CtAgentActivity1Rule() {
     @set:JvmName("setIsFulfilled")
     var isFulfilled: String? = null
 
-    @ApiModelProperty(value = "代理是否审核")
-    @get:JvmName("getIsAgentOk")
-    @set:JvmName("setIsAgentOk")
-    var isAgentOk: String? = null
-
-    @get:JvmName("getIsPlatformOk")
-    @set:JvmName("setIsPlatformOk")
-    var isPlatformOk: String? = null
+    @ApiModelProperty(value = "审核状态")
+    var verifyState: String? = null
 
     @ApiModelProperty(value = "结算状态")
     var settlementState: String? = null

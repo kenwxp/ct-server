@@ -1,8 +1,9 @@
 package com.cloudtimes.app.controller.agent
 
 import com.cloudtimes.account.dto.request.QueryByUserIdRequest
-import com.cloudtimes.agent.dto.request.AgentStoreRequest
+import com.cloudtimes.agent.dto.request.AgentStoreListRequest
 import com.cloudtimes.account.dto.response.StoreAndCommission
+import com.cloudtimes.agent.dto.request.AgentStoreDetailRequest
 import com.cloudtimes.agent.dto.response.AgentStoreOnlineStats
 import com.cloudtimes.agent.dto.response.AgentStoreProfitStats
 import com.cloudtimes.agent.service.ICtUserAgentService
@@ -25,6 +26,7 @@ import javax.validation.Valid
 
 // 泛型具体化
 class StoreAndCommissionPage() : RestPageResult<StoreAndCommission>()
+class StoreAndCommissionDetail() : RestResult<StoreAndCommission>()
 class AgentShopStatsPage() : RestPageResult<AgentStoreOnlineStats>()
 class MonthlyOrderResponse() : RestPageResult<CtOrder>()
 class StoreProfitResponse() : RestResult<AgentStoreProfitStats>()
@@ -54,15 +56,27 @@ class CtStoreController : BaseController() {
     /**
      * 查询代理门店
      */
-    @ApiOperation("查询代理门店")
+    @ApiOperation("查询代理门店列表")
     @PostMapping("/list")
-    fun list(@Valid @RequestBody request: AgentStoreRequest): StoreAndCommissionPage {
+    fun list(@Valid @RequestBody request: AgentStoreListRequest): StoreAndCommissionPage {
         startPage(request.pageNum, request.pageSize)
         val storeAndCommissionList = ctUserAgentService.selectCtAgentShopList(request)
         val pageData = getDataTable(storeAndCommissionList)
         return StoreAndCommissionPage().apply {
             total = pageData.total
             data = storeAndCommissionList
+        }
+    }
+
+    /**
+     * 查询代理门店详情
+     */
+    @ApiOperation("查询代理门店详情")
+    @PostMapping("/detail")
+    fun detail(@Valid @RequestBody request: AgentStoreDetailRequest): StoreAndCommissionDetail {
+        val detail = ctUserAgentService.selectCtAgentShopDetail(request)
+        return StoreAndCommissionDetail().apply {
+            data = detail
         }
     }
 

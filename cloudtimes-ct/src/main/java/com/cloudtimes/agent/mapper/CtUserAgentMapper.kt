@@ -78,6 +78,10 @@ interface CtUserAgentMapper : CommonUpdateMapper  {
     @SelectProvider(type=SqlProviderAdapter::class, method="select")
     fun selectCtAgentShopList(selectStatement: SelectStatementProvider): List<StoreAndCommission>
 
+    /** 查询代理门店详情 */
+    @SelectProvider(type=SqlProviderAdapter::class, method="select")
+    fun selectCtAgentShopDetail(selectStatement: SelectStatementProvider): StoreAndCommission
+
     /**
      * 查询代理门店上线统计
      *

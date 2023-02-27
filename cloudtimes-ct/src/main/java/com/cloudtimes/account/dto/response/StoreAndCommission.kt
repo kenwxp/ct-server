@@ -49,15 +49,8 @@ class StoreAndCommission {
     @ApiModelProperty(value = "(佣金)结算状态")
     var commissionState: String? = null
 
-    @ApiModelProperty(value = "(佣金)代理是否审核")
-    @get:JvmName("getIsAgentOk")
-    @set:JvmName("setIsAgentOk")
-    var isAgentOk: String? = null
-
-    @ApiModelProperty(value = "(佣金)平台是否审核")
-    @get:JvmName("getIsPlatformOk")
-    @set:JvmName("setIsPlatformOk")
-    var isPlatformOk: String? = null
+    @ApiModelProperty(value = "(佣金)审核状态")
+    var verifyState: String? = null
 
     @ApiModelProperty(value = "(佣金)手续费费率")
     var taxRatio: BigDecimal? = null

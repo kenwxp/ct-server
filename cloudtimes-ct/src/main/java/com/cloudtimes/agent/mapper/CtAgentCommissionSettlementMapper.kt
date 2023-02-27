@@ -47,8 +47,7 @@ interface CtAgentCommissionSettlementMapper : CommonCountMapper, CommonDeleteMap
                 jdbcType = JdbcType.DECIMAL
             ),
             Result(column = "is_store_online", property = "isStoreOnline", jdbcType = JdbcType.CHAR),
-            Result(column = "is_agent_ok", property = "isAgentOk", jdbcType = JdbcType.CHAR),
-            Result(column = "is_platform_ok", property = "isPlatformOk", jdbcType = JdbcType.CHAR),
+            Result(column = "verify_state", property = "verifyState", jdbcType = JdbcType.CHAR),
             Result(column = "state", property = "state", jdbcType = JdbcType.CHAR),
             Result(column = "remark", property = "remark", jdbcType = JdbcType.VARCHAR),
             Result(column = "del_flag", property = "delFlag", jdbcType = JdbcType.CHAR),

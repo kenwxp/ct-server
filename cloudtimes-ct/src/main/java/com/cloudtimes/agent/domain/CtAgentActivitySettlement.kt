@@ -63,13 +63,9 @@ class CtAgentActivitySettlement : BaseEntity() {
     @Excel(name = "是否已达成")
     var isFulfilled: String? = null
 
-    @ApiModelProperty(value = "代理是否审核")
-    @Excel(name = "代理是否审核")
-    var isAgentOk: String? = null
-
-    @ApiModelProperty(value = "平台是否审核")
-    @Excel(name = "平台是否审核")
-    var isPlatformOk: String? = null
+    @ApiModelProperty(value = "审核状态")
+    @Excel(name = "审核状态")
+    var verifyState: String? = null
 
     @ApiModelProperty(value = "结算状态")
     @Excel(name = "结算状态")
@@ -108,8 +104,7 @@ class CtAgentActivitySettlement : BaseEntity() {
             .append("platformApprovedTime", platformApprovedTime)
             .append("agentApprovedTime", agentApprovedTime)
             .append("isFulfilled", isFulfilled)
-            .append("isAgentOk", isAgentOk)
-            .append("isPlatformOk", isPlatformOk)
+            .append("verifyState", verifyState)
             .append("state", state)
             .append("delFlag", delFlag)
             .append("operator", operator)

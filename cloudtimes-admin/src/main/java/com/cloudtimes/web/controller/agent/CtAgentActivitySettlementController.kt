@@ -78,14 +78,4 @@ class CtAgentActivitySettlementController : BaseController() {
     fun edit(@RequestBody ctAgentActivitySettlement: CtAgentActivitySettlement): AjaxResult {
         return toAjax(ctAgentActivitySettlementService.updateCtAgentActivitySettlement(ctAgentActivitySettlement))
     }
-
-    /**
-     * 删除代理活动结算
-     */
-    @PreAuthorize("@ss.hasPermi('agent:activity_settlement:remove')")
-    @Log(title = "代理活动结算", businessType = BusinessType.DELETE)
-    @DeleteMapping("/{ids}")
-    fun remove(@PathVariable ids: Array<String>): AjaxResult {
-        return toAjax(ctAgentActivitySettlementService.deleteCtAgentActivitySettlementByIds(ids))
-    }
 }
