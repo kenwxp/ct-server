@@ -73,9 +73,8 @@ class CtAgentAssetsController : BaseController() {
     fun listAssetsByUserId(@Valid @RequestBody request: QueryByUserIdRequest): AgentAssetsResponse {
         val assets = agentService.selectCtUserAgentByUserId(request.userId)
         return if (assets == null) {
-            AgentAssetsResponse().apply{
-                notFound("没有获取到代理资产详细信息")
-            }
+            // AgentAssetsResponse().apply{ notFound("没有获取到代理资产详细信息") }
+            AgentAssetsResponse()
         } else {
             AgentAssetsResponse(assets)
         }
