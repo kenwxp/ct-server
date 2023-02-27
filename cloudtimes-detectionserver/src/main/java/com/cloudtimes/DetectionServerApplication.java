@@ -14,7 +14,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
  * @author tank
  */
 @EnableWebMvc
-@MapperScan("com.cloudtimes.*")
+@MapperScan("com.cloudtimes.**.mapper")
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 public class DetectionServerApplication {
     public static void main(String[] args) {

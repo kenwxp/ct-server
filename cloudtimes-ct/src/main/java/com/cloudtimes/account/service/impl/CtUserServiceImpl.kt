@@ -38,7 +38,7 @@ class CtUserServiceImpl : ICtUserService {
 
     override fun wxLoginOrCreateNewUser(loginUser: CtUser): CtUser {
         val existUser = userMapper.selectOne(CtUserProvider.selectUserByUnionId(loginUser.wxUnionId!!))
-        if ( existUser != null) {
+        if (existUser != null) {
             return existUser
         }
 
@@ -48,8 +48,8 @@ class CtUserServiceImpl : ICtUserService {
 
     override fun agentRegister(request: AgentRegisterRequest): CtUser {
         // Step 1. 查询用户信息
-        val existUser = userMapper.selectOne(CtUserProvider.selectUserByUnionId(request.wxUnionId!!)) ?:
-            throw ServiceException("数据库异常，查询微信用户失败")
+        val existUser = userMapper.selectOne(CtUserProvider.selectUserByUnionId(request.wxUnionId!!))
+            ?: throw ServiceException("数据库异常，查询微信用户失败")
 
         // Step 2. 登记为代理
         userMapper.update(CtUserProvider.agentRegister(request))
@@ -58,7 +58,7 @@ class CtUserServiceImpl : ICtUserService {
         val events = CtEvents().apply {
             eventType = EventType.CustomerServiceMessage.code
             sender = existUser.id
-            userType =UserType.Agent.code
+            userType = UserType.Agent.code
             senderName = existUser.nickName
             eventName = "代理注册"
             content = "新用户 [${request.mobile}] 申请注册为代理，请联系审核"
@@ -82,15 +82,15 @@ class CtUserServiceImpl : ICtUserService {
     override fun inviteAgent(request: QueryByUserIdRequest): InviteResponse {
         // Step 1. 查询用户信息
         val userId = request.userId!!
-        val user = userMapper.selectOne(CtUserProvider.selectUserById(userId)) ?:
-            throw ServiceException("数据库异常，查询微信用户失败")
+        val user = userMapper.selectOne(CtUserProvider.selectUserById(userId))
+            ?: throw ServiceException("数据库异常，查询微信用户失败")
         if (arrayOf(AgentType.SubAgent, AgentType.None).any { it.code == user.agentType }) {
-                throw ServiceException("下级代理不能团队拓展")
+            throw ServiceException("下级代理不能团队拓展")
         }
 
         // Step 2. 查询邀请地址
         val configUrl: String? = configService.selectConfigByKey("ct_invite_agent_url")
-        if ( configUrl.isNullOrEmpty() ) {
+        if (configUrl.isNullOrEmpty()) {
             throw ServiceException("代理邀请地址参数未配置!")
         }
 
@@ -104,7 +104,7 @@ class CtUserServiceImpl : ICtUserService {
         } else {
             val inviteCode = userId.substring(0, 8).uppercase()
             val inviteUrl = "$configUrl?ty=${UserType.Agent.code}&ic=${inviteCode}"
-            InviteResponse(inviteCode = inviteCode, inviteUrl = inviteUrl, )
+            InviteResponse(inviteCode = inviteCode, inviteUrl = inviteUrl)
         }
     }
 
@@ -112,22 +112,22 @@ class CtUserServiceImpl : ICtUserService {
     override fun inviteStore(request: QueryByUserIdRequest): InviteResponse {
         // Step 1. 查询用户信息
         val userId = request.userId!!
-        val user = userMapper.selectOne(CtUserProvider.selectUserById(userId)) ?:
-        throw ServiceException("数据库异常，查询微信用户失败")
+        val user = userMapper.selectOne(CtUserProvider.selectUserById(userId))
+            ?: throw ServiceException("数据库异常，查询微信用户失败")
         if (arrayOf(AgentType.SubAgent, AgentType.None).any { it.code == user.agentType }) {
             throw ServiceException("下级代理不能团队拓展")
         }
 
         // Step 2. 查询邀请地址
         val configUrl: String? = configService.selectConfigByKey("ct_invite_store_url")
-        if ( configUrl.isNullOrEmpty() ) {
+        if (configUrl.isNullOrEmpty()) {
             throw ServiceException("店铺邀请地址参数未配置!")
         }
 
         // Step 3. 返回邀请码和和邀请地址
         val inviteCode = userId.substring(0, 8).uppercase()
         val inviteUrl = "$configUrl?ty=${UserType.Shopkeeper.code}&ic=${userId.replace("-", "")}"
-        return InviteResponse(inviteCode = inviteCode, inviteUrl = inviteUrl, )
+        return InviteResponse(inviteCode = inviteCode, inviteUrl = inviteUrl)
     }
 
     /**
