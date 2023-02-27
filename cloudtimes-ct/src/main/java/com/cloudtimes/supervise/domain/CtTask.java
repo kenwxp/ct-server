@@ -29,6 +29,20 @@ public class CtTask extends BaseEntity {
      */
     @Excel(name = "门店编号")
     private String storeId;
+    /**
+     * 店铺名称(内存冗余)
+     */
+    @Excel(name = "店铺名称")
+    private String storeName;
+
+    /**
+     * 联系人姓名(内存冗余)
+     */
+    private String contactName;
+    /**
+     * 联系电话(内存冗余)
+     */
+    private String contactPhone;
 
     /**
      * 值守员工号

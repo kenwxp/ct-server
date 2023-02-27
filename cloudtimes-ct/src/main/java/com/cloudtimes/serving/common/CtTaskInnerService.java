@@ -47,6 +47,9 @@ public class CtTaskInnerService {
             if (dbTasks == null || dbTasks.size() == 0) {
                 CtTask newTask = new CtTask();
                 newTask.setStoreId(storeId);
+                newTask.setStoreName(dbStore.getName());
+                newTask.setContactName(dbStore.getContactName());
+                newTask.setContactPhone(dbStore.getContactPhone());
                 // todo 分配客服
                 String staffCode = distributeStaff();
                 if (StringUtils.isEmpty(staffCode)) {

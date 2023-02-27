@@ -11,6 +11,8 @@ import com.cloudtimes.common.enums.ChannelType;
 import com.cloudtimes.common.utils.JWTManager;
 import com.cloudtimes.common.utils.StringUtils;
 import com.cloudtimes.common.utils.spring.SpringUtils;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
@@ -22,10 +24,10 @@ import javax.annotation.Resource;
 
 @Component
 @Slf4j
+@Api(tags = "收银设备长链接")
 public class CashWebSocketHandler extends TextWebSocketHandler {
 
-    @Resource
-    private SingletonWsSessionManager sessionManager;
+    private SingletonWsSessionManager sessionManager = SingletonWsSessionManager.getInstance();
 
     /**
      * socket 建立成功事件
@@ -56,6 +58,7 @@ public class CashWebSocketHandler extends TextWebSocketHandler {
      * @throws Exception
      */
     @Override
+    @ApiOperation("接受消息处理")
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         AuthUser authUser = (AuthUser) session.getAttributes().get(JWTManager.AUTH_USER);
         // 获得客户端传来的消息
