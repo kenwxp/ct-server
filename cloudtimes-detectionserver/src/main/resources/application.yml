@@ -11,7 +11,7 @@ spring:
     # 国际化资源文件路径
     basename: i18n/messages
   profiles: 
-    active: rocketmq
+    active: rocketmq,druid,partner
   # 服务模块
   devtools:
     restart:
@@ -51,3 +51,12 @@ token:
 # 营石云websocket server 地址
 wiegand:
     server_url: ws://10.1.65.231:61081
+
+# MyBatis Plus配置
+mybatis-plus:
+  # 搜索指定包别名
+  typeAliasesPackage: com.cloudtimes.**.domain,com.cloudtimes.**.dto.*
+  # 配置mapper的扫描，找到所有的mapper.xml映射文件
+  mapperLocations: classpath*:mapper/**/*Mapper.xml
+  # 加载全局的配置文件
+  configLocation: classpath:mybatis/mybatis-config.xml
