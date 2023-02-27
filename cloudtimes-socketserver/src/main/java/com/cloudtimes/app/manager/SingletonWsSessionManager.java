@@ -15,13 +15,17 @@ import java.util.concurrent.ConcurrentHashMap;
 Session管理器，用于管理session，并注册层spring的一个Bean
 一个登录实例，只能创建一个链接
 */
-@Component
+//@Component
 @Slf4j
 public class SingletonWsSessionManager {
     // 使用ConcurrentHashMap在多线程写时保证线程安全
     private static final ConcurrentHashMap<String, WebSocketSession>
             SESSION_POOL = new ConcurrentHashMap<>();
     ;
+
+    public static SingletonWsSessionManager getInstance() {
+        return new SingletonWsSessionManager();
+    }
 
     // 托管连接
     public boolean add(String id, WebSocketSession session) {

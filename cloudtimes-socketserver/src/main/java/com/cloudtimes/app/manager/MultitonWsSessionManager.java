@@ -3,19 +3,20 @@ package com.cloudtimes.app.manager;
 
 import com.alibaba.fastjson.JSONObject;
 import com.cloudtimes.common.core.domain.AjaxResult;
+import com.cloudtimes.common.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /*
 Session管理器，用于管理session，并注册层spring的一个Bean
 */
-@Component
+//@Component
 @Slf4j
 public class MultitonWsSessionManager {
     private static final int maxSessions = 20;
@@ -23,6 +24,10 @@ public class MultitonWsSessionManager {
     private static final ConcurrentHashMap<String, Map<String, WebSocketSession>>
             SESSION_POOL = new ConcurrentHashMap<>();
     ;
+
+    public static MultitonWsSessionManager getInstance() {
+        return new MultitonWsSessionManager();
+    }
 
     // 托管连接
     public boolean add(String id, WebSocketSession session) {
@@ -64,6 +69,9 @@ public class MultitonWsSessionManager {
                 } catch (IOException e) {
                     log.error(String.format("Session关闭异常, channelId=%s", id), e);
                 }
+            }
+            if (StringUtils.isEmpty(sessionMap)) {
+                SESSION_POOL.remove(id);
             }
             return session;
         }
