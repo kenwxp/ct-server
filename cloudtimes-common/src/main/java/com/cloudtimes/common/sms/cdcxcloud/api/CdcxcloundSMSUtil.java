@@ -48,11 +48,11 @@ public class CdcxcloundSMSUtil {
 
     public static void sendToSms(String body, String phone) {
         Map<String, Object> p = new HashMap<String, Object>();
-        p.put("account", "922425");
-        p.put("password", "WERA24");
+        p.put("account", "922459");
+        p.put("password", "8eYtxi");
         p.put("mobile", phone);
         p.put("content", body);
-        p.put("extno", "10690446");
+        p.put("extno", "10690468");
         //接入码
         SmsHttpApi smsHttpApi = new SmsHttpApi(ApiRequestMethodEnum.get);
         try {
@@ -66,8 +66,6 @@ public class CdcxcloundSMSUtil {
             throw new ServiceException("发送短信失败！");
         }
     }
-
-
 }
 
 
