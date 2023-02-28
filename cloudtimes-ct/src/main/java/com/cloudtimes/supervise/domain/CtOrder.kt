@@ -59,6 +59,10 @@ class CtOrder : BaseEntity() {
     @Excel(name = "顾客编号")
     var userId: String? = null
 
+    @ApiModelProperty(value = "顾客手机(内存冗余)")
+    @Excel(name = "顾客手机(内存冗余)")
+    var userPhone: String? = null
+
     @ApiModelProperty(value = "是否组合支付")
     @Excel(name = "是否组合支付")
     @get:JvmName("getIsCompose")

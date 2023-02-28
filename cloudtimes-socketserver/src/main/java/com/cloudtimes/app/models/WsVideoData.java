@@ -3,7 +3,7 @@ package com.cloudtimes.app.models;
 import lombok.Data;
 
 @Data
-public class ShopVideoData {
+public class WsVideoData {
     /**
      * 设备编号
      */

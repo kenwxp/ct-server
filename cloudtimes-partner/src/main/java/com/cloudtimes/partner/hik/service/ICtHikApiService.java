@@ -2,6 +2,7 @@ package com.cloudtimes.partner.hik.service;
 
 import com.cloudtimes.partner.hik.domain.HikCommonResp;
 import com.cloudtimes.partner.hik.domain.DeviceInfoData;
+import com.cloudtimes.partner.hik.domain.VideoData;
 
 import java.util.Map;
 
@@ -51,7 +52,7 @@ public interface ICtHikApiService {
      * url 播放地址
      * token 播放token
      */
-    public Map<String, String> getLiveAddress(String deviceSerial, String protocol, String quality);
+    public VideoData getLiveAddress(String deviceSerial, String protocol, String quality, String expireSec);
 
     /**
      * 获取回放地址
@@ -64,7 +65,7 @@ public interface ICtHikApiService {
      * url 播放地址
      * token 播放token
      */
-    public Map<String, String> getPlaybackAddress(String deviceSerial, String quality, String startTime, String stopTime);
+    public VideoData getPlaybackAddress(String deviceSerial, String quality, String startTime, String stopTime);
 
     /**
      * 设备加密

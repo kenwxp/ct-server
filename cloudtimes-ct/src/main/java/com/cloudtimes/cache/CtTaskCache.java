@@ -341,7 +341,7 @@ public class CtTaskCache {
         }
     }
 
-    private Map<String, CtOrder> getOrdersByTask(String taskId) {
+    public Map<String, CtOrder> getOrdersByTask(String taskId) {
         rLock.lock();
         try {
             return redisCache.getCacheMap(TASK_ORDER_REL_CACHE + taskId);
@@ -350,7 +350,7 @@ public class CtTaskCache {
         }
     }
 
-    private Map<String, CtShopping> getOutSuperviseShopping() {
+    public Map<String, CtShopping> getOutSuperviseShopping() {
         rLock.lock();
         try {
             return redisCache.getCacheMap(TASK_SHOPPING_REL_CACHE + OUT_SUPERVISE_TASK_ID);
@@ -359,7 +359,7 @@ public class CtTaskCache {
         }
     }
 
-    private Map<String, CtShopping> getShoppingsByTask(String taskId) {
+    public Map<String, CtShopping> getShoppingsByTask(String taskId) {
         rLock.lock();
         try {
             return redisCache.getCacheMap(TASK_SHOPPING_REL_CACHE + taskId);

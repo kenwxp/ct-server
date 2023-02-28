@@ -1,7 +1,7 @@
 package com.cloudtimes.app.mq;
 
 import com.alibaba.fastjson.JSONObject;
-import com.cloudtimes.app.manager.SingletonWsSessionManager;
+import com.cloudtimes.app.manager.CashWsSessionManager;
 import com.cloudtimes.common.constant.RocketMQConstants;
 import com.cloudtimes.common.mq.CashMqData;
 import lombok.extern.slf4j.Slf4j;
@@ -9,15 +9,17 @@ import org.apache.rocketmq.spring.annotation.MessageModel;
 import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
 import org.apache.rocketmq.spring.core.RocketMQListener;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * 处理收银机模块信息
  */
 @Slf4j
+@Component
 @RocketMQMessageListener(consumerGroup = "${rocketmq.consumer.group}", topic = RocketMQConstants.WS_CASH_DEVICE, messageModel = MessageModel.CLUSTERING)
 public class CashListenerHandler implements RocketMQListener<CashMqData> {
     @Autowired
-    private SingletonWsSessionManager wsSessionManager;
+    private CashWsSessionManager wsSessionManager;
 
     @Override
     public void onMessage(CashMqData cashMqData) {

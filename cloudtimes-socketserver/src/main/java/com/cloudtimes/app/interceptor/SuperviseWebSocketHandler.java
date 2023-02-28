@@ -2,7 +2,7 @@ package com.cloudtimes.app.interceptor;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.cloudtimes.app.manager.MultitonWsSessionManager;
+import com.cloudtimes.app.manager.SuperviseWsSessionManager;
 import com.cloudtimes.app.models.SuperviseBusiData;
 import com.cloudtimes.app.models.SuperviseWsData;
 import com.cloudtimes.app.polling.SuperviseOrderPolling;
@@ -14,6 +14,7 @@ import com.cloudtimes.common.utils.JWTManager;
 import com.cloudtimes.common.utils.JacksonUtils;
 import com.cloudtimes.common.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -23,8 +24,8 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 @Component
 @Slf4j
 public class SuperviseWebSocketHandler extends TextWebSocketHandler {
-
-    private MultitonWsSessionManager sessionManager = MultitonWsSessionManager.getInstance();
+    @Autowired
+    private SuperviseWsSessionManager sessionManager;
     private static final String FETCH_TASK = "FETCH_TASK";
     private static final String FETCH_ORDER = "FETCH_ORDER";
 
@@ -42,6 +43,7 @@ public class SuperviseWebSocketHandler extends TextWebSocketHandler {
             if (!StringUtils.equals(authUser.getChannelType(), ChannelType.WEB.getCode())) {
                 throw new RuntimeException("非管理端用户，连接失败！");
             }
+            log.info("websocket链接成功！！:{}", authUser.getId());
             // 用户连接成功，放入在线用户缓存
             sessionManager.add(authUser.getId(), session);
         } else {
@@ -91,9 +93,9 @@ public class SuperviseWebSocketHandler extends TextWebSocketHandler {
                     throw new ServiceException("业务数据格式有误");
                 }
                 if (busiData.getSubscribe() == 0) {
-                    SuperviseOrderPolling.remove(authUser.getId(), session.getId());
+                    SuperviseOrderPolling.remove(authUser.getId(), busiData.getTaskId(), session.getId());
                 } else {
-                    SuperviseOrderPolling.add(authUser.getId(), session.getId(), busiData.getTaskId());
+                    SuperviseOrderPolling.add(authUser.getId(), busiData.getTaskId(), session.getId());
                 }
             } else {
                 throw new ServiceException("无效指令：【" + option + "】");
@@ -122,8 +124,13 @@ public class SuperviseWebSocketHandler extends TextWebSocketHandler {
         Object token = session.getAttributes().get(JWTManager.AUTH_USER);
         if (token != null) {
             AuthUser authUser = (AuthUser) token;
+            log.info("websocket断开链接！！:{}", authUser.getId());
             // 用户退出，移除缓存
             sessionManager.remove(authUser.getId(), session.getId());
+            //移除任务列表订阅信息
+            SuperviseTaskPolling.remove(authUser.getId(), session.getId());
+            //移除任务列表订阅信息
+            SuperviseOrderPolling.remove(authUser.getId(), session.getId());
         }
     }
 
