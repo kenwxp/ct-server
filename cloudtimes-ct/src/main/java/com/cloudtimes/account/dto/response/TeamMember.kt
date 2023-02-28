@@ -19,6 +19,9 @@ class TeamMember {
     @ApiModelProperty(value = "真实姓名")
     var realName: String? = null
 
+    @ApiModelProperty(value = "微信头像")
+    var wxAvatar: String? = null
+
     @ApiModelProperty(value = "性别")
     var sex: String? = null
 
