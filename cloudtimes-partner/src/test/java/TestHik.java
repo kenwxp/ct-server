@@ -1,4 +1,5 @@
 import com.cloudtimes.partner.hik.domain.DeviceInfoData;
+import com.cloudtimes.partner.hik.domain.HikCommonResp;
 import com.cloudtimes.partner.hik.service.ICtHikApiService;
 import com.cloudtimes.partner.hik.service.impl.CtHikApiServiceImpl;
 import org.junit.Test;
@@ -31,13 +32,13 @@ public class TestHik {
 
     public void test5() {
         ICtHikApiService service = new CtHikApiServiceImpl();
-        String result = service.setDeviceEncrypt("J58092487", "CVBSQS", false);
+        HikCommonResp result = service.setDeviceEncrypt("J58092487", "CVBSQS", false);
         System.out.println(result);
     }
 
     public void test6() {
         ICtHikApiService service = new CtHikApiServiceImpl();
-        String result = service.getDeviceCapture("J58092487");
+        HikCommonResp result = service.getDeviceCapture("J58092487");
         System.out.println(result);
     }
 }
