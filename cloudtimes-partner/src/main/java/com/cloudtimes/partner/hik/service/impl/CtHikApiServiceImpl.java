@@ -6,6 +6,7 @@ import com.cloudtimes.partner.config.PartnerConfig;
 import com.cloudtimes.partner.hik.domain.HikCommonResp;
 import com.cloudtimes.partner.hik.domain.DeviceInfoData;
 import com.cloudtimes.partner.hik.domain.HikConstant;
+import com.cloudtimes.partner.hik.domain.VideoData;
 import com.cloudtimes.partner.hik.service.ICtHikApiService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -86,11 +87,11 @@ public class CtHikApiServiceImpl implements ICtHikApiService {
     }
 
     @Override
-    public Map<String, String> getLiveAddress(String deviceSerial, String protocol, String quality) {
+    public VideoData getLiveAddress(String deviceSerial, String protocol, String quality, String expireSec) {
         Map<String, String> params = new HashMap<>();
         params.put("deviceSerial", deviceSerial);
         params.put("channelNo", "1");
-        params.put("expireTime", "3600");
+        params.put("expireTime", expireSec);
         params.put("protocol", protocol);
         params.put("quality", quality);
         params.put("supportH265", "1");
@@ -100,7 +101,7 @@ public class CtHikApiServiceImpl implements ICtHikApiService {
     }
 
     @Override
-    public Map<String, String> getPlaybackAddress(String deviceSerial, String quality, String startTime, String stopTime) {
+    public VideoData getPlaybackAddress(String deviceSerial, String quality, String startTime, String stopTime) {
         Map<String, String> params = new HashMap<>();
         params.put("deviceSerial", deviceSerial);
         params.put("channelNo", "1");
@@ -164,17 +165,15 @@ public class CtHikApiServiceImpl implements ICtHikApiService {
         return commonResp;
     }
 
-    private Map<String, String> getAddressUrl(Map<String, String> params) {
+    private VideoData getAddressUrl(Map<String, String> params) {
         HikCommonResp commonResp = sendHikHttp(HikConstant.getLiveAddressUri, params);
-        Map<String, String> retMap = new HashMap<>();
-        retMap.put("accessToken", getAccessToken());
-        retMap.put("url", "");
+        VideoData videoData = new VideoData();
         if (commonResp != null && StringUtils.equals(commonResp.getCode(), HikConstant.CODE200)
                 && commonResp.getData() != null) {
-            Map<String, String> map = JacksonUtils.convertObject(commonResp.getData(), Map.class);
-            retMap.put("url", map.get("url"));
+            videoData = JacksonUtils.convertObject(commonResp.getData(), VideoData.class);
         }
-        return retMap;
+        videoData.setToken(getAccessToken());
+        return videoData;
     }
 
     private Map<String, String> getHikHeader() {

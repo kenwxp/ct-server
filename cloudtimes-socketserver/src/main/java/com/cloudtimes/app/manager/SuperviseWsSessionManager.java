@@ -2,9 +2,11 @@ package com.cloudtimes.app.manager;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.cloudtimes.app.models.SuperviseWsData;
 import com.cloudtimes.common.core.domain.AjaxResult;
 import com.cloudtimes.common.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
@@ -16,18 +18,14 @@ import java.util.concurrent.ConcurrentHashMap;
 /*
 Session管理器，用于管理session，并注册层spring的一个Bean
 */
-//@Component
+@Component
 @Slf4j
-public class MultitonWsSessionManager {
+public class SuperviseWsSessionManager {
     private static final int maxSessions = 20;
     // 使用ConcurrentHashMap在多线程写时保证线程安全
     private static final ConcurrentHashMap<String, Map<String, WebSocketSession>>
             SESSION_POOL = new ConcurrentHashMap<>();
     ;
-
-    public static MultitonWsSessionManager getInstance() {
-        return new MultitonWsSessionManager();
-    }
 
     // 托管连接
     public boolean add(String id, WebSocketSession session) {
@@ -78,37 +76,33 @@ public class MultitonWsSessionManager {
         return null;
     }
 
-    public void sendSuccess(String id, Object data) {
+    public void sendSuccess(String id, String sessionId, String option, Object data) {
         Map<String, WebSocketSession> sessionMap = getSessionMap(id);
         if (sessionMap != null) {
-            for (WebSocketSession session :
-                    sessionMap.values()) {
-                if (session != null && session.isOpen()) {
-                    AjaxResult success = AjaxResult.success(data);
-                    TextMessage textMessage = new TextMessage(JSONObject.toJSONString(success));
-                    try {
-                        session.sendMessage(textMessage);
-                    } catch (IOException e) {
-                        log.error(String.format("发送消息失败, id=%s", id), e);
-                    }
+            WebSocketSession webSocketSession = sessionMap.get(sessionId);
+            if (webSocketSession != null && webSocketSession.isOpen()) {
+                SuperviseWsData wsData = new SuperviseWsData().success(option, data);
+                TextMessage textMessage = new TextMessage(JSONObject.toJSONString(wsData));
+                try {
+                    webSocketSession.sendMessage(textMessage);
+                } catch (IOException e) {
+                    log.error(String.format("发送消息失败, id=%s", id), e);
                 }
             }
         }
     }
 
-    public void sendError(String id, Object data) {
+    public void sendError(String id, String sessionId, String option, Object data) {
         Map<String, WebSocketSession> sessionMap = getSessionMap(id);
         if (sessionMap != null) {
-            for (WebSocketSession session :
-                    sessionMap.values()) {
-                if (session != null && session.isOpen()) {
-                    AjaxResult error = AjaxResult.error(data.toString());
-                    TextMessage textMessage = new TextMessage(JSONObject.toJSONString(error));
-                    try {
-                        session.sendMessage(textMessage);
-                    } catch (IOException e) {
-                        log.error(String.format("发送消息失败, id=%s", id), e);
-                    }
+            WebSocketSession webSocketSession = sessionMap.get(sessionId);
+            if (webSocketSession != null && webSocketSession.isOpen()) {
+                SuperviseWsData wsData = new SuperviseWsData().success(option, data);
+                TextMessage textMessage = new TextMessage(JSONObject.toJSONString(wsData));
+                try {
+                    webSocketSession.sendMessage(textMessage);
+                } catch (IOException e) {
+                    log.error(String.format("发送消息失败, id=%s", id), e);
                 }
             }
         }

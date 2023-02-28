@@ -31,12 +31,6 @@ public class CtShopping extends BaseEntity {
     private String userId;
 
     /**
-     * 用户手机
-     */
-    @Excel(name = "用户手机")
-    private String userPhone;
-
-    /**
      * 任务编号
      */
     @Excel(name = "任务编号")

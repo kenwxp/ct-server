@@ -2,7 +2,7 @@ package com.cloudtimes.app.interceptor;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.cloudtimes.app.manager.SingletonWsSessionManager;
+import com.cloudtimes.app.manager.CashWsSessionManager;
 import com.cloudtimes.app.models.CashWsData;
 import com.cloudtimes.app.process.BaseEventProcess;
 import com.cloudtimes.common.core.domain.AjaxResult;
@@ -14,20 +14,19 @@ import com.cloudtimes.common.utils.spring.SpringUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
-import javax.annotation.Resource;
-
 @Component
 @Slf4j
 @Api(tags = "收银设备长链接")
 public class CashWebSocketHandler extends TextWebSocketHandler {
-
-    private SingletonWsSessionManager sessionManager = SingletonWsSessionManager.getInstance();
+    @Autowired
+    private CashWsSessionManager sessionManager;
 
     /**
      * socket 建立成功事件
@@ -37,6 +36,7 @@ public class CashWebSocketHandler extends TextWebSocketHandler {
      */
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+
         Object token = session.getAttributes().get(JWTManager.AUTH_USER);
         if (token != null) {
             AuthUser authUser = (AuthUser) token;
@@ -44,6 +44,7 @@ public class CashWebSocketHandler extends TextWebSocketHandler {
                 throw new RuntimeException("非收银渠道，连接失败！");
             }
             // 用户连接成功，放入在线用户缓存
+            log.info("收银websocket链接成功！！:{}",authUser.getId());
             sessionManager.add(authUser.getId(), session);
         } else {
             throw new RuntimeException("用户登录已经失效!");
@@ -77,7 +78,6 @@ public class CashWebSocketHandler extends TextWebSocketHandler {
             if (obj != null) {
                 session.sendMessage(new TextMessage(JSONObject.toJSONString(obj)));
             }
-
         } catch (Exception ex) {
             AjaxResult ajaxResult = AjaxResult.error("执行指令异常：[" + payload + "]");
             session.sendMessage(new TextMessage(JSONObject.toJSONString(ajaxResult)));
@@ -98,6 +98,7 @@ public class CashWebSocketHandler extends TextWebSocketHandler {
         if (token != null) {
             AuthUser authUser = (AuthUser) token;
             // 用户退出，移除缓存
+            log.info("websocket断开链接！！:{}",authUser.getId());
             sessionManager.remove(authUser.getId());
         }
     }

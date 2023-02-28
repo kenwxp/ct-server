@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class SendOrderData {
+public class WsOrderData {
     @ApiModelProperty("订单编号")
     private String orderId;
     @ApiModelProperty("门店ID")
@@ -21,6 +21,8 @@ public class SendOrderData {
     private String userPhone;
     @ApiModelProperty("实付金额")
     private String actualAmount;
+    @ApiModelProperty("应付金额")
+    private String totalAmount;
     @ApiModelProperty("商品总数")
     private String totalCount;
     @ApiModelProperty("支付方式 0-支付宝 1-微信 2-网银")
@@ -33,5 +35,5 @@ public class SendOrderData {
     private String createDate;
     // 订单清单物品
     @ApiModelProperty("物品编号")
-    private List<SendOrderDetailData> detail;
+    private List<WsOrderDetailData> detail;
 }

@@ -1,8 +1,8 @@
 import com.cloudtimes.partner.hik.domain.DeviceInfoData;
 import com.cloudtimes.partner.hik.domain.HikCommonResp;
+import com.cloudtimes.partner.hik.domain.VideoData;
 import com.cloudtimes.partner.hik.service.ICtHikApiService;
 import com.cloudtimes.partner.hik.service.impl.CtHikApiServiceImpl;
-import org.junit.Test;
 
 import java.util.Map;
 
@@ -26,8 +26,8 @@ public class TestHik {
 
     public void test4() {
         ICtHikApiService service = new CtHikApiServiceImpl();
-        Map result = service.getLiveAddress("J58092487", "1", "2");
-        System.out.println(result.get("url"));
+        VideoData result = service.getLiveAddress("J58092487", "1", "2", "3600");
+        System.out.println(result.getUrl());
     }
 
     public void test5() {

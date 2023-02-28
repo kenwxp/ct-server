@@ -138,6 +138,7 @@ public class CtCustomerBusinessServiceImpl implements ICtCustomerBusinessService
             newOrder.setBossUserId(dbStore.getBossId());
             newOrder.setShoppingId(newShopping.getId());
             newOrder.setUserId(userId);
+            newOrder.setUserPhone(dbUser.getMobile());
             newOrder.setDeviceCashId(deviceId);
             newOrder.setDescText("扫码订单");
             //新增订单，并推送单号，顾客信息，新动态随机数到收银机

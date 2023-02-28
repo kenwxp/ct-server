@@ -1,12 +1,26 @@
 package com.cloudtimes.app.polling;
 
+import cn.hutool.core.date.DateUtil;
+import com.alibaba.fastjson2.JSON;
+import com.cloudtimes.app.manager.SuperviseWsSessionManager;
+import com.cloudtimes.app.models.WsOrderData;
+import com.cloudtimes.app.models.WsOrderDetailData;
+import com.cloudtimes.app.models.WsVideoData;
+import com.cloudtimes.cache.CacheVideoData;
+import com.cloudtimes.cache.CtTaskCache;
+import com.cloudtimes.common.utils.JacksonUtils;
 import com.cloudtimes.common.utils.StringUtils;
+import com.cloudtimes.supervise.domain.CtOrder;
+import com.cloudtimes.supervise.domain.CtOrderDetail;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -14,67 +28,179 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 @Component
 @Slf4j
 public class SuperviseOrderPolling {
-    private static Map<String, Map<String, String>> subscribers;
-    private static Thread sendThread;
+    private static Map<String, Map<String, Set<String>>> subscribers;
+    ScheduledExecutorService executorService;
+    @Autowired
+    private SuperviseWsSessionManager sessionManager;
     //读写锁
     private static final ReadWriteLock rwLock = new ReentrantReadWriteLock();
     //获取写锁
     private static final Lock wLock = rwLock.writeLock();
     //获取读锁
     private static final Lock rLock = rwLock.readLock();
+    @Autowired
+    private CtTaskCache taskCache;
+    private final String ORDER_OPTION = "ORDER_DATA";
+
 
     @PostConstruct
     public void start() {
-        if (sendThread == null || !sendThread.isAlive()) {
-            sendThread = new Thread(new Runnable() {
+        if (executorService == null || executorService.isShutdown()) {
+            executorService = Executors.newScheduledThreadPool(5);
+            executorService.scheduleAtFixedRate(new Runnable() {
                 @Override
                 public void run() {
                     while (true) {
                         try {
                             handle();
-                            Thread.sleep(2000);
+                            Thread.sleep(3000);
                         } catch (Exception ex) {
                             log.error(ex.getMessage(), ex);
                         }
                     }
                 }
-            });
-            sendThread.setDaemon(true);
-            sendThread.start();
+            }, 0, 3, TimeUnit.SECONDS);
         }
     }
 
     private void handle() {
-        rLock.lock();
-        try {
-            log.info("轮询了一次");
-        } finally {
-            rLock.unlock();
-        }
+        log.info(JSON.toJSONString(subscribers));
+//        log.info("轮询订单列表开始");
+        if (subscribers != null && !StringUtils.isEmpty(subscribers)) {
+            for (Map.Entry<String, Map<String, Set<String>>> userEntry :
+                    subscribers.entrySet()) {
+                String userId = userEntry.getKey();
+                Map<String, Set<String>> taskMap = userEntry.getValue();
+                for (Map.Entry<String, Set<String>> taskEntry :
+                        taskMap.entrySet()) {
+                    String taskId = taskEntry.getKey();
+                    Set<String> sessionSet = taskEntry.getValue();
+                    List<WsOrderData> orderList = new ArrayList<>();
+                    Map<String, CtOrder> orders = taskCache.getOrdersByTask(taskId);
+                    if (orders != null && !StringUtils.isEmpty(orders)) {
+                        for (CtOrder rawOrder :
+                                orders.values()) {
+                            WsOrderData data = new WsOrderData();
+                            data.setOrderId(rawOrder.getId());
+                            data.setStoreId(rawOrder.getStoreId());
+                            data.setStoreName(rawOrder.getStoreName());
+                            data.setShoppingId(rawOrder.getShoppingId());
+                            data.setUserId(rawOrder.getUserId());
+                            data.setUserPhone(rawOrder.getUserPhone());
+                            data.setActualAmount(rawOrder.getActualAmount().toPlainString());
+                            data.setTotalAmount(rawOrder.getTotalAmount().toPlainString());
+                            data.setTotalCount(String.valueOf(rawOrder.getItemCount()));
+                            data.setPaymentMode(rawOrder.getPaymentMode());
+                            data.setPaymentId(rawOrder.getPaymentId());
+                            data.setState(rawOrder.getState());
+                            data.setCreateDate(DateUtil.formatDateTime(rawOrder.getCreateDate()));
+                            Map<String, CtOrderDetail> orderDetailsMap = taskCache.getCacheOrderDetails(rawOrder.getId());
+                            List<WsOrderDetailData> orderDetailList = new ArrayList<>();
+                            if (orderDetailsMap != null) {
+                                for (CtOrderDetail orderDetail :
+                                        orderDetailsMap.values()) {
+                                    WsOrderDetailData detailData = new WsOrderDetailData();
+                                    detailData.setItemId(orderDetail.getItemId());
+                                    detailData.setItemName(orderDetail.getItemName());
+                                    detailData.setItemTypeId(orderDetail.getItemTypeId());
+                                    detailData.setItemTypeName(orderDetail.getItemTypeName());
+                                    detailData.setItemCount(orderDetail.getItemCount().toPlainString());
+                                    detailData.setItemPrice(orderDetail.getItemPrice().toPlainString());
+                                    detailData.setItemPrimePrice(orderDetail.getItemPrimePrice().toPlainString());
+                                    detailData.setItemSum(orderDetail.getItemSum().toPlainString());
+                                    orderDetailList.add(detailData);
+                                }
+                            }
+                            data.setDetail(orderDetailList);
+                            orderList.add(data);
+                        }
+                    }
+                    for (String sessionId :
+                            sessionSet) {
+                        sessionManager.sendSuccess(userId, sessionId, ORDER_OPTION, orderList);
+                    }
 
+                }
+            }
+        }
+//        log.info("轮询订单列表结束");
     }
 
-    public static void add(String userId, String sessionId, String taskId) {
+    public static void add(String userId, String taskId, String sessionId) {
+        if (StringUtils.isEmpty(userId) ||
+                StringUtils.isEmpty(taskId) ||
+                StringUtils.isEmpty(sessionId)) {
+            return;
+        }
+        log.info("{} 订阅获取订单列表,任务id", userId, taskId);
         wLock.lock();
         try {
             if (subscribers == null) {
                 subscribers = new HashMap<>();
             }
-            Map<String, String> sessionMap = subscribers.get(userId);
-            if (sessionMap == null) {
-                sessionMap = new HashMap<>();
+            Map<String, Set<String>> taskMap = subscribers.get(userId);
+            if (taskMap == null) {
+                taskMap = new HashMap<>();
+                subscribers.put(userId, taskMap);
             }
-            sessionMap.put(sessionId, taskId);
+            Set<String> sessionSet = taskMap.get(taskId);
+            if (sessionSet == null) {
+                sessionSet = new HashSet<>();
+                taskMap.put(taskId, sessionSet);
+            }
+            sessionSet.add(sessionId);
+        } finally {
+            wLock.unlock();
+        }
+    }
+
+    public static void remove(String userId, String taskId, String sessionId) {
+        log.info("{} 取消订阅订单列表", userId);
+        if (StringUtils.isEmpty(userId) ||
+                StringUtils.isEmpty(taskId) ||
+                StringUtils.isEmpty(sessionId)) {
+            return;
+        }
+        wLock.lock();
+        try {
+            if (subscribers != null) {
+                Map<String, Set<String>> taskMap = subscribers.get(userId);
+                if (taskMap != null) {
+                    Set<String> sessionSet = taskMap.get(taskId);
+                    if (sessionSet != null) {
+                        sessionSet.remove(sessionId);
+                        if (sessionSet.size() == 0) {
+                            taskMap.remove(taskId);
+                        }
+                    }
+                }
+            }
         } finally {
             wLock.unlock();
         }
     }
 
     public static void remove(String userId, String sessionId) {
+        log.info("{} 取消订阅订单列表", userId);
+        if (StringUtils.isEmpty(userId) ||
+                StringUtils.isEmpty(sessionId)) {
+            return;
+        }
         wLock.lock();
         try {
-            Map<String, String> sessionMap = subscribers.get(userId);
-            sessionMap.remove(sessionId);
+            if (subscribers != null) {
+                Map<String, Set<String>> taskMap = subscribers.get(userId);
+                if (taskMap != null) {
+                    for (Map.Entry<String, Set<String>> sessionSet :
+                            taskMap.entrySet()) {
+                        sessionSet.getValue().remove(sessionId);
+                        if (sessionSet.getValue().size() == 0) {
+                            taskMap.remove(sessionSet.getKey());
+                        }
+                        return;
+                    }
+                }
+            }
         } finally {
             wLock.unlock();
         }

@@ -3,10 +3,8 @@ package com.cloudtimes.app.models;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import java.math.BigDecimal;
-
 @Data
-public class SendOrderDetailData {
+public class WsOrderDetailData {
     @ApiModelProperty("物品编号")
     private String itemId;
     @ApiModelProperty("物品名称")

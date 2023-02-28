@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class SendTaskData {
+public class WsTaskData {
     /**
      * 任务编号
      */
@@ -45,5 +45,5 @@ public class SendTaskData {
      */
     private String state;
 
-    private List<ShopVideoData> videoList;
+    private List<WsVideoData> videoList;
 }

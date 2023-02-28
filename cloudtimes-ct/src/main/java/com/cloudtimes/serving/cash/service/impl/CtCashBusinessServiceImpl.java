@@ -211,6 +211,7 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
         newOrder.setBossUserId(dbStore.getBossId());
         newOrder.setShoppingId(newShopping.getId());
         newOrder.setUserId(ctUser.getId());
+        newOrder.setUserPhone(ctUser.getMobile());
         newOrder.setDeviceCashId(deviceId);
         newOrder.setDescText("刷脸订单");
         //新增订单，并推送单号，顾客信息，新动态随机数到收银机
