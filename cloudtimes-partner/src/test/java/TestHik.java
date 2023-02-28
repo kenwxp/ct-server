@@ -1,3 +1,4 @@
+import com.cloudtimes.partner.hik.domain.DeviceInfoData;
 import com.cloudtimes.partner.hik.service.ICtHikApiService;
 import com.cloudtimes.partner.hik.service.impl.CtHikApiServiceImpl;
 import org.junit.Test;
@@ -7,7 +8,7 @@ import java.util.Map;
 public class TestHik {
     public void test1() {
         ICtHikApiService service = new CtHikApiServiceImpl();
-        String result = service.getDeviceInfo("J58092487");
+        DeviceInfoData result = service.getDeviceInfo("J58092487");
         System.out.println(result);
     }
 
@@ -18,7 +19,7 @@ public class TestHik {
 
     public void test3() {
         ICtHikApiService service = new CtHikApiServiceImpl();
-        String result = service.getDeviceInfo("G28019093");
+        DeviceInfoData result = service.getDeviceInfo("G28019093");
         System.out.println(result);
     }
 

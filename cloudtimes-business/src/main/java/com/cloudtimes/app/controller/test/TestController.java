@@ -19,6 +19,7 @@ import com.cloudtimes.hardwaredevice.domain.CtDeviceDoor;
 import com.cloudtimes.hardwaredevice.mapper.CtDeviceDoorMapper;
 import com.cloudtimes.mq.service.CtCashMqSenderService;
 import com.cloudtimes.partner.config.PartnerConfig;
+import com.cloudtimes.partner.hik.domain.DeviceInfoData;
 import com.cloudtimes.partner.hik.service.ICtHikApiService;
 import com.cloudtimes.partner.pay.shouqianba.domain.AuthInfoData;
 import com.cloudtimes.partner.pay.shouqianba.domain.PayOrderData;
@@ -87,8 +88,8 @@ public class TestController extends BaseController {
     @ApiOperation("查询设备信息")
     @PostMapping("/hik/device/info")
     public AjaxResult login() {
-        String result = hikApiService.getDeviceInfo("G28019093");
-        log.info(result);
+        DeviceInfoData result = hikApiService.getDeviceInfo("G28019093");
+        log.info(result.toString());
         return AjaxResult.success(result);
     }
 

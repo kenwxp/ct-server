@@ -1,5 +1,7 @@
 package com.cloudtimes.partner.hik.service;
 
+import com.cloudtimes.partner.hik.domain.DeviceInfoData;
+
 import java.util.Map;
 
 /**
@@ -36,7 +38,7 @@ public interface ICtHikApiService {
      * @param deviceSerial
      * @return
      */
-    public String getDeviceInfo(String deviceSerial);
+    public DeviceInfoData getDeviceInfo(String deviceSerial);
 
     /**
      * 获取直播地址
@@ -65,18 +67,19 @@ public interface ICtHikApiService {
 
     /**
      * 设备加密
+     *
      * @param deviceSerial 设备序列号
      * @param validateCode 设备验证码
-     * @param enable    是否加密 0-不加密 1-加密
+     * @param enable       是否加密 0-不加密 1-加密
      * @return
      */
     public String setDeviceEncrypt(String deviceSerial, String validateCode, boolean enable);
 
     /**
      * 抓取设备截图
+     *
      * @param deviceSerial
-     * @return
-     *      url 图片链接
+     * @return url 图片链接
      */
     public String getDeviceCapture(String deviceSerial);
 }

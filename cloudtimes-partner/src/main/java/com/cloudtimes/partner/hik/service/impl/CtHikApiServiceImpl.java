@@ -2,8 +2,11 @@ package com.cloudtimes.partner.hik.service.impl;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
+import com.cloudtimes.common.utils.JacksonUtils;
 import com.cloudtimes.common.utils.http.HttpUtils;
 import com.cloudtimes.partner.config.PartnerConfig;
+import com.cloudtimes.partner.hik.domain.CommonResp;
+import com.cloudtimes.partner.hik.domain.DeviceInfoData;
 import com.cloudtimes.partner.hik.domain.HikConstant;
 import com.cloudtimes.partner.hik.service.ICtHikApiService;
 import org.slf4j.Logger;
@@ -74,10 +77,15 @@ public class CtHikApiServiceImpl implements ICtHikApiService {
     }
 
     @Override
-    public String getDeviceInfo(String deviceSerial) {
+    public DeviceInfoData getDeviceInfo(String deviceSerial) {
         Map<String, String> params = new HashMap<>();
         params.put("deviceSerial", deviceSerial);
-        return sendHikHttp(HikConstant.getDeviceInfoUri, params);
+        String result = sendHikHttp(HikConstant.getDeviceInfoUri, params);
+        CommonResp commonResp = JacksonUtils.parseObject(result, CommonResp.class);
+        if (commonResp != null && commonResp.getCode() == HikConstant.CODE200 && commonResp.getData() != null) {
+            return JacksonUtils.convertObject(commonResp.getData(), DeviceInfoData.class);
+        }
+        return null;
     }
 
     @Override
