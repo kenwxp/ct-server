@@ -467,7 +467,7 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
             b2CProfitSharingData.setReceivers(receivers);
             b2CPayReq.setProfitSharing(b2CProfitSharingData);
         }
-        CommonResp commonResp = shouqianbaApiService.b2cPay(b2CPayReq, shouqianbaParam.getTerminalKey());
+        ShouqianbaCommonResp commonResp = shouqianbaApiService.b2cPay(b2CPayReq, shouqianbaParam.getTerminalKey());
         if (commonResp == null) {
             throw new ServiceException("支付失败");
         }

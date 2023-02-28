@@ -119,7 +119,7 @@ public class CtShouqianbaApiServiceImpl implements ICtShouqianbaApiService {
      * * * * "reflect"             // N 透传参数    {"tips": "200"}
      */
     @Override
-    public CommonResp b2cPay(B2CPayReq params, String terminalKey) {
+    public ShouqianbaCommonResp b2cPay(B2CPayReq params, String terminalKey) {
         String terminalSN = params.getTerminalSN();
         if ("".equals(terminalSN)) {
             throw new RuntimeException("终端sn不能为空");
@@ -225,8 +225,8 @@ public class CtShouqianbaApiServiceImpl implements ICtShouqianbaApiService {
      * @return error
      * buzResponse
      */
-    private CommonResp getCommonResp(String rawString) {
-        return JacksonUtils.parseObject(rawString, CommonResp.class);
+    private ShouqianbaCommonResp getCommonResp(String rawString) {
+        return JacksonUtils.parseObject(rawString, ShouqianbaCommonResp.class);
     }
 
     /**
@@ -235,7 +235,7 @@ public class CtShouqianbaApiServiceImpl implements ICtShouqianbaApiService {
      * buzResponse
      */
     private BuzResponse getBuzResponse(String rawString) {
-        CommonResp commonResp = JacksonUtils.parseObject(rawString, CommonResp.class);
+        ShouqianbaCommonResp commonResp = JacksonUtils.parseObject(rawString, ShouqianbaCommonResp.class);
         if (commonResp != null) {
             return commonResp.getBizResponse();
         }
@@ -244,7 +244,7 @@ public class CtShouqianbaApiServiceImpl implements ICtShouqianbaApiService {
 
 
     private <T> T getData(String rawString, Class<T> tClass) {
-        CommonResp commonResp = JacksonUtils.parseObject(rawString, CommonResp.class);
+        ShouqianbaCommonResp commonResp = JacksonUtils.parseObject(rawString, ShouqianbaCommonResp.class);
         if (commonResp != null) {
             BuzResponse bizResponse = commonResp.getBizResponse();
             if (bizResponse != null) {

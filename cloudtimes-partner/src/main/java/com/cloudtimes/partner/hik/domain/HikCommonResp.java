@@ -8,11 +8,11 @@ import lombok.Data;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)  //过滤多余json字段
 @Data
-public class CommonResp<T> {
+public class HikCommonResp<T> {
     @JsonProperty(value = "code")
     private String code;
     @JsonProperty(value = "msg")
     private String msg;
-    @JsonProperty(value = "msg")
+    @JsonProperty(value = "data")
     private T data;
 }

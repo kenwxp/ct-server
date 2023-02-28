@@ -1,18 +1,11 @@
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.cloudtimes.partner.pay.shouqianba.domain.B2CPayReq;
 import com.cloudtimes.partner.pay.shouqianba.domain.BuzResponse;
-import com.cloudtimes.partner.pay.shouqianba.domain.CommonResp;
+import com.cloudtimes.partner.pay.shouqianba.domain.ShouqianbaCommonResp;
 import com.cloudtimes.partner.pay.shouqianba.domain.PayOrderData;
 import com.cloudtimes.partner.pay.shouqianba.service.ICtShouqianbaApiService;
 import com.cloudtimes.partner.pay.shouqianba.service.ICtShouqianbaCisApiService;
 import com.cloudtimes.partner.pay.shouqianba.service.impl.CtShouqianbaApiServiceImpl;
 import com.cloudtimes.partner.pay.shouqianba.service.impl.CtShouqianbaCisApiServiceImpl;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Test;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class TestShouqianba {
 
@@ -55,7 +48,7 @@ public class TestShouqianba {
         b2CPayReq.setSubject("测试"); //交易简介	本次交易的简要介绍
         b2CPayReq.setOperator("0001"); //门店操作员	发起本次交易的操作员
         b2CPayReq.setNotifyUrl(""); //回调	支付回调的地址
-        CommonResp bz = service.b2cPay(b2CPayReq, "aeee41ee3f908d9d1f9bb5a0dcae03e7");
+        ShouqianbaCommonResp bz = service.b2cPay(b2CPayReq, "aeee41ee3f908d9d1f9bb5a0dcae03e7");
         if (bz != null) {
             System.out.println(bz);
         }

@@ -89,7 +89,7 @@ public interface ICtShouqianbaApiService {
      * * * * "operator"            // Y 门店操作员    "张三丰"
      * * * * "reflect"             // N 透传参数    {"tips": "200"}
      */
-    public CommonResp b2cPay(B2CPayReq params, String terminalKey);
+    public ShouqianbaCommonResp b2cPay(B2CPayReq params, String terminalKey);
 
     /**
      * 查询支付订单信息接口
