@@ -19,4 +19,7 @@ public class RocketMQConstants {
     public static final String CT_OPEN_DOOR = "CT_OPEN_DOOR";
     //订单相关模块监听主题
     public static final String CT_PAY_ORDER = "CT_PAY_ORDER";
+
+    //摄像机状态监控主题
+    public static final String CT_MONITOR_CAMARE_DEVICE = "CT_MONITOR_CAMARE_DEVICE";
 }

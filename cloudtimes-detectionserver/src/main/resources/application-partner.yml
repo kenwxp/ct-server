@@ -1,6 +1,6 @@
 hik:
-  app_key: e69b05304140449997738272d2afa7cc
-  app_secret: 2bcca73bb23c65af91f5fcd79e713409
+  app_key: "392b99f5d3084816829393369cde9de2"
+  app_secret: "7f578e0863bcd258975fd0e6795a362e"
 wx:
   #小程序appid
   appid: wxdee2b19db3be8517
