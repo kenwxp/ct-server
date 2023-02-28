@@ -17,7 +17,7 @@ import java.util.*
  * @date 2023-02-07
  */
 @ApiModel(value = "CtUserAgent", description = "代理详情")
-class CtUserAgent : BaseEntity() {
+open class CtUserAgent : BaseEntity() {
     @ApiModelProperty(value = "用户编号")
     var userId: String? = null
 

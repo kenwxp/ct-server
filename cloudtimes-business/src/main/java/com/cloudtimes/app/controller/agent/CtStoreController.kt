@@ -136,6 +136,7 @@ class CtStoreController : BaseController() {
     @PostMapping("/profit_stats")
     fun profitStats(@Valid @RequestBody request: StoreProfitRequest): StoreProfitResponse {
         // :TODO:
+        val profits = ctUserAgentService.selectCtAgentShopProfitStats(request)
         return StoreProfitResponse().apply {
             data = AgentStoreProfitStats()
         }

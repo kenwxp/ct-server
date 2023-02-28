@@ -18,6 +18,9 @@ import com.cloudtimes.account.mapper.provider.CtTransferBookProvider
 import com.cloudtimes.agent.mapper.provider.CtUserAgentProvider
 import com.cloudtimes.account.mapper.provider.CtUserAssetsBookProvider
 import com.cloudtimes.agent.dto.request.AgentStoreDetailRequest
+import com.cloudtimes.agent.dto.request.StoreProfitRequest
+import com.cloudtimes.agent.dto.response.AgentAssets
+import com.cloudtimes.agent.dto.response.AgentStoreProfitStats
 import com.cloudtimes.agent.service.ICtUserAgentService
 import com.cloudtimes.common.annotation.DataSource
 import com.cloudtimes.common.enums.*
@@ -61,6 +64,13 @@ class CtUserAgentServiceImpl : ICtUserAgentService {
         return agentMapper.selectTeamMembers(
             CtUserAgentProvider.selectTeamMembers(userId)
         )
+    }
+
+    /** 查询代理资产 */
+    override fun selectAgentAssets(userId: String): AgentAssets? {
+        val assets = agentMapper.selectAgentAssets(CtUserAgentProvider.selectById(userId)) ?: return null
+        // :TODO: 返回待结算资产
+        return assets
     }
 
     /**
@@ -118,7 +128,7 @@ class CtUserAgentServiceImpl : ICtUserAgentService {
         return allStats
     }
 
-    override fun selectCtAgentShopProfitStats(userId: String): List<AgentStoreOnlineStats> {
+    override fun selectCtAgentShopProfitStats(userId: StoreProfitRequest): AgentStoreProfitStats {
         TODO("Not yet implemented")
     }
 

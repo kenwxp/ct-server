@@ -13,6 +13,7 @@ import com.cloudtimes.account.service.ICtUserAssetsBookService
 import com.cloudtimes.agent.service.ICtUserAgentService
 import com.cloudtimes.account.service.ICtUserService
 import com.cloudtimes.account.service.ICtWithdrawalBookService
+import com.cloudtimes.agent.dto.response.AgentAssets
 import com.cloudtimes.app.controller.system.SmsController
 import com.cloudtimes.common.core.controller.BaseController
 import com.cloudtimes.common.core.domain.AjaxResult
@@ -32,7 +33,7 @@ import javax.validation.Valid
 
 
 /** 泛型具体化 */
-class AgentAssetsResponse(override var data: CtUserAgent? = null) : RestResult<CtUserAgent>(data)
+class AgentAssetsResponse() : RestResult<AgentAssets>()
 class TransferRecordPage() : RestPageResult<TransferRecord>()
 class WithdrawalRecordPage() : RestPageResult<CtWithdrawalBook>()
 class AssetsBookPage() : RestPageResult<QueryAssetsBookResponse>()
@@ -71,12 +72,14 @@ class CtAgentAssetsController : BaseController() {
     @PostMapping()
     @ApiOperation(value = "获取代理资产详细信息", response = CtUserAgent::class)
     fun listAssetsByUserId(@Valid @RequestBody request: QueryByUserIdRequest): AgentAssetsResponse {
-        val assets = agentService.selectCtUserAgentByUserId(request.userId)
+        val assets = agentService.selectAgentAssets(request.userId)
         return if (assets == null) {
             // AgentAssetsResponse().apply{ notFound("没有获取到代理资产详细信息") }
             AgentAssetsResponse()
         } else {
-            AgentAssetsResponse(assets)
+            AgentAssetsResponse().apply {
+                data = assets
+            }
         }
     }
 

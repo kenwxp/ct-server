@@ -4,6 +4,7 @@ import com.cloudtimes.account.dto.response.StoreAndCommission
 import com.cloudtimes.agent.domain.CtUserAgent
 import com.cloudtimes.agent.dto.response.AgentStoreOnlineStats
 import com.cloudtimes.account.dto.response.TeamMember
+import com.cloudtimes.agent.dto.response.AgentAssets
 
 import org.apache.ibatis.annotations.Param
 import org.apache.ibatis.annotations.Select
@@ -51,6 +52,9 @@ interface CtUserAgentMapper : CommonUpdateMapper  {
     @SelectProvider(type=SqlProviderAdapter::class, method="select")
     @ResultMap("CtUserAgentResult")
     fun selectOne(selectStatement: SelectStatementProvider): CtUserAgent?
+
+    @SelectProvider(type=SqlProviderAdapter::class, method="select")
+    fun selectAgentAssets(selectStatement: SelectStatementProvider): AgentAssets?
 
     @SelectProvider(type=SqlProviderAdapter::class, method="select")
     fun selectTeamMember(selectStatement: SelectStatementProvider): TeamMember?

@@ -8,6 +8,9 @@ import com.cloudtimes.agent.dto.response.AgentStoreOnlineStats
 import com.cloudtimes.account.dto.response.StoreAndCommission
 import com.cloudtimes.account.dto.response.TeamMember
 import com.cloudtimes.agent.dto.request.AgentStoreDetailRequest
+import com.cloudtimes.agent.dto.request.StoreProfitRequest
+import com.cloudtimes.agent.dto.response.AgentAssets
+import com.cloudtimes.agent.dto.response.AgentStoreProfitStats
 
 /**
  * 代理Service接口
@@ -19,6 +22,9 @@ interface ICtUserAgentService {
     fun selectTeamMember(userId: String): TeamMember?
 
     fun selectTeamMembers(userId: String): List<TeamMember>
+
+
+    fun selectAgentAssets(userId: String): AgentAssets?
 
     /**
      * 查询代理
@@ -46,8 +52,8 @@ interface ICtUserAgentService {
     /** 查询代理门店上线统计 */
     fun selectCtAgentShopOnlineStats(userId: String): List<AgentStoreOnlineStats>
 
-    /** 查询代理门店上线统计 */
-    fun selectCtAgentShopProfitStats(userId: String): List<AgentStoreOnlineStats>
+    /** 查询代理门店收益统计 */
+    fun selectCtAgentShopProfitStats(request: StoreProfitRequest): AgentStoreProfitStats
 
     /**
      * 新增代理
