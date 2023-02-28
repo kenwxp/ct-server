@@ -9,6 +9,7 @@ import com.cloudtimes.partner.hik.domain.CommonResp;
 import com.cloudtimes.partner.hik.domain.DeviceInfoData;
 import com.cloudtimes.partner.hik.domain.HikConstant;
 import com.cloudtimes.partner.hik.service.ICtHikApiService;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,13 +47,12 @@ public class CtHikApiServiceImpl implements ICtHikApiService {
         params.put("appKey", config.getHikAppKey());
         params.put("appSecret", config.getHikAppSecret());
         String result = HttpUtils.sendFormPost("https://" + HikConstant.hikHost + HikConstant.getAccessTokenUri, params, getHikHeader());
-        JSONObject retObj = JSON.parseObject(result);
-        if (retObj != null) {
-            String code = retObj.getString("code");
-            if (HikConstant.CODE200.equals(code)) {
-                JSONObject dataObj = retObj.getJSONObject("data");
-                String newToken = dataObj.getString("accessToken");
-                Long expireTs = dataObj.getLong("expireTime");
+        CommonResp commonResp = JacksonUtils.parseObject(result, CommonResp.class);
+        if (commonResp != null) {
+            if (StringUtils.equals(commonResp.getCode(), HikConstant.CODE200) && commonResp.getData() != null) {
+                Map<String, Object> map = JacksonUtils.convertObject(commonResp.getData(), Map.class);
+                String newToken = (String) map.get("accessToken");
+                Long expireTs = (Long) map.get("expireTime");
                 accessToken = newToken;
                 expireTime = new Date(expireTs);
                 return newToken;
@@ -62,7 +62,7 @@ public class CtHikApiServiceImpl implements ICtHikApiService {
     }
 
     @Override
-    public String addDevice(String deviceSerial, String validateCode) {
+    public CommonResp addDevice(String deviceSerial, String validateCode) {
         Map<String, String> params = new HashMap<>();
         params.put("deviceSerial", deviceSerial);
         params.put("validateCode", validateCode);
@@ -70,7 +70,7 @@ public class CtHikApiServiceImpl implements ICtHikApiService {
     }
 
     @Override
-    public String deleteDevice(String deviceSerial) {
+    public CommonResp deleteDevice(String deviceSerial) {
         Map<String, String> params = new HashMap<>();
         params.put("deviceSerial", deviceSerial);
         return sendHikHttp(HikConstant.deleteDeviceUri, params);
@@ -80,9 +80,8 @@ public class CtHikApiServiceImpl implements ICtHikApiService {
     public DeviceInfoData getDeviceInfo(String deviceSerial) {
         Map<String, String> params = new HashMap<>();
         params.put("deviceSerial", deviceSerial);
-        String result = sendHikHttp(HikConstant.getDeviceInfoUri, params);
-        CommonResp commonResp = JacksonUtils.parseObject(result, CommonResp.class);
-        if (commonResp != null && commonResp.getCode() == HikConstant.CODE200 && commonResp.getData() != null) {
+        CommonResp commonResp = sendHikHttp(HikConstant.getDeviceInfoUri, params);
+        if (commonResp != null && StringUtils.equals(commonResp.getCode(), HikConstant.CODE200) && commonResp.getData() != null) {
             return JacksonUtils.convertObject(commonResp.getData(), DeviceInfoData.class);
         }
         return null;
@@ -127,7 +126,7 @@ public class CtHikApiServiceImpl implements ICtHikApiService {
      * @return
      */
     @Override
-    public String setDeviceEncrypt(String deviceSerial, String validateCode, boolean enable) {
+    public CommonResp setDeviceEncrypt(String deviceSerial, String validateCode, boolean enable) {
         Map<String, String> params = new HashMap<>();
         params.put("deviceSerial", deviceSerial);
         params.put("validateCode", validateCode);
@@ -139,42 +138,43 @@ public class CtHikApiServiceImpl implements ICtHikApiService {
     }
 
     @Override
-    public String getDeviceCapture(String deviceSerial) {
+    public CommonResp getDeviceCapture(String deviceSerial) {
         Map<String, String> params = new HashMap<>();
         params.put("deviceSerial", deviceSerial);
         params.put("channelNo", "1");
         return sendHikHttp(HikConstant.getDeviceCaptureUri, params);
     }
 
-    private String sendHikHttp(String path, Map<String, String> params) {
+    private CommonResp sendHikHttp(String path, Map<String, String> params) {
         String at = getAccessToken();
         if ("".equals(at)) {
-            return "";
+            return null;
         }
         params.put("accessToken", at);
         String result = HttpUtils.sendFormPost("https://" + HikConstant.hikHost + path, params, getHikHeader());
-        JSONObject retObj = JSON.parseObject(result);
-        if (HikConstant.CODE10002.equals(retObj.getString("code"))) {
-            //token 过时，则刷新token后，重新请求
-            String newToken = fetchAccessToken();
-            params.put("accessToken", newToken);
-            result = HttpUtils.sendFormPost("https://" + HikConstant.hikHost + path, params, getHikHeader());
+        CommonResp commonResp = JacksonUtils.parseObject(result, CommonResp.class);
+        if (commonResp != null) {
+            if (StringUtils.equals(commonResp.getCode(), HikConstant.CODE10002)) {
+                //token 过时，则刷新token后，重新请求
+                String newToken = fetchAccessToken();
+                params.put("accessToken", newToken);
+                result = HttpUtils.sendFormPost("https://" + HikConstant.hikHost + path, params, getHikHeader());
+                commonResp = JacksonUtils.parseObject(result, CommonResp.class);
+            }
         }
-        System.out.println("sendHikHttp response " + result);
-        return result;
+
+        return commonResp;
     }
 
     private Map<String, String> getAddressUrl(Map<String, String> params) {
-        String retStr = sendHikHttp(HikConstant.getLiveAddressUri, params);
+        CommonResp commonResp = sendHikHttp(HikConstant.getLiveAddressUri, params);
         Map<String, String> retMap = new HashMap<>();
         retMap.put("accessToken", getAccessToken());
         retMap.put("url", "");
-        JSONObject retObj = JSON.parseObject(retStr);
-        if (HikConstant.CODE200.equals(retObj.getString("code"))) {
-            JSONObject dataObj = retObj.getJSONObject("data");
-            if (dataObj != null) {
-                retMap.put("url", dataObj.getString("url"));
-            }
+        if (commonResp != null && StringUtils.equals(commonResp.getCode(), HikConstant.CODE200)
+                && commonResp.getData() != null) {
+            Map<String, String> map = JacksonUtils.convertObject(commonResp.getData(), Map.class);
+            retMap.put("url", map.get("url"));
         }
         return retMap;
     }

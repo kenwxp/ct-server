@@ -1,5 +1,6 @@
 package com.cloudtimes.partner.hik.service;
 
+import com.cloudtimes.partner.hik.domain.CommonResp;
 import com.cloudtimes.partner.hik.domain.DeviceInfoData;
 
 import java.util.Map;
@@ -22,7 +23,7 @@ public interface ICtHikApiService {
      * @param validateCode
      * @return
      */
-    public String addDevice(String deviceSerial, String validateCode);
+    public CommonResp addDevice(String deviceSerial, String validateCode);
 
     /**
      * 删除设备
@@ -30,7 +31,7 @@ public interface ICtHikApiService {
      * @param deviceSerial
      * @return
      */
-    public String deleteDevice(String deviceSerial);
+    public CommonResp deleteDevice(String deviceSerial);
 
     /**
      * 获取设备信息
@@ -73,7 +74,7 @@ public interface ICtHikApiService {
      * @param enable       是否加密 0-不加密 1-加密
      * @return
      */
-    public String setDeviceEncrypt(String deviceSerial, String validateCode, boolean enable);
+    public CommonResp setDeviceEncrypt(String deviceSerial, String validateCode, boolean enable);
 
     /**
      * 抓取设备截图
@@ -81,5 +82,5 @@ public interface ICtHikApiService {
      * @param deviceSerial
      * @return url 图片链接
      */
-    public String getDeviceCapture(String deviceSerial);
+    public CommonResp getDeviceCapture(String deviceSerial);
 }
