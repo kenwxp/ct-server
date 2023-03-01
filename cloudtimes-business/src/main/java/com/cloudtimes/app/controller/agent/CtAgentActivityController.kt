@@ -43,7 +43,7 @@ class ActivityStoreListResponse() : RestPageResult<AgentStoreDetail>()
  */
 @RestController
 @RequestMapping("/agent/activity")
-@Api(tags = ["代理-活动"])
+@Api(value = "活动", tags = ["代理-活动"])
 class CtAgentActivityController : BaseController() {
 
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
