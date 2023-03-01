@@ -20,10 +20,23 @@ class CtEvents : BaseEntity() {
     @ApiModelProperty(value = "编号")
     var id: String? = null
 
+    /**
+     *   -- 0 系统公告
+     *   -- 1 系统消息
+     *   -- 2 会员消息
+     *   -- 3 偷盗异常
+     *   -- 4 物品追回
+     *   -- 5 代理消息
+     *   -- 6 店主消息
+     *   -- 7 客服消息
+     */
     @ApiModelProperty(value = "事件类型")
     @Excel(name = "事件类型")
     var eventType: String? = null
 
+    /**
+     *   -- 51-系统消息(授权提示等)，52-佣金消息, 53-活动消息, 54-分润消息，55-提现消息
+     */
     @ApiModelProperty(value = "事件子类型")
     @Excel(name = "事件子类型")
     var subType: String? = null
