@@ -11,7 +11,7 @@ enum class UserType(val code: String, val info: String) {
     Agent("1", "代理"),
     Shopkeeper("2", "店主"),
     Admin("3", "管理员"),
-    Devops("4", "管理员"),
+    Devops("4", "运维人员"),
     Service("5", "客服"),
     PersonInChange("6", "客户负责人"),
 }

@@ -1,4 +1,4 @@
-package com.cloudtimes.app.models;
+package com.cloudtimes.common.core.domain;
 
 import com.cloudtimes.common.constant.HttpStatus;
 import com.cloudtimes.common.utils.StringUtils;

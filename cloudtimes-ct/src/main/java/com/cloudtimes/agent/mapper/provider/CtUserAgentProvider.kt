@@ -116,7 +116,7 @@ object CtUserAgentProvider {
     /** 查询代理团队所有成员 */
     fun selectTeamMembers(userId: String): SelectStatementProvider {
        return select(
-           userTable.id, userTable.nickName, userTable.realName, userTable.mobile,
+           userTable.id, userTable.nickName, userTable.realName, userTable.mobile, userTable.wxAvatar,
            userTable.sex, userTable.agentState, userTable.createDate,
            agentTable.totalSalesReward, agentTable.totalDividend, agentTable.totalActivityReward
        ) {
