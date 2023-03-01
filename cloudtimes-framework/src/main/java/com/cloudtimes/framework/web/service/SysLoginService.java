@@ -1,6 +1,10 @@
 package com.cloudtimes.framework.web.service;
 
 import javax.annotation.Resource;
+
+import com.cloudtimes.common.core.domain.entity.AuthUser;
+import com.cloudtimes.common.enums.ChannelType;
+import com.cloudtimes.common.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -16,10 +20,6 @@ import com.cloudtimes.common.exception.ServiceException;
 import com.cloudtimes.common.exception.user.CaptchaException;
 import com.cloudtimes.common.exception.user.CaptchaExpireException;
 import com.cloudtimes.common.exception.user.UserPasswordNotMatchException;
-import com.cloudtimes.common.utils.DateUtils;
-import com.cloudtimes.common.utils.MessageUtils;
-import com.cloudtimes.common.utils.ServletUtils;
-import com.cloudtimes.common.utils.StringUtils;
 import com.cloudtimes.common.utils.ip.IpUtils;
 import com.cloudtimes.framework.manager.AsyncManager;
 import com.cloudtimes.framework.manager.factory.AsyncFactory;
@@ -27,14 +27,16 @@ import com.cloudtimes.framework.security.context.AuthenticationContextHolder;
 import com.cloudtimes.system.service.ISysConfigService;
 import com.cloudtimes.system.service.ISysUserService;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * 登录校验方法
- * 
+ *
  * @author tank
  */
 @Component
-public class SysLoginService
-{
+public class SysLoginService {
     @Autowired
     private TokenService tokenService;
 
@@ -43,83 +45,78 @@ public class SysLoginService
 
     @Autowired
     private RedisCache redisCache;
-    
+
     @Autowired
     private ISysUserService userService;
 
     @Autowired
     private ISysConfigService configService;
 
+    @Autowired
+    private JWTManager jwtManager;
+
     /**
      * 登录验证
-     * 
+     *
      * @param username 用户名
      * @param password 密码
-     * @param code 验证码
-     * @param uuid 唯一标识
+     * @param code     验证码
+     * @param uuid     唯一标识
      * @return 结果
+     * token
+     * wsToken
      */
-    public String login(String username, String password, String code, String uuid)
-    {
+    public Map<String, String> login(String username, String password, String code, String uuid) {
         boolean captchaEnabled = configService.selectCaptchaEnabled();
         // 验证码开关
-        if (captchaEnabled)
-        {
+        if (captchaEnabled) {
             validateCaptcha(username, code, uuid);
         }
         // 用户验证
         Authentication authentication = null;
-        try
-        {
+        try {
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
             AuthenticationContextHolder.setContext(authenticationToken);
             // 该方法会去调用UserDetailsServiceImpl.loadUserByUsername
             authentication = authenticationManager.authenticate(authenticationToken);
-        }
-        catch (Exception e)
-        {
-            if (e instanceof BadCredentialsException)
-            {
+        } catch (Exception e) {
+            if (e instanceof BadCredentialsException) {
                 AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("user.password.not.match")));
                 throw new UserPasswordNotMatchException();
-            }
-            else
-            {
+            } else {
                 AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, e.getMessage()));
                 throw new ServiceException(e.getMessage());
             }
-        }
-        finally
-        {
+        } finally {
             AuthenticationContextHolder.clearContext();
         }
         AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_SUCCESS, MessageUtils.message("user.login.success")));
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
         recordLoginInfo(loginUser.getUserId());
+        HashMap<String, String> tokenMap = new HashMap<>();
+        tokenMap.put("token", tokenService.createToken(loginUser));
+        tokenMap.put("wsToken", jwtManager.createToken(new AuthUser(String.valueOf(loginUser.getUserId()), ChannelType.WEB.getCode())));
         // 生成token
-        return tokenService.createToken(loginUser);
+        return tokenMap;
     }
 
     /**
      * 校验验证码
-     * 
+     *
      * @param username 用户名
-     * @param code 验证码
-     * @param uuid 唯一标识
+     * @param code     验证码
+     * @param uuid     唯一标识
      * @return 结果
      */
-    public void validateCaptcha(String username, String code, String uuid)
-    {
+    public void validateCaptcha(String username, String code, String uuid) {
         String verifyKey = CacheConstants.CAPTCHA_CODE_KEY + StringUtils.nvl(uuid, "");
         String captcha = redisCache.getCacheObject(verifyKey);
         redisCache.deleteObject(verifyKey);
-        if (captcha == null)
-        {
+        if (captcha == null) {
             AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("user.jcaptcha.expire")));
             throw new CaptchaExpireException();
         }
-        if (!code.equalsIgnoreCase(captcha))
-        {
+        if (!code.equalsIgnoreCase(captcha)) {
             AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("user.jcaptcha.error")));
             throw new CaptchaException();
         }
@@ -130,8 +127,7 @@ public class SysLoginService
      *
      * @param userId 用户ID
      */
-    public void recordLoginInfo(Long userId)
-    {
+    public void recordLoginInfo(Long userId) {
         SysUser sysUser = new SysUser();
         sysUser.setUserId(userId);
         sysUser.setLoginIp(IpUtils.getIpAddr(ServletUtils.getRequest()));

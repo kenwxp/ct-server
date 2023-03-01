@@ -78,6 +78,10 @@ public class Constants
      * 令牌
      */
     public static final String TOKEN = "token";
+    /**
+     * 令牌
+     */
+    public static final String WS_TOKEN = "ws_token";
 
     /**
      * 令牌前缀
