@@ -6,7 +6,7 @@ import com.cloudtimes.app.controller.mobile.model.ChangePasswordReq;
 import com.cloudtimes.app.controller.mobile.model.LoginReq;
 import com.cloudtimes.app.controller.mobile.model.LoginResp;
 import com.cloudtimes.app.controller.mobile.model.RegisterReq;
-import com.cloudtimes.app.models.ApiResult;
+import com.cloudtimes.common.core.domain.ApiResult;
 import com.cloudtimes.common.utils.JWTManager;
 import com.cloudtimes.common.core.domain.AjaxResult;
 import com.cloudtimes.common.core.domain.entity.AuthUser;

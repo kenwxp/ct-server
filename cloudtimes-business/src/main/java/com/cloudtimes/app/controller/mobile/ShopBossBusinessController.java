@@ -2,8 +2,8 @@ package com.cloudtimes.app.controller.mobile;
 
 import com.alibaba.druid.util.StringUtils;
 import com.cloudtimes.app.controller.mobile.model.*;
-import com.cloudtimes.app.models.ApiResult;
 import com.cloudtimes.common.core.controller.BaseController;
+import com.cloudtimes.common.core.domain.ApiResult;
 import com.cloudtimes.common.core.domain.entity.AuthUser;
 import com.cloudtimes.common.enums.ChannelType;
 import com.cloudtimes.common.utils.AuthUtils;

@@ -2,8 +2,7 @@ package com.cloudtimes.app.controller.wechat;
 
 import com.cloudtimes.app.controller.wechat.model.ScanCodeReq;
 import com.cloudtimes.app.controller.wechat.model.ScanCodeResp;
-import com.cloudtimes.app.models.ApiResult;
-import com.cloudtimes.common.core.domain.AjaxResult;
+import com.cloudtimes.common.core.domain.ApiResult;
 import com.cloudtimes.common.core.domain.entity.AuthUser;
 import com.cloudtimes.common.enums.ChannelType;
 import com.cloudtimes.common.utils.AuthUtils;

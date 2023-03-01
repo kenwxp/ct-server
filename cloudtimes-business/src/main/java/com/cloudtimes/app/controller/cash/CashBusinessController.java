@@ -1,9 +1,8 @@
 package com.cloudtimes.app.controller.cash;
 
 import com.cloudtimes.app.controller.cash.model.*;
-import com.cloudtimes.app.models.ApiResult;
 import com.cloudtimes.common.constant.HttpStatus;
-import com.cloudtimes.common.core.domain.AjaxResult;
+import com.cloudtimes.common.core.domain.ApiResult;
 import com.cloudtimes.common.core.domain.entity.AuthUser;
 import com.cloudtimes.common.enums.ChannelType;
 import com.cloudtimes.common.utils.AuthUtils;
