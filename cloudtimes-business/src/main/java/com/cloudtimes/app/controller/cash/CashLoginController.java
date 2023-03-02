@@ -1,5 +1,6 @@
 package com.cloudtimes.app.controller.cash;
 
+import com.cloudtimes.app.constant.PrefixPathConstants;
 import com.cloudtimes.app.controller.cash.model.CashLoginCheckReq;
 import com.cloudtimes.app.controller.cash.model.CashLoginCheckResp;
 import com.cloudtimes.app.controller.cash.model.CashLoginReq;
@@ -24,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Api(tags = "收银机登录相关接口")
 @RestController
-@RequestMapping("/cash/login")
+@RequestMapping(PrefixPathConstants.CASH_PATH_PREFIX + "/login")
 public class CashLoginController {
     @Autowired
     private ICtCashLoginService loginService;
@@ -70,7 +71,7 @@ public class CashLoginController {
         CashLoginResp loginResp = new CashLoginResp();
         // 封装返回参数
         //获取token,时效为永久
-        String token = jwtManager.createToken(new AuthUser(deviceInfo.getId(), ChannelType.CASH.getCode()), 0);
+        String token = jwtManager.createToken(new AuthUser(deviceInfo.getId(), ChannelType.CASH), 0);
         loginResp.setAccessToken(token);
         //门店信息
         CtStore ctStore = storeService.selectCtStoreById(deviceInfo.getStoreId());

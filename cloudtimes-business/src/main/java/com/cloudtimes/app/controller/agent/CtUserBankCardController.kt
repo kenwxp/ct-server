@@ -3,6 +3,7 @@ package com.cloudtimes.app.controller.agent
 import com.cloudtimes.account.domain.CtUserBankCard
 import com.cloudtimes.account.dto.request.QueryByUserIdRequest
 import com.cloudtimes.account.service.ICtUserBankCardService
+import com.cloudtimes.app.constant.PrefixPathConstants
 import com.cloudtimes.common.annotation.Log
 import com.cloudtimes.common.core.controller.BaseController
 import com.cloudtimes.common.core.domain.AjaxResult
@@ -27,7 +28,7 @@ class AgentBackCardResponse(override var data: CtUserBankCard? = null) : RestRes
  * @date 2023-02-03
  */
 @RestController
-@RequestMapping("/agent/bank_card")
+@RequestMapping(PrefixPathConstants.WX_OFFICIAL_PATH_PREFIX + "/bank_card")
 @Api(tags = ["代理-银行卡"])
 class CtUserBankCardController : BaseController() {
     @Autowired

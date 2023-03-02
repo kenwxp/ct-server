@@ -3,6 +3,7 @@ package com.cloudtimes.app.controller.agent
 import com.cloudtimes.agent.domain.CtUserAgent
 import com.cloudtimes.account.dto.request.ListMessageByTypeRequest
 import com.cloudtimes.account.dto.request.QueryByUserIdRequest
+import com.cloudtimes.app.constant.PrefixPathConstants
 import com.cloudtimes.common.core.controller.BaseController
 import com.cloudtimes.common.core.domain.RestPageResult
 import com.cloudtimes.supervise.domain.CtEvents
@@ -30,7 +31,7 @@ class AgentMessageListRequest(var pageNum: Int = 1, var pageSize: Int = 10) : Qu
  * @date 2023-02-07
  */
 @RestController
-@RequestMapping("/agent/message")
+@RequestMapping(PrefixPathConstants.WX_OFFICIAL_PATH_PREFIX + "/message")
 @Api(tags = ["代理-消息"])
 class CtAgentMessageController : BaseController() {
     @Autowired

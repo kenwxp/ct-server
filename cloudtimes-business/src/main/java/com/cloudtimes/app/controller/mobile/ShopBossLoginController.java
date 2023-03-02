@@ -1,6 +1,7 @@
 package com.cloudtimes.app.controller.mobile;
 
 import com.cloudtimes.account.domain.CtUser;
+import com.cloudtimes.app.constant.PrefixPathConstants;
 import com.cloudtimes.serving.mobile.domain.LoginReq;
 import com.cloudtimes.serving.mobile.domain.LoginResp;
 import com.cloudtimes.serving.mobile.domain.RegisterReq;
@@ -22,7 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @Api(tags = "店家app登录相关接口")
 @RestController
-@RequestMapping("/mobile/login")
+@RequestMapping(PrefixPathConstants.MOBILE_PATH_PREFIX + "/login")
 public class ShopBossLoginController {
     @Autowired
     private ICtShopBossLoginService loginService;
@@ -44,7 +45,7 @@ public class ShopBossLoginController {
     @PostMapping("")
     public ApiResult<LoginResp> login(@RequestBody LoginReq param, HttpServletRequest request) {
         CtUser ctUser = loginService.shopBossLogin(param.getPhone(), param.getPassword(), IpUtils.getIpAddr(request));
-        String token = jwtManager.createToken(new AuthUser(ctUser.getId(), ChannelType.MOBILE.getCode()));
+        String token = jwtManager.createToken(new AuthUser(ctUser.getId(), ChannelType.MOBILE));
         LoginResp loginResp = new LoginResp();
         loginResp.setToken(token);
         return new ApiResult().success(loginResp);

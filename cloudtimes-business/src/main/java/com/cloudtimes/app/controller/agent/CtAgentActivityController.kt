@@ -12,6 +12,7 @@ import com.cloudtimes.agent.service.ICtAgentActivity1RuleService
 import com.cloudtimes.agent.service.ICtAgentActivity2RuleService
 import com.cloudtimes.agent.service.ICtAgentActivityService
 import com.cloudtimes.agent.service.ICtAgentActivitySettlementService
+import com.cloudtimes.app.constant.PrefixPathConstants
 import com.cloudtimes.common.core.controller.BaseController
 import com.cloudtimes.common.core.domain.AjaxResult
 import com.cloudtimes.common.core.domain.RestPageResult
@@ -42,7 +43,7 @@ class ActivityStoreListResponse() : RestPageResult<AgentStoreDetail>()
  * @date 2023-02-07
  */
 @RestController
-@RequestMapping("/agent/activity")
+@RequestMapping(PrefixPathConstants.WX_OFFICIAL_PATH_PREFIX + "/activity")
 @Api(value = "活动", tags = ["代理-活动"])
 class CtAgentActivityController : BaseController() {
 

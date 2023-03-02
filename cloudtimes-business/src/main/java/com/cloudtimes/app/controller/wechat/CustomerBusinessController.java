@@ -1,5 +1,6 @@
 package com.cloudtimes.app.controller.wechat;
 
+import com.cloudtimes.app.constant.PrefixPathConstants;
 import com.cloudtimes.app.controller.wechat.model.ScanCodeReq;
 import com.cloudtimes.app.controller.wechat.model.ScanCodeResp;
 import com.cloudtimes.common.core.domain.ApiResult;
@@ -20,7 +21,7 @@ import java.util.Map;
 
 @Api(tags = "小程序业务相关接口")
 @RestController
-@RequestMapping("/mapp/business")
+@RequestMapping(PrefixPathConstants.WX_MP_PATH_PREFIX + "/business")
 public class CustomerBusinessController {
     @Autowired
     private ICtCustomerBusinessService businessService;
@@ -30,9 +31,6 @@ public class CustomerBusinessController {
     @PostMapping("/check")
     public ApiResult<ScanCodeResp> scanCode(@RequestBody ScanCodeReq param) {
         AuthUser authUser = AuthUtils.getObject();
-        if (StringUtils.equals(authUser.getChannelType(), ChannelType.WECHAT.getCode())) {
-            return new ApiResult().error("渠道类型不匹配");
-        }
         // 校验参数
         if (StringUtils.isEmpty(param.getShopId())) {
             return new ApiResult().error("门店号不能为空");

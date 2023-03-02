@@ -5,6 +5,7 @@ import com.cloudtimes.account.dto.request.QueryBySubUserIdRequest
 import com.cloudtimes.account.dto.request.QueryByUserIdRequest
 import com.cloudtimes.account.dto.request.UpdateSubUserCommissionRequest
 import com.cloudtimes.agent.service.ICtAgentCommissionService
+import com.cloudtimes.app.constant.PrefixPathConstants
 import com.cloudtimes.common.core.controller.BaseController
 import com.cloudtimes.common.core.domain.AjaxResult
 import com.cloudtimes.common.core.domain.RestResult
@@ -25,7 +26,7 @@ class AgentCommissionDetail() : RestResult<CtAgentCommission>()
  * @date 2023-02-03
  */
 @RestController
-@RequestMapping("/agent/agent_commission")
+@RequestMapping(PrefixPathConstants.WX_OFFICIAL_PATH_PREFIX + "/agent_commission")
 @Api(tags = ["代理-佣金配置"])
 class CtAgentCommissionController : BaseController() {
     @Autowired

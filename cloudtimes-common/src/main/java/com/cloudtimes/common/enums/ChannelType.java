@@ -8,7 +8,12 @@ public enum ChannelType {
     /**
      * 微信小程序端
      */
-    WECHAT("wechat"),
+    WX_MP("wx_mp"),
+
+    /**
+     * 微信公众号
+     */
+    WX_OFFICIAL("wx_official"),
     /**
      * 管理后台端
      */

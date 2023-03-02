@@ -2,6 +2,7 @@ package com.cloudtimes.app.controller.agent
 
 import com.cloudtimes.account.dto.request.ConfirmCommissionRequest
 import com.cloudtimes.agent.service.ICtAgentCommissionSettlementService
+import com.cloudtimes.app.constant.PrefixPathConstants
 import com.cloudtimes.common.core.controller.BaseController
 import com.cloudtimes.common.core.domain.AjaxResult
 import io.swagger.annotations.Api
@@ -17,7 +18,7 @@ import javax.validation.Valid
  * @date 2023-02-03
  */
 @RestController
-@RequestMapping("/agent/commission_settlement")
+@RequestMapping(PrefixPathConstants.WX_OFFICIAL_PATH_PREFIX + "/commission_settlement")
 @Api(tags = ["代理-佣金结算"])
 class CtAgentCommissionSettlementController : BaseController() {
     @Autowired

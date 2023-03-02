@@ -3,6 +3,7 @@ package com.cloudtimes.app.controller.agent
 import com.cloudtimes.common.annotation.Log
 import com.cloudtimes.account.domain.CtSuggestion
 import com.cloudtimes.account.service.ICtSuggestionService
+import com.cloudtimes.app.constant.PrefixPathConstants
 import com.cloudtimes.common.core.controller.BaseController
 import com.cloudtimes.common.core.domain.AjaxResult
 import com.cloudtimes.common.core.domain.RestResult
@@ -18,7 +19,7 @@ import javax.validation.Valid
 class CtSuggestionListResponse(var rows: List<CtSuggestion>) : RestResult<Any>()
 
 @RestController
-@RequestMapping("/agent/suggestion")
+@RequestMapping(PrefixPathConstants.WX_OFFICIAL_PATH_PREFIX + "/suggestion")
 @Api(tags = ["代理-投诉建议"])
 class CtSuggestionController : BaseController() {
     @Autowired

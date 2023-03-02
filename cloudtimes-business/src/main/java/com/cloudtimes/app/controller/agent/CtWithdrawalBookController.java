@@ -2,6 +2,7 @@ package com.cloudtimes.app.controller.agent;
 
 import com.cloudtimes.account.domain.CtWithdrawalBook;
 import com.cloudtimes.account.service.ICtWithdrawalBookService;
+import com.cloudtimes.app.constant.PrefixPathConstants;
 import com.cloudtimes.common.annotation.Log;
 import com.cloudtimes.common.core.controller.BaseController;
 import com.cloudtimes.common.core.domain.AjaxResult;
@@ -21,7 +22,7 @@ import java.util.List;
  * @date 2023-02-03
  */
 @RestController
-@RequestMapping("/agent/withdrawal_book")
+@RequestMapping(PrefixPathConstants.WX_OFFICIAL_PATH_PREFIX + "/withdrawal_book")
 @Api(tags = "代理-提现登记簿")
 public class CtWithdrawalBookController extends BaseController
 {

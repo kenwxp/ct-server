@@ -1,5 +1,6 @@
 package com.cloudtimes.app.controller.door;
 
+import com.cloudtimes.app.constant.PrefixPathConstants;
 import com.cloudtimes.app.controller.door.model.DoorFaceLoginCheckReq;
 import com.cloudtimes.app.controller.door.model.DoorFaceLoginCheckResp;
 import com.cloudtimes.app.controller.door.model.DoorFaceLoginReq;
@@ -21,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Api(tags = "门禁刷脸登录相关接口")
 @RestController
-@RequestMapping("/door/login")
+@RequestMapping(PrefixPathConstants.DOOR_FACE_PATH_PREFIX + "/login")
 public class DoorFaceLoginController {
     @Autowired
     private ICtDoorFaceLoginService loginService;
@@ -63,7 +64,7 @@ public class DoorFaceLoginController {
         DoorFaceLoginResp loginResp = new DoorFaceLoginResp();
         // 封装返回参数
         //获取token,时效为永久
-        String token = jwtManager.createToken(new AuthUser(deviceInfo.getId(), ChannelType.DOOR_FACE.getCode()), 0);
+        String token = jwtManager.createToken(new AuthUser(deviceInfo.getId(), ChannelType.DOOR_FACE), 0);
         loginResp.setAccessToken(token);
         return AjaxResult.success(loginResp);
     }

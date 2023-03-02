@@ -8,6 +8,7 @@ import com.cloudtimes.account.dto.request.QueryByUserIdWithPageRequest
 import com.cloudtimes.account.dto.response.TeamMember
 import com.cloudtimes.account.service.ICtUserService
 import com.cloudtimes.agent.service.ICtUserAgentService
+import com.cloudtimes.app.constant.PrefixPathConstants
 import com.cloudtimes.common.core.controller.BaseController
 import com.cloudtimes.common.core.domain.RestPageResult
 import com.cloudtimes.common.core.domain.RestResult
@@ -32,7 +33,7 @@ class TeamMemberDetail() : RestResult<TeamMember>()
  * @date 2023-02-07
  */
 @RestController
-@RequestMapping("/agent/team")
+@RequestMapping(PrefixPathConstants.WX_OFFICIAL_PATH_PREFIX + "t/team")
 @Api(tags = ["代理-团队"])
 class CtAgentTeamController : BaseController() {
     @Autowired

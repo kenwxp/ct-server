@@ -1,10 +1,10 @@
 package com.cloudtimes.app.controller.mobile;
 
 import com.alibaba.druid.util.StringUtils;
+import com.cloudtimes.app.constant.PrefixPathConstants;
 import com.cloudtimes.common.core.controller.BaseController;
 import com.cloudtimes.common.core.domain.ApiResult;
 import com.cloudtimes.common.core.domain.entity.AuthUser;
-import com.cloudtimes.common.enums.ChannelType;
 import com.cloudtimes.common.utils.AuthUtils;
 import com.cloudtimes.common.utils.PageUtils;
 import com.cloudtimes.serving.mobile.domain.*;
@@ -22,7 +22,7 @@ import java.util.List;
 
 @Api(tags = "店家app业务相关接口")
 @RestController
-@RequestMapping("/mobile/business")
+@RequestMapping(PrefixPathConstants.MOBILE_PATH_PREFIX + "/business")
 public class ShopBossBusinessController extends BaseController {
     @Autowired
     private ICtShopBossBusinessService shopBossBusinessService;
@@ -31,9 +31,6 @@ public class ShopBossBusinessController extends BaseController {
     @PostMapping("/password")
     public ApiResult changePassword(@RequestBody ChangePasswordReq param) {
         AuthUser authUser = AuthUtils.getObject();
-        if (StringUtils.equals(authUser.getChannelType(), ChannelType.MOBILE.getCode())) {
-            return new ApiResult().error("渠道类型不匹配");
-        }
         if (shopBossBusinessService.changePassword(authUser.getId(), param.getPasswordNew(), param.getPasswordOld())) {
             return new ApiResult().success();
         } else {
@@ -46,9 +43,7 @@ public class ShopBossBusinessController extends BaseController {
     @PostMapping("/supervise/apply")
     public ApiResult applySupervise(@RequestBody ApplySuperviseReq param) {
         AuthUser authUser = AuthUtils.getObject();
-        if (StringUtils.equals(authUser.getChannelType(), ChannelType.MOBILE.getCode())) {
-            return new ApiResult().error("渠道类型不匹配");
-        }
+        
         if (StringUtils.isEmpty(param.getStoreId())) {
             return new ApiResult().error("门店id不能为空");
         }
@@ -67,9 +62,7 @@ public class ShopBossBusinessController extends BaseController {
     @PostMapping("/shop/list")
     public ApiResult<List<GetShopListResp>> getShopList(@RequestBody GetShopListReq param) {
         AuthUser authUser = AuthUtils.getObject();
-        if (StringUtils.equals(authUser.getChannelType(), ChannelType.MOBILE.getCode())) {
-            return new ApiResult().error("渠道类型不匹配");
-        }
+        
         ArrayList<GetShopListResp> shopList = new ArrayList<>();
         return new ApiResult().success(shopList);
     }
@@ -78,9 +71,7 @@ public class ShopBossBusinessController extends BaseController {
     @PostMapping("/shop/detail")
     public ApiResult<GetShopDetailResp> getShopDetail(@RequestBody GetShopDetailReq param) {
         AuthUser authUser = AuthUtils.getObject();
-        if (StringUtils.equals(authUser.getChannelType(), ChannelType.MOBILE.getCode())) {
-            return new ApiResult().error("渠道类型不匹配");
-        }
+        
         GetShopDetailResp getShopDetailResp = new GetShopDetailResp();
         return new ApiResult().success(getShopDetailResp);
     }
@@ -89,9 +80,7 @@ public class ShopBossBusinessController extends BaseController {
     @PostMapping("/shop/rank")
     public ApiResult<List<GetShopRankResp>> getShopRank() {
         AuthUser authUser = AuthUtils.getObject();
-        if (StringUtils.equals(authUser.getChannelType(), ChannelType.MOBILE.getCode())) {
-            return new ApiResult().error("渠道类型不匹配");
-        }
+        
         GetShopDetailResp getShopDetailResp = new GetShopDetailResp();
         return new ApiResult().success(getShopDetailResp);
     }
@@ -100,9 +89,7 @@ public class ShopBossBusinessController extends BaseController {
     @PostMapping("/shop/open/door")
     public ApiResult getShopOpenDoor(@RequestBody GetShopDetailReq param) {
         AuthUser authUser = AuthUtils.getObject();
-        if (StringUtils.equals(authUser.getChannelType(), ChannelType.MOBILE.getCode())) {
-            return new ApiResult().error("渠道类型不匹配");
-        }
+        
         return new ApiResult().success();
     }
 
@@ -110,9 +97,7 @@ public class ShopBossBusinessController extends BaseController {
     @PostMapping("/device/list")
     public ApiResult<List<GetDeviceListResp>> getDeviceList(@RequestBody GetDeviceListReq param) {
         AuthUser authUser = AuthUtils.getObject();
-        if (StringUtils.equals(authUser.getChannelType(), ChannelType.MOBILE.getCode())) {
-            return new ApiResult().error("渠道类型不匹配");
-        }
+        
         GetDeviceListResp resp = new GetDeviceListResp();
         return new ApiResult().success(resp);
     }
@@ -122,9 +107,7 @@ public class ShopBossBusinessController extends BaseController {
     public ApiResult<List<GetSuperviseListResp>> getSuperviseList(@RequestBody GetSuperviseListReq param) {
         ApiResult apiResult = new ApiResult();
         AuthUser authUser = AuthUtils.getObject();
-        if (StringUtils.equals(authUser.getChannelType(), ChannelType.MOBILE.getCode())) {
-            return apiResult.error("渠道类型不匹配");
-        }
+   
         PageUtils.startPage(param.getPageNum(), param.getPageSize());
         List<GetSuperviseListResp> list = new ArrayList<>();
         GetSuperviseListResp resp = new GetSuperviseListResp();
@@ -137,9 +120,7 @@ public class ShopBossBusinessController extends BaseController {
     @PostMapping("/stat/sum/visit")
     public ApiResult<ShopVisitSumResp> getStatVisitSum(@RequestBody ShopStatSumReq param) {
         AuthUser authUser = AuthUtils.getObject();
-        if (StringUtils.equals(authUser.getChannelType(), ChannelType.MOBILE.getCode())) {
-            return new ApiResult().error("渠道类型不匹配");
-        }
+        
         ShopVisitSumResp resp = new ShopVisitSumResp();
         return new ApiResult().success(resp);
     }
@@ -148,9 +129,7 @@ public class ShopBossBusinessController extends BaseController {
     @PostMapping("/stat/chart/visit")
     public ApiResult<List<ShopStatChartResp>> getStatVisitChart(@RequestBody ShopStatChartReq param) {
         AuthUser authUser = AuthUtils.getObject();
-        if (StringUtils.equals(authUser.getChannelType(), ChannelType.MOBILE.getCode())) {
-            return new ApiResult().error("渠道类型不匹配");
-        }
+        
         List<ShopStatChartResp> list = new ArrayList<>();
         ShopStatChartResp resp = new ShopStatChartResp();
         list.add(resp);
@@ -161,9 +140,7 @@ public class ShopBossBusinessController extends BaseController {
     @PostMapping("/stat/sum/income")
     public ApiResult<ShopIncomeSumResp> getStatIncomeSum(@RequestBody ShopStatSumReq param) {
         AuthUser authUser = AuthUtils.getObject();
-        if (StringUtils.equals(authUser.getChannelType(), ChannelType.MOBILE.getCode())) {
-            return new ApiResult().error("渠道类型不匹配");
-        }
+        
         ShopIncomeSumResp resp = new ShopIncomeSumResp();
         return new ApiResult().success(resp);
     }
@@ -172,9 +149,7 @@ public class ShopBossBusinessController extends BaseController {
     @PostMapping("/stat/chart/income")
     public ApiResult<List<ShopStatChartResp>> getStatIncomeChart(@RequestBody ShopStatChartReq param) {
         AuthUser authUser = AuthUtils.getObject();
-        if (StringUtils.equals(authUser.getChannelType(), ChannelType.MOBILE.getCode())) {
-            return new ApiResult().error("渠道类型不匹配");
-        }
+        
         List<ShopStatChartResp> list = new ArrayList<>();
         ShopStatChartResp resp = new ShopStatChartResp();
         list.add(resp);
@@ -185,9 +160,7 @@ public class ShopBossBusinessController extends BaseController {
     @PostMapping("/stat/sum/24h")
     public ApiResult<ShopStat24hSumResp> getStatIncomeSum(@RequestBody GetShopDetailReq param) {
         AuthUser authUser = AuthUtils.getObject();
-        if (StringUtils.equals(authUser.getChannelType(), ChannelType.MOBILE.getCode())) {
-            return new ApiResult().error("渠道类型不匹配");
-        }
+        
         ShopStat24hSumResp resp = new ShopStat24hSumResp();
         return new ApiResult().success(resp);
     }
@@ -197,9 +170,7 @@ public class ShopBossBusinessController extends BaseController {
     public ApiResult<List<GetOrderListResp>> getOrderList(@RequestBody GetOrderListReq param) {
         ApiResult apiResult = new ApiResult();
         AuthUser authUser = AuthUtils.getObject();
-        if (StringUtils.equals(authUser.getChannelType(), ChannelType.MOBILE.getCode())) {
-            return apiResult.error("渠道类型不匹配");
-        }
+   
         PageUtils.startPage(param.getPageNum(), param.getPageSize());
         List<GetOrderListResp> list = new ArrayList<>();
         GetOrderListResp resp = new GetOrderListResp();
@@ -212,9 +183,7 @@ public class ShopBossBusinessController extends BaseController {
     @PostMapping("/order/detail")
     public ApiResult<GetOrderDetailResp> getOrderDetail(@RequestBody GetOrderDetailReq param) {
         AuthUser authUser = AuthUtils.getObject();
-        if (StringUtils.equals(authUser.getChannelType(), ChannelType.MOBILE.getCode())) {
-            return new ApiResult().error("渠道类型不匹配");
-        }
+        
         GetOrderDetailResp resp = new GetOrderDetailResp();
         return new ApiResult().success(resp);
     }
@@ -224,9 +193,7 @@ public class ShopBossBusinessController extends BaseController {
     @PostMapping("/video/order")
     public ApiResult<GetOrderLocalVideoResp> getOrderLocalVideo(@RequestBody GetOrderLocalVideoReq param) {
         AuthUser authUser = AuthUtils.getObject();
-        if (StringUtils.equals(authUser.getChannelType(), ChannelType.MOBILE.getCode())) {
-            return new ApiResult().error("渠道类型不匹配");
-        }
+        
         GetOrderLocalVideoResp resp = new GetOrderLocalVideoResp();
         return new ApiResult().success(resp);
     }
@@ -235,9 +202,7 @@ public class ShopBossBusinessController extends BaseController {
     @PostMapping("/product/sync")
     public ApiResult syncProduct(@RequestBody SyncProductReq param) {
         AuthUser authUser = AuthUtils.getObject();
-        if (StringUtils.equals(authUser.getChannelType(), ChannelType.MOBILE.getCode())) {
-            return new ApiResult().error("渠道类型不匹配");
-        }
+        
         return new ApiResult().success();
     }
 }

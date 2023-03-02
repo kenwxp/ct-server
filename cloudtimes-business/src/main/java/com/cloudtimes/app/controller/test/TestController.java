@@ -96,7 +96,7 @@ public class TestController extends BaseController {
     @ApiOperation("获取jwt")
     @GetMapping(value = "/token/get/{id}")
     public AjaxResult getInfo(@PathVariable("id") String id) {
-        String token = jwtManager.createToken(new AuthUser(id, ChannelType.WEB.getCode()));
+        String token = jwtManager.createToken(new AuthUser(id, ChannelType.WEB));
         return AjaxResult.success(token);
     }
 
@@ -189,7 +189,7 @@ public class TestController extends BaseController {
         AuthResponse ds = weixinOfficialApiService.login(callback);
 
         System.out.println(JSONObject.toJSONString(ds));
-        String token = jwtManager.createToken(new AuthUser("", ChannelType.WECHAT.getCode()));
+        String token = jwtManager.createToken(new AuthUser("", ChannelType.WX_MP));
         AjaxResult ajaxResult = AjaxResult.success("成功", token);
         ajaxResult.put("isAgent", false);
         ajaxResult.put("isApprove", true);

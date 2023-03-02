@@ -1,5 +1,6 @@
 package com.cloudtimes.app.controller.agent
 
+import com.cloudtimes.app.constant.PrefixPathConstants
 import com.cloudtimes.common.core.controller.BaseController
 import com.cloudtimes.common.core.domain.AjaxResult
 import com.cloudtimes.common.core.page.TableDataInfo
@@ -18,7 +19,7 @@ import javax.validation.Valid
  * @date 2023-02-09
  */
 @RestController
-@RequestMapping("/agent/stats")
+@RequestMapping(PrefixPathConstants.WX_OFFICIAL_PATH_PREFIX + "/stats")
 @Api(tags = ["代理-数据统计"])
 class CtAgentStatsController : BaseController() {
     @Autowired

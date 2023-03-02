@@ -87,7 +87,7 @@ class WxAuthController {
             wxAvatar = userInfo.avatar
         }
         val loggedUser = userService.wxLoginOrCreateNewUser(loginUser)
-        val token = jwtManager.createToken(AuthUser(loggedUser.id, ChannelType.WECHAT.code));
+        val token = jwtManager.createToken(AuthUser(loggedUser.id, ChannelType.WX_OFFICIAL));
         loggedUser.token = token
 
         //缓存一下accesstoken
