@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cloudtimes.system.mapper.SysCustomerServiceMapper">
+
+
+    <sql id="selectSysCustomerServiceVo">
+        select id, staff_id, staff_name, level, max_accept_task, max_accept_order, del_flag, create_time, update_time
+        from sys_customer_service
+    </sql>
+
+    <select id="selectSysCustomerServiceList" parameterType="SysCustomerService" resultType="SysCustomerService">
+        <include refid="selectSysCustomerServiceVo"/>
+        <where>
+            <if test="staffId != null  and staffId != ''">and staff_id = #{staffId}</if>
+            <if test="staffName != null  and staffName != ''">and staff_name like concat('%', #{staffName}, '%')</if>
+            <if test="level != null  and level != ''">and level = #{level}</if>
+            <if test="maxAcceptTask != null ">and max_accept_task = #{maxAcceptTask}</if>
+            <if test="maxAcceptOrder != null ">and max_accept_order = #{maxAcceptOrder}</if>
+        </where>
+    </select>
+
+    <select id="selectSysCustomerServiceById" parameterType="String" resultType="SysCustomerService">
+        <include refid="selectSysCustomerServiceVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSysCustomerService" parameterType="SysCustomerService">
+        insert into sys_customer_service
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="staffId != null">staff_id,</if>
+            <if test="staffName != null">staff_name,</if>
+            <if test="level != null">level,</if>
+            <if test="maxAcceptTask != null">max_accept_task,</if>
+            <if test="maxAcceptOrder != null">max_accept_order,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="staffId != null">#{staffId},</if>
+            <if test="staffName != null">#{staffName},</if>
+            <if test="level != null">#{level},</if>
+            <if test="maxAcceptTask != null">#{maxAcceptTask},</if>
+            <if test="maxAcceptOrder != null">#{maxAcceptOrder},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSysCustomerService" parameterType="SysCustomerService">
+        update sys_customer_service
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="staffId != null">staff_id = #{staffId},</if>
+            <if test="staffName != null">staff_name = #{staffName},</if>
+            <if test="level != null">level = #{level},</if>
+            <if test="maxAcceptTask != null">max_accept_task = #{maxAcceptTask},</if>
+            <if test="maxAcceptOrder != null">max_accept_order = #{maxAcceptOrder},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysCustomerServiceById" parameterType="String">
+        delete from sys_customer_service where id = #{id}
+    </delete>
+
+    <delete id="deleteSysCustomerServiceByIds" parameterType="String">
+        delete from sys_customer_service where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
