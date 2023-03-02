@@ -25,13 +25,25 @@ public class SysCustomerService extends BaseEntity {
      * 客服编号
      */
     @Excel(name = "客服编号")
-    private String staffId;
+    private String serviceId;
 
     /**
      * 客服名
      */
     @Excel(name = "客服名")
-    private String staffName;
+    private String serviceName;
+
+    /**
+     * 客服负责人编号
+     */
+    @Excel(name = "客服负责人编号")
+    private String superiorId;
+
+    /**
+     * 客服负责人名
+     */
+    @Excel(name = "客服负责人名")
+    private String superiorName;
 
     /**
      * 客服级别
