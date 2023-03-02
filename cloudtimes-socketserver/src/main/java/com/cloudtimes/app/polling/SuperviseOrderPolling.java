@@ -5,10 +5,7 @@ import com.alibaba.fastjson2.JSON;
 import com.cloudtimes.app.manager.SuperviseWsSessionManager;
 import com.cloudtimes.app.models.WsOrderData;
 import com.cloudtimes.app.models.WsOrderDetailData;
-import com.cloudtimes.app.models.WsVideoData;
-import com.cloudtimes.cache.CacheVideoData;
 import com.cloudtimes.cache.CtTaskCache;
-import com.cloudtimes.common.utils.JacksonUtils;
 import com.cloudtimes.common.utils.StringUtils;
 import com.cloudtimes.supervise.domain.CtOrder;
 import com.cloudtimes.supervise.domain.CtOrderDetail;
@@ -18,9 +15,6 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.*;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -29,7 +23,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 @Slf4j
 public class SuperviseOrderPolling {
     private static Map<String, Map<String, Set<String>>> subscribers;
-    ScheduledExecutorService executorService;
+    private Thread thread;
     @Autowired
     private SuperviseWsSessionManager sessionManager;
     //读写锁
@@ -45,22 +39,39 @@ public class SuperviseOrderPolling {
 
     @PostConstruct
     public void start() {
-        if (executorService == null || executorService.isShutdown()) {
-            executorService = Executors.newScheduledThreadPool(5);
-            executorService.scheduleAtFixedRate(new Runnable() {
+//        if (executorService == null || executorService.isShutdown()) {
+//            executorService = Executors.newScheduledThreadPool(5);
+//            executorService.scheduleAtFixedRate(new Runnable() {
+//                @Override
+//                public void run() {
+//                    while (true) {
+//                        try {
+//                            handle();
+//                        } catch (Exception ex) {
+//                            log.error(ex.getMessage(), ex);
+//                        }
+//                    }
+//                }
+//            }, 0, 5, TimeUnit.SECONDS);
+//        }
+        if (thread == null || !thread.isAlive()) {
+            thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
                     while (true) {
                         try {
-                            handle();
-                            Thread.sleep(3000);
+                           handle();
+                           Thread.sleep(5000);
                         } catch (Exception ex) {
-                            log.error(ex.getMessage(), ex);
+
                         }
                     }
                 }
-            }, 0, 3, TimeUnit.SECONDS);
+            });
+            thread.setDaemon(true);
+            thread.start();
         }
+
     }
 
     private void handle() {

@@ -29,11 +29,10 @@ public class OrderUtil {
 
     public static CtShopping getInitCtShopping() {
         CtShopping newShopping = new CtShopping();
-        newShopping.setState(PayState.READY_TO_PAY.getCode());
-        newShopping.setExceptionalState("0");
-        newShopping.setIsApprove("0");
-        newShopping.setIsLeadApprove("0");
-        newShopping.setIsBossApprove("0");
+//        newShopping.setExceptionalState("0");
+//        newShopping.setIsApprove("0");
+//        newShopping.setIsLeadApprove("0");
+//        newShopping.setIsBossApprove("0");
         newShopping.setState("0");
         newShopping.setDelFlag("0");
         newShopping.setCreateTime(new Date());

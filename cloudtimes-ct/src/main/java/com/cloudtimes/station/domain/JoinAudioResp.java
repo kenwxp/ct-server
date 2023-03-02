@@ -1,4 +1,4 @@
-package com.cloudtimes.web.controller.station.model;
+package com.cloudtimes.station.domain;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

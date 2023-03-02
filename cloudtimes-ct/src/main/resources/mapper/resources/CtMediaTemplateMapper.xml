@@ -4,33 +4,34 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.cloudtimes.resources.mapper.CtMediaTemplateMapper">
 
-    <resultMap type="CtMediaTemplate" id="CtMediaTemplateResult">
-        <result property="id" column="id"/>
-        <result property="templateName" column="template_name"/>
-        <result property="mediaId" column="media_id"/>
-        <result property="createTime" column="create_time"/>
-        <result property="updateTime" column="update_time"/>
-        <result property="delFlag" column="del_flag"/>
-    </resultMap>
-
     <sql id="selectCtMediaTemplateVo">
-        select id, template_name, create_time, media_id, update_time, del_flag
-        from ct_media_template
+        select
+        t.id,
+        t.template_name,
+        t.create_time,
+        t.media_id,
+        m.oss_link,
+        t.update_time,
+        t.del_flag
+        from ct_media_template t
+        left join ct_media m on t.media_id = m.id
     </sql>
 
-    <select id="selectCtMediaTemplateList" parameterType="CtMediaTemplate" resultMap="CtMediaTemplateResult">
+    <select id="selectCtMediaTemplateList" parameterType="CtMediaTemplate" resultType="CtMediaTemplate">
         <include refid="selectCtMediaTemplateVo"/>
         <where>
-            <if test="templateName != null  and templateName != ''">and template_name like concat('%', #{templateName},
+            <if test="templateName != null  and templateName != ''">and t.template_name like concat('%',
+                #{templateName},
                 '%')
             </if>
-            <if test="mediaId != null  and mediaId != ''">and media_id = #{mediaId}</if>
+            <if test="mediaId != null  and mediaId != ''">and t.media_id = #{mediaId}</if>
+            <if test="del_flag != null  ">and t.del_flag = #{delFlag}</if>
         </where>
     </select>
 
-    <select id="selectCtMediaTemplateById" parameterType="String" resultMap="CtMediaTemplateResult">
+    <select id="selectCtMediaTemplateById" parameterType="String" resultType="CtMediaTemplate">
         <include refid="selectCtMediaTemplateVo"/>
-        where id = #{id}
+        where t.id = #{id}
     </select>
 
     <insert id="insertCtMediaTemplate" parameterType="CtMediaTemplate" useGeneratedKeys="true" keyProperty="id">

@@ -63,7 +63,7 @@ class CtUserServiceImpl : ICtUserService {
             eventName = "代理注册"
             content = "新用户 [${request.mobile}] 申请注册为代理，请联系审核"
             validDays = 30
-            sourceType = SourceType.Platform.code
+            sourceType = ChannelType.WEB.code
         }
         eventsMapper.insertCtEvents(events)
 

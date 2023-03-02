@@ -1,5 +1,6 @@
 package com.cloudtimes.resources.domain;
 
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.cloudtimes.common.annotation.Excel;
@@ -11,6 +12,7 @@ import com.cloudtimes.common.core.domain.BaseEntity;
  * @author tank
  * @date 2023-01-17
  */
+@Data
 public class CtMediaTemplate extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
@@ -31,53 +33,15 @@ public class CtMediaTemplate extends BaseEntity {
      */
     @Excel(name = "媒体编码")
     private String mediaId;
+    /**
+     * 播放链接
+     */
+    @Excel(name = "播放链接")
+    private String ossLink;
 
     /**
      * 是否删除
      */
     private Long delFlag;
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setTemplateName(String templateName) {
-        this.templateName = templateName;
-    }
-
-    public String getTemplateName() {
-        return templateName;
-    }
-
-    public void setDelFlag(Long delFlag) {
-        this.delFlag = delFlag;
-    }
-
-    public Long getDelFlag() {
-        return delFlag;
-    }
-
-
-    public String getMediaId() {
-        return mediaId;
-    }
-
-    public void setMediaId(String mediaId) {
-        this.mediaId = mediaId;
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
-                .append("id", getId())
-                .append("templateName", getTemplateName())
-                .append("createTime", getCreateTime())
-                .append("updateTime", getUpdateTime())
-                .append("delFlag", getDelFlag())
-                .toString();
-    }
 }

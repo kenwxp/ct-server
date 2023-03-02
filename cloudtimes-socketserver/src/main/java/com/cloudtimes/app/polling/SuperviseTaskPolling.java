@@ -3,11 +3,12 @@ package com.cloudtimes.app.polling;
 import com.alibaba.fastjson2.JSON;
 import com.cloudtimes.app.manager.SuperviseWsSessionManager;
 import com.cloudtimes.app.models.WsTaskData;
-import com.cloudtimes.app.models.WsVideoData;
-import com.cloudtimes.cache.CacheVideoData;
+import com.cloudtimes.app.models.WsTaskListData;
+import com.cloudtimes.cache.CtStaffAcceptCache;
 import com.cloudtimes.cache.CtStoreVideoCache;
 import com.cloudtimes.cache.CtTaskCache;
 import com.cloudtimes.common.utils.StringUtils;
+import com.cloudtimes.supervise.domain.CtOrder;
 import com.cloudtimes.supervise.domain.CtTask;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +16,6 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.*;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -26,37 +24,40 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 @Slf4j
 public class SuperviseTaskPolling {
     private static Map<String, Set<String>> subscribers;
-    ScheduledExecutorService executorService;
-    @Autowired
-    private SuperviseWsSessionManager sessionManager;
+    private static Thread thread;
+    private final String TASK_OPTION = "TASK_DATA";
     //读写锁
     private static final ReadWriteLock rwLock = new ReentrantReadWriteLock();
     //获取写锁
     private static final Lock wLock = rwLock.writeLock();
     //获取读锁
     private static final Lock rLock = rwLock.readLock();
+
+    @Autowired
+    private SuperviseWsSessionManager sessionManager;
     @Autowired
     private CtTaskCache taskCache;
-    private CtStoreVideoCache storeVideoCache;
-    private final String TASK_OPTION = "TASK_DATA";
+    @Autowired
+    private CtStaffAcceptCache staffAcceptCache;
 
     @PostConstruct
     public void start() {
-        if (executorService == null || executorService.isShutdown()) {
-            executorService = Executors.newScheduledThreadPool(5);
-            executorService.scheduleAtFixedRate(new Runnable() {
+        if (thread == null || !thread.isAlive()) {
+            thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
                     while (true) {
                         try {
                             handle();
-                            Thread.sleep(3000);
+                            Thread.sleep(5000);
                         } catch (Exception ex) {
-                            log.error(ex.getMessage(), ex);
+
                         }
                     }
                 }
-            }, 0, 3, TimeUnit.SECONDS);
+            });
+            thread.setDaemon(true);
+            thread.start();
         }
 
     }
@@ -69,12 +70,15 @@ public class SuperviseTaskPolling {
                     subscribers.entrySet()) {
                 String userId = userEntry.getKey();
                 Set<String> sessionSet = userEntry.getValue();
-                List<WsTaskData> taskList = new ArrayList<>();
-                Map<String, CtTask> tasks = taskCache.getAllTasksOfStaff(userId);
-                if (tasks != null && !StringUtils.isEmpty(tasks)) {
+                List<WsTaskListData> taskList = new ArrayList<>();
+                Map<String, CtTask> taskMap = taskCache.getAllTasksOfStaff(userId);
+                int taskCount = 0;
+                int orderCount = 0;
+                if (taskMap != null && !StringUtils.isEmpty(taskMap)) {
+                    taskCount = taskMap.size();
                     for (CtTask rawTask :
-                            tasks.values()) {
-                        WsTaskData data = new WsTaskData();
+                            taskMap.values()) {
+                        WsTaskListData data = new WsTaskListData();
                         data.setTaskId(rawTask.getId());
                         data.setStoreId(rawTask.getStoreId());
                         data.setStoreName(rawTask.getStoreName());
@@ -83,25 +87,20 @@ public class SuperviseTaskPolling {
                         data.setStaffCode(rawTask.getStaffCode());
                         data.setSuperviseArea(rawTask.getSuperviseArea());
                         data.setState(rawTask.getState());
-                        Map<String, CacheVideoData> videoDataMap = storeVideoCache.getCacheVideosOfStore(rawTask.getStoreId());
-                        List<WsVideoData> videoList = new ArrayList<>();
-                        if (videoDataMap != null) {
-                            for (CacheVideoData cacheVideo :
-                                    videoDataMap.values()) {
-                                WsVideoData shopVideoData = new WsVideoData();
-                                shopVideoData.setDeviceId(cacheVideo.getDeviceId());
-                                shopVideoData.setSerial(cacheVideo.getDeviceSerial());
-                                shopVideoData.setUrl(cacheVideo.getUrl());
-                                shopVideoData.setToken(cacheVideo.getToken());
-                                videoList.add(shopVideoData);
-                            }
+                        Map<String, CtOrder> ordersMap = taskCache.getOrdersByTask(rawTask.getId());
+                        if (!StringUtils.isEmpty(ordersMap)) {
+                            orderCount = orderCount + ordersMap.size();
                         }
-                        data.setVideoList(videoList);
                         taskList.add(data);
                     }
                 }
+                WsTaskData wsTaskData = new WsTaskData();
+                wsTaskData.setTaskCount(String.valueOf(taskCount));
+                wsTaskData.setOrderCount(String.valueOf(orderCount));
+                wsTaskData.setAcceptStatus(staffAcceptCache.get(userId));
+                wsTaskData.setTaskList(taskList);
                 for (String sessionId : sessionSet) {
-                    sessionManager.sendSuccess(userId, sessionId, TASK_OPTION, taskList);
+                    sessionManager.sendSuccess(userId, sessionId, TASK_OPTION, wsTaskData);
                 }
             }
         }

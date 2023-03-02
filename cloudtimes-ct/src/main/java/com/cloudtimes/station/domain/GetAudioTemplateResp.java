@@ -1,4 +1,4 @@
-package com.cloudtimes.web.controller.station.model;
+package com.cloudtimes.station.domain;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -12,15 +12,15 @@ import java.util.List;
 @Slf4j
 public class GetAudioTemplateResp {
     @ApiModelProperty("模版编号")
-    String templateId;// uuid
+    private String templateId;// uuid
     @ApiModelProperty("模版名")
-    String templateName;// 模版名
+    private String templateName;// 模版名
     @ApiModelProperty("媒体id")
-    String mediaUuid;// 媒体id
+    private String mediaUuid;// 媒体id
     @ApiModelProperty("媒体id")
-    String ossLink;// 媒体id
+    private String ossLink;// 媒体id
     @ApiModelProperty("创建时间")
-    String createTime;// 创建时间
+    private String createTime;// 创建时间
     @ApiModelProperty("更新时间")
-    String updateTime;// 更新时间
+    private String updateTime;// 更新时间
 }
