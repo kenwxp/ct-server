@@ -7,6 +7,7 @@ import com.cloudtimes.account.dto.request.VerifyRealNameRequest
 import com.cloudtimes.account.service.ICtUserService
 import com.cloudtimes.agent.dto.request.AgentRegisterRequest
 import com.cloudtimes.agent.dto.response.InviteResponse
+import com.cloudtimes.app.constant.PrefixPathConstants
 import com.cloudtimes.app.controller.system.SmsController
 import com.cloudtimes.common.core.controller.BaseController
 import com.cloudtimes.common.core.domain.AjaxResult
@@ -33,7 +34,7 @@ class InviteStoreResponse : RestResult<InviteResponse>()
  * @date 2023-01-17
  */
 @RestController
-@RequestMapping("/agent/user")
+@RequestMapping(PrefixPathConstants.WX_OFFICIAL_PATH_PREFIX + "/user")
 @Api(tags = ["代理-用户"])
 class CtUserController : BaseController() {
     @Autowired
@@ -83,7 +84,7 @@ class CtUserController : BaseController() {
             }
 
         user.let {
-            val token = jwtManager.createToken(AuthUser(it.id, ChannelType.MOBILE.code));
+            val token = jwtManager.createToken(AuthUser(it.id, ChannelType.MOBILE));
             it.token = token
         }
 

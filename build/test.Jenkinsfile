@@ -58,6 +58,7 @@ pipeline {
 
                 // 3.2 上传(./build/)脚本
                 // sshPut remote: remote234, from: './build/{start_all.sh,stop_all.sh,backup_all.sh}', into: "$REMOTE_WORK_DIR/"
+                sshPut remote: remote234, from: './build/start_all.sh', into: "$REMOTE_WORK_DIR/"
                 sshPut remote: remote234, from: './build/stop_all.sh', into: "$REMOTE_WORK_DIR/"
                 sshPut remote: remote234, from: './build/backup_all.sh', into: "$REMOTE_WORK_DIR/"
 

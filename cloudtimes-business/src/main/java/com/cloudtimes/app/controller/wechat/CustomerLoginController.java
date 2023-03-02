@@ -2,6 +2,7 @@ package com.cloudtimes.app.controller.wechat;
 
 
 import com.cloudtimes.account.domain.CtUser;
+import com.cloudtimes.app.constant.PrefixPathConstants;
 import com.cloudtimes.app.controller.wechat.model.LoginCheckReq;
 import com.cloudtimes.app.controller.wechat.model.LoginCheckResp;
 import com.cloudtimes.app.controller.wechat.model.LoginReq;
@@ -24,7 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @Api(tags = "小程序登录相关接口")
 @RestController
-@RequestMapping("/mapp/login")
+@RequestMapping(PrefixPathConstants.WX_MP_PATH_PREFIX + "/login")
 public class CustomerLoginController {
 
     @Autowired
@@ -61,7 +62,7 @@ public class CustomerLoginController {
         LoginResp loginResp = new LoginResp();
         // 封装返回参数
         //获取token
-        String token = jwtManager.createToken(new AuthUser(customerInfo.getId(), ChannelType.WECHAT.getCode()));
+        String token = jwtManager.createToken(new AuthUser(customerInfo.getId(), ChannelType.WX_MP));
         loginResp.setAccessToken(token);
         return new ApiResult().success(loginResp);
     }

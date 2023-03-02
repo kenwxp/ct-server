@@ -1,6 +1,7 @@
 package com.cloudtimes.app.controller.agent
 
 import com.cloudtimes.agent.dto.request.CtRegionRequest
+import com.cloudtimes.app.constant.PrefixPathConstants
 import com.cloudtimes.common.core.domain.RestPageResult
 import com.cloudtimes.resources.domain.CtRegion
 import com.cloudtimes.resources.service.ICtRegionService
@@ -16,7 +17,7 @@ import javax.validation.Valid
 class RegionListResponse: RestPageResult<CtRegion>()
 
 @RestController
-@RequestMapping("/agent/region")
+@RequestMapping(PrefixPathConstants.WX_OFFICIAL_PATH_PREFIX + "/region")
 @Api(tags = ["代理-区域"])
 class CtRegionController {
     @Autowired

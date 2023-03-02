@@ -14,6 +14,7 @@ import com.cloudtimes.agent.service.ICtUserAgentService
 import com.cloudtimes.account.service.ICtUserService
 import com.cloudtimes.account.service.ICtWithdrawalBookService
 import com.cloudtimes.agent.dto.response.AgentAssets
+import com.cloudtimes.app.constant.PrefixPathConstants
 import com.cloudtimes.app.controller.system.SmsController
 import com.cloudtimes.common.core.controller.BaseController
 import com.cloudtimes.common.core.domain.AjaxResult
@@ -45,7 +46,7 @@ class AssetsBookPage() : RestPageResult<QueryAssetsBookResponse>()
  * @date 2023-02-07
  */
 @RestController
-@RequestMapping("/agent/assets")
+@RequestMapping(PrefixPathConstants.WX_OFFICIAL_PATH_PREFIX + "/assets")
 @Api(tags = ["代理-资产"])
 class CtAgentAssetsController : BaseController() {
     private val logger: Logger = LoggerFactory.getLogger(javaClass)

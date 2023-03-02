@@ -1,10 +1,10 @@
 package com.cloudtimes.app.controller.cash;
 
+import com.cloudtimes.app.constant.PrefixPathConstants;
 import com.cloudtimes.app.controller.cash.model.*;
 import com.cloudtimes.common.constant.HttpStatus;
 import com.cloudtimes.common.core.domain.ApiResult;
 import com.cloudtimes.common.core.domain.entity.AuthUser;
-import com.cloudtimes.common.enums.ChannelType;
 import com.cloudtimes.common.utils.AuthUtils;
 import com.cloudtimes.common.utils.JWTManager;
 import com.cloudtimes.common.utils.StringUtils;
@@ -27,7 +27,7 @@ import java.util.Map;
 
 @Api(tags = "收银机业务相关接口")
 @RestController
-@RequestMapping("/cash/business")
+@RequestMapping(PrefixPathConstants.CASH_PATH_PREFIX + "/business")
 public class CashBusinessController {
     @Autowired
     private ICtCashLoginService loginService;
@@ -36,14 +36,11 @@ public class CashBusinessController {
     @Autowired
     private ICtCashBusinessService cashBusinessService;
 
-
     @ApiOperation("获取刷脸凭证")
     @PostMapping(value = "/face/authinfo")
     public ApiResult<AuthInfoData> getFaceAuthInfo(@RequestBody GetFaceAuthInfoReq info) {
         AuthUser authUser = AuthUtils.getObject();
-        if (!StringUtils.equals(authUser.getChannelType(), ChannelType.CASH.getCode())) {
-            return new ApiResult().error("渠道类型错误");
-        }
+
         if (StringUtils.isEmpty(info.getRawdata())) {
             return new ApiResult().error("rawdata不能为空");
         }
@@ -62,9 +59,6 @@ public class CashBusinessController {
     @PostMapping(value = "/face/order")
     public ApiResult<GetOrderIdResp> getOrderId(@RequestBody GetOrderIdReq info) {
         AuthUser authUser = AuthUtils.getObject();
-        if (!StringUtils.equals(authUser.getChannelType(), ChannelType.CASH.getCode())) {
-            return new ApiResult().error("渠道类型错误");
-        }
         Map<String, String> orderInfo = cashBusinessService.getOrderId(authUser.getId(), info.getToken());
         GetOrderIdResp resp = new GetOrderIdResp();
         resp.setOrderId(orderInfo.get("orderId"));
@@ -76,9 +70,6 @@ public class CashBusinessController {
     @PostMapping(value = "/product/fetch")
     public ApiResult<List<GetProductListResp>> getProductList() {
         AuthUser authUser = AuthUtils.getObject();
-        if (!StringUtils.equals(authUser.getChannelType(), ChannelType.CASH.getCode())) {
-            return new ApiResult().error("渠道类型错误");
-        }
         List<CtShopProduct> productList = cashBusinessService.getProductList(authUser.getId());
         List<GetProductListResp> resp = new ArrayList<>();
         for (CtShopProduct dbProduct :
@@ -107,9 +98,6 @@ public class CashBusinessController {
     @PostMapping(value = "/voice/token")
     public ApiResult<GetVoiceTokenResp> getVoiceToken() {
         AuthUser authUser = AuthUtils.getObject();
-        if (!StringUtils.equals(authUser.getChannelType(), ChannelType.CASH.getCode())) {
-            return new ApiResult().error("渠道类型错误");
-        }
         VoiceTokenData voiceToken = cashBusinessService.getVoiceToken(authUser.getId());
         GetVoiceTokenResp resp = new GetVoiceTokenResp();
         resp.setAppId(voiceToken.getAppId());
@@ -123,9 +111,6 @@ public class CashBusinessController {
     @PostMapping(value = "/order/item/add")
     public ApiResult<OrderItemResp> addOrderItem(@RequestBody OrderItemReq info) {
         AuthUser authUser = AuthUtils.getObject();
-        if (!StringUtils.equals(authUser.getChannelType(), ChannelType.CASH.getCode())) {
-            return new ApiResult().error("渠道类型错误");
-        }
         String newOrderId = cashBusinessService.addOrderItem(authUser.getId(),
                 info.getOrderId(),
                 info.getIsSupervise(),
@@ -143,9 +128,6 @@ public class CashBusinessController {
     @PostMapping(value = "/order/item/delete")
     public ApiResult<OrderItemResp> deleteOrderItem(@RequestBody OrderItemReq info) {
         AuthUser authUser = AuthUtils.getObject();
-        if (!StringUtils.equals(authUser.getChannelType(), ChannelType.CASH.getCode())) {
-            return new ApiResult().error("渠道类型错误");
-        }
         cashBusinessService.deleteOrderItem(authUser.getId(), info.getOrderId(), info.getGoodId(), info.getNum());
         return new ApiResult().success(new OrderItemResp(info.getOrderId()));
     }
@@ -154,9 +136,6 @@ public class CashBusinessController {
     @PostMapping(value = "/order/cancel")
     public ApiResult<OrderItemResp> cancelOrder(@RequestBody OrderItemReq info) {
         AuthUser authUser = AuthUtils.getObject();
-        if (!StringUtils.equals(authUser.getChannelType(), ChannelType.CASH.getCode())) {
-            return new ApiResult().error("渠道类型错误");
-        }
         cashBusinessService.cancelOrder(authUser.getId(), info.getOrderId());
         return new ApiResult().success(new OrderItemResp(info.getOrderId()));
     }
@@ -165,9 +144,6 @@ public class CashBusinessController {
     @PostMapping(value = "/order/pay")
     public ApiResult payOrder(@RequestBody OrderPayReq info) {
         AuthUser authUser = AuthUtils.getObject();
-        if (!StringUtils.equals(authUser.getChannelType(), ChannelType.CASH.getCode())) {
-            return new ApiResult().error("渠道类型错误");
-        }
         String errorMsg = cashBusinessService.payOrder(authUser.getId(), info.getOrderId(), info.getPayType(), info.getPayCode(), info.getTotalAmount(), info.getTotalNum());
         if (StringUtils.isEmpty(errorMsg)) {
             return new ApiResult().success();
@@ -180,9 +156,6 @@ public class CashBusinessController {
     @PostMapping(value = "/order/status")
     public ApiResult<OrderPayStatusResp> payOrderStatus(@RequestBody OrderPayReq info) {
         AuthUser authUser = AuthUtils.getObject();
-        if (!StringUtils.equals(authUser.getChannelType(), ChannelType.CASH.getCode())) {
-            return new ApiResult().error("渠道类型错误");
-        }
         int retCode = cashBusinessService.payOrderStatus(authUser.getId(), info.getOrderId());
         if (retCode == 0) {
             //超时

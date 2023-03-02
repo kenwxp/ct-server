@@ -10,6 +10,7 @@ import com.cloudtimes.agent.dto.response.AgentStoreProfitStats
 import com.cloudtimes.agent.dto.response.StoreOrderDetail
 import com.cloudtimes.agent.dto.response.OrderMonthlyStats
 import com.cloudtimes.agent.service.ICtUserAgentService
+import com.cloudtimes.app.constant.PrefixPathConstants
 import com.cloudtimes.app.controller.system.SmsController
 import com.cloudtimes.common.core.controller.BaseController
 import com.cloudtimes.common.core.domain.AjaxResult
@@ -42,7 +43,7 @@ class StoreProfitResponse() : RestResult<AgentStoreProfitStats>()
  * @date 2023-01-17
  */
 @RestController
-@RequestMapping("/agent/store")
+@RequestMapping(PrefixPathConstants.WX_OFFICIAL_PATH_PREFIX + "/store")
 @Api(tags = ["代理-门店"])
 class CtStoreController : BaseController() {
     @Autowired

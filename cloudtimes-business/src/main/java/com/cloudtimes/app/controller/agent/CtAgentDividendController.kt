@@ -5,6 +5,7 @@ import com.cloudtimes.account.dto.request.QueryBySubUserIdRequest
 import com.cloudtimes.account.dto.request.QueryByUserIdRequest
 import com.cloudtimes.agent.dto.request.UpdateSubAgentDividendRequest
 import com.cloudtimes.agent.service.ICtAgentDividendService
+import com.cloudtimes.app.constant.PrefixPathConstants
 import com.cloudtimes.common.core.controller.BaseController
 import com.cloudtimes.common.core.domain.AjaxResult
 import com.cloudtimes.common.core.domain.RestPageResult
@@ -23,7 +24,7 @@ class AgentDividendPage() : RestPageResult<CtAgentDividend>()
  * @date 2023-02-03
  */
 @RestController
-@RequestMapping("/agent/agent_dividend")
+@RequestMapping(PrefixPathConstants.WX_OFFICIAL_PATH_PREFIX + "/agent_dividend")
 @Api(tags = ["代理-分润配置"])
 class CtAgentDividendController : BaseController() {
     @Autowired

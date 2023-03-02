@@ -4,6 +4,7 @@ import com.cloudtimes.agent.domain.CtAgentDividendSettlement
 import com.cloudtimes.agent.dto.request.AgentDividendRequest
 import com.cloudtimes.agent.dto.request.StoreDividendRequest
 import com.cloudtimes.agent.service.ICtAgentDividendSettlementService
+import com.cloudtimes.app.constant.PrefixPathConstants
 import com.cloudtimes.common.core.controller.BaseController
 import com.cloudtimes.common.core.domain.AjaxResult
 import com.cloudtimes.common.core.domain.RestPageResult
@@ -28,7 +29,7 @@ class DividendDetail: RestResult<CtAgentDividendSettlement>()
  * @date 2023-02-03
  */
 @RestController
-@RequestMapping("/agent/dividend_settlement")
+@RequestMapping(PrefixPathConstants.WX_OFFICIAL_PATH_PREFIX + "/dividend_settlement")
 @Api(tags = ["代理-分润结算"])
 class CtAgentDividendSettlementController : BaseController() {
     @Autowired

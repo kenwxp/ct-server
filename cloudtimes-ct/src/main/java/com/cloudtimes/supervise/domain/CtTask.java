@@ -45,10 +45,15 @@ public class CtTask extends BaseEntity {
     private String contactPhone;
 
     /**
-     * 值守员工号
+     * 客服员工号
      */
-    @Excel(name = "值守员工号")
+    @Excel(name = "客服员工号")
     private String staffCode;
+    /**
+     * 客服员工名
+     */
+    @Excel(name = "客服员工名")
+    private String staffName;
 
     /**
      * 任务状态

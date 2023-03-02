@@ -45,7 +45,7 @@ public class CtCashMqSenderService {
         }
     }
 
-    public void notifyCashDoCall(String storeId, String isSupervise) {
+    public void notifyCashDoCall(String storeId, String isJoin) {
         log.info("通知收银机加入/离开频道: 门店id=" + storeId);
         List<CtDevice> ctDevices = getCashDevicesOfShop(storeId);
         for (CtDevice device :
@@ -54,7 +54,7 @@ public class CtCashMqSenderService {
             cashMqData.setDeviceId(device.getId());
             cashMqData.setOption(SEND_CALL_DO);
             CallDoData data = new CallDoData();
-            data.setDoJoin(isSupervise);
+            data.setDoJoin(isJoin);
             cashMqData.setData(data);
             log.info("发送mq信息：" + cashMqData);
             mqProducer.send(RocketMQConstants.WS_CASH_DEVICE, cashMqData);

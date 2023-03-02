@@ -20,7 +20,7 @@ TEST_MYSQL_PASSWORD='password: hty@test'
 TEST_REDIS_PASSWORD='password: hty@test'
 
 ADMIN_TEST_PORT='port: 8080'
-ADMIN_TEST_CONTEXT='context-path: /'
+ADMIN_TEST_CONTEXT='context-path: /admin-api'
 
 # 3. 通用函数
 

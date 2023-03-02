@@ -4,6 +4,7 @@ import com.alibaba.fastjson2.JSON;
 import com.cloudtimes.common.annotation.RepeatSubmit;
 import com.cloudtimes.common.core.domain.AjaxResult;
 import com.cloudtimes.common.utils.ServletUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -18,11 +19,13 @@ import java.lang.reflect.Method;
  * @author tank
  */
 @Component
+@Slf4j
 public abstract class RepeatSubmitInterceptor implements HandlerInterceptor
 {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception
     {
+        log.info("=============>" + request.getRequestURI());
         if (handler instanceof HandlerMethod)
         {
             HandlerMethod handlerMethod = (HandlerMethod) handler;
