@@ -1,15 +1,20 @@
 package com.cloudtimes.app.polling;
 
+import cn.hutool.core.date.DateUnit;
+import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson2.JSON;
 import com.cloudtimes.app.manager.SuperviseWsSessionManager;
 import com.cloudtimes.app.models.WsStaffListData;
 import com.cloudtimes.cache.CacheVideoData;
-import com.cloudtimes.cache.CtStaffAcceptCache;
+import com.cloudtimes.cache.CtCustomerServiceCache;
 import com.cloudtimes.cache.CtStoreVideoCache;
 import com.cloudtimes.cache.CtTaskCache;
+import com.cloudtimes.common.utils.DateUtils;
 import com.cloudtimes.common.utils.StringUtils;
+import com.cloudtimes.enums.PayState;
 import com.cloudtimes.supervise.domain.CtOrder;
 import com.cloudtimes.supervise.domain.CtTask;
+import com.cloudtimes.system.service.ISysConfigService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -38,9 +43,11 @@ public class SuperviseServicePolling {
     @Autowired
     private CtTaskCache taskCache;
     @Autowired
-    private CtStaffAcceptCache staffAcceptCache;
+    private CtCustomerServiceCache customerServiceCache;
     @Autowired
     private CtStoreVideoCache videoCache;
+    @Autowired
+    private ISysConfigService configService;
 
     @PostConstruct
     public void start() {
@@ -72,10 +79,12 @@ public class SuperviseServicePolling {
                 String userId = userEntry.getKey();
                 Set<String> sessionSet = userEntry.getValue();
                 // todo 根据客服负责人获取客服列表
-                List<String> staffList = new ArrayList<>();
-                staffList.add("1");
+                List<String> customerServiceList = new ArrayList<>();
+                customerServiceList.add("1");// 测试用
+                customerServiceList.add("2");// 测试用
+                customerServiceList.add("3");// 测试用
                 List<WsStaffListData> retStaffList = new ArrayList<>();
-                for (String staffId : staffList) {
+                for (String staffId : customerServiceList) {
                     String staffName = "";
                     int currentTaskCount = 0;
                     int overflowTaskCount = 0;
@@ -88,25 +97,37 @@ public class SuperviseServicePolling {
                     Map<String, CtTask> taskMap = taskCache.getAllTasksOfStaff(staffId);
                     if (taskMap != null && !StringUtils.isEmpty(taskMap)) {
                         currentTaskCount = taskMap.size();
+                        // 统计超额任务量
+                        Long maxAcceptTaskCount = customerServiceCache.getMaxAcceptTask(staffId);
+                        if (currentTaskCount > maxAcceptTaskCount) {
+                            overflowTaskCount = currentTaskCount - maxAcceptTaskCount.intValue();
+                        }
                         storeCount = taskMap.size(); //todo 一个门店一个任务的情况
                         for (CtTask rawTask :
                                 taskMap.values()) {
                             staffName = rawTask.getStaffName();
-                            // todo 统计超额订单量
-                            // todo 统计过期订单量
+                            // 统计过期订单量
+                            String overduePeriod = configService.selectConfigByKey("supervise_task_overdue_period");
+                            long diffSec = DateUtil.between(rawTask.getStartTime(), DateUtils.getNowDate(), DateUnit.SECOND);
+                            if (diffSec > Long.parseLong(overduePeriod)) {
+                                overdueTaskCount++;
+                            }
                             Map<String, CacheVideoData> videoMap = videoCache.getCacheVideosOfStore(rawTask.getStoreId());
                             if (videoMap != null) {
-                                videoCount = videoMap.size();
+                                videoCount = videoCount + videoMap.size();
                             }
                             Map<String, CtOrder> ordersMap = taskCache.getOrdersByTask(rawTask.getId());
                             if (!StringUtils.isEmpty(ordersMap)) {
                                 currentOrderCount = currentOrderCount + ordersMap.size();
                                 for (CtOrder order :
                                         ordersMap.values()) {
-                                    //todo 统计进行中订单
-
-                                    //todo 统计未处理订单
-
+                                    if (StringUtils.equals(order.getState(), PayState.READY_TO_PAY.getCode())) {
+                                        // 统计进行中订单
+                                        inProgressOrderCount++;
+                                    } else {
+                                        // 统计未处理订单
+                                        unHandleOrderCount++;
+                                    }
                                 }
                             }
                         }
@@ -122,6 +143,8 @@ public class SuperviseServicePolling {
                     wsStaffData.setCurrentOrderCount(String.valueOf(currentOrderCount));
                     wsStaffData.setInProgressOrderCount(String.valueOf(inProgressOrderCount));
                     wsStaffData.setUnHandleOrderCount(String.valueOf(unHandleOrderCount));
+                    // 获取接单开关
+                    wsStaffData.setAcceptState(customerServiceCache.getAcceptState(staffId));
                     retStaffList.add(wsStaffData);
                 }
                 for (String sessionId : sessionSet) {

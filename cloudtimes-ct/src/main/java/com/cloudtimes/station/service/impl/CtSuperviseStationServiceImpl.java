@@ -2,7 +2,7 @@ package com.cloudtimes.station.service.impl;
 
 import cn.hutool.core.date.DateUtil;
 import com.cloudtimes.cache.CacheVideoData;
-import com.cloudtimes.cache.CtStaffAcceptCache;
+import com.cloudtimes.cache.CtCustomerServiceCache;
 import com.cloudtimes.cache.CtStoreVideoCache;
 import com.cloudtimes.cache.CtTaskCache;
 import com.cloudtimes.common.constant.RocketMQConstants;
@@ -40,7 +40,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -298,7 +297,7 @@ public class CtSuperviseStationServiceImpl implements ICtSuperviseStationService
     }
 
     @Autowired
-    private CtStaffAcceptCache staffAcceptCache;
+    private CtCustomerServiceCache staffAcceptCache;
 
     /**
      * 接单开关维护
@@ -309,7 +308,16 @@ public class CtSuperviseStationServiceImpl implements ICtSuperviseStationService
      */
     @Override
     public void acceptTask(Long userId, AcceptTaskReq param) {
-        staffAcceptCache.put(String.valueOf(userId), param.getOption());
+        if (StringUtils.equals(param.getOption(), "2")) {
+            //结束任务
+            Map<String, CtTask> taskMap = taskCache.getAllTasksOfStaff(String.valueOf(userId));
+            if (taskMap.size() > 0) {
+                throw new ServiceException("当前有未完成的任务,请确认");
+            }
+        } else {
+            //开始接单或暂停接单
+            staffAcceptCache.setAcceptState(String.valueOf(userId), param.getOption());
+        }
     }
 
     @Autowired

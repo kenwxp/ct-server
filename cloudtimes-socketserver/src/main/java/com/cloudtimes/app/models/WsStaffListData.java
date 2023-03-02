@@ -27,4 +27,6 @@ public class WsStaffListData {
     private String inProgressOrderCount;
     @ApiModelProperty("未处理订单量")
     private String unHandleOrderCount;
+    @ApiModelProperty("接单状态 0-开始接单 1-暂停接单 2-结束接单")
+    private String acceptState;
 }

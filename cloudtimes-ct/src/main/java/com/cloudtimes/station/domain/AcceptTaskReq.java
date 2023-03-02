@@ -9,6 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 @Data
 @Slf4j
 public class AcceptTaskReq {
-    @ApiModelProperty(value = "接单标志（0-开始接单 1-暂停接单）", required = true)
+    @ApiModelProperty(value = "接单标志（0-开始接单 1-暂停接单 2-结束接单）", required = true)
     private String option;
 }

@@ -1,14 +1,18 @@
 package com.cloudtimes.app.polling;
 
+import cn.hutool.core.date.DateUnit;
+import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson2.JSON;
 import com.cloudtimes.app.manager.SuperviseWsSessionManager;
 import com.cloudtimes.app.models.WsTaskData;
 import com.cloudtimes.app.models.WsTaskListData;
-import com.cloudtimes.cache.CtStaffAcceptCache;
+import com.cloudtimes.cache.CtCustomerServiceCache;
 import com.cloudtimes.cache.CtTaskCache;
+import com.cloudtimes.common.utils.DateUtils;
 import com.cloudtimes.common.utils.StringUtils;
 import com.cloudtimes.supervise.domain.CtOrder;
 import com.cloudtimes.supervise.domain.CtTask;
+import com.cloudtimes.system.service.ISysConfigService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -37,7 +41,9 @@ public class SuperviseTaskPolling {
     @Autowired
     private CtTaskCache taskCache;
     @Autowired
-    private CtStaffAcceptCache staffAcceptCache;
+    private CtCustomerServiceCache customerServiceCache;
+    @Autowired
+    private ISysConfigService configService;
 
     @PostConstruct
     public void start() {
@@ -71,12 +77,25 @@ public class SuperviseTaskPolling {
                 Set<String> sessionSet = userEntry.getValue();
                 List<WsTaskListData> taskList = new ArrayList<>();
                 Map<String, CtTask> taskMap = taskCache.getAllTasksOfStaff(userId);
-                int taskCount = 0;
-                int orderCount = 0;
+                int currentTaskCount = 0;
+                int overflowTaskCount = 0;
+                int overdueTaskCount = 0;
+                int currentOrderCount = 0;
                 if (taskMap != null && !StringUtils.isEmpty(taskMap)) {
-                    taskCount = taskMap.size();
+                    currentTaskCount = taskMap.size();
+                    // 统计超额任务量
+                    Long maxAcceptTaskCount = customerServiceCache.getMaxAcceptTask(userId);
+                    if (currentTaskCount > maxAcceptTaskCount) {
+                        overflowTaskCount = currentTaskCount - maxAcceptTaskCount.intValue();
+                    }
                     for (CtTask rawTask :
                             taskMap.values()) {
+                        // 统计过期订单量
+                        String overduePeriod = configService.selectConfigByKey("supervise_task_overdue_period");
+                        long diffSec = DateUtil.between(rawTask.getStartTime(), DateUtils.getNowDate(), DateUnit.SECOND);
+                        if (diffSec > Long.parseLong(overduePeriod)) {
+                            overdueTaskCount++;
+                        }
                         WsTaskListData data = new WsTaskListData();
                         data.setTaskId(rawTask.getId());
                         data.setStoreId(rawTask.getStoreId());
@@ -88,15 +107,17 @@ public class SuperviseTaskPolling {
                         data.setState(rawTask.getState());
                         Map<String, CtOrder> ordersMap = taskCache.getOrdersByTask(rawTask.getId());
                         if (!StringUtils.isEmpty(ordersMap)) {
-                            orderCount = orderCount + ordersMap.size();
+                            currentOrderCount = currentOrderCount + ordersMap.size();
                         }
                         taskList.add(data);
                     }
                 }
                 WsTaskData wsTaskData = new WsTaskData();
-                wsTaskData.setTaskCount(String.valueOf(taskCount));
-                wsTaskData.setOrderCount(String.valueOf(orderCount));
-                wsTaskData.setAcceptStatus(staffAcceptCache.get(userId));
+                wsTaskData.setCurrentTaskCount(String.valueOf(currentTaskCount));
+                wsTaskData.setOverflowTaskCount(String.valueOf(overflowTaskCount));
+                wsTaskData.setOverdueTaskCount(String.valueOf(overdueTaskCount));
+                wsTaskData.setCurrentOrderCount(String.valueOf(currentOrderCount));
+                wsTaskData.setAcceptStatus(customerServiceCache.getAcceptState(userId));
                 wsTaskData.setTaskList(taskList);
                 for (String sessionId : sessionSet) {
                     sessionManager.sendSuccess(userId, sessionId, OPTION_NAME, wsTaskData);
