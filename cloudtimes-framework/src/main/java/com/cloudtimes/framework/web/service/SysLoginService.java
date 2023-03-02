@@ -95,7 +95,7 @@ public class SysLoginService {
         recordLoginInfo(loginUser.getUserId());
         HashMap<String, String> tokenMap = new HashMap<>();
         tokenMap.put("token", tokenService.createToken(loginUser));
-        tokenMap.put("wsToken", jwtManager.createToken(new AuthUser(String.valueOf(loginUser.getUserId()), ChannelType.WEB.getCode())));
+        tokenMap.put("wsToken", jwtManager.createToken(new AuthUser(String.valueOf(loginUser.getUserId()), ChannelType.WEB)));
         // 生成token
         return tokenMap;
     }

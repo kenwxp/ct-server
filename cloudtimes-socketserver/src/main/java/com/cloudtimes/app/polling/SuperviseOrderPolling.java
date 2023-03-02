@@ -34,7 +34,7 @@ public class SuperviseOrderPolling {
     private static final Lock rLock = rwLock.readLock();
     @Autowired
     private CtTaskCache taskCache;
-    private final String ORDER_OPTION = "ORDER_DATA";
+    private final String OPTION_NAME = "ORDER_DATA";
 
 
     @PostConstruct
@@ -128,7 +128,7 @@ public class SuperviseOrderPolling {
                     }
                     for (String sessionId :
                             sessionSet) {
-                        sessionManager.sendSuccess(userId, sessionId, ORDER_OPTION, orderList);
+                        sessionManager.sendSuccess(userId, sessionId, OPTION_NAME, orderList);
                     }
 
                 }

@@ -2,9 +2,10 @@ package com.cloudtimes.app.polling;
 
 import com.alibaba.fastjson2.JSON;
 import com.cloudtimes.app.manager.SuperviseWsSessionManager;
-import com.cloudtimes.app.models.WsTaskData;
-import com.cloudtimes.app.models.WsTaskListData;
+import com.cloudtimes.app.models.WsStaffListData;
+import com.cloudtimes.cache.CacheVideoData;
 import com.cloudtimes.cache.CtStaffAcceptCache;
+import com.cloudtimes.cache.CtStoreVideoCache;
 import com.cloudtimes.cache.CtTaskCache;
 import com.cloudtimes.common.utils.StringUtils;
 import com.cloudtimes.supervise.domain.CtOrder;
@@ -21,10 +22,10 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 @Component
 @Slf4j
-public class SuperviseTaskPolling {
+public class SuperviseServicePolling {
     private static Map<String, Set<String>> subscribers;
     private static Thread thread;
-    private final String OPTION_NAME = "TASK_DATA";
+    private final String OPTION_NAME = "SERVICE_DATA";
     //读写锁
     private static final ReadWriteLock rwLock = new ReentrantReadWriteLock();
     //获取写锁
@@ -38,6 +39,8 @@ public class SuperviseTaskPolling {
     private CtTaskCache taskCache;
     @Autowired
     private CtStaffAcceptCache staffAcceptCache;
+    @Autowired
+    private CtStoreVideoCache videoCache;
 
     @PostConstruct
     public void start() {
@@ -63,43 +66,66 @@ public class SuperviseTaskPolling {
 
     private void handle() {
         log.info(JSON.toJSONString(subscribers));
-//        log.info("轮询任务列表开始");
         if (subscribers != null && !StringUtils.isEmpty(subscribers)) {
             for (Map.Entry<String, Set<String>> userEntry :
                     subscribers.entrySet()) {
                 String userId = userEntry.getKey();
                 Set<String> sessionSet = userEntry.getValue();
-                List<WsTaskListData> taskList = new ArrayList<>();
-                Map<String, CtTask> taskMap = taskCache.getAllTasksOfStaff(userId);
-                int taskCount = 0;
-                int orderCount = 0;
-                if (taskMap != null && !StringUtils.isEmpty(taskMap)) {
-                    taskCount = taskMap.size();
-                    for (CtTask rawTask :
-                            taskMap.values()) {
-                        WsTaskListData data = new WsTaskListData();
-                        data.setTaskId(rawTask.getId());
-                        data.setStoreId(rawTask.getStoreId());
-                        data.setStoreName(rawTask.getStoreName());
-                        data.setContactName(rawTask.getContactName());
-                        data.setContactPhone(rawTask.getContactPhone());
-                        data.setStaffCode(rawTask.getStaffCode());
-                        data.setSuperviseArea(rawTask.getSuperviseArea());
-                        data.setState(rawTask.getState());
-                        Map<String, CtOrder> ordersMap = taskCache.getOrdersByTask(rawTask.getId());
-                        if (!StringUtils.isEmpty(ordersMap)) {
-                            orderCount = orderCount + ordersMap.size();
+                // todo 根据客服负责人获取客服列表
+                List<String> staffList = new ArrayList<>();
+                staffList.add("1");
+                List<WsStaffListData> retStaffList = new ArrayList<>();
+                for (String staffId : staffList) {
+                    String staffName = "";
+                    int currentTaskCount = 0;
+                    int overflowTaskCount = 0;
+                    int overdueTaskCount = 0;
+                    int storeCount = 0;
+                    int videoCount = 0;
+                    int currentOrderCount = 0;
+                    int inProgressOrderCount = 0;
+                    int unHandleOrderCount = 0;
+                    Map<String, CtTask> taskMap = taskCache.getAllTasksOfStaff(staffId);
+                    if (taskMap != null && !StringUtils.isEmpty(taskMap)) {
+                        currentTaskCount = taskMap.size();
+                        storeCount = taskMap.size(); //todo 一个门店一个任务的情况
+                        for (CtTask rawTask :
+                                taskMap.values()) {
+                            staffName = rawTask.getStaffName();
+                            // todo 统计超额订单量
+                            // todo 统计过期订单量
+                            Map<String, CacheVideoData> videoMap = videoCache.getCacheVideosOfStore(rawTask.getStoreId());
+                            if (videoMap != null) {
+                                videoCount = videoMap.size();
+                            }
+                            Map<String, CtOrder> ordersMap = taskCache.getOrdersByTask(rawTask.getId());
+                            if (!StringUtils.isEmpty(ordersMap)) {
+                                currentOrderCount = currentOrderCount + ordersMap.size();
+                                for (CtOrder order :
+                                        ordersMap.values()) {
+                                    //todo 统计进行中订单
+
+                                    //todo 统计未处理订单
+
+                                }
+                            }
                         }
-                        taskList.add(data);
                     }
+                    WsStaffListData wsStaffData = new WsStaffListData();
+                    wsStaffData.setStaffId(staffId);
+                    wsStaffData.setStaffName(staffName);
+                    wsStaffData.setCurrentTaskCount(String.valueOf(currentTaskCount));
+                    wsStaffData.setOverflowTaskCount(String.valueOf(overflowTaskCount));
+                    wsStaffData.setOverdueTaskCount(String.valueOf(overdueTaskCount));
+                    wsStaffData.setStoreCount(String.valueOf(storeCount));
+                    wsStaffData.setVideoCount(String.valueOf(videoCount));
+                    wsStaffData.setCurrentOrderCount(String.valueOf(currentOrderCount));
+                    wsStaffData.setInProgressOrderCount(String.valueOf(inProgressOrderCount));
+                    wsStaffData.setUnHandleOrderCount(String.valueOf(unHandleOrderCount));
+                    retStaffList.add(wsStaffData);
                 }
-                WsTaskData wsTaskData = new WsTaskData();
-                wsTaskData.setTaskCount(String.valueOf(taskCount));
-                wsTaskData.setOrderCount(String.valueOf(orderCount));
-                wsTaskData.setAcceptStatus(staffAcceptCache.get(userId));
-                wsTaskData.setTaskList(taskList);
                 for (String sessionId : sessionSet) {
-                    sessionManager.sendSuccess(userId, sessionId, OPTION_NAME, wsTaskData);
+                    sessionManager.sendSuccess(userId, sessionId, OPTION_NAME, retStaffList);
                 }
             }
         }
@@ -107,7 +133,7 @@ public class SuperviseTaskPolling {
     }
 
     public static void add(String userId, String sessionId) {
-        log.info("{} 订阅获取任务列表", userId);
+        log.info("{} 订阅获取客服员工统计列表", userId);
         if (StringUtils.isEmpty(userId) ||
                 StringUtils.isEmpty(sessionId)) {
             return;
@@ -129,7 +155,7 @@ public class SuperviseTaskPolling {
     }
 
     public static void remove(String userId, String sessionId) {
-        log.info("{} 取消订阅任务列表", userId);
+        log.info("{} 取消订阅客服员工统计列表", userId);
         if (StringUtils.isEmpty(userId) ||
                 StringUtils.isEmpty(sessionId)) {
             return;

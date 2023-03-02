@@ -40,11 +40,11 @@ public class CashWebSocketHandler extends TextWebSocketHandler {
         Object token = session.getAttributes().get(JWTManager.AUTH_USER);
         if (token != null) {
             AuthUser authUser = (AuthUser) token;
-            if (!StringUtils.equals(authUser.getChannelType(), ChannelType.CASH.getCode())) {
+            if (StringUtils.equals(authUser.getChannelType().getCode(), ChannelType.CASH.getCode())) {
                 throw new RuntimeException("非收银渠道，连接失败！");
             }
             // 用户连接成功，放入在线用户缓存
-            log.info("收银websocket链接成功！！:{}",authUser.getId());
+            log.info("收银websocket链接成功！！:{}", authUser.getId());
             sessionManager.add(authUser.getId(), session);
         } else {
             throw new RuntimeException("用户登录已经失效!");
@@ -98,7 +98,7 @@ public class CashWebSocketHandler extends TextWebSocketHandler {
         if (token != null) {
             AuthUser authUser = (AuthUser) token;
             // 用户退出，移除缓存
-            log.info("websocket断开链接！！:{}",authUser.getId());
+            log.info("websocket断开链接！！:{}", authUser.getId());
             sessionManager.remove(authUser.getId());
         }
     }

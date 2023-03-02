@@ -6,6 +6,7 @@ import com.cloudtimes.app.manager.SuperviseWsSessionManager;
 import com.cloudtimes.app.models.SuperviseBusiData;
 import com.cloudtimes.app.models.SuperviseWsData;
 import com.cloudtimes.app.polling.SuperviseOrderPolling;
+import com.cloudtimes.app.polling.SuperviseServicePolling;
 import com.cloudtimes.app.polling.SuperviseTaskPolling;
 import com.cloudtimes.common.core.domain.entity.AuthUser;
 import com.cloudtimes.common.enums.ChannelType;
@@ -28,6 +29,7 @@ public class SuperviseWebSocketHandler extends TextWebSocketHandler {
     private SuperviseWsSessionManager sessionManager;
     private static final String FETCH_TASK = "FETCH_TASK";
     private static final String FETCH_ORDER = "FETCH_ORDER";
+    private static final String FETCH_SERVICE = "FETCH_SERVICE";
 
     /**
      * socket 建立成功事件
@@ -40,7 +42,7 @@ public class SuperviseWebSocketHandler extends TextWebSocketHandler {
         Object token = session.getAttributes().get(JWTManager.AUTH_USER);
         if (token != null) {
             AuthUser authUser = (AuthUser) token;
-            if (!StringUtils.equals(authUser.getChannelType(), ChannelType.WEB.getCode())) {
+            if (!StringUtils.equals(authUser.getChannelType().getCode(), ChannelType.WEB.getCode())) {
                 throw new RuntimeException("非管理端用户，连接失败！");
             }
             log.info("websocket链接成功！！:{}", authUser.getId());
@@ -97,6 +99,19 @@ public class SuperviseWebSocketHandler extends TextWebSocketHandler {
                 } else {
                     SuperviseOrderPolling.add(authUser.getId(), busiData.getTaskId(), session.getId());
                 }
+            } else if (StringUtils.equals(option, FETCH_SERVICE)) {
+                if (receive.getData() == null) {
+                    throw new ServiceException("无法获取业务数据");
+                }
+                SuperviseBusiData busiData = JacksonUtils.convertObject(receive.getData(), SuperviseBusiData.class);
+                if (busiData == null) {
+                    throw new ServiceException("业务数据格式有误");
+                }
+                if (busiData.getSubscribe() == 0) {
+                    SuperviseServicePolling.remove(authUser.getId(), session.getId());
+                } else {
+                    SuperviseServicePolling.add(authUser.getId(), session.getId());
+                }
             } else {
                 throw new ServiceException("无效指令：【" + option + "】");
             }
@@ -131,6 +146,8 @@ public class SuperviseWebSocketHandler extends TextWebSocketHandler {
             SuperviseTaskPolling.remove(authUser.getId(), session.getId());
             //移除任务列表订阅信息
             SuperviseOrderPolling.remove(authUser.getId(), session.getId());
+            //移除任务列表订阅信息
+            SuperviseServicePolling.remove(authUser.getId(), session.getId());
         }
     }
 
