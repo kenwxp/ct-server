@@ -7,9 +7,9 @@
 // [工作流]https://www.jenkins.io/doc/pipeline/steps/workflow-basic-steps/
 
 // 定义ssh远程服务器参数
-def remote234 = [
-        name         : 'test remote 234',
-        host         : '10.1.65.234',
+def dev233 = [
+        name         : 'test remote 233',
+        host         : '10.1.65.233',
         user         : 'root',
         password     : 'htzee123',
         allowAnyHosts: true
@@ -46,7 +46,7 @@ pipeline {
         // 3. 替换环境变量
         stage('Replace Env') {
             steps {
-                sh 'bash ./build/replace_test_env.sh'
+                sh 'bash ./build/replace_dev_env.sh'
             }
         }
 
@@ -54,19 +54,19 @@ pipeline {
         stage("Prepare Deploy") {
             steps {
                 // 3.1 创建目录, 确保各级目录存在
-                sshCommand remote: remote234, command: "mkdir -p $REMOTE_WORK_DIR/{backup,admin,detectionserver,business,socketserver}"
+                sshCommand remote: dev233, command: "mkdir -p $REMOTE_WORK_DIR/{backup,admin,detectionserver,business,socketserver}"
 
                 // 3.2 上传(./build/)脚本
-                // sshPut remote: remote234, from: './build/{start_all.sh,stop_all.sh,backup_all.sh}', into: "$REMOTE_WORK_DIR/"
-                sshPut remote: remote234, from: './build/start_all.sh', into: "$REMOTE_WORK_DIR/"
-                sshPut remote: remote234, from: './build/stop_all.sh', into: "$REMOTE_WORK_DIR/"
-                sshPut remote: remote234, from: './build/backup_all.sh', into: "$REMOTE_WORK_DIR/"
+                // sshPut remote: dev233, from: './build/{start_all.sh,stop_all.sh,backup_all.sh}', into: "$REMOTE_WORK_DIR/"
+                sshPut remote: dev233, from: './build/start_all.sh', into: "$REMOTE_WORK_DIR/"
+                sshPut remote: dev233, from: './build/stop_all.sh', into: "$REMOTE_WORK_DIR/"
+                sshPut remote: dev233, from: './build/backup_all.sh', into: "$REMOTE_WORK_DIR/"
 
                 // 3.3 停止所有服务
-                sshCommand remote: remote234, command: "bash $REMOTE_WORK_DIR/stop_all.sh"
+                sshCommand remote: dev233, command: "bash $REMOTE_WORK_DIR/stop_all.sh"
 
                 // 3.4 备份目录
-                sshCommand remote: remote234, command: "bash $REMOTE_WORK_DIR/backup_all.sh"
+                sshCommand remote: dev233, command: "bash $REMOTE_WORK_DIR/backup_all.sh"
             }
         }
 
@@ -78,10 +78,10 @@ pipeline {
                     def services = ['admin', 'business', 'socketserver', 'detectionserver']
                     services.each { service ->
                         def remote_dir = "${REMOTE_WORK_DIR}/${service}/"
-                        sshPut remote: remote234, from: "cloudtimes-${service}/target/cloudtimes-${service}.jar", into: remote_dir
-                        sshPut remote: remote234, from: "cloudtimes-${service}/target/lib", into: remote_dir
-                        sshPut remote: remote234, from: "cloudtimes-${service}/target/resources", into: remote_dir
-                        sshPut remote: remote234, from: 'build/run.sh', into: remote_dir
+                        sshPut remote: dev233, from: "cloudtimes-${service}/target/cloudtimes-${service}.jar", into: remote_dir
+                        sshPut remote: dev233, from: "cloudtimes-${service}/target/lib", into: remote_dir
+                        sshPut remote: dev233, from: "cloudtimes-${service}/target/resources", into: remote_dir
+                        sshPut remote: dev233, from: 'build/run.sh', into: remote_dir
                     }
                 }
             }
@@ -90,8 +90,8 @@ pipeline {
         // 5. 重启服务
         stage('Restart') {
             steps {
-                sshCommand remote: remote234, command: "bash $REMOTE_WORK_DIR/start_all.sh"
-                sshCommand remote: remote234, command: 'systemctl restart nginx.service'
+                sshCommand remote: dev233, command: "bash $REMOTE_WORK_DIR/start_all.sh"
+                // sshCommand remote: dev233, command: 'systemctl restart nginx.service'
             }
         }
     }
