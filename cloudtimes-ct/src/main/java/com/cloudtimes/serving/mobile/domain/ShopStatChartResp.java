@@ -1,4 +1,4 @@
-package com.cloudtimes.app.controller.mobile.model;
+package com.cloudtimes.serving.mobile.domain;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

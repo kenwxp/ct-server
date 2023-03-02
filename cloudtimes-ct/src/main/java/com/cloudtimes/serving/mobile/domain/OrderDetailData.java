@@ -1,4 +1,4 @@
-package com.cloudtimes.app.controller.mobile.model;
+package com.cloudtimes.serving.mobile.domain;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -18,11 +18,13 @@ public class OrderDetailData {
     @ApiModelProperty("类别名称")
     private String itemTypeName;
     @ApiModelProperty("物品数量")
-    private BigDecimal itemCount;
+    private String itemCount;
     @ApiModelProperty("物品单价")
-    private BigDecimal itemPrice;
+    private String itemPrice;
     @ApiModelProperty("物品进货价")
-    private BigDecimal itemPrimePrice;
+    private String itemPrimePrice;
     @ApiModelProperty("小计")
-    private BigDecimal itemSum;
+    private String itemSum;
+    @ApiModelProperty("毛利率")
+    private String profit;
 }

@@ -1,17 +1,13 @@
 package com.cloudtimes.app.controller.mobile;
 
-import com.alibaba.druid.util.StringUtils;
 import com.cloudtimes.account.domain.CtUser;
-import com.cloudtimes.app.controller.mobile.model.ChangePasswordReq;
-import com.cloudtimes.app.controller.mobile.model.LoginReq;
-import com.cloudtimes.app.controller.mobile.model.LoginResp;
-import com.cloudtimes.app.controller.mobile.model.RegisterReq;
+import com.cloudtimes.serving.mobile.domain.LoginReq;
+import com.cloudtimes.serving.mobile.domain.LoginResp;
+import com.cloudtimes.serving.mobile.domain.RegisterReq;
 import com.cloudtimes.common.core.domain.ApiResult;
 import com.cloudtimes.common.utils.JWTManager;
-import com.cloudtimes.common.core.domain.AjaxResult;
 import com.cloudtimes.common.core.domain.entity.AuthUser;
 import com.cloudtimes.common.enums.ChannelType;
-import com.cloudtimes.common.utils.AuthUtils;
 import com.cloudtimes.common.utils.ip.IpUtils;
 import com.cloudtimes.serving.mobile.service.ICtShopBossLoginService;
 import io.swagger.annotations.Api;

@@ -1,13 +1,13 @@
 package com.cloudtimes.app.controller.mobile;
 
 import com.alibaba.druid.util.StringUtils;
-import com.cloudtimes.app.controller.mobile.model.*;
 import com.cloudtimes.common.core.controller.BaseController;
 import com.cloudtimes.common.core.domain.ApiResult;
 import com.cloudtimes.common.core.domain.entity.AuthUser;
 import com.cloudtimes.common.enums.ChannelType;
 import com.cloudtimes.common.utils.AuthUtils;
 import com.cloudtimes.common.utils.PageUtils;
+import com.cloudtimes.serving.mobile.domain.*;
 import com.cloudtimes.serving.mobile.service.ICtShopBossBusinessService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -232,8 +232,8 @@ public class ShopBossBusinessController extends BaseController {
     }
 
     @ApiOperation("更新商品")
-    @PostMapping("/product/async")
-    public ApiResult asyncProduct(@RequestBody AsyncProductReq param) {
+    @PostMapping("/product/sync")
+    public ApiResult syncProduct(@RequestBody SyncProductReq param) {
         AuthUser authUser = AuthUtils.getObject();
         if (StringUtils.equals(authUser.getChannelType(), ChannelType.MOBILE.getCode())) {
             return new ApiResult().error("渠道类型不匹配");

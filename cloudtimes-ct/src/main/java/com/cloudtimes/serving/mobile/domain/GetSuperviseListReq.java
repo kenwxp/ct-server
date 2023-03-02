@@ -1,4 +1,4 @@
-package com.cloudtimes.app.controller.mobile.model;
+package com.cloudtimes.serving.mobile.domain;
 
 import com.cloudtimes.common.core.domain.PageRequest;
 import io.swagger.annotations.ApiModel;

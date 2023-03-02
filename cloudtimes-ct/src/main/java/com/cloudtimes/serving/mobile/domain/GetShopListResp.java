@@ -1,4 +1,4 @@
-package com.cloudtimes.app.controller.mobile.model;
+package com.cloudtimes.serving.mobile.domain;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -10,8 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 @Data
 @Slf4j
 public class GetShopListResp {
-    @ApiModelProperty("token")
-    private String token;
     @ApiModelProperty("店id")
     private String shopId;
     @ApiModelProperty("门店号")
