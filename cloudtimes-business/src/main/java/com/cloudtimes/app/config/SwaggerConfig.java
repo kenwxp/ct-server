@@ -1,5 +1,6 @@
 package com.cloudtimes.app.config;
 
+import java.util.function.Predicate;
 import com.cloudtimes.common.config.CloudTimesConfig;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,9 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc;
+
+import static springfox.documentation.builders.PathSelectors.*;
+import static com.google.common.base.Predicates.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,6 +72,36 @@ public class SwaggerConfig {
                 .securityContexts(securityContexts())
                 .pathMapping(pathMapping);
     }
+
+    @Bean
+    public Docket agentApiGroup() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .groupName("agent")
+                .select()
+                .apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
+                .apis(RequestHandlerSelectors.basePackage("com.cloudtimes.app.controller"))
+                .paths(PathSelectors.regex(".*/agent/.*"))
+                .build()
+                /* 设置安全模式，swagger可以设置访问token */
+                .securitySchemes(securitySchemes())
+                .securityContexts(securityContexts())
+                .pathMapping(pathMapping);
+    }
+
+    @Bean
+    public Docket rcygApiGroup() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .groupName("rcyg")
+                .select()
+                .apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
+                .apis(RequestHandlerSelectors.basePackage("com.cloudtimes.app.controller"))
+                .paths(PathSelectors.regex(".*/rcyg/.*"))
+                .build()
+                .securitySchemes(securitySchemes())
+                .securityContexts(securityContexts())
+                .pathMapping(pathMapping);
+    }
+
 
     /**
      * 安全模式，这里指定token通过Authorization头请求头传递
