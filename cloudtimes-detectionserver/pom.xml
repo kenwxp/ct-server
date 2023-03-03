@@ -16,7 +16,6 @@
     </description>
     <properties>
         <cloudtimes.version>3.8.3</cloudtimes.version>
-        <swagger.version>3.0.0</swagger.version>
     </properties>
 
     <dependencies>
@@ -27,13 +26,6 @@
             <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional> <!-- 表示依赖不会传递 -->
         </dependency>
-
-
-        <!--        <dependency>-->
-        <!--            <groupId>io.springfox</groupId>-->
-        <!--            <artifactId>springfox-boot-starter</artifactId>-->
-        <!--            <version>3.0.0</version>-->
-        <!--        </dependency>-->
 
         <!-- SpringBoot 拦截器 -->
         <dependency>

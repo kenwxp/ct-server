@@ -16,7 +16,6 @@
     </description>
     <properties>
         <cloudtimes.version>3.8.3</cloudtimes.version>
-        <swagger.version>3.0.0</swagger.version>
     </properties>
 
     <dependencies>
@@ -28,45 +27,10 @@
             <optional>true</optional> <!-- 表示依赖不会传递 -->
         </dependency>
 
-
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-boot-starter</artifactId>
-            <version>3.0.0</version>
-        </dependency>
-
-        <!-- Swagger3依赖 -->
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-boot-starter</artifactId>
-            <version>${swagger.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>io.swagger</groupId>
-                    <artifactId>swagger-models</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>io.swagger</groupId>
-            <artifactId>swagger-models</artifactId>
-            <version>1.5.24</version>
-        </dependency>
-
         <dependency>
             <groupId>com.github.xiaoymin</groupId>
             <artifactId>knife4j-spring-boot-starter</artifactId>
-            <version>3.0.2</version>
         </dependency>
-
-        <!-- 引入swagger-bootstrap-ui包 /doc.html-->
-        <dependency>
-            <groupId>com.github.xiaoymin</groupId>
-            <artifactId>swagger-bootstrap-ui</artifactId>
-            <version>1.9.1</version>
-        </dependency>
-
 
         <!-- Mysql驱动包 -->
         <dependency>

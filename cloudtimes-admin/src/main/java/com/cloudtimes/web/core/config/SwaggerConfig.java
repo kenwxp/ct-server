@@ -73,6 +73,15 @@ public class SwaggerConfig {
                 .pathMapping(pathMapping);
     }
 
+    @Bean
+    public Docket agentGroup() {
+        return new Docket(DocumentationType.OAS_30)
+                .groupName("代理API")
+                .select()
+                .paths(PathSelectors.regex(".*/agent/.*"))
+                .build();
+    }
+
     /**
      * 安全模式，这里指定token通过Authorization头请求头传递
      */
