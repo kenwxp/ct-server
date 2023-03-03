@@ -82,6 +82,19 @@ public class SysCustomerServiceCache {
         return null;
     }
 
+
+    public List<SysCustomerService> getAllSysCustomerServiceList() {
+        // 获取全部前缀匹配的key 一个key一个客服
+        Set<String> keys = (Set<String>) redisCache.keys(CACHE_NAME + "*");
+        List<SysCustomerService> list = new ArrayList<>();
+        for (String key :
+                keys) {
+            Map<String, Object> cacheMap = redisCache.getCacheMap(key);
+            list.add(BeanUtil.mapToBean(cacheMap, SysCustomerService.class, true));
+        }
+        return list;
+    }
+
     public List<SysCustomerService> getSysCustomerServiceListBySuperior(Long superiorId) {
         // 获取全部前缀匹配的key 一个key一个客服
         Set<String> keys = (Set<String>) redisCache.keys(CACHE_NAME + "*");
@@ -89,7 +102,7 @@ public class SysCustomerServiceCache {
         for (String key :
                 keys) {
             Map<String, Object> cacheMap = redisCache.getCacheMap(key);
-            SysCustomerService customerService = BeanUtil.mapToBean(cacheMap, SysCustomerService.class, false);
+            SysCustomerService customerService = BeanUtil.mapToBean(cacheMap, SysCustomerService.class, true);
             if (customerService.getSuperiorId() == superiorId) {
                 list.add(customerService);
             }
