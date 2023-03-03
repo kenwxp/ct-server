@@ -1,19 +1,25 @@
 package com.cloudtimes.cache;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.cloudtimes.common.core.redis.RedisCache;
+import com.cloudtimes.common.enums.AcceptTaskType;
+import com.cloudtimes.common.utils.StringUtils;
 import com.cloudtimes.system.domain.SysCustomerService;
 import com.cloudtimes.system.mapper.SysCustomerServiceMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 @Component
-public class CtCustomerServiceCache {
+public class SysCustomerServiceCache {
     private static final String CACHE_NAME = "CUSTOMER_SERVICE:";//
     //读写锁
     private final ReadWriteLock rwLock = new ReentrantReadWriteLock();
@@ -25,50 +31,70 @@ public class CtCustomerServiceCache {
     private RedisCache redisCache;
     @Autowired
     private SysCustomerServiceMapper customerServiceMapper;
+    private final long SERVICE_DEPT_ID = 201;
 
     @PostConstruct
     public void init() {
         //初始化加载进行中的任务
-        wLock.lock();
-        try {
-            SysCustomerService query = new SysCustomerService();
-            query.setDelFlag("0");
-            List<SysCustomerService> customerServiceList = customerServiceMapper.selectSysCustomerServiceList(query);
-            for (SysCustomerService customerService : customerServiceList) {
-                Map<String, Object> map = new HashMap<>();
-                map.put("serviceId", customerService.getServiceId());
-                map.put("serviceName", customerService.getServiceName());
-                map.put("superiorId", customerService.getServiceId());
-                map.put("superiorName", customerService.getSuperiorName());
-                map.put("level", customerService.getLevel());
-                map.put("maxAcceptTask", customerService.getMaxAcceptTask());
-                map.put("maxAcceptOrder", customerService.getMaxAcceptOrder());
-                map.put("acceptState", "1");
-                putMap(String.valueOf(customerService.getServiceId()), map);
-            }
-        } finally {
-            wLock.unlock();
-        }
-
+        refresh(true);
     }
 
-    public void refreshByServiceId(String serviceId) {
-        rLock.lock();
-        try {
-            SysCustomerService customerService = customerServiceMapper.selectSysCustomerServiceById(serviceId);
-            Map<String, Object> map = new HashMap<>();
-            map.put("serviceId", customerService.getServiceId());
-            map.put("serviceName", customerService.getServiceName());
-            map.put("superiorId", customerService.getServiceId());
-            map.put("superiorName", customerService.getSuperiorName());
-            map.put("level", customerService.getLevel());
-            map.put("maxAcceptTask", customerService.getMaxAcceptTask());
-            map.put("maxAcceptOrder", customerService.getMaxAcceptOrder());
-            map.put("acceptState", "1");
+    public void refresh() {
+        refresh(false);
+    }
+
+    /**
+     * 刷新内存
+     */
+    public void refresh(boolean init) {
+        //初始化加载进行中的任务
+        SysCustomerService query = new SysCustomerService();
+        query.setDelFlag("0");
+        List<SysCustomerService> customerServiceList = customerServiceMapper.selectSysCustomerServiceList(query);
+        for (SysCustomerService customerService : customerServiceList) {
+            if (!init) {
+                String acceptState = getAcceptState(String.valueOf(customerService.getServiceId()));
+                if (StringUtils.isEmpty(acceptState)) {
+                    customerService.setAcceptState(AcceptTaskType.PAUSE.getCode()); //暂停接单
+                } else {
+                    customerService.setAcceptState(acceptState);
+                }
+            } else {
+                customerService.setAcceptState(AcceptTaskType.PAUSE.getCode());
+            }
+            Map<String, Object> map = BeanUtil.beanToMap(customerService);
             putMap(String.valueOf(customerService.getServiceId()), map);
-        } finally {
-            rLock.unlock();
         }
+    }
+
+    public Map<String, Object> refreshOne(String serviceId) {
+        SysCustomerService customerService = customerServiceMapper.selectSysCustomerServiceByServiceId(Long.parseLong(serviceId));
+        if (customerService != null) {
+            String acceptState = getAcceptState(String.valueOf(customerService.getServiceId()));
+            if (StringUtils.isEmpty(acceptState)) {
+                customerService.setAcceptState(AcceptTaskType.PAUSE.getCode());
+            } else {
+                customerService.setAcceptState(acceptState);
+            }
+            Map<String, Object> map = BeanUtil.beanToMap(customerService);
+            putMap(String.valueOf(customerService.getServiceId()), map);
+        }
+        return null;
+    }
+
+    public List<SysCustomerService> getSysCustomerServiceListBySuperior(Long superiorId) {
+        // 获取全部前缀匹配的key 一个key一个客服
+        Set<String> keys = (Set<String>) redisCache.keys(CACHE_NAME + "*");
+        List<SysCustomerService> list = new ArrayList<>();
+        for (String key :
+                keys) {
+            Map<String, Object> cacheMap = redisCache.getCacheMap(key);
+            SysCustomerService customerService = BeanUtil.mapToBean(cacheMap, SysCustomerService.class, false);
+            if (customerService.getSuperiorId() == superiorId) {
+                list.add(customerService);
+            }
+        }
+        return list;
     }
 
     public String getAcceptState(String serviceId) {
@@ -108,7 +134,12 @@ public class CtCustomerServiceCache {
     public Map<String, Object> getMap(String serviceId) {
         rLock.lock();
         try {
-            return redisCache.getCacheMap(getCacheName(serviceId));
+            Map<String, Object> cacheMap = redisCache.getCacheMap(getCacheName(serviceId));
+            if (StringUtils.isEmpty(cacheMap)) {
+                return cacheMap;
+            }
+            rLock.unlock();
+            return refreshOne(serviceId);
         } finally {
             rLock.unlock();
         }

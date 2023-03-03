@@ -2,6 +2,10 @@ package com.cloudtimes.web.controller.system;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.cloudtimes.common.core.domain.ApiResult;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +33,7 @@ import com.cloudtimes.common.core.page.TableDataInfo;
  */
 @RestController
 @RequestMapping("/system/service")
+@Api("客服特性参数相关接口")
 public class SysCustomerServiceController extends BaseController
 {
     @Autowired
@@ -90,7 +95,6 @@ public class SysCustomerServiceController extends BaseController
     {
         return toAjax(sysCustomerServiceService.updateSysCustomerService(sysCustomerService));
     }
-
     /**
      * 删除客服特性参数
      */
@@ -100,5 +104,17 @@ public class SysCustomerServiceController extends BaseController
     public AjaxResult remove(@PathVariable String[] ids)
     {
         return toAjax(sysCustomerServiceService.deleteSysCustomerServiceByIds(ids));
+    }
+
+    /**
+     * 同步客服参数特性
+     */
+    @ApiOperation(value = "同步客服参数特性")
+    @PreAuthorize("@ss.hasPermi('system:service:sync')")
+    @Log(title = "客服特性参数", businessType = BusinessType.OTHER)
+    @GetMapping("/sync")
+    public ApiResult sync()
+    {
+        return new ApiResult().success(sysCustomerServiceService.syncSysCustomerService());
     }
 }

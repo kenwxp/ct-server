@@ -2,6 +2,7 @@ package com.cloudtimes.system.mapper;
 
 import java.util.List;
 import com.cloudtimes.system.domain.SysCustomerService;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 客服特性参数Mapper接口
@@ -20,12 +21,35 @@ public interface SysCustomerServiceMapper
     public SysCustomerService selectSysCustomerServiceById(String id);
 
     /**
+     * 查询客服特性参数
+     *
+     * @param id 客服特性参数主键
+     * @return 客服特性参数
+     */
+    public List<SysCustomerService> selectSysCustomerServiceByIds(String[] ids);
+
+    /**
+     * 查询客服特性参数
+     *
+     * @param serviceId 客服特性参数主键
+     * @return 客服特性参数
+     */
+    public SysCustomerService selectSysCustomerServiceByServiceId(@Param("serviceId") Long serviceId);
+    /**
      * 查询客服特性参数列表
      * 
      * @param sysCustomerService 客服特性参数
      * @return 客服特性参数集合
      */
     public List<SysCustomerService> selectSysCustomerServiceList(SysCustomerService sysCustomerService);
+
+    /**
+     * 获取原始客服列表
+     *
+     * @param deptId
+     * @return 客服特性参数集合
+     */
+    public List<SysCustomerService> selectSysCustomerServiceListFromDept(Long deptId);
 
     /**
      * 新增客服特性参数

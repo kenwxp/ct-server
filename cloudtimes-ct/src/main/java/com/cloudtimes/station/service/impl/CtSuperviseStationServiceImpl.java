@@ -2,7 +2,7 @@ package com.cloudtimes.station.service.impl;
 
 import cn.hutool.core.date.DateUtil;
 import com.cloudtimes.cache.CacheVideoData;
-import com.cloudtimes.cache.CtCustomerServiceCache;
+import com.cloudtimes.cache.SysCustomerServiceCache;
 import com.cloudtimes.cache.CtStoreVideoCache;
 import com.cloudtimes.cache.CtTaskCache;
 import com.cloudtimes.common.constant.RocketMQConstants;
@@ -297,7 +297,7 @@ public class CtSuperviseStationServiceImpl implements ICtSuperviseStationService
     }
 
     @Autowired
-    private CtCustomerServiceCache staffAcceptCache;
+    private SysCustomerServiceCache staffAcceptCache;
 
     /**
      * 接单开关维护

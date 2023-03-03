@@ -72,6 +72,11 @@ public class SysCustomerService extends BaseEntity {
      */
     @Excel(name = "最大接受订单量")
     private Long maxAcceptOrder;
+    
+    /**
+     * 接单状态(内存) 0-开始接单 1-暂停接单 2-结束接单
+     */
+    private String acceptState;
 
     /**
      * 是否删除

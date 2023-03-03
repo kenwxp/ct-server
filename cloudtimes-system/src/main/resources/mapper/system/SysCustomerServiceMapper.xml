@@ -33,7 +33,44 @@
         where id = #{id}
     </select>
 
+    <select id="selectSysCustomerServiceByIds" parameterType="String" resultType="SysCustomerService">
+        <include refid="selectSysCustomerServiceVo"/>
+        where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="selectSysCustomerServiceByServiceId" parameterType="Long" resultType="SysCustomerService">
+        <include refid="selectSysCustomerServiceVo"/>
+        where service_id = #{serviceId}
+    </select>
+
+    <select id="selectSysCustomerServiceListFromDept" parameterType="Long" resultType="SysCustomerService">
+        select
+        ju.user_id service_id,
+        ju.user_name service_name,
+        su.user_id superior_id,
+        su.user_name superior_name,
+        jd.dept_id dept_id ,
+        jd.dept_name dept_name
+        from
+        sys_user ju
+        left join sys_dept jd on
+        jd.dept_id = ju.dept_id
+        left join sys_dept sd on
+        jd.parent_id = sd.dept_id
+        left join sys_user su on
+        su.user_id = jd.leader_user_id
+        where
+        sd.dept_id = #{deptId}
+        and ju.user_id != jd.leader_user_id ;
+    </select>
+
     <insert id="insertSysCustomerService" parameterType="SysCustomerService">
+        <selectKey keyProperty="id" order="BEFORE" resultType="String">
+            select uuid() from dual
+        </selectKey>
         insert into sys_customer_service
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
