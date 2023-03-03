@@ -6,8 +6,8 @@ import com.cloudtimes.system.domain.SysCustomerService;
 /**
  * 客服特性参数Service接口
  * 
- * @author tank
- * @date 2023-03-02
+ * @author wangxp
+ * @date 2023-03-03
  */
 public interface ISysCustomerServiceService 
 {

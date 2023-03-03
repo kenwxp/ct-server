@@ -1,16 +1,14 @@
 package com.cloudtimes.system.domain;
 
-import lombok.Data;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import com.cloudtimes.common.annotation.Excel;
 import com.cloudtimes.common.core.domain.BaseEntity;
+import lombok.Data;
 
 /**
  * 客服特性参数对象 sys_customer_service
  *
  * @author wangxp
- * @date 2023-03-02
+ * @date 2023-03-03
  */
 @Data
 public class SysCustomerService extends BaseEntity {
@@ -25,7 +23,7 @@ public class SysCustomerService extends BaseEntity {
      * 客服编号
      */
     @Excel(name = "客服编号")
-    private String serviceId;
+    private Long serviceId;
 
     /**
      * 客服名
@@ -37,13 +35,25 @@ public class SysCustomerService extends BaseEntity {
      * 客服负责人编号
      */
     @Excel(name = "客服负责人编号")
-    private String superiorId;
+    private Long superiorId;
 
     /**
      * 客服负责人名
      */
     @Excel(name = "客服负责人名")
     private String superiorName;
+
+    /**
+     * 部门id
+     */
+    @Excel(name = "部门id")
+    private Long deptId;
+
+    /**
+     * 部门名
+     */
+    @Excel(name = "部门名")
+    private String deptName;
 
     /**
      * 客服级别

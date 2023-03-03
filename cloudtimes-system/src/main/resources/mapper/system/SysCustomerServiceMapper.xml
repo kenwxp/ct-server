@@ -5,21 +5,23 @@
 <mapper namespace="com.cloudtimes.system.mapper.SysCustomerServiceMapper">
 
     <sql id="selectSysCustomerServiceVo">
-        select id, service_id, service_name, superior_id, superior_name, level, max_accept_task, max_accept_order,
-        del_flag, create_time, update_time from sys_customer_service
+        select id, service_id, service_name, superior_id, superior_name, dept_id, dept_name, level, max_accept_task,
+        max_accept_order, del_flag, create_time, update_time from sys_customer_service
     </sql>
 
     <select id="selectSysCustomerServiceList" parameterType="SysCustomerService" resultType="SysCustomerService">
         <include refid="selectSysCustomerServiceVo"/>
         <where>
-            <if test="serviceId != null  and serviceId != ''">and service_id = #{serviceId}</if>
+            <if test="serviceId != null ">and service_id = #{serviceId}</if>
             <if test="serviceName != null  and serviceName != ''">and service_name like concat('%', #{serviceName},
                 '%')
             </if>
-            <if test="superiorId != null  and superiorId != ''">and superior_id = #{superiorId}</if>
+            <if test="superiorId != null ">and superior_id = #{superiorId}</if>
             <if test="superiorName != null  and superiorName != ''">and superior_name like concat('%', #{superiorName},
                 '%')
             </if>
+            <if test="deptId != null ">and dept_id = #{deptId}</if>
+            <if test="deptName != null  and deptName != ''">and dept_name like concat('%', #{deptName}, '%')</if>
             <if test="level != null  and level != ''">and level = #{level}</if>
             <if test="maxAcceptTask != null ">and max_accept_task = #{maxAcceptTask}</if>
             <if test="maxAcceptOrder != null ">and max_accept_order = #{maxAcceptOrder}</if>
@@ -39,6 +41,8 @@
             <if test="serviceName != null">service_name,</if>
             <if test="superiorId != null">superior_id,</if>
             <if test="superiorName != null">superior_name,</if>
+            <if test="deptId != null">dept_id,</if>
+            <if test="deptName != null">dept_name,</if>
             <if test="level != null">level,</if>
             <if test="maxAcceptTask != null">max_accept_task,</if>
             <if test="maxAcceptOrder != null">max_accept_order,</if>
@@ -52,6 +56,8 @@
             <if test="serviceName != null">#{serviceName},</if>
             <if test="superiorId != null">#{superiorId},</if>
             <if test="superiorName != null">#{superiorName},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="deptName != null">#{deptName},</if>
             <if test="level != null">#{level},</if>
             <if test="maxAcceptTask != null">#{maxAcceptTask},</if>
             <if test="maxAcceptOrder != null">#{maxAcceptOrder},</if>
@@ -68,6 +74,8 @@
             <if test="serviceName != null">service_name = #{serviceName},</if>
             <if test="superiorId != null">superior_id = #{superiorId},</if>
             <if test="superiorName != null">superior_name = #{superiorName},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="deptName != null">dept_name = #{deptName},</if>
             <if test="level != null">level = #{level},</if>
             <if test="maxAcceptTask != null">max_accept_task = #{maxAcceptTask},</if>
             <if test="maxAcceptOrder != null">max_accept_order = #{maxAcceptOrder},</if>

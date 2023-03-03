@@ -24,8 +24,8 @@ import com.cloudtimes.common.core.page.TableDataInfo;
 /**
  * 客服特性参数Controller
  * 
- * @author tank
- * @date 2023-03-02
+ * @author wangxp
+ * @date 2023-03-03
  */
 @RestController
 @RequestMapping("/system/service")
