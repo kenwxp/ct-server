@@ -44,7 +44,7 @@ public class CtCustomerServiceCache {
                 map.put("maxAcceptTask", customerService.getMaxAcceptTask());
                 map.put("maxAcceptOrder", customerService.getMaxAcceptOrder());
                 map.put("acceptState", "1");
-                putMap(customerService.getServiceId(), map);
+                putMap(String.valueOf(customerService.getServiceId()), map);
             }
         } finally {
             wLock.unlock();
@@ -65,7 +65,7 @@ public class CtCustomerServiceCache {
             map.put("maxAcceptTask", customerService.getMaxAcceptTask());
             map.put("maxAcceptOrder", customerService.getMaxAcceptOrder());
             map.put("acceptState", "1");
-            putMap(customerService.getServiceId(), map);
+            putMap(String.valueOf(customerService.getServiceId()), map);
         } finally {
             rLock.unlock();
         }
