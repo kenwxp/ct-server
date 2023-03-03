@@ -1,6 +1,7 @@
 package com.cloudtimes.supervise.service.impl;
 
 import com.cloudtimes.cache.CtCustomerServiceCache;
+import com.cloudtimes.common.enums.AcceptTaskType;
 import com.cloudtimes.common.exception.ServiceException;
 import com.cloudtimes.common.utils.DateUtils;
 import com.cloudtimes.supervise.domain.CtCustomerService;
@@ -156,6 +157,7 @@ public class CtCustomerServiceServiceImpl implements ICtCustomerServiceService {
             rawUser.setLevel("0");
             rawUser.setMaxAcceptTask(10L);
             rawUser.setMaxAcceptOrder(50L);
+            rawUser.setAcceptState(AcceptTaskType.COMPLETE.getCode()); // 初始值为结束任务
             rawUser.setDelFlag("0");
             rawUser.setCreateTime(DateUtils.getNowDate());
             rawUser.setUpdateTime(DateUtils.getNowDate());

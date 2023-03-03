@@ -2,7 +2,6 @@ package com.cloudtimes.cache;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.cloudtimes.common.core.redis.RedisCache;
-import com.cloudtimes.common.enums.AcceptTaskType;
 import com.cloudtimes.common.utils.StringUtils;
 import com.cloudtimes.supervise.domain.CtCustomerService;
 import com.cloudtimes.supervise.mapper.CtCustomerServiceMapper;
@@ -51,16 +50,6 @@ public class CtCustomerServiceCache {
         query.setDelFlag("0");
         List<CtCustomerService> customerServiceList = customerServiceMapper.selectCtCustomerServiceList(query);
         for (CtCustomerService customerService : customerServiceList) {
-            if (!init) {
-                String acceptState = getAcceptState(String.valueOf(customerService.getServiceId()));
-                if (StringUtils.isEmpty(acceptState)) {
-                    customerService.setAcceptState(AcceptTaskType.PAUSE.getCode()); //暂停接单
-                } else {
-                    customerService.setAcceptState(acceptState);
-                }
-            } else {
-                customerService.setAcceptState(AcceptTaskType.PAUSE.getCode());
-            }
             Map<String, Object> map = BeanUtil.beanToMap(customerService);
             putMap(String.valueOf(customerService.getServiceId()), map);
         }
@@ -69,12 +58,6 @@ public class CtCustomerServiceCache {
     public Map<String, Object> refreshOne(String serviceId) {
         CtCustomerService customerService = customerServiceMapper.selectCtCustomerServiceByServiceId(Long.parseLong(serviceId));
         if (customerService != null) {
-            String acceptState = getAcceptState(String.valueOf(customerService.getServiceId()));
-            if (StringUtils.isEmpty(acceptState)) {
-                customerService.setAcceptState(AcceptTaskType.PAUSE.getCode());
-            } else {
-                customerService.setAcceptState(acceptState);
-            }
             Map<String, Object> map = BeanUtil.beanToMap(customerService);
             putMap(String.valueOf(customerService.getServiceId()), map);
         }

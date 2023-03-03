@@ -6,10 +6,7 @@ import com.cloudtimes.cache.CtCustomerServiceCache;
 import com.cloudtimes.cache.CtStoreVideoCache;
 import com.cloudtimes.cache.CtTaskCache;
 import com.cloudtimes.common.constant.RocketMQConstants;
-import com.cloudtimes.common.enums.ChannelType;
-import com.cloudtimes.common.enums.EventType;
-import com.cloudtimes.common.enums.OpenDoorOption;
-import com.cloudtimes.common.enums.UserType;
+import com.cloudtimes.common.enums.*;
 import com.cloudtimes.common.exception.ServiceException;
 import com.cloudtimes.common.mq.CtRocketMqProducer;
 import com.cloudtimes.common.mq.OpenDoorMqData;
@@ -24,14 +21,8 @@ import com.cloudtimes.resources.domain.CtMediaTemplate;
 import com.cloudtimes.resources.mapper.CtMediaTemplateMapper;
 import com.cloudtimes.station.domain.*;
 import com.cloudtimes.station.service.ICtSuperviseStationService;
-import com.cloudtimes.supervise.domain.CtEvents;
-import com.cloudtimes.supervise.domain.CtOrder;
-import com.cloudtimes.supervise.domain.CtShopping;
-import com.cloudtimes.supervise.domain.CtTask;
-import com.cloudtimes.supervise.mapper.CtEventsMapper;
-import com.cloudtimes.supervise.mapper.CtOrderMapper;
-import com.cloudtimes.supervise.mapper.CtShoppingMapper;
-import com.cloudtimes.supervise.mapper.CtTaskMapper;
+import com.cloudtimes.supervise.domain.*;
+import com.cloudtimes.supervise.mapper.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -297,7 +288,9 @@ public class CtSuperviseStationServiceImpl implements ICtSuperviseStationService
     }
 
     @Autowired
-    private CtCustomerServiceCache staffAcceptCache;
+    private CtCustomerServiceCache customerServiceCache;
+
+    private CtCustomerServiceMapper customerServiceMapper;
 
     /**
      * 接单开关维护
@@ -308,16 +301,20 @@ public class CtSuperviseStationServiceImpl implements ICtSuperviseStationService
      */
     @Override
     public void acceptTask(Long userId, AcceptTaskReq param) {
-        if (StringUtils.equals(param.getOption(), "2")) {
+        if (StringUtils.equals(param.getOption(), AcceptTaskType.COMPLETE.getCode())) {
             //结束任务
             Map<String, CtTask> taskMap = taskCache.getAllTasksOfStaff(String.valueOf(userId));
             if (taskMap.size() > 0) {
                 throw new ServiceException("当前有未完成的任务,请确认");
             }
-        } else {
-            //开始接单或暂停接单
-            staffAcceptCache.setAcceptState(String.valueOf(userId), param.getOption());
         }
+        CtCustomerService ctCustomerService = customerServiceMapper.selectCtCustomerServiceByServiceId(userId);
+        if (ctCustomerService == null) {
+            throw new ServiceException("无法获取客服信息");
+        }
+        ctCustomerService.setAcceptState(param.getOption());
+        customerServiceMapper.updateCtCustomerService(ctCustomerService);
+        customerServiceCache.setAcceptState(String.valueOf(userId), param.getOption());
     }
 
     @Autowired
