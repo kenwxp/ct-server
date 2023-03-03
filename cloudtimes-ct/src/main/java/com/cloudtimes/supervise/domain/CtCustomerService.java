@@ -1,4 +1,4 @@
-package com.cloudtimes.system.domain;
+package com.cloudtimes.supervise.domain;
 
 import com.cloudtimes.common.annotation.Excel;
 import com.cloudtimes.common.core.domain.BaseEntity;
@@ -11,7 +11,7 @@ import lombok.Data;
  * @date 2023-03-03
  */
 @Data
-public class SysCustomerService extends BaseEntity {
+public class CtCustomerService extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
     /**

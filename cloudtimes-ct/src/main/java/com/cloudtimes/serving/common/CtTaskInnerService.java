@@ -1,7 +1,7 @@
 package com.cloudtimes.serving.common;
 
 import com.cloudtimes.cache.CtTaskCache;
-import com.cloudtimes.cache.SysCustomerServiceCache;
+import com.cloudtimes.cache.CtCustomerServiceCache;
 import com.cloudtimes.common.enums.AcceptTaskType;
 import com.cloudtimes.common.exception.ServiceException;
 import com.cloudtimes.common.enums.OpenDoorOption;
@@ -13,7 +13,7 @@ import com.cloudtimes.hardwaredevice.mapper.CtStoreMapper;
 import com.cloudtimes.supervise.domain.CtOrder;
 import com.cloudtimes.supervise.domain.CtTask;
 import com.cloudtimes.supervise.mapper.CtTaskMapper;
-import com.cloudtimes.system.domain.SysCustomerService;
+import com.cloudtimes.supervise.domain.CtCustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -101,7 +101,7 @@ public class CtTaskInnerService {
     }
 
     @Autowired
-    private SysCustomerServiceCache customerServiceCache;
+    private CtCustomerServiceCache customerServiceCache;
 
 
     /**
@@ -111,11 +111,11 @@ public class CtTaskInnerService {
      */
     public String distributeStaff() {
         // 获取全部客服人员
-        List<SysCustomerService> allCustomerServiceList = customerServiceCache.getAllSysCustomerServiceList();
+        List<CtCustomerService> allCustomerServiceList = customerServiceCache.getAllCtCustomerServiceList();
         // 遍历每个客服人员，根据接单标志，当前任务数，分配期望任务量最少的人员
         Long pick = 0L;
         BigDecimal maxWeight = new BigDecimal(0);
-        for (SysCustomerService customerService :
+        for (CtCustomerService customerService :
                 allCustomerServiceList) {
             if (StringUtils.equals(customerService.getAcceptState(), AcceptTaskType.START.getCode())) {
                 // 接单中的客服进行分配

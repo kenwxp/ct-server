@@ -6,7 +6,7 @@ import com.alibaba.fastjson2.JSON;
 import com.cloudtimes.app.manager.SuperviseWsSessionManager;
 import com.cloudtimes.app.models.WsStaffListData;
 import com.cloudtimes.cache.CacheVideoData;
-import com.cloudtimes.cache.SysCustomerServiceCache;
+import com.cloudtimes.cache.CtCustomerServiceCache;
 import com.cloudtimes.cache.CtStoreVideoCache;
 import com.cloudtimes.cache.CtTaskCache;
 import com.cloudtimes.common.utils.DateUtils;
@@ -14,7 +14,7 @@ import com.cloudtimes.common.utils.StringUtils;
 import com.cloudtimes.enums.PayState;
 import com.cloudtimes.supervise.domain.CtOrder;
 import com.cloudtimes.supervise.domain.CtTask;
-import com.cloudtimes.system.domain.SysCustomerService;
+import com.cloudtimes.supervise.domain.CtCustomerService;
 import com.cloudtimes.system.service.ISysConfigService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +44,7 @@ public class SuperviseServicePolling {
     @Autowired
     private CtTaskCache taskCache;
     @Autowired
-    private SysCustomerServiceCache customerServiceCache;
+    private CtCustomerServiceCache customerServiceCache;
     @Autowired
     private CtStoreVideoCache videoCache;
     @Autowired
@@ -80,9 +80,9 @@ public class SuperviseServicePolling {
                 String superiorId = userEntry.getKey();
                 Set<String> sessionSet = userEntry.getValue();
                 // 根据客服负责人获取客服列表
-                List<SysCustomerService> customerServiceList = customerServiceCache.getSysCustomerServiceListBySuperior(Long.parseLong(superiorId));
+                List<CtCustomerService> customerServiceList = customerServiceCache.getCtCustomerServiceListBySuperior(Long.parseLong(superiorId));
                 List<WsStaffListData> retStaffList = new ArrayList<>();
-                for (SysCustomerService customerService : customerServiceList) {
+                for (CtCustomerService customerService : customerServiceList) {
                     int currentTaskCount = 0;
                     int overflowTaskCount = 0;
                     int overdueTaskCount = 0;

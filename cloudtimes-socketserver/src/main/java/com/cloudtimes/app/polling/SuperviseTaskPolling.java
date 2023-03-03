@@ -6,7 +6,7 @@ import com.alibaba.fastjson2.JSON;
 import com.cloudtimes.app.manager.SuperviseWsSessionManager;
 import com.cloudtimes.app.models.WsTaskData;
 import com.cloudtimes.app.models.WsTaskListData;
-import com.cloudtimes.cache.SysCustomerServiceCache;
+import com.cloudtimes.cache.CtCustomerServiceCache;
 import com.cloudtimes.cache.CtTaskCache;
 import com.cloudtimes.common.utils.DateUtils;
 import com.cloudtimes.common.utils.StringUtils;
@@ -41,7 +41,7 @@ public class SuperviseTaskPolling {
     @Autowired
     private CtTaskCache taskCache;
     @Autowired
-    private SysCustomerServiceCache customerServiceCache;
+    private CtCustomerServiceCache customerServiceCache;
     @Autowired
     private ISysConfigService configService;
 

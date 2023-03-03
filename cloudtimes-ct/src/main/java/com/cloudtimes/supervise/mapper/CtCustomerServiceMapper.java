@@ -1,8 +1,9 @@
-package com.cloudtimes.system.mapper;
+package com.cloudtimes.supervise.mapper;
+
+import com.cloudtimes.supervise.domain.CtCustomerService;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
-import com.cloudtimes.system.domain.SysCustomerService;
-import org.apache.ibatis.annotations.Param;
 
 /**
  * 客服特性参数Mapper接口
@@ -10,7 +11,7 @@ import org.apache.ibatis.annotations.Param;
  * @author wangxp
  * @date 2023-03-02
  */
-public interface SysCustomerServiceMapper 
+public interface CtCustomerServiceMapper
 {
     /**
      * 查询客服特性参数
@@ -18,15 +19,15 @@ public interface SysCustomerServiceMapper
      * @param id 客服特性参数主键
      * @return 客服特性参数
      */
-    public SysCustomerService selectSysCustomerServiceById(String id);
+    public CtCustomerService selectCtCustomerServiceById(String id);
 
     /**
      * 查询客服特性参数
      *
-     * @param id 客服特性参数主键
+     * @param ids 客服特性参数主键
      * @return 客服特性参数
      */
-    public List<SysCustomerService> selectSysCustomerServiceByIds(String[] ids);
+    public List<CtCustomerService> selectCtCustomerServiceByIds(String[] ids);
 
     /**
      * 查询客服特性参数
@@ -34,14 +35,14 @@ public interface SysCustomerServiceMapper
      * @param serviceId 客服特性参数主键
      * @return 客服特性参数
      */
-    public SysCustomerService selectSysCustomerServiceByServiceId(@Param("serviceId") Long serviceId);
+    public CtCustomerService selectCtCustomerServiceByServiceId(@Param("serviceId") Long serviceId);
     /**
      * 查询客服特性参数列表
      * 
      * @param sysCustomerService 客服特性参数
      * @return 客服特性参数集合
      */
-    public List<SysCustomerService> selectSysCustomerServiceList(SysCustomerService sysCustomerService);
+    public List<CtCustomerService> selectCtCustomerServiceList(CtCustomerService sysCustomerService);
 
     /**
      * 获取原始客服列表
@@ -49,7 +50,7 @@ public interface SysCustomerServiceMapper
      * @param deptId
      * @return 客服特性参数集合
      */
-    public List<SysCustomerService> selectSysCustomerServiceListFromDept(Long deptId);
+    public List<CtCustomerService> selectCtCustomerServiceListFromDept(Long deptId);
 
     /**
      * 新增客服特性参数
@@ -57,7 +58,7 @@ public interface SysCustomerServiceMapper
      * @param sysCustomerService 客服特性参数
      * @return 结果
      */
-    public int insertSysCustomerService(SysCustomerService sysCustomerService);
+    public int insertCtCustomerService(CtCustomerService sysCustomerService);
 
     /**
      * 修改客服特性参数
@@ -65,7 +66,7 @@ public interface SysCustomerServiceMapper
      * @param sysCustomerService 客服特性参数
      * @return 结果
      */
-    public int updateSysCustomerService(SysCustomerService sysCustomerService);
+    public int updateCtCustomerService(CtCustomerService sysCustomerService);
 
     /**
      * 删除客服特性参数
@@ -73,7 +74,7 @@ public interface SysCustomerServiceMapper
      * @param id 客服特性参数主键
      * @return 结果
      */
-    public int deleteSysCustomerServiceById(String id);
+    public int deleteCtCustomerServiceById(String id);
 
     /**
      * 批量删除客服特性参数
@@ -81,5 +82,5 @@ public interface SysCustomerServiceMapper
      * @param ids 需要删除的数据主键集合
      * @return 结果
      */
-    public int deleteSysCustomerServiceByIds(String[] ids);
+    public int deleteCtCustomerServiceByIds(String[] ids);
 }

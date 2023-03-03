@@ -1,4 +1,4 @@
-package com.cloudtimes.web.controller.system;
+package com.cloudtimes.web.controller.supervise;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
@@ -20,8 +20,8 @@ import com.cloudtimes.common.annotation.Log;
 import com.cloudtimes.common.core.controller.BaseController;
 import com.cloudtimes.common.core.domain.AjaxResult;
 import com.cloudtimes.common.enums.BusinessType;
-import com.cloudtimes.system.domain.SysCustomerService;
-import com.cloudtimes.system.service.ISysCustomerServiceService;
+import com.cloudtimes.supervise.domain.CtCustomerService;
+import com.cloudtimes.supervise.service.ICtCustomerServiceService;
 import com.cloudtimes.common.utils.poi.ExcelUtil;
 import com.cloudtimes.common.core.page.TableDataInfo;
 
@@ -34,20 +34,20 @@ import com.cloudtimes.common.core.page.TableDataInfo;
 @RestController
 @RequestMapping("/system/service")
 @Api("客服特性参数相关接口")
-public class SysCustomerServiceController extends BaseController
+public class CtCustomerServiceController extends BaseController
 {
     @Autowired
-    private ISysCustomerServiceService sysCustomerServiceService;
+    private ICtCustomerServiceService sysCustomerServiceService;
 
     /**
      * 查询客服特性参数列表
      */
     @PreAuthorize("@ss.hasPermi('system:service:list')")
     @GetMapping("/list")
-    public TableDataInfo list(SysCustomerService sysCustomerService)
+    public TableDataInfo list(CtCustomerService sysCustomerService)
     {
         startPage();
-        List<SysCustomerService> list = sysCustomerServiceService.selectSysCustomerServiceList(sysCustomerService);
+        List<CtCustomerService> list = sysCustomerServiceService.selectCtCustomerServiceList(sysCustomerService);
         return getDataTable(list);
     }
 
@@ -57,10 +57,10 @@ public class SysCustomerServiceController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:service:export')")
     @Log(title = "客服特性参数", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, SysCustomerService sysCustomerService)
+    public void export(HttpServletResponse response, CtCustomerService sysCustomerService)
     {
-        List<SysCustomerService> list = sysCustomerServiceService.selectSysCustomerServiceList(sysCustomerService);
-        ExcelUtil<SysCustomerService> util = new ExcelUtil<SysCustomerService>(SysCustomerService.class);
+        List<CtCustomerService> list = sysCustomerServiceService.selectCtCustomerServiceList(sysCustomerService);
+        ExcelUtil<CtCustomerService> util = new ExcelUtil<CtCustomerService>(CtCustomerService.class);
         util.exportExcel(response, list, "客服特性参数数据");
     }
 
@@ -71,7 +71,7 @@ public class SysCustomerServiceController extends BaseController
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") String id)
     {
-        return AjaxResult.success(sysCustomerServiceService.selectSysCustomerServiceById(id));
+        return AjaxResult.success(sysCustomerServiceService.selectCtCustomerServiceById(id));
     }
 
     /**
@@ -80,9 +80,9 @@ public class SysCustomerServiceController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:service:add')")
     @Log(title = "客服特性参数", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody SysCustomerService sysCustomerService)
+    public AjaxResult add(@RequestBody CtCustomerService sysCustomerService)
     {
-        return toAjax(sysCustomerServiceService.insertSysCustomerService(sysCustomerService));
+        return toAjax(sysCustomerServiceService.insertCtCustomerService(sysCustomerService));
     }
 
     /**
@@ -91,9 +91,9 @@ public class SysCustomerServiceController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:service:edit')")
     @Log(title = "客服特性参数", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody SysCustomerService sysCustomerService)
+    public AjaxResult edit(@RequestBody CtCustomerService sysCustomerService)
     {
-        return toAjax(sysCustomerServiceService.updateSysCustomerService(sysCustomerService));
+        return toAjax(sysCustomerServiceService.updateCtCustomerService(sysCustomerService));
     }
     /**
      * 删除客服特性参数
@@ -103,7 +103,7 @@ public class SysCustomerServiceController extends BaseController
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable String[] ids)
     {
-        return toAjax(sysCustomerServiceService.deleteSysCustomerServiceByIds(ids));
+        return toAjax(sysCustomerServiceService.deleteCtCustomerServiceByIds(ids));
     }
 
     /**
@@ -115,6 +115,6 @@ public class SysCustomerServiceController extends BaseController
     @GetMapping("/sync")
     public ApiResult sync()
     {
-        return new ApiResult().success(sysCustomerServiceService.syncSysCustomerService());
+        return new ApiResult().success(sysCustomerServiceService.syncCtCustomerService());
     }
 }

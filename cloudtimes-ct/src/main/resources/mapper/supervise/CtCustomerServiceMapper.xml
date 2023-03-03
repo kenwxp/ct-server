@@ -2,15 +2,15 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.cloudtimes.system.mapper.SysCustomerServiceMapper">
+<mapper namespace="com.cloudtimes.supervise.mapper.CtCustomerServiceMapper">
 
-    <sql id="selectSysCustomerServiceVo">
+    <sql id="selectCtCustomerServiceVo">
         select id, service_id, service_name, superior_id, superior_name, dept_id, dept_name, level, max_accept_task,
-        max_accept_order, del_flag, create_time, update_time from sys_customer_service
+        max_accept_order, del_flag, create_time, update_time from ct_customer_service
     </sql>
 
-    <select id="selectSysCustomerServiceList" parameterType="SysCustomerService" resultType="SysCustomerService">
-        <include refid="selectSysCustomerServiceVo"/>
+    <select id="selectCtCustomerServiceList" parameterType="CtCustomerService" resultType="CtCustomerService">
+        <include refid="selectCtCustomerServiceVo"/>
         <where>
             <if test="serviceId != null ">and service_id = #{serviceId}</if>
             <if test="serviceName != null  and serviceName != ''">and service_name like concat('%', #{serviceName},
@@ -28,25 +28,25 @@
         </where>
     </select>
 
-    <select id="selectSysCustomerServiceById" parameterType="String" resultType="SysCustomerService">
-        <include refid="selectSysCustomerServiceVo"/>
+    <select id="selectCtCustomerServiceById" parameterType="String" resultType="CtCustomerService">
+        <include refid="selectCtCustomerServiceVo"/>
         where id = #{id}
     </select>
 
-    <select id="selectSysCustomerServiceByIds" parameterType="String" resultType="SysCustomerService">
-        <include refid="selectSysCustomerServiceVo"/>
+    <select id="selectCtCustomerServiceByIds" parameterType="String" resultType="CtCustomerService">
+        <include refid="selectCtCustomerServiceVo"/>
         where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </select>
 
-    <select id="selectSysCustomerServiceByServiceId" parameterType="Long" resultType="SysCustomerService">
-        <include refid="selectSysCustomerServiceVo"/>
+    <select id="selectCtCustomerServiceByServiceId" parameterType="Long" resultType="CtCustomerService">
+        <include refid="selectCtCustomerServiceVo"/>
         where service_id = #{serviceId}
     </select>
 
-    <select id="selectSysCustomerServiceListFromDept" parameterType="Long" resultType="SysCustomerService">
+    <select id="selectCtCustomerServiceListFromDept" parameterType="Long" resultType="CtCustomerService">
         select
         ju.user_id service_id,
         ju.user_name service_name,
@@ -67,11 +67,11 @@
         and ju.user_id != jd.leader_user_id ;
     </select>
 
-    <insert id="insertSysCustomerService" parameterType="SysCustomerService">
+    <insert id="insertCtCustomerService" parameterType="CtCustomerService">
         <selectKey keyProperty="id" order="BEFORE" resultType="String">
             select uuid() from dual
         </selectKey>
-        insert into sys_customer_service
+        insert into ct_customer_service
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
             <if test="serviceId != null">service_id,</if>
@@ -104,8 +104,8 @@
         </trim>
     </insert>
 
-    <update id="updateSysCustomerService" parameterType="SysCustomerService">
-        update sys_customer_service
+    <update id="updateCtCustomerService" parameterType="CtCustomerService">
+        update ct_customer_service
         <trim prefix="SET" suffixOverrides=",">
             <if test="serviceId != null">service_id = #{serviceId},</if>
             <if test="serviceName != null">service_name = #{serviceName},</if>
@@ -123,12 +123,12 @@
         where id = #{id}
     </update>
 
-    <delete id="deleteSysCustomerServiceById" parameterType="String">
-        delete from sys_customer_service where id = #{id}
+    <delete id="deleteCtCustomerServiceById" parameterType="String">
+        delete from ct_customer_service where id = #{id}
     </delete>
 
-    <delete id="deleteSysCustomerServiceByIds" parameterType="String">
-        delete from sys_customer_service where id in
+    <delete id="deleteCtCustomerServiceByIds" parameterType="String">
+        delete from ct_customer_service where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

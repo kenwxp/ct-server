@@ -1,18 +1,19 @@
-package com.cloudtimes.system.service.impl;
+package com.cloudtimes.supervise.service.impl;
 
-import java.util.List;
-
-import com.cloudtimes.cache.SysCustomerServiceCache;
+import com.cloudtimes.cache.CtCustomerServiceCache;
 import com.cloudtimes.common.exception.ServiceException;
 import com.cloudtimes.common.utils.DateUtils;
+import com.cloudtimes.supervise.domain.CtCustomerService;
+import com.cloudtimes.supervise.mapper.CtCustomerServiceMapper;
+import com.cloudtimes.supervise.service.ICtCustomerServiceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.cloudtimes.common.annotation.DataSource;
 import com.cloudtimes.common.enums.DataSourceType;
-import com.cloudtimes.system.mapper.SysCustomerServiceMapper;
-import com.cloudtimes.system.domain.SysCustomerService;
-import com.cloudtimes.system.service.ISysCustomerServiceService;
+
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * 客服特性参数Service业务层处理
@@ -22,12 +23,12 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @DataSource(DataSourceType.CT)
 @Service
-public class SysCustomerServiceServiceImpl implements ISysCustomerServiceService {
+public class CtCustomerServiceServiceImpl implements ICtCustomerServiceService {
     @Autowired
-    private SysCustomerServiceMapper sysCustomerServiceMapper;
+    private CtCustomerServiceMapper sysCustomerServiceMapper;
     private final long SERVICE_DEPT_ID = 201;
     @Autowired
-    private SysCustomerServiceCache ctCustomerServiceCache;
+    private CtCustomerServiceCache ctCustomerServiceCache;
 
     /**
      * 查询客服特性参数
@@ -36,8 +37,8 @@ public class SysCustomerServiceServiceImpl implements ISysCustomerServiceService
      * @return 客服特性参数
      */
     @Override
-    public SysCustomerService selectSysCustomerServiceById(String id) {
-        return sysCustomerServiceMapper.selectSysCustomerServiceById(id);
+    public CtCustomerService selectCtCustomerServiceById(String id) {
+        return sysCustomerServiceMapper.selectCtCustomerServiceById(id);
     }
 
     /**
@@ -47,8 +48,8 @@ public class SysCustomerServiceServiceImpl implements ISysCustomerServiceService
      * @return 客服特性参数
      */
     @Override
-    public List<SysCustomerService> selectSysCustomerServiceList(SysCustomerService sysCustomerService) {
-        return sysCustomerServiceMapper.selectSysCustomerServiceList(sysCustomerService);
+    public List<CtCustomerService> selectCtCustomerServiceList(CtCustomerService sysCustomerService) {
+        return sysCustomerServiceMapper.selectCtCustomerServiceList(sysCustomerService);
     }
 
     /**
@@ -59,9 +60,9 @@ public class SysCustomerServiceServiceImpl implements ISysCustomerServiceService
      */
     @Transactional
     @Override
-    public int insertSysCustomerService(SysCustomerService sysCustomerService) {
+    public int insertCtCustomerService(CtCustomerService sysCustomerService) {
         sysCustomerService.setCreateTime(DateUtils.getNowDate());
-        int row = sysCustomerServiceMapper.insertSysCustomerService(sysCustomerService);
+        int row = sysCustomerServiceMapper.insertCtCustomerService(sysCustomerService);
         // 刷新
         ctCustomerServiceCache.refreshOne(sysCustomerService.getId());
         return row;
@@ -75,14 +76,14 @@ public class SysCustomerServiceServiceImpl implements ISysCustomerServiceService
      */
     @Transactional
     @Override
-    public int updateSysCustomerService(SysCustomerService sysCustomerService) {
-        SysCustomerService dbOne = sysCustomerServiceMapper.selectSysCustomerServiceById(sysCustomerService.getId());
+    public int updateCtCustomerService(CtCustomerService sysCustomerService) {
+        CtCustomerService dbOne = sysCustomerServiceMapper.selectCtCustomerServiceById(sysCustomerService.getId());
         if (dbOne == null) {
             throw new ServiceException("客服不存在");
         }
         ctCustomerServiceCache.refreshOne(String.valueOf(dbOne.getServiceId()));
         sysCustomerService.setUpdateTime(DateUtils.getNowDate());
-        return sysCustomerServiceMapper.updateSysCustomerService(sysCustomerService);
+        return sysCustomerServiceMapper.updateCtCustomerService(sysCustomerService);
     }
 
     /**
@@ -93,16 +94,16 @@ public class SysCustomerServiceServiceImpl implements ISysCustomerServiceService
      */
     @Transactional
     @Override
-    public int deleteSysCustomerServiceByIds(String[] ids) {
-        List<SysCustomerService> sysCustomerServices = sysCustomerServiceMapper.selectSysCustomerServiceByIds(ids);
-        for (SysCustomerService customerService :
+    public int deleteCtCustomerServiceByIds(String[] ids) {
+        List<CtCustomerService> sysCustomerServices = sysCustomerServiceMapper.selectCtCustomerServiceByIds(ids);
+        for (CtCustomerService customerService :
                 sysCustomerServices) {
             if (customerService == null) {
                 throw new ServiceException("客服不存在");
             }
             ctCustomerServiceCache.deleteMap(String.valueOf(customerService.getServiceId()));
         }
-        return sysCustomerServiceMapper.deleteSysCustomerServiceByIds(ids);
+        return sysCustomerServiceMapper.deleteCtCustomerServiceByIds(ids);
     }
 
     /**
@@ -113,14 +114,14 @@ public class SysCustomerServiceServiceImpl implements ISysCustomerServiceService
      */
     @Transactional
     @Override
-    public int deleteSysCustomerServiceById(String id) {
-        SysCustomerService customerService = sysCustomerServiceMapper.selectSysCustomerServiceById(id);
+    public int deleteCtCustomerServiceById(String id) {
+        CtCustomerService customerService = sysCustomerServiceMapper.selectCtCustomerServiceById(id);
         if (customerService == null) {
             throw new ServiceException("客服不存在");
         }
         // 内存删除
         ctCustomerServiceCache.deleteMap(String.valueOf(customerService.getServiceId()));
-        return sysCustomerServiceMapper.deleteSysCustomerServiceById(id);
+        return sysCustomerServiceMapper.deleteCtCustomerServiceById(id);
     }
 
 
@@ -131,16 +132,16 @@ public class SysCustomerServiceServiceImpl implements ISysCustomerServiceService
      */
     @Transactional
     @Override
-    public int syncSysCustomerService() {
+    public int syncCtCustomerService() {
         // 原始数据
-        List<SysCustomerService> rawList = sysCustomerServiceMapper.selectSysCustomerServiceListFromDept(SERVICE_DEPT_ID);
-        SysCustomerService query = new SysCustomerService();
+        List<CtCustomerService> rawList = sysCustomerServiceMapper.selectCtCustomerServiceListFromDept(SERVICE_DEPT_ID);
+        CtCustomerService query = new CtCustomerService();
         query.setDelFlag("0");
         // 已有数据
-        List<SysCustomerService> currentList = sysCustomerServiceMapper.selectSysCustomerServiceList(query);
-        for (SysCustomerService rawUser : rawList) {
+        List<CtCustomerService> currentList = sysCustomerServiceMapper.selectCtCustomerServiceList(query);
+        for (CtCustomerService rawUser : rawList) {
             boolean exist = false;
-            for (SysCustomerService existUser :
+            for (CtCustomerService existUser :
                     currentList) {
                 if (rawUser.getServiceId() == existUser.getServiceId()) {
                     // 存在
@@ -158,7 +159,7 @@ public class SysCustomerServiceServiceImpl implements ISysCustomerServiceService
             rawUser.setDelFlag("0");
             rawUser.setCreateTime(DateUtils.getNowDate());
             rawUser.setUpdateTime(DateUtils.getNowDate());
-            sysCustomerServiceMapper.insertSysCustomerService(rawUser);
+            sysCustomerServiceMapper.insertCtCustomerService(rawUser);
         }
         // 刷新内存
         ctCustomerServiceCache.refresh();
