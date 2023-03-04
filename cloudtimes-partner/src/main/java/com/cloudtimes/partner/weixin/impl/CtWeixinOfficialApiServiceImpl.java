@@ -5,6 +5,7 @@ import com.cloudtimes.common.utils.http.HttpUtils;
 import com.cloudtimes.common.utils.uuid.UUID;
 import com.cloudtimes.partner.config.PartnerConfig;
 import com.cloudtimes.partner.weixin.ICtWeixinOfficialApiService;
+import com.cloudtimes.partner.weixin.cache.AuthStateRedisCache;
 import com.xkcoding.http.config.HttpConfig;
 import me.zhyd.oauth.config.AuthConfig;
 import me.zhyd.oauth.model.AuthCallback;
@@ -29,6 +30,9 @@ public class CtWeixinOfficialApiServiceImpl implements ICtWeixinOfficialApiServi
 
     @Autowired
     private PartnerConfig partnerConfig;
+
+    @Autowired
+    private AuthStateRedisCache stateRedisCache;
 
     @Override
     public String getWXAuthURL(String type, String inviteCode) {
@@ -56,7 +60,7 @@ public class CtWeixinOfficialApiServiceImpl implements ICtWeixinOfficialApiServi
                 .clientId(partnerConfig.getWxOfficialAppid())
                 .clientSecret(partnerConfig.getWxOfficialSecret())
                 .redirectUri(redirectUrl)
-                .build());
+                .build(), stateRedisCache);
     }
 
     @Override
