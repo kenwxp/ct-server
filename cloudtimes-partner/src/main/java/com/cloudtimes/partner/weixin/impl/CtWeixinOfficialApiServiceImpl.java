@@ -5,6 +5,7 @@ import com.cloudtimes.common.utils.http.HttpUtils;
 import com.cloudtimes.common.utils.uuid.UUID;
 import com.cloudtimes.partner.config.PartnerConfig;
 import com.cloudtimes.partner.weixin.ICtWeixinOfficialApiService;
+import com.xkcoding.http.config.HttpConfig;
 import me.zhyd.oauth.config.AuthConfig;
 import me.zhyd.oauth.model.AuthCallback;
 import me.zhyd.oauth.model.AuthResponse;
@@ -38,8 +39,8 @@ public class CtWeixinOfficialApiServiceImpl implements ICtWeixinOfficialApiServi
     private AuthRequest createAuthRequest(String type, String inviteCode) {
         String redirectUrl = partnerConfig.getLoginCallbackApiUrl();
         String params = "";
-        if ( type != null) params += "ty=" + type;
-        if ( inviteCode != null) {
+        if (type != null) params += "ty=" + type;
+        if (inviteCode != null) {
             if (params.isEmpty()) {
                 params += "ic=" + inviteCode;
             } else {
@@ -49,8 +50,9 @@ public class CtWeixinOfficialApiServiceImpl implements ICtWeixinOfficialApiServi
         if (!params.isEmpty()) {
             redirectUrl += "?" + params;
         }
-
-        return new AuthWeChatMpRequest(AuthConfig.builder()
+        HttpConfig httpConfig = new HttpConfig();
+        httpConfig.setTimeout(60000);
+        return new AuthWeChatMpRequest(AuthConfig.builder().httpConfig(httpConfig)
                 .clientId(partnerConfig.getWxOfficialAppid())
                 .clientSecret(partnerConfig.getWxOfficialSecret())
                 .redirectUri(redirectUrl)

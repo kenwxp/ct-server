@@ -36,6 +36,8 @@ server:
       io: 8
       # 阻塞任务线程池, 当执行类似servlet请求阻塞操作, undertow会从这个线程池中取得线程,它的值设置取决于系统的负载
       worker: 256
+    session:
+      timeout: 30000
 
 # 日志配置
 logging:
