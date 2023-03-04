@@ -21,6 +21,17 @@ object CtAgentCommissionProvider {
         }
     }
 
+
+    fun insertOne(
+        agentCommission: CtAgentCommission,
+    ): GeneralInsertStatementProvider {
+        return with(commissionTable) {
+            insertInto(commissionTable) {
+                set(userId) toValue agentCommission.userId!!
+            }
+        }
+    }
+
     fun insertOneWithParentConfig(
         parentCommission: CtAgentCommission,
         childUserId: String

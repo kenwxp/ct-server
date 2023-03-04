@@ -3,6 +3,7 @@ package com.cloudtimes.web.controller.account;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.cloudtimes.agent.service.ICtUserAgentService;
 import com.cloudtimes.common.enums.AgentState;
 import com.cloudtimes.common.utils.DateUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -35,6 +36,9 @@ import com.cloudtimes.common.core.page.TableDataInfo;
 public class CtUserController extends BaseController {
     @Autowired
     private ICtUserService ctUserService;
+
+    @Autowired
+    private ICtUserAgentService ctUserAgentService;
 
     /**
      * 查询用户列表
@@ -89,5 +93,18 @@ public class CtUserController extends BaseController {
             ctUser.setCreateAgentTime(DateUtils.getNowDate());
         }
         return toAjax(ctUserService.updateCtUser(ctUser));
+    }
+
+    /**
+     * 修改代理类型和状态
+     */
+    @PreAuthorize("@ss.hasPermi('account:ctuser:edit')")
+    @Log(title = "代理", businessType = BusinessType.UPDATE)
+    @PutMapping("/update_agent")
+    public AjaxResult updateAgentTypeAndState(@RequestBody CtUser ctUser) {
+        if (!AgentState.None.getCode().equals(ctUser.getAgentState())) {
+            ctUser.setCreateAgentTime(DateUtils.getNowDate());
+        }
+        return toAjax(ctUserAgentService.updateAgentStatus(ctUser));
     }
 }

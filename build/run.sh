@@ -69,8 +69,10 @@ function status()
     PID=`ps -ef |grep java|grep $AppName|grep -v grep|wc -l`
     if [ $PID != 0 ];then
         echo "$AppName is running..."
+        exit 0
     else
         echo "$AppName is not running..."
+        exit 1
     fi
 }
 

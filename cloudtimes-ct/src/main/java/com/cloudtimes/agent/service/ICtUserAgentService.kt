@@ -1,5 +1,6 @@
 package com.cloudtimes.agent.service
 
+import com.cloudtimes.account.domain.CtUser
 import com.cloudtimes.agent.domain.CtUserAgent
 import com.cloudtimes.agent.dto.request.AgentStoreListRequest
 import com.cloudtimes.account.dto.request.TransferCashRequest
@@ -19,12 +20,15 @@ import com.cloudtimes.agent.dto.response.AgentStoreProfitStats
  * @date 2023-02-07
  */
 interface ICtUserAgentService {
+    /** 修改代理类型/状态 */
+    fun updateAgentStatus(user: CtUser): Int
+
     fun selectTeamMember(userId: String): TeamMember?
 
     fun selectTeamMembers(userId: String): List<TeamMember>
 
-
     fun selectAgentAssets(userId: String): AgentAssets?
+
 
     /**
      * 查询代理

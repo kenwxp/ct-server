@@ -43,28 +43,44 @@ class CtAgentCommissionServiceImpl : ICtAgentCommissionService {
         val agent = agentMapper.selectOne(CtUserAgentProvider.selectById(userId))
             ?: throw ServiceException("数据库异常，查询代理信息失败")
 
-        if (agent.agentType != AgentType.SubAgent.code) {
-            throw ServiceException("数据库异常，代理佣金参数未配置")
+        if (agent.agentType == AgentType.None.code) {
+            throw ServiceException("代理类型未知")
         }
 
-        if (agent.parentUserId == null) {
-            throw ServiceException("数据库异常，代理没有绑定上级代理")
+        //  插入下级代理佣金配置数据
+        if (agent.agentType == AgentType.SubAgent.code) {
+            if (agent.parentUserId == null) {
+                throw ServiceException("数据库异常，代理没有绑定上级代理")
+            }
+
+            // 获取上级代理佣金信息
+            val parentCommission = commissionMapper.selectOne(
+                CtAgentCommissionProvider.selectByUserId(agent.parentUserId!!)
+            ) ?: throw ServiceException("数据库异常，代理佣金参数未配置")
+
+            //  插入下级代理佣金默认值
+            commissionMapper.generalInsert(
+                CtAgentCommissionProvider.insertOneWithParentConfig(parentCommission, userId)
+            )
+
+            // 再次查询
+            commission = commissionMapper.selectOne(
+                CtAgentCommissionProvider.selectByUserId(userId)
+            )
+        } else {
+            //  插入上级代理佣金配置数据
+            var agentCommission = CtAgentCommission()
+            agentCommission.userId = userId
+
+            commissionMapper.generalInsert(
+                CtAgentCommissionProvider.insertOne(agentCommission)
+            )
+
+            commission = commissionMapper.selectOne(
+                CtAgentCommissionProvider.selectByUserId(userId)
+            )
         }
 
-        // 获取上级代理佣金信息
-        val parentCommission = commissionMapper.selectOne(
-            CtAgentCommissionProvider.selectByUserId(agent.parentUserId!!)
-        ) ?: throw ServiceException("数据库异常，代理佣金参数未配置")
-
-        //  插入下级代理佣金默认值
-        commissionMapper.generalInsert(
-            CtAgentCommissionProvider.insertOneWithParentConfig(parentCommission, userId)
-        )
-
-        // 再次查询
-        commission = commissionMapper.selectOne(
-            CtAgentCommissionProvider.selectByUserId(userId)
-        )
 
         return commission
     }
