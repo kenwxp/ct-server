@@ -1,6 +1,7 @@
 package com.cloudtimes.agent.service.impl
 
 import com.cloudtimes.account.domain.CtTransferBook
+import com.cloudtimes.account.domain.CtUser
 import com.cloudtimes.agent.domain.CtUserAgent
 import com.cloudtimes.account.domain.CtUserAssetsBook
 import com.cloudtimes.account.domain.CtWithdrawalBook
@@ -13,10 +14,12 @@ import com.cloudtimes.account.dto.response.TeamMember
 import com.cloudtimes.account.mapper.CtTransferBookMapper
 import com.cloudtimes.agent.mapper.CtUserAgentMapper
 import com.cloudtimes.account.mapper.CtUserAssetsBookMapper
+import com.cloudtimes.account.mapper.CtUserMapper
 import com.cloudtimes.account.mapper.CtWithdrawalBookMapper
 import com.cloudtimes.account.mapper.provider.CtTransferBookProvider
 import com.cloudtimes.agent.mapper.provider.CtUserAgentProvider
 import com.cloudtimes.account.mapper.provider.CtUserAssetsBookProvider
+import com.cloudtimes.account.mapper.provider.CtUserProvider
 import com.cloudtimes.agent.dto.request.AgentStoreDetailRequest
 import com.cloudtimes.agent.dto.request.StoreProfitRequest
 import com.cloudtimes.agent.dto.response.AgentAssets
@@ -43,6 +46,9 @@ import java.util.Date
 @Service
 class CtUserAgentServiceImpl : ICtUserAgentService {
     @Autowired
+    private lateinit var userMapper: CtUserMapper
+
+    @Autowired
     private lateinit var agentMapper: CtUserAgentMapper
 
     @Autowired
@@ -53,6 +59,25 @@ class CtUserAgentServiceImpl : ICtUserAgentService {
 
     @Autowired
     private lateinit var transferBookMapper: CtTransferBookMapper
+
+    /** 修改代理类型/状态 */
+    override fun updateAgentStatus(agent: CtUser): Int {
+        val existUser = userMapper.selectCtUserById(agent.id!!) ?: throw ServiceException("用户不存在")
+        val ret = userMapper.update(CtUserProvider.updateAgentTypeAndState(agent))
+        val existAgent = agentMapper.selectOne(CtUserAgentProvider.selectById(agent.id!!))
+        if (existAgent == null) {
+            val newAgent = CtUserAgent().apply {
+                userId = agent.id
+                nickName = agent.nickName
+                agentType = agent.agentType
+            }
+            agentMapper.generalInsert(CtUserAgentProvider.createAgent(newAgent))
+        } else {
+            existAgent.agentType = agent.agentType
+            agentMapper.update(CtUserAgentProvider.updateAgentTypeAndState(existAgent))
+        }
+        return ret
+    }
 
     override fun selectTeamMember(userId: String): TeamMember? {
         return agentMapper.selectTeamMember(

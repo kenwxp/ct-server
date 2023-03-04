@@ -1,18 +1,25 @@
 package com.cloudtimes.agent.mapper.provider
 
+import com.cloudtimes.account.domain.CtUser
 import com.cloudtimes.agent.domain.CtUserAgent
 import com.cloudtimes.agent.table.agentTable
 import com.cloudtimes.account.table.userTable
+import com.cloudtimes.agent.domain.CtAgentDividend
 import com.cloudtimes.agent.dto.request.AgentStoreDetailRequest
 import com.cloudtimes.agent.dto.request.AgentStoreListRequest
 import com.cloudtimes.agent.table.commissionSettlementTable
+import com.cloudtimes.agent.table.dividendTable
+import com.cloudtimes.common.enums.AgentType
 import com.cloudtimes.hardwaredevice.table.storeTable
 import org.mybatis.dynamic.sql.BasicColumn
+import org.mybatis.dynamic.sql.insert.render.GeneralInsertStatementProvider
+import org.mybatis.dynamic.sql.insert.render.InsertStatementProvider
 import org.mybatis.dynamic.sql.util.kotlin.mybatis3.select
 
 import org.mybatis.dynamic.sql.select.render.SelectStatementProvider
 import org.mybatis.dynamic.sql.update.render.UpdateStatementProvider
 import org.mybatis.dynamic.sql.util.kotlin.elements.sortColumn
+import org.mybatis.dynamic.sql.util.kotlin.mybatis3.insertInto
 import org.mybatis.dynamic.sql.util.kotlin.mybatis3.update
 import java.util.Date
 
@@ -37,6 +44,28 @@ object CtUserAgentProvider {
         commissionSettlementTable.taxAmount,
         commissionSettlementTable.taxRatio,
     )
+
+    fun createAgent(newAgent: CtUserAgent): GeneralInsertStatementProvider {
+        return with(agentTable) {
+            insertInto(agentTable) {
+                set(userId) toValue newAgent.userId!!
+                set(agentType) toValue (newAgent.agentType ?: AgentType.None.code)
+                set(nickName) toValueWhenPresent  newAgent.nickName
+            }
+        }
+    }
+
+    fun updateAgentTypeAndState(agent: CtUserAgent): UpdateStatementProvider {
+        return with(agentTable) {
+            update(agentTable) {
+                set(agentType).equalTo(agent.agentType!!)
+                set(updateTime).equalTo(Date())
+                where {
+                    userId isEqualTo agent.userId!!
+                }
+            }
+        }
+    }
 
     fun selectById(id: String): SelectStatementProvider {
         return with(agentTable) {

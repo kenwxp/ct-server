@@ -69,6 +69,20 @@ object CtUserProvider {
         }
     }
 
+
+    fun updateAgentTypeAndState(agent: CtUser): UpdateStatementProvider {
+        return with(userTable) {
+            update(userTable) {
+                set(agentState).equalTo(agent.agentState!!)
+                set(agentType).equalTo(agent.agentType!!)
+                set(updateTime).equalTo(Date())
+                where {
+                    id isEqualTo agent.id!!
+                }
+            }
+        }
+    }
+
     fun agentRegister(request: AgentRegisterRequest): UpdateStatementProvider {
         return with(userTable) {
             update(userTable) {
