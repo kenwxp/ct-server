@@ -33,7 +33,7 @@ class TeamMemberDetail() : RestResult<TeamMember>()
  * @date 2023-02-07
  */
 @RestController
-@RequestMapping(PrefixPathConstants.WX_OFFICIAL_PATH_PREFIX + "t/team")
+@RequestMapping(PrefixPathConstants.WX_OFFICIAL_PATH_PREFIX + "/team")
 @Api(tags = ["代理-团队"])
 class CtAgentTeamController : BaseController() {
     @Autowired
