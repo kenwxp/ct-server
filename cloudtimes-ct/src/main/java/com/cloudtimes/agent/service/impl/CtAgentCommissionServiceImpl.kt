@@ -40,8 +40,8 @@ class CtAgentCommissionServiceImpl : ICtAgentCommissionService {
         if (commission != null) return commission
 
         // 获取代理信息
-        val agent = agentMapper.selectOne(CtUserAgentProvider.selectById(userId)) ?:
-            throw ServiceException("数据库异常，查询代理信息失败")
+        val agent = agentMapper.selectOne(CtUserAgentProvider.selectById(userId))
+            ?: throw ServiceException("数据库异常，查询代理信息失败")
 
         if (agent.agentType != AgentType.SubAgent.code) {
             throw ServiceException("数据库异常，代理佣金参数未配置")
@@ -93,6 +93,10 @@ class CtAgentCommissionServiceImpl : ICtAgentCommissionService {
      */
     override fun selectCtAgentCommissionById(id: String): CtAgentCommission? {
         return commissionMapper.selectCtAgentCommissionById(id)
+    }
+
+    override fun selectCtAgentCommissionByPId(id: String): CtAgentCommission? {
+        return commissionMapper.selectCtAgentCommissionByPid(id);
     }
 
     /**

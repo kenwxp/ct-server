@@ -55,6 +55,8 @@ interface CtAgentCommissionMapper
      */
     fun selectCtAgentCommissionById(id: String): CtAgentCommission?
 
+    fun selectCtAgentCommissionByPid(id: String):CtAgentCommission?
+
     /**
      * 查询代理销售佣金设置列表
      *

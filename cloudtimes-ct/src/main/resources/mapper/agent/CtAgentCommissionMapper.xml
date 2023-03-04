@@ -11,6 +11,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectCtAgentCommissionVo"/>
         <where>  
             <if test="id != null  and id != ''"> and id = #{id}</if>
+            <if test="userId != null  and userId != ''"> and user_id = #{userId}</if>
+            <if test="parentUserId != null  and parentUserId != ''"> and parent_user_id = #{parentUserId}</if>
             and del_flag = '0'
         </where>
     </select>
@@ -19,7 +21,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectCtAgentCommissionVo"/>
         where user_id = #{id}
     </select>
-        
+
+    <select id="selectCtAgentCommissionByPid" parameterType="String" resultMap="CtAgentCommissionResult">
+        <include refid="selectCtAgentCommissionVo"/>
+        where id = #{id}
+    </select>
+
+
     <insert id="insertCtAgentCommission" parameterType="CtAgentCommission">
         insert into ct_agent_commission
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -50,7 +58,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update ct_agent_commission
         <trim prefix="SET" suffixOverrides=",">
             <if test="parentUserId != null">parent_user_id = #{parentUserId},</if>
-            <if test="costPrice != null">cost_price = #{costPrice</if>
+            <if test="costPrice != null">cost_price = #{costPrice},</if>
             <if test="operator != null">operator = #{operator},</if>
             <if test="remark != null">remark = #{remark},</if>
             <if test="delFlag != null">del_flag = #{delFlag},</if>

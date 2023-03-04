@@ -54,8 +54,8 @@ class CtUser : BaseEntity() {
     var sex: String? = null
 
     @ApiModelProperty(value = "生日")
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "生日", width = 30.0, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "生日", width = 30.0, dateFormat = "yyyy-MM-dd HH:mm:ss")
     var birthday: Date? = null
 
     @ApiModelProperty(value = "是否实名")
@@ -105,18 +105,18 @@ class CtUser : BaseEntity() {
     var lastLoginIp: String? = null
 
     @ApiModelProperty(value = "最近登录时间")
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "最近登录时间", width = 30.0, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd  HH:mm:ss")
+    @Excel(name = "最近登录时间", width = 30.0, dateFormat = "yyyy-MM-dd HH:mm:ss")
     var lastLoginTime: Date? = null
 
     @ApiModelProperty(value = "成为店主时间")
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "成为店主时间", width = 30.0, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd  HH:mm:ss")
+    @Excel(name = "成为店主时间", width = 30.0, dateFormat = "yyyy-MM-dd HH:mm:ss")
     var createBossTime: Date? = null
 
     @ApiModelProperty(value = "成为代理时间")
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "成为代理时间", width = 30.0, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd  HH:mm:ss")
+    @Excel(name = "成为代理时间", width = 30.0, dateFormat = "yyyy-MM-dd HH:mm:ss")
     var createAgentTime: Date? = null
 
     @ApiModelProperty(value = "代理状态")
@@ -162,8 +162,8 @@ class CtUser : BaseEntity() {
     var operator: String? = null
 
     @ApiModelProperty(value = "注册日期")
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "注册日期", width = 30.0, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd  HH:mm:ss")
+    @Excel(name = "注册日期", width = 30.0, dateFormat = "yyyy-MM-dd HH:mm:ss")
     var createDate: Date? = null
 
     @ApiModelProperty(value = "是否删除")

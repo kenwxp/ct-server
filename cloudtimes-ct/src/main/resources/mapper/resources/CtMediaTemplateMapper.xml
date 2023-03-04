@@ -25,7 +25,6 @@
                 '%')
             </if>
             <if test="mediaId != null  and mediaId != ''">and t.media_id = #{mediaId}</if>
-            <if test="del_flag != null  ">and t.del_flag = #{delFlag}</if>
         </where>
     </select>
 

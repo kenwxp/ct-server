@@ -22,6 +22,8 @@ interface ICtAgentCommissionService {
      */
     fun selectCtAgentCommissionById(id: String): CtAgentCommission?
 
+    fun selectCtAgentCommissionByPId(id: String): CtAgentCommission?
+
     /**
      * 查询代理销售佣金设置列表
      *

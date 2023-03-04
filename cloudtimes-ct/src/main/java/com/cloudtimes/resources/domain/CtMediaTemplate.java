@@ -1,8 +1,5 @@
 package com.cloudtimes.resources.domain;
 
-import lombok.Data;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import com.cloudtimes.common.annotation.Excel;
 import com.cloudtimes.common.core.domain.BaseEntity;
 
@@ -12,7 +9,6 @@ import com.cloudtimes.common.core.domain.BaseEntity;
  * @author tank
  * @date 2023-01-17
  */
-@Data
 public class CtMediaTemplate extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
@@ -44,4 +40,43 @@ public class CtMediaTemplate extends BaseEntity {
      */
     private Long delFlag;
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getTemplateName() {
+        return templateName;
+    }
+
+    public void setTemplateName(String templateName) {
+        this.templateName = templateName;
+    }
+
+    public String getMediaId() {
+        return mediaId;
+    }
+
+    public void setMediaId(String mediaId) {
+        this.mediaId = mediaId;
+    }
+
+    public String getOssLink() {
+        return ossLink;
+    }
+
+    public void setOssLink(String ossLink) {
+        this.ossLink = ossLink;
+    }
+
+    public Long getDelFlag() {
+        return delFlag;
+    }
+
+    public void setDelFlag(Long delFlag) {
+        this.delFlag = delFlag;
+    }
 }

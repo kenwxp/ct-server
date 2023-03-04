@@ -45,8 +45,8 @@ class CtAgentCommission : BaseEntity() {
     var delFlag: String? = null
 
     @ApiModelProperty(value = "创建日期")
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "创建日期", width = 30.0, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "创建日期", width = 30.0, dateFormat = "yyyy-MM-dd HH:mm:ss")
     var createDate: Date? = null
     override fun toString(): String {
         return ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)

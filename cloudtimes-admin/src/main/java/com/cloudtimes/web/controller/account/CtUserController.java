@@ -2,6 +2,9 @@ package com.cloudtimes.web.controller.account;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.cloudtimes.common.enums.AgentState;
+import com.cloudtimes.common.utils.DateUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,14 +26,13 @@ import com.cloudtimes.common.core.page.TableDataInfo;
 
 /**
  * 用户Controller
- * 
+ *
  * @author 沈兵
  * @date 2023-01-17
  */
 @RestController
 @RequestMapping("/account/ctuser")
-public class CtUserController extends BaseController
-{
+public class CtUserController extends BaseController {
     @Autowired
     private ICtUserService ctUserService;
 
@@ -39,8 +41,7 @@ public class CtUserController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('account:ctuser:list')")
     @GetMapping("/list")
-    public TableDataInfo list(CtUser ctUser)
-    {
+    public TableDataInfo list(CtUser ctUser) {
         startPage();
         List<CtUser> list = ctUserService.selectCtUserList(ctUser);
         return getDataTable(list);
@@ -52,8 +53,7 @@ public class CtUserController extends BaseController
     @PreAuthorize("@ss.hasPermi('account:ctuser:export')")
     @Log(title = "用户", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, CtUser ctUser)
-    {
+    public void export(HttpServletResponse response, CtUser ctUser) {
         List<CtUser> list = ctUserService.selectCtUserList(ctUser);
         ExcelUtil<CtUser> util = new ExcelUtil<CtUser>(CtUser.class);
         util.exportExcel(response, list, "用户数据");
@@ -64,8 +64,7 @@ public class CtUserController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('account:ctuser:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") String id)
-    {
+    public AjaxResult getInfo(@PathVariable("id") String id) {
         return AjaxResult.success(ctUserService.selectCtUserById(id));
     }
 
@@ -75,8 +74,7 @@ public class CtUserController extends BaseController
     @PreAuthorize("@ss.hasPermi('account:ctuser:add')")
     @Log(title = "用户", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody CtUser ctUser)
-    {
+    public AjaxResult add(@RequestBody CtUser ctUser) {
         return toAjax(ctUserService.insertCtUser(ctUser));
     }
 
@@ -86,8 +84,10 @@ public class CtUserController extends BaseController
     @PreAuthorize("@ss.hasPermi('account:ctuser:edit')")
     @Log(title = "用户", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody CtUser ctUser)
-    {
+    public AjaxResult edit(@RequestBody CtUser ctUser) {
+        if (!AgentState.None.getCode().equals(ctUser.getAgentState())) {
+            ctUser.setCreateAgentTime(DateUtils.getNowDate());
+        }
         return toAjax(ctUserService.updateCtUser(ctUser));
     }
 }

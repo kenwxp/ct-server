@@ -45,6 +45,9 @@ logging:
 
 knife4j:
   enable: true
+  setting:
+     enableOpenApi: false
+     enableFooter: false
 # 用户配置
 user:
   password:
