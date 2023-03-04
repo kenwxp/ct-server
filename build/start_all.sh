@@ -7,8 +7,13 @@ function restart_service() {
   cd $WORK_DIR/$service/
   pwd
   sh run.sh restart
-  sleep 3
+  sleep 10
   sh run.sh status
+  exit_status=$?
+  if [ $exit_status -eq 1 ]; then
+      echo "启动服务 $service 失败 ..."
+      exit $exit_status
+  fi
 }
 
 # declare an array variable
