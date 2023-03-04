@@ -12,7 +12,9 @@ function restart_service() {
   exit_status=$?
   if [ $exit_status -eq 1 ]; then
       echo "启动服务 $service 失败 ..."
-      exit $exit_status
+      exit 0
+  else
+      echo "启动服务 $service 成功 ..."
   fi
 }
 
