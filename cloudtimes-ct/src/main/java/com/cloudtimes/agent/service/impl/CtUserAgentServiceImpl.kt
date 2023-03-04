@@ -154,7 +154,8 @@ class CtUserAgentServiceImpl : ICtUserAgentService {
     }
 
     override fun selectCtAgentShopProfitStats(userId: StoreProfitRequest): AgentStoreProfitStats {
-        TODO("Not yet implemented")
+        // TODO
+        return AgentStoreProfitStats()
     }
 
     /**
