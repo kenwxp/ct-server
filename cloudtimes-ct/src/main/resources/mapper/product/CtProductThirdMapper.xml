@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cloudtimes.product.mapper.CtProductThirdMapper">
+    
+    <resultMap type="CtProductThird" id="CtProductThirdResult">
+        <result property="thirdCode"    column="third_code"    />
+        <result property="thirdProductId"    column="third_product_id"    />
+        <result property="productId"    column="product_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectCtProductThirdVo">
+        select third_code, third_product_id, product_id, create_time, update_time from ct_product_third
+    </sql>
+
+    <select id="selectCtProductThirdList" parameterType="CtProductThird" resultMap="CtProductThirdResult">
+        <include refid="selectCtProductThirdVo"/>
+        <where>  
+            <if test="productId != null  and productId != ''"> and product_id = #{productId}</if>
+        </where>
+    </select>
+    
+    <select id="selectCtProductThirdByThirdCode" parameterType="String" resultMap="CtProductThirdResult">
+        <include refid="selectCtProductThirdVo"/>
+        where third_code = #{thirdCode}
+    </select>
+        
+    <insert id="insertCtProductThird" parameterType="CtProductThird">
+        insert into ct_product_third
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="thirdCode != null">third_code,</if>
+            <if test="thirdProductId != null">third_product_id,</if>
+            <if test="productId != null and productId != ''">product_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="thirdCode != null">#{thirdCode},</if>
+            <if test="thirdProductId != null">#{thirdProductId},</if>
+            <if test="productId != null and productId != ''">#{productId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCtProductThird" parameterType="CtProductThird">
+        update ct_product_third
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="thirdProductId != null">third_product_id = #{thirdProductId},</if>
+            <if test="productId != null and productId != ''">product_id = #{productId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where third_code = #{thirdCode}
+    </update>
+
+    <delete id="deleteCtProductThirdByThirdCode" parameterType="String">
+        delete from ct_product_third where third_code = #{thirdCode}
+    </delete>
+
+    <delete id="deleteCtProductThirdByThirdCodes" parameterType="String">
+        delete from ct_product_third where third_code in 
+        <foreach item="thirdCode" collection="array" open="(" separator="," close=")">
+            #{thirdCode}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,9 +1,7 @@
-package com.cloudtimes.product.mapper;
+package com.cloudtimes.product.mapper
 
-import com.cloudtimes.product.domain.CtShopProduct;
-import org.apache.ibatis.annotations.Param;
-
-import java.util.List;
+import com.cloudtimes.product.domain.CtShopProduct
+import org.apache.ibatis.annotations.Param
 
 /**
  * 店铺商品Mapper接口
@@ -11,14 +9,14 @@ import java.util.List;
  * @author tank
  * @date 2023-02-15
  */
-public interface CtShopProductMapper {
+interface CtShopProductMapper {
     /**
      * 查询店铺商品
      *
      * @param id 店铺商品主键
      * @return 店铺商品
      */
-    public CtShopProduct selectCtShopProductById(String id);
+    fun selectCtShopProductById(id: String): CtShopProduct?
 
     /**
      * 查询店铺商品列表
@@ -26,7 +24,7 @@ public interface CtShopProductMapper {
      * @param ctShopProduct 店铺商品
      * @return 店铺商品集合
      */
-    public List<CtShopProduct> selectCtShopProductList(CtShopProduct ctShopProduct);
+    fun selectCtShopProductList(ctShopProduct: CtShopProduct): List<CtShopProduct>
 
     /**
      * 新增店铺商品
@@ -34,7 +32,7 @@ public interface CtShopProductMapper {
      * @param ctShopProduct 店铺商品
      * @return 结果
      */
-    public int insertCtShopProduct(CtShopProduct ctShopProduct);
+    fun insertCtShopProduct(ctShopProduct: CtShopProduct): Int
 
     /**
      * 修改店铺商品
@@ -42,8 +40,7 @@ public interface CtShopProductMapper {
      * @param ctShopProduct 店铺商品
      * @return 结果
      */
-    public int updateCtShopProduct(CtShopProduct ctShopProduct);
-
+    fun updateCtShopProduct(ctShopProduct: CtShopProduct): Int
 
     /**
      * 删除店铺商品
@@ -51,7 +48,7 @@ public interface CtShopProductMapper {
      * @param id 店铺商品主键
      * @return 结果
      */
-    public int deleteCtShopProductById(String id);
+    fun deleteCtShopProductById(id: String): Int
 
     /**
      * 批量删除店铺商品
@@ -59,7 +56,7 @@ public interface CtShopProductMapper {
      * @param ids 需要删除的数据主键集合
      * @return 结果
      */
-    public int deleteCtShopProductByIds(String[] ids);
+    fun deleteCtShopProductByIds(ids: Array<String>): Int
 
     /**
      * 查询商店商品列表
@@ -67,7 +64,7 @@ public interface CtShopProductMapper {
      * @param shopNo
      * @return
      */
-    public List<CtShopProduct> selectCtShopProductListByStore(@Param("shopNo") String shopNo);
+    fun selectCtShopProductListByStore(@Param("shopNo") shopNo: String): List<CtShopProduct>
 
     /**
      * 更新商品库存
@@ -75,5 +72,5 @@ public interface CtShopProductMapper {
      * @param ctShopProduct 店铺商品
      * @return 结果
      */
-    public int updateCtShopProductStock(CtShopProduct ctShopProduct);
+    fun updateCtShopProductStock(ctShopProduct: CtShopProduct): Int
 }

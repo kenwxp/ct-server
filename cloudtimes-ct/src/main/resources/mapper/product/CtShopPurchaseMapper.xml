@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cloudtimes.product.mapper.CtShopPurchaseMapper">
+    
+    <resultMap type="CtShopPurchase" id="CtShopPurchaseResult">
+        <result property="id"    column="id"    />
+        <result property="shopId"    column="shop_id"    />
+        <result property="supplier"    column="supplier"    />
+        <result property="orderingNumber"    column="ordering_number"    />
+        <result property="totalPrice"    column="total_price"    />
+        <result property="logisticsFee"    column="logistics_fee"    />
+        <result property="trackingNumber"    column="tracking_number"    />
+        <result property="orderingStatus"    column="ordering_status"    />
+        <result property="orderingDate"    column="ordering_date"    />
+        <result property="deliveryTime"    column="delivery_time"    />
+        <result property="takeTime"    column="take_time"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectCtShopPurchaseVo">
+        select id, shop_id, supplier, ordering_number, total_price, logistics_fee, tracking_number, ordering_status, ordering_date, delivery_time, take_time, create_time, update_time from ct_shop_purchase
+    </sql>
+
+    <select id="selectCtShopPurchaseList" parameterType="CtShopPurchase" resultMap="CtShopPurchaseResult">
+        <include refid="selectCtShopPurchaseVo"/>
+        <where>  
+            <if test="shopId != null  and shopId != ''"> and shop_id = #{shopId}</if>
+            <if test="supplier != null  and supplier != ''"> and supplier = #{supplier}</if>
+            <if test="orderingNumber != null  and orderingNumber != ''"> and ordering_number = #{orderingNumber}</if>
+            <if test="totalPrice != null "> and total_price = #{totalPrice}</if>
+            <if test="logisticsFee != null "> and logistics_fee = #{logisticsFee}</if>
+            <if test="trackingNumber != null  and trackingNumber != ''"> and tracking_number = #{trackingNumber}</if>
+            <if test="orderingStatus != null  and orderingStatus != ''"> and ordering_status = #{orderingStatus}</if>
+            <if test="orderingDate != null "> and ordering_date = #{orderingDate}</if>
+            <if test="deliveryTime != null "> and delivery_time = #{deliveryTime}</if>
+            <if test="takeTime != null "> and take_time = #{takeTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectCtShopPurchaseById" parameterType="String" resultMap="CtShopPurchaseResult">
+        <include refid="selectCtShopPurchaseVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertCtShopPurchase" parameterType="CtShopPurchase">
+        insert into ct_shop_purchase
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="shopId != null and shopId != ''">shop_id,</if>
+            <if test="supplier != null and supplier != ''">supplier,</if>
+            <if test="orderingNumber != null and orderingNumber != ''">ordering_number,</if>
+            <if test="totalPrice != null">total_price,</if>
+            <if test="logisticsFee != null">logistics_fee,</if>
+            <if test="trackingNumber != null">tracking_number,</if>
+            <if test="orderingStatus != null">ordering_status,</if>
+            <if test="orderingDate != null">ordering_date,</if>
+            <if test="deliveryTime != null">delivery_time,</if>
+            <if test="takeTime != null">take_time,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="shopId != null and shopId != ''">#{shopId},</if>
+            <if test="supplier != null and supplier != ''">#{supplier},</if>
+            <if test="orderingNumber != null and orderingNumber != ''">#{orderingNumber},</if>
+            <if test="totalPrice != null">#{totalPrice},</if>
+            <if test="logisticsFee != null">#{logisticsFee},</if>
+            <if test="trackingNumber != null">#{trackingNumber},</if>
+            <if test="orderingStatus != null">#{orderingStatus},</if>
+            <if test="orderingDate != null">#{orderingDate},</if>
+            <if test="deliveryTime != null">#{deliveryTime},</if>
+            <if test="takeTime != null">#{takeTime},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCtShopPurchase" parameterType="CtShopPurchase">
+        update ct_shop_purchase
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="shopId != null and shopId != ''">shop_id = #{shopId},</if>
+            <if test="supplier != null and supplier != ''">supplier = #{supplier},</if>
+            <if test="orderingNumber != null and orderingNumber != ''">ordering_number = #{orderingNumber},</if>
+            <if test="totalPrice != null">total_price = #{totalPrice},</if>
+            <if test="logisticsFee != null">logistics_fee = #{logisticsFee},</if>
+            <if test="trackingNumber != null">tracking_number = #{trackingNumber},</if>
+            <if test="orderingStatus != null">ordering_status = #{orderingStatus},</if>
+            <if test="orderingDate != null">ordering_date = #{orderingDate},</if>
+            <if test="deliveryTime != null">delivery_time = #{deliveryTime},</if>
+            <if test="takeTime != null">take_time = #{takeTime},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCtShopPurchaseById" parameterType="String">
+        delete from ct_shop_purchase where id = #{id}
+    </delete>
+
+    <delete id="deleteCtShopPurchaseByIds" parameterType="String">
+        delete from ct_shop_purchase where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
