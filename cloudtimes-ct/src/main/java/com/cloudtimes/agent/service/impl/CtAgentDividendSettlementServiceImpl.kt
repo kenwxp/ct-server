@@ -3,6 +3,7 @@ package com.cloudtimes.agent.service.impl
 import com.cloudtimes.agent.domain.CtAgentDividendSettlement
 import com.cloudtimes.agent.dto.request.AgentDividendRequest
 import com.cloudtimes.agent.dto.request.StoreDividendRequest
+import com.cloudtimes.agent.dto.response.CtAgentDividendSettlementDto
 import com.cloudtimes.agent.mapper.CtAgentDividendSettlementMapper
 import com.cloudtimes.agent.mapper.provider.CtAgentDividendSettlementProvider
 import com.cloudtimes.agent.service.ICtAgentDividendSettlementService
@@ -67,6 +68,10 @@ class CtAgentDividendSettlementServiceImpl : ICtAgentDividendSettlementService {
         return dividendSettlementMapper.selectCtAgentDividendSettlementList(ctAgentDividendSettlement)
     }
 
+    override fun selectCtAgentDividendSettlementListPlus(ctAgentDividendSettlement: CtAgentDividendSettlement): List<CtAgentDividendSettlementDto> {
+        return dividendSettlementMapper.selectCtAgentDividendSettlementListPlus(ctAgentDividendSettlement);
+    }
+
     /**
      * 新增分润结算审核
      *
@@ -86,6 +91,7 @@ class CtAgentDividendSettlementServiceImpl : ICtAgentDividendSettlementService {
      */
     override fun updateCtAgentDividendSettlement(ctAgentDividendSettlement: CtAgentDividendSettlement): Int {
         ctAgentDividendSettlement.updateTime = DateUtils.getNowDate()
+        ctAgentDividendSettlement.platformApprovedTime = DateUtils.getNowDate()
         return dividendSettlementMapper.updateCtAgentDividendSettlement(ctAgentDividendSettlement)
     }
 }

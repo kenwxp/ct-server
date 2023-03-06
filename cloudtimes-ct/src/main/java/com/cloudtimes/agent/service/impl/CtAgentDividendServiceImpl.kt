@@ -2,6 +2,7 @@ package com.cloudtimes.agent.service.impl
 
 import com.cloudtimes.agent.domain.CtAgentDividend
 import com.cloudtimes.agent.dto.request.UpdateSubAgentDividendRequest
+import com.cloudtimes.agent.dto.response.CtAgentDividendDto
 import com.cloudtimes.agent.mapper.CtAgentDividendMapper
 import com.cloudtimes.agent.mapper.CtUserAgentMapper
 import com.cloudtimes.agent.mapper.provider.CtAgentDividendProvider
@@ -40,14 +41,14 @@ class CtAgentDividendServiceImpl : ICtAgentDividendService {
     /** 根据代理ID查询分润配置 */
     override fun selectManyByUserId(userId: String): List<CtAgentDividend> {
         // 1. 查询代理
-        val agent = agentMapper.selectOne(CtUserAgentProvider.selectById(userId)) ?:
-            throw ServiceException("数据库异常，没有查询到代理信息")
+        val agent = agentMapper.selectOne(CtUserAgentProvider.selectById(userId))
+            ?: throw ServiceException("数据库异常，没有查询到代理信息")
 
         // 2. 查询出配置信息
         var dividendList = dividendMapper.selectMany(CtAgentDividendProvider.selectManyByUserId(userId))
 
         // 3. 普通代理要判断是否有配置信息，没有先初始化配置信息
-        if ( agent.agentType == AgentType.SubAgent.code && dividendList.isEmpty()) {
+        if (agent.agentType == AgentType.SubAgent.code && dividendList.isEmpty()) {
             val parentAgent = agent.parentUserId ?: throw ServiceException("数控库异常，上级代理为空")
 
             // 3.1 查询出上级代理的配置
@@ -88,9 +89,10 @@ class CtAgentDividendServiceImpl : ICtAgentDividendService {
             if (
                 subDividend.parentUserId != request.userId ||
                 subDividend.userId != request.subUserId ||
-                subDividend.billAmount!!.compareTo(parentDividend.billAmount) != 0  ||
+                subDividend.billAmount!!.compareTo(parentDividend.billAmount) != 0 ||
                 subDividend.dividendRatio!! > parentDividend.dividendRatio!! ||
-                subDividend.dividendRatio!! < BigDecimal.ZERO) {
+                subDividend.dividendRatio!! < BigDecimal.ZERO
+            ) {
                 logger.error("request.userId = ${request.userId}")
                 logger.error("request.subUserId = ${request.subUserId}")
                 logger.error("subDividend = $subDividend")
@@ -125,6 +127,10 @@ class CtAgentDividendServiceImpl : ICtAgentDividendService {
      */
     override fun selectCtAgentDividendList(ctAgentDividend: CtAgentDividend): List<CtAgentDividend> {
         return dividendMapper.selectCtAgentDividendList(ctAgentDividend)
+    }
+
+    override fun selectCtAgentDividendListPlus(ctAgentDividend: CtAgentDividendDto): List<CtAgentDividendDto> {
+        return dividendMapper.selectCtAgentDividendListPlus(ctAgentDividend)
     }
 
     /**

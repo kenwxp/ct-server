@@ -2,6 +2,8 @@ package com.cloudtimes.web.controller.agent;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.cloudtimes.agent.dto.response.CtAgentDividendSettlementDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,14 +25,13 @@ import com.cloudtimes.common.core.page.TableDataInfo;
 
 /**
  * 分润结算审核Controller
- * 
+ *
  * @author 沈兵
  * @date 2023-02-03
  */
 @RestController
 @RequestMapping("/account/dividend_settlement")
-public class CtAgentDividendSettlementController extends BaseController
-{
+public class CtAgentDividendSettlementController extends BaseController {
     @Autowired
     private ICtAgentDividendSettlementService ctAgentDividendSettlementService;
 
@@ -39,10 +40,9 @@ public class CtAgentDividendSettlementController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('account:dividend_settlement:list')")
     @GetMapping("/list")
-    public TableDataInfo list(CtAgentDividendSettlement ctAgentDividendSettlement)
-    {
+    public TableDataInfo list(CtAgentDividendSettlement ctAgentDividendSettlement) {
         startPage();
-        List<CtAgentDividendSettlement> list = ctAgentDividendSettlementService.selectCtAgentDividendSettlementList(ctAgentDividendSettlement);
+        List<CtAgentDividendSettlementDto> list = ctAgentDividendSettlementService.selectCtAgentDividendSettlementListPlus(ctAgentDividendSettlement);
         return getDataTable(list);
     }
 
@@ -52,8 +52,7 @@ public class CtAgentDividendSettlementController extends BaseController
     @PreAuthorize("@ss.hasPermi('account:dividend_settlement:export')")
     @Log(title = "分润结算审核", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, CtAgentDividendSettlement ctAgentDividendSettlement)
-    {
+    public void export(HttpServletResponse response, CtAgentDividendSettlement ctAgentDividendSettlement) {
         List<CtAgentDividendSettlement> list = ctAgentDividendSettlementService.selectCtAgentDividendSettlementList(ctAgentDividendSettlement);
         ExcelUtil<CtAgentDividendSettlement> util = new ExcelUtil<CtAgentDividendSettlement>(CtAgentDividendSettlement.class);
         util.exportExcel(response, list, "分润结算审核数据");
@@ -62,10 +61,9 @@ public class CtAgentDividendSettlementController extends BaseController
     /**
      * 获取分润结算审核详细信息
      */
-    @PreAuthorize("@ss.hasPermi('account:dividend_settlement:query')")
+    //  @PreAuthorize("@ss.hasPermi('account:dividend_settlement:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") String id)
-    {
+    public AjaxResult getInfo(@PathVariable("id") String id) {
         return AjaxResult.success(ctAgentDividendSettlementService.selectCtAgentDividendSettlementById(id));
     }
 
@@ -75,19 +73,17 @@ public class CtAgentDividendSettlementController extends BaseController
     @PreAuthorize("@ss.hasPermi('account:dividend_settlement:add')")
     @Log(title = "分润结算审核", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody CtAgentDividendSettlement ctAgentDividendSettlement)
-    {
+    public AjaxResult add(@RequestBody CtAgentDividendSettlement ctAgentDividendSettlement) {
         return toAjax(ctAgentDividendSettlementService.insertCtAgentDividendSettlement(ctAgentDividendSettlement));
     }
 
     /**
      * 修改分润结算审核
      */
-    @PreAuthorize("@ss.hasPermi('account:dividend_settlement:edit')")
+    //  @PreAuthorize("@ss.hasPermi('account:dividend_settlement:edit')")
     @Log(title = "分润结算审核", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody CtAgentDividendSettlement ctAgentDividendSettlement)
-    {
+    public AjaxResult edit(@RequestBody CtAgentDividendSettlement ctAgentDividendSettlement) {
         return toAjax(ctAgentDividendSettlementService.updateCtAgentDividendSettlement(ctAgentDividendSettlement));
     }
 }

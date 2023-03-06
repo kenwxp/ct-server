@@ -1,8 +1,9 @@
-package com.cloudtimes.web.controller.account;
+package com.cloudtimes.web.controller.agent;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.cloudtimes.agent.dto.response.CtAgentCommissionDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,7 +42,7 @@ public class CtAgentCommissionController extends BaseController {
     @GetMapping("/list")
     public TableDataInfo list(CtAgentCommission ctAgentCommission) {
         startPage();
-        List<CtAgentCommission> list = ctAgentCommissionService.selectCtAgentCommissionList(ctAgentCommission);
+        List<CtAgentCommissionDto> list = ctAgentCommissionService.selectCtAgentCommissionListPlus(ctAgentCommission);
         return getDataTable(list);
     }
 
@@ -60,7 +61,6 @@ public class CtAgentCommissionController extends BaseController {
     /**
      * 获取代理销售佣金设置详细信息
      */
-    @PreAuthorize("@ss.hasPermi('account:agent_commission:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") String id) {
         return AjaxResult.success(ctAgentCommissionService.selectCtAgentCommissionByPId(id));
@@ -81,7 +81,7 @@ public class CtAgentCommissionController extends BaseController {
     /**
      * 修改代理销售佣金设置
      */
-    @PreAuthorize("@ss.hasPermi('account:agent_commission:edit')")
+    //  @PreAuthorize("@ss.hasPermi('account:agent_commission:edit')")
     @Log(title = "代理销售佣金设置", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody CtAgentCommission ctAgentCommission) {

@@ -2,6 +2,7 @@ package com.cloudtimes.agent.service
 
 import com.cloudtimes.agent.domain.CtAgentDividend
 import com.cloudtimes.agent.dto.request.UpdateSubAgentDividendRequest
+import com.cloudtimes.agent.dto.response.CtAgentDividendDto
 
 /**
  * 分润配置Service接口
@@ -10,7 +11,7 @@ import com.cloudtimes.agent.dto.request.UpdateSubAgentDividendRequest
  * @date 2023-02-03
  */
 interface ICtAgentDividendService {
-    fun selectManyByUserId(userId: String) : List<CtAgentDividend>
+    fun selectManyByUserId(userId: String): List<CtAgentDividend>
 
     fun updateSubAgentDividend(request: UpdateSubAgentDividendRequest): Int
 
@@ -29,6 +30,8 @@ interface ICtAgentDividendService {
      * @return 分润配置集合
      */
     fun selectCtAgentDividendList(ctAgentDividend: CtAgentDividend): List<CtAgentDividend>?
+
+    fun selectCtAgentDividendListPlus(ctAgentDividend: CtAgentDividendDto): List<CtAgentDividendDto>?
 
     /**
      * 新增分润配置

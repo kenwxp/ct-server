@@ -1,6 +1,7 @@
 package com.cloudtimes.agent.mapper
 
 import com.cloudtimes.agent.domain.CtAgentDividend
+import com.cloudtimes.agent.dto.response.CtAgentDividendDto
 
 import org.apache.ibatis.annotations.Mapper
 import org.apache.ibatis.annotations.Result
@@ -24,25 +25,28 @@ import org.mybatis.dynamic.sql.util.mybatis3.CommonUpdateMapper
 @Mapper
 interface CtAgentDividendMapper
     : CommonCountMapper, CommonDeleteMapper, CommonInsertMapper<CtAgentDividend>, CommonUpdateMapper {
-    @SelectProvider(type=SqlProviderAdapter::class, method="select")
-    @Results(id="CtAgentDividendResult", value = [
-        Result(column="id", property="id", jdbcType=JdbcType.OTHER, id=true),
-        Result(column="user_id", property="userId", jdbcType=JdbcType.OTHER),
-        Result(column="bill_amount", property="billAmount", jdbcType=JdbcType.DECIMAL),
-        Result(column="dividend_ratio", property="dividendRatio", jdbcType=JdbcType.DECIMAL),
-        Result(column="tax_ratio", property="taxRatio", jdbcType=JdbcType.DECIMAL),
-        Result(column="operator", property="operator", jdbcType=JdbcType.VARCHAR),
-        Result(column="remark", property="remark", jdbcType=JdbcType.VARCHAR),
-        Result(column="del_flag", property="delFlag", jdbcType=JdbcType.CHAR),
-        Result(column="create_date", property="createDate", jdbcType=JdbcType.DATE),
-        Result(column="create_time", property="createTime", jdbcType=JdbcType.TIMESTAMP),
-        Result(column="update_time", property="updateTime", jdbcType=JdbcType.TIMESTAMP)
-    ])
+    @SelectProvider(type = SqlProviderAdapter::class, method = "select")
+    @Results(
+        id = "CtAgentDividendResult", value = [
+            Result(column = "id", property = "id", jdbcType = JdbcType.OTHER, id = true),
+            Result(column = "user_id", property = "userId", jdbcType = JdbcType.OTHER),
+            Result(column = "bill_amount", property = "billAmount", jdbcType = JdbcType.DECIMAL),
+            Result(column = "dividend_ratio", property = "dividendRatio", jdbcType = JdbcType.DECIMAL),
+            Result(column = "tax_ratio", property = "taxRatio", jdbcType = JdbcType.DECIMAL),
+            Result(column = "operator", property = "operator", jdbcType = JdbcType.VARCHAR),
+            Result(column = "remark", property = "remark", jdbcType = JdbcType.VARCHAR),
+            Result(column = "del_flag", property = "delFlag", jdbcType = JdbcType.CHAR),
+            Result(column = "create_date", property = "createDate", jdbcType = JdbcType.DATE),
+            Result(column = "create_time", property = "createTime", jdbcType = JdbcType.TIMESTAMP),
+            Result(column = "update_time", property = "updateTime", jdbcType = JdbcType.TIMESTAMP)
+        ]
+    )
     fun selectMany(selectStatement: SelectStatementProvider): List<CtAgentDividend>
 
-    @SelectProvider(type=SqlProviderAdapter::class, method="select")
+    @SelectProvider(type = SqlProviderAdapter::class, method = "select")
     @ResultMap("CtAgentDividendResult")
     fun selectOne(selectStatement: SelectStatementProvider): CtAgentDividend?
+
     /**
      * 查询分润配置
      *
@@ -58,6 +62,8 @@ interface CtAgentDividendMapper
      * @return 分润配置集合
      */
     fun selectCtAgentDividendList(ctAgentDividend: CtAgentDividend): List<CtAgentDividend>
+
+    fun selectCtAgentDividendListPlus(ctAgentDividend: CtAgentDividendDto): List<CtAgentDividendDto>
 
     /**
      * 新增分润配置

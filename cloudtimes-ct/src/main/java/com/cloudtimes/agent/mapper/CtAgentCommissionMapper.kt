@@ -1,6 +1,6 @@
 package com.cloudtimes.agent.mapper
 
-import com.cloudtimes.agent.domain.CtAgentActivity
+import com.cloudtimes.agent.domain.CtAgentCommission
 import org.apache.ibatis.annotations.Mapper
 import org.apache.ibatis.annotations.Result
 import org.apache.ibatis.annotations.ResultMap
@@ -10,7 +10,7 @@ import org.apache.ibatis.type.JdbcType
 import org.mybatis.dynamic.sql.select.render.SelectStatementProvider
 import org.mybatis.dynamic.sql.util.SqlProviderAdapter
 
-import com.cloudtimes.agent.domain.CtAgentCommission
+import com.cloudtimes.agent.dto.response.CtAgentCommissionDto
 import org.mybatis.dynamic.sql.util.mybatis3.CommonCountMapper
 import org.mybatis.dynamic.sql.util.mybatis3.CommonDeleteMapper
 import org.mybatis.dynamic.sql.util.mybatis3.CommonInsertMapper
@@ -55,7 +55,7 @@ interface CtAgentCommissionMapper
      */
     fun selectCtAgentCommissionById(id: String): CtAgentCommission?
 
-    fun selectCtAgentCommissionByPid(id: String):CtAgentCommission?
+    fun selectCtAgentCommissionByPid(id: String): CtAgentCommission?
 
     /**
      * 查询代理销售佣金设置列表
@@ -64,6 +64,25 @@ interface CtAgentCommissionMapper
      * @return 代理销售佣金设置集合
      */
     fun selectCtAgentCommissionList(ctAgentCommission: CtAgentCommission): List<CtAgentCommission>
+
+//    @Results(
+//        id = "CtAgentCommissionDtoResult", value = [
+//            Result(column = "id", property = "id", jdbcType = JdbcType.OTHER, id = true),
+//            Result(column = "user_id", property = "userId", jdbcType = JdbcType.OTHER),
+//            Result(column = "user_account", property = "userAccount", jdbcType = JdbcType.VARCHAR),
+//            Result(column = "parent_user_id", property = "parentUserId", jdbcType = JdbcType.OTHER),
+//            Result(column = "parent_user_account", property = "parentUserAccount", jdbcType = JdbcType.VARCHAR),
+//            Result(column = "cost_price", property = "costPrice", jdbcType = JdbcType.DECIMAL),
+//            Result(column = "tax_ratio", property = "taxRatio", jdbcType = JdbcType.DECIMAL),
+//            Result(column = "operator", property = "operator", jdbcType = JdbcType.VARCHAR),
+//            Result(column = "remark", property = "remark", jdbcType = JdbcType.VARCHAR),
+//            Result(column = "del_flag", property = "delFlag", jdbcType = JdbcType.CHAR),
+//            Result(column = "create_date", property = "createDate", jdbcType = JdbcType.DATE),
+//            Result(column = "create_time", property = "createTime", jdbcType = JdbcType.TIMESTAMP),
+//            Result(column = "update_time", property = "updateTime", jdbcType = JdbcType.TIMESTAMP)
+//        ]
+//    )
+    fun selectCtAgentCommissionListPlus(ctAgentCommission: CtAgentCommission): List<CtAgentCommissionDto>
 
     /**
      * 新增代理销售佣金设置
@@ -96,4 +115,6 @@ interface CtAgentCommissionMapper
      * @return 结果
      */
     fun deleteCtAgentCommissionByIds(ids: Array<String>): Int
+
+
 }

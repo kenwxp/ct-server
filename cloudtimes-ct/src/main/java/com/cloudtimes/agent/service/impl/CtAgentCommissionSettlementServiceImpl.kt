@@ -1,6 +1,7 @@
 package com.cloudtimes.agent.service.impl
 
 import com.cloudtimes.agent.domain.CtAgentCommissionSettlement
+import com.cloudtimes.agent.dto.response.CtAgentCommissionSettlementDto
 import com.cloudtimes.agent.mapper.CtAgentCommissionSettlementMapper
 import com.cloudtimes.agent.service.ICtAgentCommissionSettlementService
 import com.cloudtimes.common.annotation.DataSource
@@ -39,6 +40,10 @@ class CtAgentCommissionSettlementServiceImpl : ICtAgentCommissionSettlementServi
      */
     override fun selectCtAgentCommissionSettlementList(ctAgentCommissionSettlement: CtAgentCommissionSettlement): List<CtAgentCommissionSettlement> {
         return ctAgentCommissionSettlementMapper.selectCtAgentCommissionSettlementList(ctAgentCommissionSettlement)
+    }
+
+    override fun selectCtAgentCommissionSettlementListPlus(ctAgentCommissionSettlement: CtAgentCommissionSettlement): List<CtAgentCommissionSettlementDto> {
+        return ctAgentCommissionSettlementMapper.selectCtAgentCommissionSettlementListPlus(ctAgentCommissionSettlement);
     }
 
     /**

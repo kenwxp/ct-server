@@ -3,6 +3,7 @@ package com.cloudtimes.agent.service
 import com.cloudtimes.agent.domain.CtAgentDividendSettlement
 import com.cloudtimes.agent.dto.request.AgentDividendRequest
 import com.cloudtimes.agent.dto.request.StoreDividendRequest
+import com.cloudtimes.agent.dto.response.CtAgentDividendSettlementDto
 
 /**
  * 分润结算审核Service接口
@@ -35,6 +36,8 @@ interface ICtAgentDividendSettlementService {
      * @return 分润结算审核集合
      */
     fun selectCtAgentDividendSettlementList(ctAgentDividendSettlement: CtAgentDividendSettlement): List<CtAgentDividendSettlement>
+
+    fun selectCtAgentDividendSettlementListPlus(ctAgentDividendSettlement: CtAgentDividendSettlement): List<CtAgentDividendSettlementDto>
 
     /**
      * 新增分润结算审核

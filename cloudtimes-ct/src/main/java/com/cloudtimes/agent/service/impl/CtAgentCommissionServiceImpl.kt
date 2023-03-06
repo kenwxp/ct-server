@@ -2,6 +2,7 @@ package com.cloudtimes.agent.service.impl
 
 import com.cloudtimes.agent.domain.CtAgentCommission
 import com.cloudtimes.account.dto.request.UpdateSubUserCommissionRequest
+import com.cloudtimes.agent.dto.response.CtAgentCommissionDto
 import com.cloudtimes.agent.mapper.CtAgentCommissionMapper
 import com.cloudtimes.agent.mapper.CtUserAgentMapper
 import com.cloudtimes.agent.mapper.provider.CtAgentCommissionProvider
@@ -123,6 +124,10 @@ class CtAgentCommissionServiceImpl : ICtAgentCommissionService {
      */
     override fun selectCtAgentCommissionList(ctAgentCommission: CtAgentCommission): List<CtAgentCommission> {
         return commissionMapper.selectCtAgentCommissionList(ctAgentCommission)
+    }
+
+    override fun selectCtAgentCommissionListPlus(ctAgentCommission: CtAgentCommission): List<CtAgentCommissionDto> {
+        return commissionMapper.selectCtAgentCommissionListPlus(ctAgentCommission);
     }
 
     /**

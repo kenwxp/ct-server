@@ -2,6 +2,7 @@ package com.cloudtimes.agent.service
 
 import com.cloudtimes.agent.domain.CtAgentCommission
 import com.cloudtimes.account.dto.request.UpdateSubUserCommissionRequest
+import com.cloudtimes.agent.dto.response.CtAgentCommissionDto
 
 /**
  * 代理销售佣金设置Service接口
@@ -31,6 +32,8 @@ interface ICtAgentCommissionService {
      * @return 代理销售佣金设置集合
      */
     fun selectCtAgentCommissionList(ctAgentCommission: CtAgentCommission): List<CtAgentCommission>
+
+    fun selectCtAgentCommissionListPlus(ctAgentCommission: CtAgentCommission): List<CtAgentCommissionDto>
 
     /**
      * 新增代理销售佣金设置

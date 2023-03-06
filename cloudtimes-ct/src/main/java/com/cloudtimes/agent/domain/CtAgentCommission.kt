@@ -16,13 +16,14 @@ import java.util.*
  * @author 沈兵
  * @date 2023-02-03
  */
-@ApiModel(value = "CtAgentCommission", description = "代理佣金")
+@ApiModel(value = "CtAgentCommissionDto", description = "代理佣金")
 class CtAgentCommission : BaseEntity() {
     @ApiModelProperty(value = "编号")
     var id: String? = null
 
     @ApiModelProperty(value = "代理编号")
     var userId: String? = null
+
 
     @ApiModelProperty(value = "上级代理编号")
     @Excel(name = "上级代理编号")

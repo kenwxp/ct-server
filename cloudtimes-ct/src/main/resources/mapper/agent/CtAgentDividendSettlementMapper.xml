@@ -9,12 +9,31 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectCtAgentDividendSettlementList" parameterType="CtAgentDividendSettlement" resultMap="CtAgentDividendSettlementResult">
         <include refid="selectCtAgentDividendSettlementVo"/>
-        <where>  
-            <if test="userId != null  and userId != ''"> and user_id = #{userId}</if>
-            <if test="storeId != null  and storeId != ''"> and store_id = #{storeId}</if>
-            <if test="dividendYear != null "> and dividend_year = #{dividendYear}</if>
-            <if test="dividendMonth != null "> and dividend_month = #{dividendMonth}</if>
+        <where>
+            <if test="userId != null  and userId != ''">and user_id = #{userId}</if>
+            <if test="storeId != null  and storeId != ''">and store_id = #{storeId}</if>
+            <if test="dividendYear != null ">and dividend_year = #{dividendYear}</if>
+            <if test="dividendMonth != null ">and dividend_month = #{dividendMonth}</if>
             and del_flag = '0'
+        </where>
+    </select>
+
+
+    <select id="selectCtAgentDividendSettlementListPlus" parameterType="CtAgentDividendSettlement" resultType="CtAgentDividendSettlementDto">
+        SELECT
+        ds.*,
+        u.account as user_account,
+        uu.account as parent_user_account,
+        s.`name`
+        FROM
+        ct_agent_dividend_settlement ds
+        LEFT JOIN ct_user u ON u.id = ds.user_id
+        LEFT JOIN ct_user uu ON uu.id = ds.parent_user_id
+        LEFT JOIN ct_store s ON s.id = ds.store_id
+        <where>
+            <if test="storeId != null  and storeId != ''">and ds.store_id = #{storeId}</if>
+            <if test="userId != null  and userId != ''">and u.account = #{userId}</if>
+            and ds.del_flag = '0'
         </where>
     </select>
     
@@ -44,8 +63,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="id != null">#{id},</if>
             <if test="userId != null">#{userId},</if>
             <if test="storeId != null">#{storeId},</if>
-            <if test="dividendYear != null">#{dividendYear},</if>
-            <if test="dividendMonth != null">#{dividendMonth},</if>
+            <if test="dividend_year_month != null">#{dividendYearMonth},</if>
             <if test="settleAmount != null">#{settleAmount},</if>
             <if test="state != null">#{state},</if>
             <if test="delFlag != null">#{delFlag},</if>
@@ -62,10 +80,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="SET" suffixOverrides=",">
             <if test="userId != null">user_id = #{userId},</if>
             <if test="storeId != null">store_id = #{storeId},</if>
-            <if test="dividendYear != null">dividend_year = #{dividendYear},</if>
-            <if test="dividendMonth != null">dividend_month = #{dividendMonth},</if>
-            <if test="settleAmount != null">settle_amount = #{settleAmount},</if>
+            <if test="amount != null">amount = #{amount},</if>
             <if test="state != null">state = #{state},</if>
+            <if test="verifyState != null">verify_state = #{verifyState},</if>
             <if test="delFlag != null">del_flag = #{delFlag},</if>
             <if test="platformApprovedTime != null">platform_approved_time = #{platformApprovedTime},</if>
             <if test="agentApprovedTime != null">agent_approved_time = #{agentApprovedTime},</if>

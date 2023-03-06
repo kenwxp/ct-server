@@ -1,6 +1,7 @@
 package com.cloudtimes.agent.mapper
 
 import com.cloudtimes.agent.domain.CtAgentDividendSettlement
+import com.cloudtimes.agent.dto.response.CtAgentDividendSettlementDto
 
 import org.apache.ibatis.annotations.Mapper
 import org.apache.ibatis.annotations.Result
@@ -77,6 +78,8 @@ interface CtAgentDividendSettlementMapper : CommonCountMapper, CommonDeleteMappe
      * @return 分润结算审核集合
      */
     fun selectCtAgentDividendSettlementList(ctAgentDividendSettlement: CtAgentDividendSettlement): List<CtAgentDividendSettlement>
+
+    fun selectCtAgentDividendSettlementListPlus(ctAgentDividendSettlement: CtAgentDividendSettlement): List<CtAgentDividendSettlementDto>
 
     /**
      * 新增分润结算审核

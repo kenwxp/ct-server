@@ -1,6 +1,7 @@
 package com.cloudtimes.agent.mapper
 
 import com.cloudtimes.agent.domain.CtAgentCommissionSettlement
+import com.cloudtimes.agent.dto.response.CtAgentCommissionSettlementDto
 import org.apache.ibatis.annotations.Mapper
 import org.apache.ibatis.annotations.Param
 import org.apache.ibatis.annotations.Update
@@ -79,6 +80,8 @@ interface CtAgentCommissionSettlementMapper : CommonCountMapper, CommonDeleteMap
      * @return 销售佣金结算集合
      */
     fun selectCtAgentCommissionSettlementList(ctAgentCommissionSettlement: CtAgentCommissionSettlement): List<CtAgentCommissionSettlement>
+
+    fun selectCtAgentCommissionSettlementListPlus(ctAgentCommissionSettlement: CtAgentCommissionSettlement): List<CtAgentCommissionSettlementDto>
 
     /**
      * 新增销售佣金结算

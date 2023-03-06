@@ -1,6 +1,7 @@
 package com.cloudtimes.agent.service
 
 import com.cloudtimes.agent.domain.CtAgentCommissionSettlement
+import com.cloudtimes.agent.dto.response.CtAgentCommissionSettlementDto
 
 /**
  * 销售佣金结算Service接口
@@ -24,6 +25,8 @@ interface ICtAgentCommissionSettlementService {
      * @return 销售佣金结算集合
      */
     fun selectCtAgentCommissionSettlementList(ctAgentCommissionSettlement: CtAgentCommissionSettlement): List<CtAgentCommissionSettlement>
+
+    fun selectCtAgentCommissionSettlementListPlus(ctAgentCommissionSettlement: CtAgentCommissionSettlement): List<CtAgentCommissionSettlementDto>
 
     /**
      * 新增销售佣金结算

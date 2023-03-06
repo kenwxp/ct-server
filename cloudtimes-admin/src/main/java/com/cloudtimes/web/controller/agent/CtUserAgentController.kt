@@ -1,12 +1,16 @@
 package com.cloudtimes.web.controller.agent
 
+import com.cloudtimes.account.domain.CtUser
+import com.cloudtimes.account.service.ICtUserService
 import com.cloudtimes.agent.domain.CtUserAgent
 import com.cloudtimes.agent.service.ICtUserAgentService
 import com.cloudtimes.common.annotation.Log
 import com.cloudtimes.common.core.controller.BaseController
 import com.cloudtimes.common.core.domain.AjaxResult
 import com.cloudtimes.common.core.page.TableDataInfo
+import com.cloudtimes.common.enums.AgentState
 import com.cloudtimes.common.enums.BusinessType
+import com.cloudtimes.common.utils.DateUtils
 import com.cloudtimes.common.utils.poi.ExcelUtil
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.prepost.PreAuthorize
@@ -25,16 +29,41 @@ class CtUserAgentController : BaseController() {
     @Autowired
     private lateinit var ctUserAgentService: ICtUserAgentService
 
+    @Autowired
+    private lateinit var ctUserService: ICtUserService
+
+//    /**
+//     * 查询代理列表
+//     */
+//    @PreAuthorize("@ss.hasPermi('agent:agent:list')")
+//    @GetMapping("/list")
+//    fun list(ctUserAgent: CtUserAgent): TableDataInfo {
+//        startPage()
+//        val list: List<CtUserAgent?> = ctUserAgentService.selectCtUserAgentList(ctUserAgent)
+//        return getDataTable(list)
+//    }
+
     /**
-     * 查询代理列表
+     * 查询用户列表
      */
-    @PreAuthorize("@ss.hasPermi('agent:agent:list')")
-    @GetMapping("/list")
-    fun list(ctUserAgent: CtUserAgent): TableDataInfo {
+   // @PreAuthorize("@ss.hasPermi('agent:agent:agentUserlist')")
+    @GetMapping("/agentUserlist")
+    fun listUser(ctUser: CtUser?): TableDataInfo? {
         startPage()
-        val list: List<CtUserAgent?> = ctUserAgentService.selectCtUserAgentList(ctUserAgent)
+        val list: List<CtUser?> = ctUserService.selectCtUserList(ctUser!!)
         return getDataTable(list)
     }
+
+
+    /**
+     * 获取代理详细信息
+     */
+//    @PreAuthorize("@ss.hasPermi('agent:agent:query')")
+    @GetMapping(value = ["/getAgnetUser/{userId}"])
+    fun getAgnetUser(@PathVariable("userId") userId: String): AjaxResult {
+        return AjaxResult.success(ctUserService.selectCtUserById(userId))
+    }
+
 
     /**
      * 导出代理列表
@@ -69,13 +98,24 @@ class CtUserAgentController : BaseController() {
         return toAjax(ctUserAgentService.insertCtUserAgent(ctUserAgent))
     }
 
-    /**
-     * 修改代理
-     */
-    @PreAuthorize("@ss.hasPermi('agent:agent:edit')")
+
+  //  @PreAuthorize("@ss.hasPermi('agent:agent:edit')")
     @Log(title = "代理", businessType = BusinessType.UPDATE)
-    @PutMapping
-    fun edit(@RequestBody ctUserAgent: CtUserAgent): AjaxResult {
-        return toAjax(ctUserAgentService.updateCtUserAgent(ctUserAgent))
+    @PutMapping("/updateAgnetUser")
+    fun updateAgnetUser(@RequestBody ctUser: CtUser): AjaxResult? {
+        if (AgentState.None.code != ctUser.agentState) {
+            ctUser.createAgentTime = DateUtils.getNowDate()
+        }
+        return toAjax(ctUserService.updateCtUser(ctUser))
     }
+
+//    /**
+//     * 修改代理
+//     */
+//    @PreAuthorize("@ss.hasPermi('agent:agent:edit')")
+//    @Log(title = "代理", businessType = BusinessType.UPDATE)
+//    @PutMapping
+//    fun edit(@RequestBody ctUserAgent: CtUserAgent): AjaxResult {
+//        return toAjax(ctUserAgentService.updateCtUserAgent(ctUserAgent))
+//    }
 }

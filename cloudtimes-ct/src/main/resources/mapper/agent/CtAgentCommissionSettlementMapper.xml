@@ -16,6 +16,28 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             and del_flag = '0'
         </where>
     </select>
+
+
+    <select id="selectCtAgentCommissionSettlementListPlus" parameterType="CtAgentCommissionSettlement" resultType="CtAgentCommissionSettlementDto">
+        SELECT
+        cc.*,
+        u.account AS user_account,
+        uu.account AS parent_user_account,
+        s.`name`
+        FROM
+        ct_agent_commission_settlement cc
+        LEFT JOIN ct_user u ON u.id = cc.user_id
+        LEFT JOIN ct_user uu ON uu.id = cc.parent_user_id
+        LEFT JOIN ct_store s ON s.id = cc.store_id
+        <where>
+            <if test="userId != null  and userId != ''">and cc.user_id = #{userId}</if>
+            <if test="verifyState != null  and verifyState != ''">and cc.verify_state = #{verifyState}</if>
+            <if test="state != null  and state != ''">and cc.state = #{state}</if>
+            and cc.del_flag = '0'
+        </where>
+    </select>
+
+
     
     <select id="selectCtAgentCommissionSettlementById" parameterType="String" resultMap="CtAgentCommissionSettlementResult">
         <include refid="selectCtAgentCommissionSettlementVo"/>
@@ -63,8 +85,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="SET" suffixOverrides=",">
             <if test="storeId != null">store_id = #{storeId},</if>
             <if test="userId != null">user_id = #{userId},</if>
-            <if test="systemPrice != null">system_price = #{systemPrice},</if>
-            <if test="settleTime != null">settle_time = #{settleTime},</if>
+            <if test="costPrice != null">cost_price = #{costPrice},</if>
             <if test="verifyState != null  and verifyState != ''">verify_state = #{verifyState},</if>
             <if test="state != null">state = #{state},</if>
             <if test="remark != null">remark = #{remark},</if>
