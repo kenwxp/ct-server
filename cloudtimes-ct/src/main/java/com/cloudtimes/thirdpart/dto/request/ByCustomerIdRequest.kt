@@ -11,4 +11,8 @@ class ByCustomerIdRequest {
     @field:NotEmpty(message =  "门店账号不能为空")
     @JsonProperty("customerid")
     var customerId: String = ""
+
+    override fun toString(): String {
+        return "ByCustomerIdRequest(customerId='$customerId')"
+    }
 }

@@ -69,6 +69,8 @@
     <select id="selectCtUserByAccount" parameterType="String" resultType="CtUser">
         <include refid="selectCtUserVo"/>
         where account = #{account}
+        or mobile = #{account}
+        or wx_union_id = #{account}
     </select>
 
     <select id="selectCtUserByWxOpenId" parameterType="String" resultType="CtUser">

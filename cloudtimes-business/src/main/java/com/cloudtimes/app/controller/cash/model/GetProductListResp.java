@@ -14,8 +14,6 @@ public class GetProductListResp {
     private String productUid;
     @ApiModelProperty(value = "商品名称", required = true)
     private String productName;
-    @ApiModelProperty(value = "商品类别的唯一标识", required = true)
-    private String categoryUid;
     @ApiModelProperty(value = "商品分类编码", required = true)
     private String categoryCode;
     @ApiModelProperty(value = "商品条形码", required = true)

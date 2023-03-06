@@ -24,10 +24,6 @@ class CtShopProduct : BaseEntity() {
     @Excel(name = "店铺编号")
     var shopNo: String? = null
 
-    @ApiModelProperty(value = "商品分类编号")
-    @Excel(name = "商品分类编号")
-    var categoryId: String? = null
-
     @ApiModelProperty(value = "商品分类编码（冗余）")
     @Excel(name = "商品分类编码（冗余")
     var categoryCode: String? = null

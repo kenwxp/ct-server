@@ -47,4 +47,9 @@ class YcygPurchaseRecord {
     @ApiModelProperty(value = "特供状态ID(DM特供,00正常)")
     @JsonProperty("cxtype")
     var specialSupplyType: Int = 0
+
+    override fun toString(): String {
+        return "YcygPurchaseRecord(manufacturingDate='$manufacturingDate', expireDate='$expireDate', giftType='$giftType', barCode='$barCode', casherProductId='$casherProductId', thirdProductId='$thirdProductId', productName='$productName', hsjj='$hsjj', total=$total, specialSupplyType=$specialSupplyType)"
+    }
+
 }

@@ -22,4 +22,10 @@ class YcygPurchaseBookKeepRequest {
 
     @ApiModelProperty(value = "商品列表")
     var list: List<YcygPurchaseRecord> = emptyList()
+
+    override fun toString(): String {
+        return "YcygPurchaseBookKeepRequest(orderId='$orderId', customerId='$customerId', remark='$remark', list=$list)"
+    }
+
+
 }
