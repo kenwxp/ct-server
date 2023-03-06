@@ -32,7 +32,7 @@ class CtProductCatalog : BaseEntity() {
 
     /** 商品分类编码  */
     @Excel(name = "商品分类编码")
-    var productCode: String? = null
+    var categoryCode: String? = null
 
     /** 生产商  */
     @Excel(name = "生产商")
@@ -59,14 +59,17 @@ class CtProductCatalog : BaseEntity() {
     @Excel(name = "上市日期", width = 30.0, dateFormat = "yyyy-MM-dd")
     var listingDate: Date? = null
 
-
-    /** 建议零售价  */
-    @Excel(name = "建议零售价")
+    /** 保质期天数  */
+    @Excel(name = "保质期天数")
     var lifeSpanDays: Int? = null
 
     /** 建议零售价  */
     @Excel(name = "建议零售价")
     var retailPrice: Long? = null
+
+    /** 建议零售价  */
+    @Excel(name = "建议零售价")
+    var wholesalePrice: Long? = null
 
     /** 商品图片地址  */
     @Excel(name = "商品图片地址")
@@ -81,7 +84,7 @@ class CtProductCatalog : BaseEntity() {
             .append("productName", productName)
             .append("englishName", englishName)
             .append("productBrand", productBrand)
-            .append("productCode", productCode)
+            .append("categoryCode", categoryCode)
             .append("manufacturer", manufacturer)
             .append("originCountry", originCountry)
             .append("specification", specification)
@@ -90,6 +93,7 @@ class CtProductCatalog : BaseEntity() {
             .append("listingDate", listingDate)
             .append("lifeSpanDays", lifeSpanDays)
             .append("retailPrice", retailPrice)
+            .append("wholesalePrice", wholesalePrice)
             .append("pictureUrl", pictureUrl)
             .append("remarks", remarks)
             .append("createTime", createTime)

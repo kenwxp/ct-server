@@ -14,7 +14,7 @@ class CtProductCatalogTable : AliasableSqlTable<CtProductCatalogTable>("ct_produ
 
     val productBrand = column<String>(name = "product_brand", jdbcType = JDBCType.VARCHAR)
 
-    val productCode = column<String>(name = "product_code", jdbcType = JDBCType.VARCHAR)
+    val categoryCode = column<String>(name = "categoryCode", jdbcType = JDBCType.VARCHAR)
 
     val manufacturer = column<String>(name = "manufacturer", jdbcType = JDBCType.VARCHAR)
 
@@ -31,6 +31,8 @@ class CtProductCatalogTable : AliasableSqlTable<CtProductCatalogTable>("ct_produ
     val lifeSpanDays = column<Int>(name = "life_span_days", jdbcType = JDBCType.DATE)
 
     val retailPrice = column<Int>(name = "retail_price", jdbcType = JDBCType.INTEGER)
+
+    val wholesalePrice = column<Int>(name = "wholesale_price", jdbcType = JDBCType.INTEGER)
 
     val pictureUrl = column<String>(name = "picture_url", jdbcType = JDBCType.VARCHAR)
 
