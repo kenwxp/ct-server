@@ -120,7 +120,13 @@ public class CtShopBossBusinessServiceImpl implements ICtShopBossBusinessService
             }
             //通知收银机进行状态转换
             cashMqSender.notifyCashDutyStatus(dbStore.getId(), isSupervise);
-            // todo 发送app客户端消息
+            // 发送app客户端消息
+            CtEvents newEvent = new CtEvents();
+            newEvent.setEventName("云值守上线通知");
+            newEvent.setContent("您的店铺+" + dbStore.getName() + "已提交云值守申请，由客服人员看店，如需取消云值守，请在当前app上申请下线");
+            newEvent.setReceiver(userId);
+            newEvent.setReceiverName(dbUser.getNickName());
+            webMqSenderService.sendShopkeeperMessage(newEvent);
             // 解锁门禁
             producer.send(RocketMQConstants.CT_OPEN_DOOR, new OpenDoorMqData(OpenDoorOption.UNLOCK_DOOR, dbStore.getId(), userId, ChannelType.MOBILE));
         } else if (StringUtils.equals(opFlag, "0")) {
@@ -160,6 +166,13 @@ public class CtShopBossBusinessServiceImpl implements ICtShopBossBusinessService
                     webMqSenderService.sendCustomerServiceMessage(newEvent);
                 }
             }
+            // 发送app客户端消息
+            CtEvents newEvent = new CtEvents();
+            newEvent.setEventName("云值守下线通知");
+            newEvent.setContent("您的店铺+" + dbStore.getName() + "已提交下线申请，门店将处在关停状态，请及时接管门店。请如需重新上线，请在当前app上申请云值守");
+            newEvent.setReceiver(userId);
+            newEvent.setReceiverName(dbUser.getNickName());
+            webMqSenderService.sendShopkeeperMessage(newEvent);
             //强锁门禁
             producer.send(RocketMQConstants.CT_OPEN_DOOR, new OpenDoorMqData(OpenDoorOption.FORCE_LOCK_DOOR, dbStore.getId(), userId, ChannelType.MOBILE));
         }

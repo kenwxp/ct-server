@@ -57,4 +57,28 @@ public class CtWebMqSenderService {
         log.info("发送消息到值守端: 客服编号：" + newEvent.getSender());
     }
 
+    /**
+     * 发送店家信息
+     *
+     * @param newEvent
+     */
+    public void sendShopkeeperMessage(CtEvents newEvent) {
+        if (StringUtils.isNotEmpty(newEvent.getReceiver())) {
+            newEvent.setReceiverName(customerServiceCache.getServiceName(newEvent.getReceiver()));
+        }
+//        newEvent.setSender();
+//        newEvent.setSenderName();
+//        newEvent.setShoppingId();
+        newEvent.setEventType(EventType.ShopkeeperMessage.getCode());
+        newEvent.setUserType(UserType.Shopkeeper.getCode());
+        newEvent.setSourceType(ChannelType.MOBILE.getCode());
+        newEvent.setStopped("0");
+        newEvent.setCreateDate(DateUtils.getNowDate());
+        newEvent.setDelFlag("0");
+        newEvent.setCreateTime(DateUtils.getNowDate());
+        newEvent.setUpdateTime(DateUtils.getNowDate());
+        // 新增事件
+        eventsMapper.insertCtEvents(newEvent);
+    }
+
 }
