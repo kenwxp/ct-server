@@ -14,9 +14,6 @@ import java.util.*
  * @date 2023-03-06
  */
 class CtProductCatalog : BaseEntity() {
-    /** 商品目录编号  */
-    var id: String? = null
-
     /** 商品条形码  */
     @Excel(name = "商品条形码")
     var barcode: String? = null
@@ -62,6 +59,11 @@ class CtProductCatalog : BaseEntity() {
     @Excel(name = "上市日期", width = 30.0, dateFormat = "yyyy-MM-dd")
     var listingDate: Date? = null
 
+
+    /** 建议零售价  */
+    @Excel(name = "建议零售价")
+    var lifeSpanDays: Int? = null
+
     /** 建议零售价  */
     @Excel(name = "建议零售价")
     var retailPrice: Long? = null
@@ -75,7 +77,6 @@ class CtProductCatalog : BaseEntity() {
     var remarks: String? = null
     override fun toString(): String {
         return ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", id)
             .append("barcode", barcode)
             .append("productName", productName)
             .append("englishName", englishName)
@@ -87,6 +88,7 @@ class CtProductCatalog : BaseEntity() {
             .append("unit", unit)
             .append("weight", weight)
             .append("listingDate", listingDate)
+            .append("lifeSpanDays", lifeSpanDays)
             .append("retailPrice", retailPrice)
             .append("pictureUrl", pictureUrl)
             .append("remarks", remarks)

@@ -10,7 +10,7 @@ import javax.validation.constraints.NotEmpty
 class RcygProductRecord {
     @ApiModelProperty(value = "商品条码")
     @JsonProperty("smallLineCode")
-    var barCode: String = ""
+    var barcode: String = ""
 
     @ApiModelProperty(value = "蓉城易购商品唯一ID")
     @JsonProperty("goodsId")
@@ -52,4 +52,8 @@ class RcygProductRecord {
     @ApiModelProperty(value = "保质期天数")
     @JsonProperty("shelfLifeDays")
     var lifeSpanDays: Int = 0
+
+    override fun toString(): String {
+        return "RcygProductRecord(barCode='$barcode', thirdProductId='$thirdProductId', productName='$productName', specification='$specification', unit='$unit', retailPrice=$retailPrice, wholeSalePrice=$wholeSalePrice, packingTotal='$packingTotal', isAvailable='$isAvailable', createTime='$createTime', lifeSpanDays=$lifeSpanDays)"
+    }
 }

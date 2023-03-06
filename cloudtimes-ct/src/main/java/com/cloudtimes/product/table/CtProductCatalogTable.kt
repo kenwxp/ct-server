@@ -6,8 +6,6 @@ import org.mybatis.dynamic.sql.AliasableSqlTable
 import org.mybatis.dynamic.sql.util.kotlin.elements.column
 
 class CtProductCatalogTable : AliasableSqlTable<CtProductCatalogTable>("ct_product_catalog", ::CtProductCatalogTable) {
-    val id = column<Object>(name = "id", jdbcType = JDBCType.OTHER)
-
     val barcode = column<String>(name = "barcode", jdbcType = JDBCType.VARCHAR)
 
     val productName = column<String>(name = "product_name", jdbcType = JDBCType.VARCHAR)
@@ -29,6 +27,8 @@ class CtProductCatalogTable : AliasableSqlTable<CtProductCatalogTable>("ct_produ
     val weight = column<String>(name = "weight", jdbcType = JDBCType.VARCHAR)
 
     val listingDate = column<Date>(name = "listing_date", jdbcType = JDBCType.DATE)
+
+    val lifeSpanDays = column<Int>(name = "life_span_days", jdbcType = JDBCType.DATE)
 
     val retailPrice = column<Int>(name = "retail_price", jdbcType = JDBCType.INTEGER)
 

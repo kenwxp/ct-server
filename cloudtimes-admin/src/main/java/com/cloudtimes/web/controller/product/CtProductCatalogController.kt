@@ -56,9 +56,9 @@ class CtProductCatalogController : BaseController() {
      * 获取商品目录详细信息
      */
     @PreAuthorize("@ss.hasPermi('product:product_catalog:query')")
-    @GetMapping(value = ["/{id}"])
-    fun getInfo(@PathVariable("id") id: String): AjaxResult {
-        return AjaxResult.success(ctProductCatalogService.selectCtProductCatalogById(id))
+    @GetMapping(value = ["/{barcode}"])
+    fun getInfo(@PathVariable("barcode") barcode: String): AjaxResult {
+        return AjaxResult.success(ctProductCatalogService.selectCtProductCatalogByBarcode(barcode))
     }
 
     /**
@@ -79,15 +79,5 @@ class CtProductCatalogController : BaseController() {
     @PutMapping
     fun edit(@RequestBody ctProductCatalog: CtProductCatalog): AjaxResult {
         return toAjax(ctProductCatalogService.updateCtProductCatalog(ctProductCatalog))
-    }
-
-    /**
-     * 删除商品目录
-     */
-    @PreAuthorize("@ss.hasPermi('product:product_catalog:remove')")
-    @Log(title = "商品目录", businessType = BusinessType.DELETE)
-    @DeleteMapping("/{ids}")
-    fun remove(@PathVariable ids: Array<String>): AjaxResult {
-        return toAjax(ctProductCatalogService.deleteCtProductCatalogByIds(ids))
     }
 }

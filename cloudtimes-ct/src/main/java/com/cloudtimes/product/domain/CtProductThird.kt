@@ -18,14 +18,15 @@ class CtProductThird : BaseEntity() {
     /** 第三方商品ID  */
     var thirdProductId: String? = null
 
-    /** 商品目录编号  */
-    @Excel(name = "商品目录编号")
-    var productId: String? = null
+    /** 商品条码  */
+    @Excel(name = "商品条码")
+    var barcode: String? = null
+
     override fun toString(): String {
         return ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
             .append("thirdCode", thirdCode)
             .append("thirdProductId", thirdProductId)
-            .append("productId", productId)
+            .append("barcode", barcode)
             .append("createTime", createTime)
             .append("updateTime", updateTime)
             .toString()

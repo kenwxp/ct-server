@@ -3,7 +3,9 @@ package com.cloudtimes.app.controller.rcyg
 import com.cloudtimes.app.constant.PrefixPathConstants
 import com.cloudtimes.common.core.domain.RestResult
 import com.cloudtimes.thirdpart.dto.request.ByCustomerIdRequest
+import com.cloudtimes.thirdpart.dto.request.YcygIncrementalProductSyncRequest
 import com.cloudtimes.thirdpart.dto.request.YcygPurchaseBookKeepRequest
+import com.cloudtimes.thirdpart.dto.response.YcygIncrementalProductSyncResponse
 import com.cloudtimes.thirdpart.dto.response.YcygPurchaseBookKeepResponse
 import com.cloudtimes.thirdpart.dto.response.YcygSuggestionPurchase
 import com.cloudtimes.thirdpart.services.RcygService
@@ -28,6 +30,16 @@ class RcygController(
 ) {
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
+    @PostMapping(value = ["/incremental_product_sync"])
+    @ApiOperation(value = "增量商品同步")
+    fun incrementalProductSync(
+        @Valid @RequestBody request: YcygIncrementalProductSyncRequest,
+    ): YcygIncrementalProductSyncResponse {
+        logger.info("request: $request")
+        ycygServcie.incrementalProductSync(request.list)
+        return YcygIncrementalProductSyncResponse()
+    }
+
     @PostMapping(value = ["/suggest_purchase"])
     @ApiOperation(value = "建议采购商品")
     fun suggestPurchase(@Valid @RequestBody request: ByCustomerIdRequest): SuggestPurchaseResponse {
@@ -42,13 +54,6 @@ class RcygController(
     @PostMapping(value = ["/purchase_book_keep"])
     @ApiOperation(value = "采购商品入库")
     fun purchaseBookKeep(@Valid @RequestBody request: YcygPurchaseBookKeepRequest): YcygPurchaseBookKeepResponse {
-        logger.info("request: $request")
-        return YcygPurchaseBookKeepResponse()
-    }
-
-    @PostMapping(value = ["/incremental_product_sync"])
-    @ApiOperation(value = "增量商品同步")
-    fun incrementalProductSync(@Valid @RequestBody request: YcygPurchaseBookKeepRequest): YcygPurchaseBookKeepResponse {
         logger.info("request: $request")
         return YcygPurchaseBookKeepResponse()
     }

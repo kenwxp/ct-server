@@ -7,7 +7,7 @@ import org.mybatis.dynamic.sql.AliasableSqlTable
 import org.mybatis.dynamic.sql.util.kotlin.elements.column
 
 class CtShopPurchaseTable : AliasableSqlTable<CtShopPurchaseTable>("ct_shop_purchase", ::CtShopPurchaseTable) {
-    val id = column<Object>(name = "id", jdbcType = JDBCType.OTHER)
+    val id = column<String>(name = "id", jdbcType = JDBCType.OTHER)
 
     val shopNo = column<String>(name = "shop_no", jdbcType = JDBCType.VARCHAR)
 

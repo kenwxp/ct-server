@@ -3,32 +3,11 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.cloudtimes.product.mapper.CtProductCatalogMapper">
-    
-    <resultMap type="CtProductCatalog" id="CtProductCatalogResult">
-        <result property="id"    column="id"    />
-        <result property="barcode"    column="barcode"    />
-        <result property="productName"    column="product_name"    />
-        <result property="englishName"    column="english_name"    />
-        <result property="productBrand"    column="product_brand"    />
-        <result property="productCode"    column="product_code"    />
-        <result property="manufacturer"    column="manufacturer"    />
-        <result property="originCountry"    column="origin_country"    />
-        <result property="specification"    column="specification"    />
-        <result property="unit"    column="unit"    />
-        <result property="weight"    column="weight"    />
-        <result property="listingDate"    column="listing_date"    />
-        <result property="retailPrice"    column="retail_price"    />
-        <result property="pictureUrl"    column="picture_url"    />
-        <result property="remarks"    column="remarks"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateTime"    column="update_time"    />
-    </resultMap>
-
     <sql id="selectCtProductCatalogVo">
-        select id, barcode, product_name, english_name, product_brand, product_code, manufacturer, origin_country, specification, unit, weight, listing_date, retail_price, picture_url, remarks, create_time, update_time from ct_product_catalog
+        select * from ct_product_catalog
     </sql>
 
-    <select id="selectCtProductCatalogList" parameterType="CtProductCatalog" resultMap="CtProductCatalogResult">
+    <select id="selectCtProductCatalogList" parameterType="CtProductCatalog" resultType="CtProductCatalog">
         <include refid="selectCtProductCatalogVo"/>
         <where>  
             <if test="barcode != null  and barcode != ''"> and barcode = #{barcode}</if>
@@ -48,15 +27,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
     </select>
     
-    <select id="selectCtProductCatalogById" parameterType="String" resultMap="CtProductCatalogResult">
+    <select id="selectCtProductCatalogByBarcode" parameterType="String" resultType="CtProductCatalog">
         <include refid="selectCtProductCatalogVo"/>
-        where id = #{id}
+        where barcode = #{barcode}
     </select>
         
     <insert id="insertCtProductCatalog" parameterType="CtProductCatalog">
         insert into ct_product_catalog
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="id != null">id,</if>
             <if test="barcode != null and barcode != ''">barcode,</if>
             <if test="productName != null and productName != ''">product_name,</if>
             <if test="englishName != null">english_name,</if>
@@ -75,7 +53,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null">update_time,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="id != null">#{id},</if>
             <if test="barcode != null and barcode != ''">#{barcode},</if>
             <if test="productName != null and productName != ''">#{productName},</if>
             <if test="englishName != null">#{englishName},</if>
@@ -118,14 +95,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </update>
 
-    <delete id="deleteCtProductCatalogById" parameterType="String">
-        delete from ct_product_catalog where id = #{id}
-    </delete>
-
-    <delete id="deleteCtProductCatalogByIds" parameterType="String">
-        delete from ct_product_catalog where id in 
-        <foreach item="id" collection="array" open="(" separator="," close=")">
-            #{id}
-        </foreach>
+    <delete id="deleteCtProductCatalogByBarcode" parameterType="String">
+        delete from ct_product_catalog where barcode = #{barcode}
     </delete>
 </mapper>

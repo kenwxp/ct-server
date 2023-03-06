@@ -2,13 +2,28 @@ package com.cloudtimes.product.mapper
 
 import com.cloudtimes.product.domain.CtShopPurchase
 
+import org.apache.ibatis.annotations.Mapper
+import org.apache.ibatis.annotations.SelectProvider
+import org.mybatis.dynamic.sql.util.mybatis3.CommonCountMapper
+import org.mybatis.dynamic.sql.util.mybatis3.CommonDeleteMapper
+import org.mybatis.dynamic.sql.util.mybatis3.CommonInsertMapper
+import org.mybatis.dynamic.sql.util.mybatis3.CommonUpdateMapper
+import org.mybatis.dynamic.sql.util.SqlProviderAdapter
+import org.mybatis.dynamic.sql.select.render.SelectStatementProvider
+
 /**
  * 店铺商品采购Mapper接口
  *
  * @author 沈兵
  * @date 2023-03-05
  */
-interface CtShopPurchaseMapper {
+@Mapper
+interface CtShopPurchaseMapper : CommonCountMapper, CommonDeleteMapper, CommonInsertMapper<CtShopPurchase>, CommonUpdateMapper {
+    @SelectProvider(type=SqlProviderAdapter::class, method="select")
+    fun selectMany(selectStatement: SelectStatementProvider): List<CtShopPurchase>
+
+    @SelectProvider(type=SqlProviderAdapter::class, method="select")
+    fun selectOne(selectStatement: SelectStatementProvider): CtShopPurchase?
     /**
      * 查询店铺商品采购
      *

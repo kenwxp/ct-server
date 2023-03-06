@@ -27,8 +27,8 @@ class CtProductCatalogServiceImpl : ICtProductCatalogService {
      * @param id 商品目录主键
      * @return 商品目录
      */
-    override fun selectCtProductCatalogById(id: String): CtProductCatalog? {
-        return ctProductCatalogMapper.selectCtProductCatalogById(id)
+    override fun selectCtProductCatalogByBarcode(barcode: String): CtProductCatalog? {
+        return ctProductCatalogMapper.selectCtProductCatalogByBarcode(barcode)
     }
 
     /**
@@ -64,22 +64,12 @@ class CtProductCatalogServiceImpl : ICtProductCatalogService {
     }
 
     /**
-     * 批量删除商品目录
-     *
-     * @param ids 需要删除的商品目录主键
-     * @return 结果
-     */
-    override fun deleteCtProductCatalogByIds(ids: Array<String>): Int {
-        return ctProductCatalogMapper.deleteCtProductCatalogByIds(ids)
-    }
-
-    /**
      * 删除商品目录信息
      *
      * @param id 商品目录主键
      * @return 结果
      */
-    override fun deleteCtProductCatalogById(id: String): Int {
-        return ctProductCatalogMapper.deleteCtProductCatalogById(id)
+    override fun deleteCtProductCatalogByBarcode(barcode: String): Int {
+        return ctProductCatalogMapper.deleteCtProductCatalogByBarcode(barcode)
     }
 }

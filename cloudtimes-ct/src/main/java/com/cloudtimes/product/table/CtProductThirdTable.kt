@@ -10,7 +10,7 @@ class CtProductThirdTable : AliasableSqlTable<CtProductThirdTable>("ct_product_t
 
     val thirdProductId = column<String>(name = "third_product_id", jdbcType = JDBCType.VARCHAR)
 
-    val productId = column<Object>(name = "product_id", jdbcType = JDBCType.OTHER)
+    val barcode = column<String>(name = "barcode", jdbcType = JDBCType.OTHER)
 
     val createTime = column<Date>(name = "create_time", jdbcType = JDBCType.TIMESTAMP)
 

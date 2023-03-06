@@ -15,7 +15,7 @@ interface ICtProductCatalogService {
      * @param id 商品目录主键
      * @return 商品目录
      */
-    fun selectCtProductCatalogById(id: String): CtProductCatalog?
+    fun selectCtProductCatalogByBarcode(barcode: String): CtProductCatalog?
 
     /**
      * 查询商品目录列表
@@ -42,18 +42,10 @@ interface ICtProductCatalogService {
     fun updateCtProductCatalog(ctProductCatalog: CtProductCatalog): Int
 
     /**
-     * 批量删除商品目录
-     *
-     * @param ids 需要删除的商品目录主键集合
-     * @return 结果
-     */
-    fun deleteCtProductCatalogByIds(ids: Array<String>): Int
-
-    /**
      * 删除商品目录信息
      *
      * @param id 商品目录主键
      * @return 结果
      */
-    fun deleteCtProductCatalogById(id: String): Int
+    fun deleteCtProductCatalogByBarcode(barcode: String): Int
 }
