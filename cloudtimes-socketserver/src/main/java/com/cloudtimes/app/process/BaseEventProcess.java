@@ -6,5 +6,5 @@ public interface BaseEventProcess {
 
     public String eventName();
 
-    public Object process(AuthUser user, Object data);
+    public String process(AuthUser user, Object data);
 }
