@@ -5,6 +5,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.validation.constraints.NotEmpty;
+
 /**
  * 小程序登录校验请求体
  */
@@ -12,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 @Data
 @Slf4j
 public class LoginCheckReq {
-
+    @NotEmpty
     @ApiModelProperty(value = "微信登录code", required = true)
     private String loginCode;
 

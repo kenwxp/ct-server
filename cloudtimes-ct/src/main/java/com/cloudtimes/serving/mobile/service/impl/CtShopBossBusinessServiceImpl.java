@@ -4,12 +4,11 @@ import com.cloudtimes.account.domain.CtUser;
 import com.cloudtimes.account.mapper.CtUserMapper;
 import com.cloudtimes.common.annotation.DataSource;
 import com.cloudtimes.common.constant.RocketMQConstants;
-import com.cloudtimes.common.enums.ChannelType;
-import com.cloudtimes.common.enums.DataSourceType;
-import com.cloudtimes.common.enums.OpenDoorOption;
+import com.cloudtimes.common.enums.*;
 import com.cloudtimes.common.exception.ServiceException;
 import com.cloudtimes.common.mq.CtRocketMqProducer;
 import com.cloudtimes.common.mq.OpenDoorMqData;
+import com.cloudtimes.common.utils.DateUtils;
 import com.cloudtimes.common.utils.SecurityUtils;
 import com.cloudtimes.common.utils.StringUtils;
 import com.cloudtimes.hardwaredevice.domain.CtStore;
@@ -17,12 +16,18 @@ import com.cloudtimes.hardwaredevice.domain.CtSuperviseLogs;
 import com.cloudtimes.hardwaredevice.mapper.CtStoreMapper;
 import com.cloudtimes.hardwaredevice.mapper.CtSuperviseLogsMapper;
 import com.cloudtimes.mq.service.CtCashMqSenderService;
+import com.cloudtimes.mq.service.CtWebMqSenderService;
+import com.cloudtimes.serving.common.CtTaskInnerService;
 import com.cloudtimes.serving.mobile.service.ICtShopBossBusinessService;
+import com.cloudtimes.supervise.domain.CtEvents;
+import com.cloudtimes.supervise.domain.CtTask;
+import com.cloudtimes.supervise.mapper.CtTaskMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 小程序用户登录Service业务层处理
@@ -44,6 +49,16 @@ public class CtShopBossBusinessServiceImpl implements ICtShopBossBusinessService
     private CtCashMqSenderService cashMqSender;
     @Autowired
     private CtRocketMqProducer producer;
+
+    @Autowired
+    private CtTaskInnerService taskInnerService;
+
+    @Autowired
+    private CtTaskMapper taskMapper;
+
+    @Autowired
+    private CtWebMqSenderService webMqSenderService;
+
     @Override
     public boolean changePassword(String userId, String newPassword, String oldPassword) {
         CtUser dbUser = userMapper.selectCtUserById(userId);
@@ -61,6 +76,7 @@ public class CtShopBossBusinessServiceImpl implements ICtShopBossBusinessService
         }
         return true;
     }
+
     @Transactional
     @Override
     public boolean applySupervise(String userId, String storeId, String opFlag) {
@@ -120,13 +136,30 @@ public class CtShopBossBusinessServiceImpl implements ICtShopBossBusinessService
             //更新门店值守状态
             String isSupervise = "0";
             dbStore.setIsSupervise(isSupervise);
-            dbStore.setUpdateTime(new Date());
+            dbStore.setSuperviseLogId("");
             if (storeMapper.updateCtStore(dbStore) < 1) {
                 throw new ServiceException("更新门店值守状态异常");
             }
             //通知收银机进行状态转换
             cashMqSender.notifyCashDutyStatus(dbStore.getId(), isSupervise);
-            //todo 发送值守端结束任务通知
+            // 发送值守端结束任务通知
+            CtTask query = new CtTask();
+            query.setStoreId(dbStore.getId());
+            query.setState("0");
+            List<CtTask> dbTasks = taskMapper.selectCtTaskList(query);
+            if (dbTasks != null && dbTasks.size() > 0) {
+                // 有进行中的任务，则通知值守员结束任务
+                // 发送进客提醒给客服,及时
+                for (CtTask task :
+                        dbTasks) {
+                    CtEvents newEvent = new CtEvents();
+                    newEvent.setEventName("值守下线通知");
+                    newEvent.setContent(dbStore.getName() + "已提交下线申请，请及时处理并结束任务");
+                    newEvent.setReceiver(task.getStaffCode());
+                    newEvent.setTaskId(task.getId());
+                    webMqSenderService.sendCustomerServiceMessage(newEvent);
+                }
+            }
             //强锁门禁
             producer.send(RocketMQConstants.CT_OPEN_DOOR, new OpenDoorMqData(OpenDoorOption.FORCE_LOCK_DOOR, dbStore.getId(), userId, ChannelType.MOBILE));
         }

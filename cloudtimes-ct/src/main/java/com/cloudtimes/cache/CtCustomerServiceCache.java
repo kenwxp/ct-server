@@ -92,6 +92,10 @@ public class CtCustomerServiceCache {
         return list;
     }
 
+    public String getServiceName(String serviceId) {
+        return getMapValue(serviceId, "serviceName");
+    }
+
     public String getAcceptState(String serviceId) {
         return getMapValue(serviceId, "acceptState");
     }

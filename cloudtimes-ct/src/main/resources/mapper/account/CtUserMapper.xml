@@ -161,7 +161,7 @@
             <if test="account != null">account = #{account},</if>
             <if test="password != null">password = #{password},</if>
             <if test="wxOpenId != null">wx_open_id = #{wxOpenId},</if>
-            <if test="wxUnionId != null">wx_open_id = #{wxUnionId},</if>
+            <if test="wxUnionId != null">wx_union_id = #{wxUnionId},</if>
             <if test="mobile != null">mobile = #{mobile},</if>
             <if test="nickName != null">nick_name = #{nickName},</if>
             <if test="realName != null">real_name = #{realName},</if>

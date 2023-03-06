@@ -5,8 +5,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
-
-
 @Data
 @Slf4j
 @ApiModel(description = "返回参数")

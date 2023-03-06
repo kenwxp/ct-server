@@ -43,7 +43,12 @@ public class SuperviseWsData<T> {
         return error(option, msg, null);
     }
 
+    public SuperviseWsData error(String option, T data) {
+        return error(option, "操作失败", data);
+    }
+
     public SuperviseWsData error(String option, String msg, T data) {
         return new SuperviseWsData(option, HttpStatus.ERROR, msg, data);
     }
+
 }

@@ -5,8 +5,7 @@ import com.cloudtimes.common.mq.*;
 import com.cloudtimes.enums.DeviceType;
 import com.cloudtimes.hardwaredevice.domain.CtDevice;
 import com.cloudtimes.hardwaredevice.mapper.CtDeviceMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,8 +13,8 @@ import java.util.List;
 
 
 @Service
+@Slf4j
 public class CtCashMqSenderService {
-    static Logger log = LoggerFactory.getLogger(CtCashMqSenderService.class);
     @Autowired
     private CtDeviceMapper deviceMapper;
     @Autowired

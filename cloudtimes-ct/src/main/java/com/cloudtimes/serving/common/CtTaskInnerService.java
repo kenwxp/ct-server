@@ -1,19 +1,22 @@
 package com.cloudtimes.serving.common;
 
-import com.cloudtimes.cache.CtTaskCache;
 import com.cloudtimes.cache.CtCustomerServiceCache;
+import com.cloudtimes.cache.CtTaskCache;
 import com.cloudtimes.common.enums.AcceptTaskType;
-import com.cloudtimes.common.exception.ServiceException;
 import com.cloudtimes.common.enums.OpenDoorOption;
+import com.cloudtimes.common.exception.ServiceException;
 import com.cloudtimes.common.utils.StringUtils;
 import com.cloudtimes.hardwaredevice.domain.CtOpenDoorLogs;
 import com.cloudtimes.hardwaredevice.domain.CtStore;
 import com.cloudtimes.hardwaredevice.mapper.CtOpenDoorLogsMapper;
 import com.cloudtimes.hardwaredevice.mapper.CtStoreMapper;
+import com.cloudtimes.hardwaredevice.mapper.CtSuperviseLogsMapper;
+import com.cloudtimes.mq.service.CtWebMqSenderService;
+import com.cloudtimes.supervise.domain.CtCustomerService;
+import com.cloudtimes.supervise.domain.CtEvents;
 import com.cloudtimes.supervise.domain.CtOrder;
 import com.cloudtimes.supervise.domain.CtTask;
 import com.cloudtimes.supervise.mapper.CtTaskMapper;
-import com.cloudtimes.supervise.domain.CtCustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +35,12 @@ public class CtTaskInnerService {
     private CtTaskCache taskCache;
     @Autowired
     private CtOpenDoorLogsMapper openDoorLogsMapper;
+    @Autowired
+    private CtWebMqSenderService mqSenderService;
+    @Autowired
+    private CtCustomerServiceCache customerServiceCache;
+    @Autowired
+    private CtSuperviseLogsMapper superviseLogsMapper;
 
     /**
      * 门店分配任务
@@ -90,19 +99,28 @@ public class CtTaskInnerService {
                 }
                 // 放入内存
                 taskCache.setCacheTask(newTask);
-                // todo 发送新任务提醒给客服
+                //发送新任务提醒给客服
+                CtEvents newEvent = new CtEvents();
+                newEvent.setEventName("新任务提醒");
+                newEvent.setContent("你有新的值守任务，请留意值守门店：" + dbStore.getName());
+                newEvent.setReceiver(staffCode);
+                newEvent.setTaskId(newTask.getId());
+                mqSenderService.sendCustomerServiceMessage(newEvent);
                 return newTask;
             } else {
-                // todo 发送进客提醒给客服
-                return dbTasks.get(0);
+                CtTask task = dbTasks.get(0);
+                // 发送进客提醒给客服
+                CtEvents newEvent = new CtEvents();
+                newEvent.setEventName("新任务提醒");
+                newEvent.setContent(dbStore.getName() + "有人进店，请留意值守");
+                newEvent.setReceiver(task.getStaffCode());
+                newEvent.setTaskId(task.getId());
+                mqSenderService.sendCustomerServiceMessage(newEvent);
+                return task;
             }
         }
         return null;
     }
-
-    @Autowired
-    private CtCustomerServiceCache customerServiceCache;
-
 
     /**
      * 分配值守员
