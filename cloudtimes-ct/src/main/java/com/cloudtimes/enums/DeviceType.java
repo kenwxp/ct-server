@@ -22,7 +22,11 @@ public enum DeviceType {
     /**
      * 门禁刷脸
      */
-    DOOR_FACE("3");
+    DOOR_FACE("3"),
+    /**
+     * 网线供电摄像头
+     */
+    POE_CAMERA("4");
 
     private String code;
 

@@ -2,6 +2,7 @@ package com.cloudtimes.partner.hik.service;
 
 import com.cloudtimes.partner.hik.domain.HikCommonResp;
 import com.cloudtimes.partner.hik.domain.DeviceInfoData;
+import com.cloudtimes.partner.hik.domain.NvrDeviceInfoData;
 import com.cloudtimes.partner.hik.domain.VideoData;
 
 import java.util.Map;
@@ -84,4 +85,11 @@ public interface ICtHikApiService {
      * @return url 图片链接
      */
     public HikCommonResp getDeviceCapture(String deviceSerial);
+    /**
+     * 获取nvr在线状态及其下通道设备的状态
+     *
+     * @param nvrSerial
+     * @return url 图片链接
+     */
+    public NvrDeviceInfoData getNvrChannelStatus(String nvrSerial);
 }

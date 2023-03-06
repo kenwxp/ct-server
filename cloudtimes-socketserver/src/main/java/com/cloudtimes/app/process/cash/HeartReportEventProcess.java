@@ -1,8 +1,8 @@
 package com.cloudtimes.app.process.cash;
 
 import com.cloudtimes.app.process.BaseEventProcess;
-import com.cloudtimes.common.core.domain.AjaxResult;
 import com.cloudtimes.common.core.domain.entity.AuthUser;
+import com.cloudtimes.common.enums.DeviceState;
 import com.cloudtimes.common.utils.DateUtils;
 import com.cloudtimes.hardwaredevice.domain.CtDevice;
 import com.cloudtimes.hardwaredevice.mapper.CtDeviceMapper;
@@ -30,7 +30,7 @@ public class HeartReportEventProcess implements BaseEventProcess {
         // 更新收银机状态
         CtDevice device = new CtDevice();
         device.setId(authUser.getId());
-        device.setState("0");
+        device.setState(DeviceState.Online.getCode());
         device.setUpdateTime(DateUtils.getNowDate());
         deviceMapper.updateCtDevice(device);
         return null;

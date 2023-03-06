@@ -8,6 +8,7 @@ import com.cloudtimes.app.process.BaseEventProcess;
 import com.cloudtimes.common.core.domain.AjaxResult;
 import com.cloudtimes.common.core.domain.entity.AuthUser;
 import com.cloudtimes.common.enums.ChannelType;
+import com.cloudtimes.common.enums.DeviceState;
 import com.cloudtimes.common.utils.DateUtils;
 import com.cloudtimes.common.utils.JWTManager;
 import com.cloudtimes.common.utils.StringUtils;
@@ -108,8 +109,8 @@ public class CashWebSocketHandler extends TextWebSocketHandler {
             // 设备设置离线
             // 更新收银机状态
             CtDevice device = deviceMapper.selectCtDeviceById(authUser.getId());
-            if (StringUtils.equals(device.getState(), "0")) {
-                device.setState("3");
+            if (StringUtils.equals(device.getState(), DeviceState.Online.getCode())) {
+                device.setState(DeviceState.Offline.getCode());
                 device.setUpdateTime(DateUtils.getNowDate());
                 deviceMapper.updateCtDevice(device);
             }
