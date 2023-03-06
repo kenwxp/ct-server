@@ -7,7 +7,7 @@ import com.cloudtimes.thirdpart.dto.request.YcygIncrementalProductSyncRequest
 import com.cloudtimes.thirdpart.dto.request.YcygPurchaseBookKeepRequest
 import com.cloudtimes.thirdpart.dto.response.YcygIncrementalProductSyncResponse
 import com.cloudtimes.thirdpart.dto.response.YcygPurchaseBookKeepResponse
-import com.cloudtimes.thirdpart.dto.response.YcygSuggestionPurchase
+import com.cloudtimes.thirdpart.dto.response.YcygSuggestPurchase
 import com.cloudtimes.thirdpart.services.RcygService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import javax.validation.Valid
 
-data class SuggestPurchaseList(val list: List<YcygSuggestionPurchase>)
+data class SuggestPurchaseList(val list: List<YcygSuggestPurchase>)
 class SuggestPurchaseResponse : RestResult<SuggestPurchaseList>()
 
 @RestController

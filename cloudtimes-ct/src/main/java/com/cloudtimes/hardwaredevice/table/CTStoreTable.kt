@@ -68,7 +68,7 @@ class CtStoreTable : AliasableSqlTable<CtStoreTable>("ct_store", ::CtStoreTable)
     val storeOnlineTime = column<Date>(name = "store_online_time", jdbcType = JDBCType.TIMESTAMP)
 
     /** 蓉城易购门店手机号 */
-    val rcygStorePhone = column<Date>(name = "rcyg_store_phone", jdbcType = JDBCType.TIMESTAMP)
+    val rcygStorePhone = column<String>(name = "rcyg_store_phone", jdbcType = JDBCType.TIMESTAMP)
 
     /** 是否删除 */
     val delFlag = column<String>(name = "del_flag", jdbcType = JDBCType.CHAR)

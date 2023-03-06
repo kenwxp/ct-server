@@ -1,16 +1,15 @@
 package com.cloudtimes.product.mapper.provider
 
-import com.cloudtimes.common.enums.AgentType
-import com.cloudtimes.product.table.CtProductCatalogTable
-import com.cloudtimes.thirdpart.dto.request.RcygProductRecord
-
+import java.math.BigDecimal
 
 import org.mybatis.dynamic.sql.insert.render.GeneralInsertStatementProvider
 import org.mybatis.dynamic.sql.util.kotlin.mybatis3.select
-
 import org.mybatis.dynamic.sql.select.render.SelectStatementProvider
 import org.mybatis.dynamic.sql.util.kotlin.mybatis3.insertInto
-import java.math.BigDecimal
+
+import com.cloudtimes.product.table.CtProductCatalogTable
+import com.cloudtimes.thirdpart.dto.request.RcygProductRecord
+
 
 object CtProductCatalogProvider {
     private val oneHundred = BigDecimal("100.00")

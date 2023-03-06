@@ -4,13 +4,13 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
 
-@ApiModel(value = "YcygSuggestionPurchase", description = "建议采购")
-class YcygSuggestionPurchase {
+@ApiModel(value = "YcygSuggestPurchase", description = "建议采购")
+class YcygSuggestPurchase {
     @ApiModelProperty(value = "商品唯一编码（蓉城易购商品唯一编码）")
     @JsonProperty("factorycode")
-    var thirdPartProductId = ""
+    var thirdProductId = ""
 
     @ApiModelProperty(value = "建议采购数量")
     @JsonProperty("jycgsl")
-    var suggestionCount = ""
+    var suggestionCount = 0
 }

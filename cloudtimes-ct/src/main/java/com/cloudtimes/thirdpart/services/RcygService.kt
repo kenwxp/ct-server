@@ -4,10 +4,12 @@ import com.cloudtimes.common.enums.ChannelType
 import com.cloudtimes.product.domain.CtProductThird
 import com.cloudtimes.product.mapper.CtProductCatalogMapper
 import com.cloudtimes.product.mapper.CtProductThirdMapper
+import com.cloudtimes.product.mapper.CtShopProductMapper
 import com.cloudtimes.product.mapper.provider.CtProductCatalogProvider
 import com.cloudtimes.product.mapper.provider.CtProductThirdProvider
+import com.cloudtimes.product.mapper.provider.CtShopProductProvider
 import com.cloudtimes.thirdpart.dto.request.RcygProductRecord
-import com.cloudtimes.thirdpart.dto.response.YcygSuggestionPurchase
+import com.cloudtimes.thirdpart.dto.response.YcygSuggestPurchase
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -20,6 +22,9 @@ class RcygService {
 
     @Autowired
     private lateinit var catalogMapper: CtProductCatalogMapper
+
+    @Autowired
+    private lateinit var shopProductMapper: CtShopProductMapper
 
     @Autowired
     private lateinit var thirdMapper: CtProductThirdMapper
@@ -68,7 +73,10 @@ class RcygService {
         return updatedRecords
     }
 
-    fun suggestionPurchase(customerId: String): List<YcygSuggestionPurchase> {
-        return emptyList()
+    /** 查询店铺建议采购商品 */
+    fun suggestionPurchase(customerId: String): List<YcygSuggestPurchase> {
+        return shopProductMapper.selectSuggestProducts(
+            CtShopProductProvider.findSuggestProductsStmt(customerId)
+        )
     }
 }

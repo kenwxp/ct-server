@@ -1,6 +1,7 @@
 package com.cloudtimes.product.mapper
 
 import com.cloudtimes.product.domain.CtShopProduct
+import com.cloudtimes.thirdpart.dto.response.YcygSuggestPurchase
 import org.apache.ibatis.annotations.Param
 
 import org.apache.ibatis.annotations.Mapper
@@ -25,6 +26,9 @@ interface CtShopProductMapper : CommonCountMapper, CommonDeleteMapper, CommonIns
 
     @SelectProvider(type=SqlProviderAdapter::class, method="select")
     fun selectOne(selectStatement: SelectStatementProvider): CtShopProduct?
+
+    @SelectProvider(type=SqlProviderAdapter::class, method="select")
+    fun selectSuggestProducts(selectStatement: SelectStatementProvider): List<YcygSuggestPurchase>
 
     /**
      * 查询店铺商品
