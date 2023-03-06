@@ -2,12 +2,16 @@ package com.cloudtimes.app.manager;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.cloudtimes.common.constant.RocketMQConstants;
+import com.cloudtimes.common.enums.DeviceState;
+import com.cloudtimes.common.utils.StringUtils;
+import com.cloudtimes.enums.DeviceType;
 import com.cloudtimes.hardwaredevice.domain.CtDevice;
 import com.cloudtimes.hardwaredevice.service.ICtDeviceService;
 import com.cloudtimes.partner.hik.domain.DeviceInfoData;
+import com.cloudtimes.partner.hik.domain.NvrChannelStatus;
+import com.cloudtimes.partner.hik.domain.NvrDeviceInfoData;
 import com.cloudtimes.partner.hik.service.ICtHikApiService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.rocketmq.common.message.Message;
 import org.apache.rocketmq.spring.annotation.MessageModel;
 import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
 import org.apache.rocketmq.spring.core.RocketMQListener;
@@ -64,15 +68,19 @@ public class CtCameraDeviceMonitorManager implements RocketMQListener<CtDevice> 
         long msTime = lastLoadTime + loadGapTime * 60 * 1000L;
         if (nowTime - msTime > 0) {
             CtDevice query = new CtDevice();
-            query.setDeviceType("0");
+            // 查询普通摄像头列表
+            query.setDeviceType(DeviceType.CAMERA.getCode());
             List<CtDevice> devices = deviceService.selectCtDeviceList(query);
+            // 查询连接nvr的poe摄像头列表
+            query.setDeviceType(DeviceType.POE_CAMERA.getCode());
+            devices.addAll(deviceService.selectCtDeviceList(query));
             for (CtDevice ctDevice : devices) {
                 if (ctCameraDevices.containsKey(ctDevice.getDeviceSerial())) {
-                    if (ctDevice.getState().equals("4")) {
+                    if (ctDevice.getState().equals(DeviceState.forbidden.getCode())) {
                         ctCameraDevices.remove(ctDevice.getDeviceSerial());
                     }
                 }
-                if (!ctDevice.getState().equals("4")) {
+                if (!ctDevice.getState().equals(DeviceState.forbidden.getCode())) {
                     if (!ctCameraDevices.containsKey(ctDevice.getDeviceSerial())) {
                         ctCameraDevices.put(ctDevice.getDeviceSerial(), ctDevice);
                         sendToMQ(ctDevice);
@@ -84,19 +92,49 @@ public class CtCameraDeviceMonitorManager implements RocketMQListener<CtDevice> 
         log.info("当前监控中的摄头机设备数量：[" + ctCameraDevices.size() + "]");
     }
 
-    public void checkCamare(CtDevice ctDevice) {
-
+    public void checkCamera(CtDevice ctDevice) {
         try {
-            DeviceInfoData deviceInfoData = ctHikApiService.getDeviceInfo(ctDevice.getDeviceSerial());
-
-            log.info("摄像机[DeviceSerial:" + ctDevice.getDeviceSerial() + " name: " + ctDevice.getName() + "],状态检测三方返回结果:[" + JSONObject.toJSONString(deviceInfoData) + "]");
-            ctDevice.setState(String.valueOf(deviceInfoData.getStatus()));
-
-            CtDevice update = new CtDevice();
-            update.setId(ctDevice.getId());
-            update.setState(ctDevice.getState());
-            ctDevice.setName(deviceInfoData.getDeviceName());
-            deviceService.updateCtDevice(ctDevice);
+            if (StringUtils.equals(ctDevice.getDeviceType(), DeviceType.CAMERA.getCode())) {
+                // IPC摄像头
+                DeviceInfoData deviceInfoData = ctHikApiService.getDeviceInfo(ctDevice.getDeviceSerial());
+                log.info("摄像机[DeviceSerial:" + ctDevice.getDeviceSerial() + " name: " + ctDevice.getName() + "],状态检测三方返回结果:[" + JSONObject.toJSONString(deviceInfoData) + "]");
+                ctDevice.setState(String.valueOf(deviceInfoData.getStatus()));
+                CtDevice update = new CtDevice();
+                update.setId(ctDevice.getId());
+                if (deviceInfoData.getStatus() == 1) {
+                    update.setState(DeviceState.Online.getCode());
+                } else {
+                    update.setState(DeviceState.Offline.getCode());
+                }
+                ctDevice.setName(deviceInfoData.getDeviceName());
+                deviceService.updateCtDevice(ctDevice);
+            } else if (StringUtils.equals(ctDevice.getDeviceType(), DeviceType.POE_CAMERA.getCode())) {
+                // POE摄像头，实际查询nvr状态
+                NvrDeviceInfoData nvrChannelStatus = ctHikApiService.getNvrChannelStatus(ctDevice.getDeviceSerial());
+                List<NvrChannelStatus> channelInfoList = nvrChannelStatus.getChannelInfoList();
+                CtDevice query = new CtDevice();
+                query.setDeviceSerial(ctDevice.getDeviceSerial());
+                query.setDeviceType(DeviceType.POE_CAMERA.getCode());
+                List<CtDevice> poeDeviceList = deviceService.selectCtDeviceList(query);
+                for (CtDevice device :
+                        poeDeviceList) {
+                    for (NvrChannelStatus channel :
+                            channelInfoList) {
+                        if (channel.getSuperDevChannel() == device.getDeviceChannel()) {
+                            CtDevice update = new CtDevice();
+                            update.setId(ctDevice.getId());
+                            if (channel.getStatus() == 0) {
+                                update.setState(DeviceState.Offline.getCode());
+                            } else if (channel.getStatus() == 0) {
+                                update.setState(DeviceState.Online.getCode());
+                            } else {
+                                update.setState(DeviceState.Error.getCode());
+                            }
+                            deviceService.updateCtDevice(ctDevice);
+                        }
+                    }
+                }
+            }
         } catch (Exception e) {
             log.error("摄像机设备状态更新失败！", e);
         }
@@ -114,7 +152,7 @@ public class CtCameraDeviceMonitorManager implements RocketMQListener<CtDevice> 
             return;
         }
         log.info("正在检测摄像机状态:[DeviceSerial:" + ctDevice.getDeviceSerial() + " name:" + ctDevice.getName() + "] ");
-        this.checkCamare(ctDevice);
+        this.checkCamera(ctDevice);
         this.loadData();
     }
 }

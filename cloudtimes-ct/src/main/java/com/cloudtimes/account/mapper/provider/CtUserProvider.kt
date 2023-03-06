@@ -86,6 +86,7 @@ object CtUserProvider {
     fun agentRegister(request: AgentRegisterRequest): UpdateStatementProvider {
         return with(userTable) {
             update(userTable) {
+                set(account) equalTo request.mobile!!
                 set(mobile) equalTo request.mobile!!
                 set(agentState) equalTo AgentState.Signing.code
                 set(isAgent) equalTo YesNoState.Yes.code

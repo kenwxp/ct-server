@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cloudtimes.product.mapper.CtProductThirdMapper">
+    <sql id="selectCtProductThirdVo">
+        select * from ct_product_third
+    </sql>
+
+    <select id="selectCtProductThirdList" parameterType="CtProductThird" resultType="CtProductThird">
+        <include refid="selectCtProductThirdVo"/>
+        <where>  
+            <if test="barcode != null  and barcode != ''"> and barcode = #{barcode}</if>
+        </where>
+    </select>
+    
+    <select id="selectCtProductThirdByThirdCode" parameterType="String" resultType="CtProductThird">
+        <include refid="selectCtProductThirdVo"/>
+        where third_code = #{thirdCode}
+    </select>
+        
+    <insert id="insertCtProductThird" parameterType="CtProductThird">
+        insert into ct_product_third
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="thirdCode != null">third_code,</if>
+            <if test="thirdProductId != null">third_barcode,</if>
+            <if test="barcode != null and barcode != ''">barcode,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="thirdCode != null">#{thirdCode},</if>
+            <if test="thirdProductId != null">#{thirdProductId},</if>
+            <if test="barcode != null and barcode != ''">#{barcode},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCtProductThird" parameterType="CtProductThird">
+        update ct_product_third
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="thirdProductId != null">third_barcode = #{thirdProductId},</if>
+            <if test="barcode != null and barcode != ''">barcode = #{barcode},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where third_code = #{thirdCode}
+    </update>
+
+    <delete id="deleteCtProductThirdByThirdCode" parameterType="String">
+        delete from ct_product_third where third_code = #{thirdCode}
+    </delete>
+
+    <delete id="deleteCtProductThirdByThirdCodes" parameterType="String">
+        delete from ct_product_third where third_code in 
+        <foreach item="thirdCode" collection="array" open="(" separator="," close=")">
+            #{thirdCode}
+        </foreach>
+    </delete>
+</mapper>

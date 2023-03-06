@@ -68,7 +68,7 @@ public class CtCustomerLoginServiceImpl implements ICtCustomerLoginService {
             }
             Map<String, String> phoneInfo = (Map<String, String>) userPhoneInfo.get("phone_info");
             String phoneNumber = phoneInfo.get("purePhoneNumber");
-            CtUser dbUser = userMapper.selectCtUserByMobile(phoneNumber);
+            CtUser dbUser = userMapper.selectCtUserByWxUnionId(unionId);
             if (dbUser == null) {
                 CtUser newUser = new CtUser();
                 newUser.setWxOpenId(openId);
@@ -97,23 +97,27 @@ public class CtCustomerLoginServiceImpl implements ICtCustomerLoginService {
                 }
                 return newUser;
             } else {
-                //此流程为，当前手机号在本系统已有其它身份，现在增加顾客身份
+                //此流程为，当前unionId在本系统已有其它身份，现在增加顾客身份
                 dbUser.setId(dbUser.getId());
                 dbUser.setWxOpenId(openId);
                 dbUser.setWxUnionId(unionId);
+                dbUser.setMobile(phoneNumber);
                 dbUser.setCustomerState("0");
                 if (userMapper.updateCtUser(dbUser) < 1) {
                     throw new ServiceException("更新用户失败");
                 }
                 //获取用户资产表信息并更新customer 部分的参数
                 CtUserAssets dbUserAssets = userAssetsMapper.selectCtUserAssetsById(dbUser.getId());
-                dbUserAssets.setUserId(dbUser.getId());
-                dbUserAssets.setCustomerCashAmount(BigDecimal.valueOf(0));
-                dbUserAssets.setCustomerTotalWithdrawal(BigDecimal.valueOf(0));
-                dbUserAssets.setCustomerScorePoints(BigDecimal.valueOf(0));
-                dbUserAssets.setCustomerCreditScore(80L);
-                if (userAssetsMapper.updateCtUserAssets(dbUserAssets) < 1) {
-                    throw new ServiceException("新增用户资产失败");
+                if (dbUserAssets == null) {
+                    dbUserAssets = new CtUserAssets();
+                    dbUserAssets.setUserId(dbUser.getId());
+                    dbUserAssets.setCustomerCashAmount(BigDecimal.valueOf(0));
+                    dbUserAssets.setCustomerTotalWithdrawal(BigDecimal.valueOf(0));
+                    dbUserAssets.setCustomerScorePoints(BigDecimal.valueOf(0));
+                    dbUserAssets.setCustomerCreditScore(80L);
+                    if (userAssetsMapper.insertCtUserAssets(dbUserAssets) < 1) {
+                        throw new ServiceException("新增用户资产失败");
+                    }
                 }
                 return dbUser;
             }

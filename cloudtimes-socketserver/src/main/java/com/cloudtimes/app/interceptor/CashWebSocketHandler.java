@@ -8,9 +8,13 @@ import com.cloudtimes.app.process.BaseEventProcess;
 import com.cloudtimes.common.core.domain.AjaxResult;
 import com.cloudtimes.common.core.domain.entity.AuthUser;
 import com.cloudtimes.common.enums.ChannelType;
+import com.cloudtimes.common.enums.DeviceState;
+import com.cloudtimes.common.utils.DateUtils;
 import com.cloudtimes.common.utils.JWTManager;
 import com.cloudtimes.common.utils.StringUtils;
 import com.cloudtimes.common.utils.spring.SpringUtils;
+import com.cloudtimes.hardwaredevice.domain.CtDevice;
+import com.cloudtimes.hardwaredevice.mapper.CtDeviceMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -74,9 +78,9 @@ public class CashWebSocketHandler extends TextWebSocketHandler {
             return;
         }
         try {
-            Object obj = process.process(authUser, receive.getData());
-            if (obj != null) {
-                session.sendMessage(new TextMessage(JSONObject.toJSONString(obj)));
+            String errorMsg = process.process(authUser, receive.getData());
+            if (StringUtils.isNotEmpty(errorMsg)) {
+                session.sendMessage(new TextMessage(JSONObject.toJSONString(AjaxResult.error(errorMsg))));
             }
         } catch (Exception ex) {
             AjaxResult ajaxResult = AjaxResult.error("执行指令异常：[" + payload + "]");
@@ -84,6 +88,8 @@ public class CashWebSocketHandler extends TextWebSocketHandler {
         }
     }
 
+    @Autowired
+    private CtDeviceMapper deviceMapper;
 
     /**
      * socket 断开连接时
@@ -100,6 +106,14 @@ public class CashWebSocketHandler extends TextWebSocketHandler {
             // 用户退出，移除缓存
             log.info("websocket断开链接！！:{}", authUser.getId());
             sessionManager.remove(authUser.getId());
+            // 设备设置离线
+            // 更新收银机状态
+            CtDevice device = deviceMapper.selectCtDeviceById(authUser.getId());
+            if (StringUtils.equals(device.getState(), DeviceState.Online.getCode())) {
+                device.setState(DeviceState.Offline.getCode());
+                device.setUpdateTime(DateUtils.getNowDate());
+                deviceMapper.updateCtDevice(device);
+            }
         }
     }
 

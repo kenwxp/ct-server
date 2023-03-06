@@ -136,10 +136,9 @@ class CtStoreController : BaseController() {
     @ApiOperation("查询代理门店收益统计")
     @PostMapping("/profit_stats")
     fun profitStats(@Valid @RequestBody request: StoreProfitRequest): StoreProfitResponse {
-        // :TODO:
         val profits = ctUserAgentService.selectCtAgentShopProfitStats(request)
         return StoreProfitResponse().apply {
-            data = AgentStoreProfitStats()
+            data = profits
         }
     }
 

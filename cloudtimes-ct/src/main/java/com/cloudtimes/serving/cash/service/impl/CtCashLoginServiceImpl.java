@@ -1,5 +1,6 @@
 package com.cloudtimes.serving.cash.service.impl;
 
+import com.cloudtimes.common.enums.DeviceState;
 import com.cloudtimes.common.exception.ServiceException;
 import com.cloudtimes.common.utils.StringUtils;
 import com.cloudtimes.enums.DeviceType;
@@ -53,7 +54,7 @@ public class CtCashLoginServiceImpl implements ICtCashLoginService {
             newDevice.setDeviceArea("0");
             newDevice.setValidateCode("");
             newDevice.setDeviceAscription("0");
-            newDevice.setState("0");
+            newDevice.setState(DeviceState.Offline.getCode());
             newDevice.setDelFlag("0");
             newDevice.setCreateTime(new Date());
             newDevice.setUpdateTime(new Date());

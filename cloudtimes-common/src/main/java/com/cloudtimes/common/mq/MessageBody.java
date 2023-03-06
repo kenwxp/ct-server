@@ -1,16 +1,11 @@
 package com.cloudtimes.common.mq;
 
-import java.io.Serializable;
+import lombok.Data;
 
+import java.io.Serializable;
+@Data
 public class MessageBody implements Serializable {
 
     private String payload;
 
-    public String getPayload() {
-        return payload;
-    }
-
-    public void setPayload(String payload) {
-        this.payload = payload;
-    }
 }

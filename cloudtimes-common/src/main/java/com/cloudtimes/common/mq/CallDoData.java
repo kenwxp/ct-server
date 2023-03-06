@@ -1,13 +1,8 @@
 package com.cloudtimes.common.mq;
 
+import lombok.Data;
+
+@Data
 public class CallDoData {
     private String doJoin;
-
-    public String getDoJoin() {
-        return doJoin;
-    }
-
-    public void setDoJoin(String doJoin) {
-        this.doJoin = doJoin;
-    }
 }

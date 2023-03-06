@@ -12,7 +12,7 @@ public class RocketMQConstants {
     public static final String TOPIC_DEVICE = "TOPIC_DEVICE";
 
     public static final String WS_CASH_DEVICE = "WS_CASH_DEVICE";
-    public static final String WS_SUPERVISE_HANDLE = "WS_SUPERVISE_HANDLE";
+    public static final String WS_WEB_MESSAGE = "WS_WEB_MESSAGE";
 
     //门禁报文处理主体
     public static final String CT_DOOR_MESSAGE = "CT_DOOR_MESSAGE";

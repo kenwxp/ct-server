@@ -75,6 +75,10 @@ public class CtDevice extends BaseEntity
     @Excel(name = "设备验证码")
     private String validateCode;
 
+    /** 设备验证码 */
+    @Excel(name = "设备验证码")
+    private int deviceChannel;
+
     /** 设备归属
      * 平台	0
      * 商户	1

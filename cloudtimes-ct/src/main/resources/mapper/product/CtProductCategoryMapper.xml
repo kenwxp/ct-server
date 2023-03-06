@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cloudtimes.product.mapper.CtProductCategoryMapper">
+    
+    <resultMap type="CtProductCategory" id="CtProductCategoryResult">
+        <result property="categoryCode"    column="category_code"    />
+        <result property="tier"    column="tier"    />
+        <result property="categoryName"    column="category_name"    />
+        <result property="comment"    column="comment"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectCtProductCategoryVo">
+        select category_code, tier, category_name, comment, create_time, update_time from ct_product_category
+    </sql>
+
+    <select id="selectCtProductCategoryList" parameterType="CtProductCategory" resultMap="CtProductCategoryResult">
+        <include refid="selectCtProductCategoryVo"/>
+        <where>  
+            <if test="tier != null  and tier != ''"> and tier = #{tier}</if>
+            <if test="categoryName != null  and categoryName != ''"> and category_name like concat('%', #{categoryName}, '%')</if>
+            <if test="comment != null  and comment != ''"> and comment = #{comment}</if>
+        </where>
+    </select>
+    
+    <select id="selectCtProductCategoryByCategoryCode" parameterType="String" resultMap="CtProductCategoryResult">
+        <include refid="selectCtProductCategoryVo"/>
+        where category_code = #{categoryCode}
+    </select>
+        
+    <insert id="insertCtProductCategory" parameterType="CtProductCategory">
+        insert into ct_product_category
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="categoryCode != null">category_code,</if>
+            <if test="tier != null and tier != ''">tier,</if>
+            <if test="categoryName != null and categoryName != ''">category_name,</if>
+            <if test="comment != null">comment,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="categoryCode != null">#{categoryCode},</if>
+            <if test="tier != null and tier != ''">#{tier},</if>
+            <if test="categoryName != null and categoryName != ''">#{categoryName},</if>
+            <if test="comment != null">#{comment},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCtProductCategory" parameterType="CtProductCategory">
+        update ct_product_category
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="tier != null and tier != ''">tier = #{tier},</if>
+            <if test="categoryName != null and categoryName != ''">category_name = #{categoryName},</if>
+            <if test="comment != null">comment = #{comment},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where category_code = #{categoryCode}
+    </update>
+
+    <delete id="deleteCtProductCategoryByCategoryCode" parameterType="String">
+        delete from ct_product_category where category_code = #{categoryCode}
+    </delete>
+
+    <delete id="deleteCtProductCategoryByCategoryCodes" parameterType="String">
+        delete from ct_product_category where category_code in 
+        <foreach item="categoryCode" collection="array" open="(" separator="," close=")">
+            #{categoryCode}
+        </foreach>
+    </delete>
+</mapper>

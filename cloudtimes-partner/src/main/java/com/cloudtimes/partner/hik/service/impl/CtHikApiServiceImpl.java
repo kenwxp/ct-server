@@ -1,12 +1,10 @@
 package com.cloudtimes.partner.hik.service.impl;
 
+import com.cloudtimes.common.constant.Constants;
 import com.cloudtimes.common.utils.JacksonUtils;
 import com.cloudtimes.common.utils.http.HttpUtils;
 import com.cloudtimes.partner.config.PartnerConfig;
-import com.cloudtimes.partner.hik.domain.HikCommonResp;
-import com.cloudtimes.partner.hik.domain.DeviceInfoData;
-import com.cloudtimes.partner.hik.domain.HikConstant;
-import com.cloudtimes.partner.hik.domain.VideoData;
+import com.cloudtimes.partner.hik.domain.*;
 import com.cloudtimes.partner.hik.service.ICtHikApiService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -181,5 +179,32 @@ public class CtHikApiServiceImpl implements ICtHikApiService {
         header.put("Host", "open.ys7.com");
         header.put("Content-Type", "application/x-www-form-urlencoded");
         return header;
+    }
+
+    public NvrDeviceInfoData getNvrChannelStatus(String nvrSerial) {
+        String at = getAccessToken();
+        if ("".equals(at)) {
+            return null;
+        }
+        Map<String, String> hikHeader = getHikHeader();
+        hikHeader.put("accessToken", accessToken);
+        hikHeader.put("deviceSerial", nvrSerial);
+        String result = HttpUtils.sendGet("https://" + HikConstant.hikHost + HikConstant.getNvrChannelStatus, null, Constants.UTF8, hikHeader);
+        Map resultMap = JacksonUtils.parseObject(result, Map.class);
+        if (resultMap != null) {
+            Object resultObj = resultMap.get("result");
+            if (resultObj != null) {
+                HikCommonResp hikCommonResp = JacksonUtils.convertObject(resultObj, HikCommonResp.class);
+                if (StringUtils.equals(hikCommonResp.getCode(), HikConstant.CODE10002)) {
+                    //token 过时，则刷新token后，重新请求
+                    fetchAccessToken();
+                    return getNvrChannelStatus(nvrSerial);
+                }
+                if (StringUtils.equals(hikCommonResp.getCode(), HikConstant.CODE200)) {
+                    return JacksonUtils.convertObject(hikCommonResp.getData(), NvrDeviceInfoData.class);
+                }
+            }
+        }
+        return null;
     }
 }

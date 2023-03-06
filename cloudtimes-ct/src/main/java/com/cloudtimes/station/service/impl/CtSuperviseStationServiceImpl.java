@@ -290,6 +290,7 @@ public class CtSuperviseStationServiceImpl implements ICtSuperviseStationService
     @Autowired
     private CtCustomerServiceCache customerServiceCache;
 
+    @Autowired
     private CtCustomerServiceMapper customerServiceMapper;
 
     /**
@@ -327,6 +328,7 @@ public class CtSuperviseStationServiceImpl implements ICtSuperviseStationService
      * @param param
      * @return
      */
+    @Transactional
     @Override
     public void finishTask(Long userId, FinishTaskReq param) {
         Map<String, CtOrder> orderMap = taskCache.getOrdersByTask(param.getTaskId());

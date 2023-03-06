@@ -9,7 +9,7 @@
                customer_total_withdrawal,
                customer_score_points,
                customer_credit_score
-        from ct_user_assets_assets;
+        from ct_user_assets
     </sql>
 
     <select id="selectCtUserAssetsById" parameterType="String" resultType="CtUserAssets">

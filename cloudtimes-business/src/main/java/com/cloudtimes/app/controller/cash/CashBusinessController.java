@@ -77,8 +77,7 @@ public class CashBusinessController {
             GetProductListResp getProductListResp = new GetProductListResp();
             getProductListResp.setProductUid(dbProduct.getId());
             getProductListResp.setProductName(dbProduct.getProductName());
-            getProductListResp.setCategoryUid(dbProduct.getCategoryId());
-            getProductListResp.setCategoryName(dbProduct.getCategoryName());
+            getProductListResp.setCategoryCode(dbProduct.getCategoryCode());
             getProductListResp.setBarcode(dbProduct.getBarcode());
             getProductListResp.setImageUrl(dbProduct.getPictureUrl());
             getProductListResp.setBuyPrice(dbProduct.getPurchasePrice().intValue());

@@ -125,10 +125,6 @@ class CtStore : BaseEntity() {
     @Excel(name = "三方门店编号")
     var storeSn: String? = null
 
-    @ApiModelProperty(value = "蓉城易购门店id")
-    @Excel(name = "蓉城易购门店id")
-    var rcygStoreId: String? = null
-
     @ApiModelProperty(value = "蓉城易购门店手机号")
     @Excel(name = "蓉城易购门店手机号")
     var rcygStorePhone: String? = null

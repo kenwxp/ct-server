@@ -6,7 +6,7 @@
     <sql id="selectCtShopProductVo">
         select id,
         shop_no,
-        category_id,
+        category_code,
         barcode,
         product_name,
         english_name,
@@ -47,7 +47,7 @@
         <include refid="selectCtShopProductVo"/>
         <where>
             <if test="shopNo != null  and shopNo != ''">and shop_no = #{shopNo}</if>
-            <if test="categoryId != null  and categoryId != ''">and category_id = #{categoryId}</if>
+            <if test="categoryCode != null  and categoryCode != ''">and category_code = #{categoryCode}</if>
             <if test="barcode != null  and barcode != ''">and barcode = #{barcode}</if>
             <if test="productName != null  and productName != ''">and product_name like concat('%', #{productName},
                 '%')
@@ -98,7 +98,7 @@
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
             <if test="shopNo != null and shopNo != ''">shop_no,</if>
-            <if test="categoryId != null and categoryId != ''">category_id,</if>
+            <if test="categoryCode != null and categoryCode != ''">category_code,</if>
             <if test="barcode != null and barcode != ''">barcode,</if>
             <if test="productName != null and productName != ''">product_name,</if>
             <if test="englishName != null">english_name,</if>
@@ -136,7 +136,7 @@
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
             <if test="shopNo != null and shopNo != ''">#{shopNo},</if>
-            <if test="categoryId != null and categoryId != ''">#{categoryId},</if>
+            <if test="categoryCode != null and categoryCode != ''">#{categoryCode},</if>
             <if test="barcode != null and barcode != ''">#{barcode},</if>
             <if test="productName != null and productName != ''">#{productName},</if>
             <if test="englishName != null">#{englishName},</if>
@@ -177,7 +177,7 @@
         update ct_shop_product
         <trim prefix="SET" suffixOverrides=",">
             <if test="shopNo != null and shopNo != ''">shop_no = #{shopNo},</if>
-            <if test="categoryId != null and categoryId != ''">category_id = #{categoryId},</if>
+            <if test="categoryCode != null and categoryCode != ''">category_code = #{categoryCode},</if>
             <if test="barcode != null and barcode != ''">barcode = #{barcode},</if>
             <if test="productName != null and productName != ''">product_name = #{productName},</if>
             <if test="englishName != null">english_name = #{englishName},</if>
@@ -232,7 +232,7 @@
         select
         p.id ,
         p.shop_no ,
-        p.category_id ,
+        p.category_code ,
         p.barcode ,
         p.product_name ,
         p.english_name ,
@@ -269,9 +269,9 @@
         coalesce(pc.category_name , "") category_name
         from
         ct_shop_product p
-        left join ct_shop_product_category pc
+        left join ct_product_category pc
         on
-        p.category_id = pc.id
+        p.category_code = pc.category_code
         and p.shop_no =
         #{shopNo}
     </select>

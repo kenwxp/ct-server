@@ -3,7 +3,6 @@ package com.cloudtimes.app.manager;
 
 import com.alibaba.fastjson.JSONObject;
 import com.cloudtimes.app.models.SuperviseWsData;
-import com.cloudtimes.common.core.domain.AjaxResult;
 import com.cloudtimes.common.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -76,6 +75,7 @@ public class SuperviseWsSessionManager {
         return null;
     }
 
+
     public void sendSuccess(String id, String sessionId, String option, Object data) {
         Map<String, WebSocketSession> sessionMap = getSessionMap(id);
         if (sessionMap != null) {
@@ -97,12 +97,48 @@ public class SuperviseWsSessionManager {
         if (sessionMap != null) {
             WebSocketSession webSocketSession = sessionMap.get(sessionId);
             if (webSocketSession != null && webSocketSession.isOpen()) {
-                SuperviseWsData wsData = new SuperviseWsData().success(option, data);
+                SuperviseWsData wsData = new SuperviseWsData().error(option, "操作失败", data);
                 TextMessage textMessage = new TextMessage(JSONObject.toJSONString(wsData));
                 try {
                     webSocketSession.sendMessage(textMessage);
                 } catch (IOException e) {
                     log.error(String.format("发送消息失败, id=%s", id), e);
+                }
+            }
+        }
+    }
+
+    public void batchSendSuccess(String id, String option, Object data) {
+        Map<String, WebSocketSession> sessionMap = getSessionMap(id);
+        if (sessionMap != null) {
+            for (WebSocketSession session :
+                    sessionMap.values()) {
+                if (session != null && session.isOpen()) {
+                    SuperviseWsData wsData = new SuperviseWsData().success(option, data);
+                    TextMessage textMessage = new TextMessage(JSONObject.toJSONString(wsData));
+                    try {
+                        session.sendMessage(textMessage);
+                    } catch (IOException e) {
+                        log.error(String.format("发送消息失败, id=%s", id), e);
+                    }
+                }
+            }
+        }
+    }
+
+    public void batchSendError(String id, String option, Object data) {
+        Map<String, WebSocketSession> sessionMap = getSessionMap(id);
+        if (sessionMap != null) {
+            for (WebSocketSession session :
+                    sessionMap.values()) {
+                if (session != null && session.isOpen()) {
+                    SuperviseWsData wsData = new SuperviseWsData().error(option, data);
+                    TextMessage textMessage = new TextMessage(JSONObject.toJSONString(wsData));
+                    try {
+                        session.sendMessage(textMessage);
+                    } catch (IOException e) {
+                        log.error(String.format("发送消息失败, id=%s", id), e);
+                    }
                 }
             }
         }
