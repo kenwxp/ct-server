@@ -2,6 +2,8 @@ package com.cloudtimes.web.controller.hardwaredevice;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.cloudtimes.hardwaredevice.domain.ActivateDeviceReq;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,14 +25,13 @@ import com.cloudtimes.common.core.page.TableDataInfo;
 
 /**
  * 电子设备Controller
- * 
+ *
  * @author tank
  * @date 2023-01-17
  */
 @RestController
 @RequestMapping("/hardwaredevice/ctdevice")
-public class CtDeviceController extends BaseController
-{
+public class CtDeviceController extends BaseController {
     @Autowired
     private ICtDeviceService ctDeviceService;
 
@@ -39,8 +40,7 @@ public class CtDeviceController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('hardwaredevice:ctdevice:list')")
     @GetMapping("/list")
-    public TableDataInfo list(CtDevice ctDevice)
-    {
+    public TableDataInfo list(CtDevice ctDevice) {
         startPage();
         List<CtDevice> list = ctDeviceService.selectCtDeviceList(ctDevice);
         return getDataTable(list);
@@ -52,8 +52,7 @@ public class CtDeviceController extends BaseController
     @PreAuthorize("@ss.hasPermi('hardwaredevice:ctdevice:export')")
     @Log(title = "电子设备", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, CtDevice ctDevice)
-    {
+    public void export(HttpServletResponse response, CtDevice ctDevice) {
         List<CtDevice> list = ctDeviceService.selectCtDeviceList(ctDevice);
         ExcelUtil<CtDevice> util = new ExcelUtil<CtDevice>(CtDevice.class);
         util.exportExcel(response, list, "电子设备数据");
@@ -64,8 +63,7 @@ public class CtDeviceController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('hardwaredevice:ctdevice:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") String id)
-    {
+    public AjaxResult getInfo(@PathVariable("id") String id) {
         return AjaxResult.success(ctDeviceService.selectCtDeviceById(id));
     }
 
@@ -75,8 +73,7 @@ public class CtDeviceController extends BaseController
     @PreAuthorize("@ss.hasPermi('hardwaredevice:ctdevice:add')")
     @Log(title = "电子设备", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody CtDevice ctDevice)
-    {
+    public AjaxResult add(@RequestBody CtDevice ctDevice) {
         return toAjax(ctDeviceService.insertCtDevice(ctDevice));
     }
 
@@ -86,8 +83,7 @@ public class CtDeviceController extends BaseController
     @PreAuthorize("@ss.hasPermi('hardwaredevice:ctdevice:edit')")
     @Log(title = "电子设备", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody CtDevice ctDevice)
-    {
+    public AjaxResult edit(@RequestBody CtDevice ctDevice) {
         return toAjax(ctDeviceService.updateCtDevice(ctDevice));
     }
 
@@ -96,9 +92,19 @@ public class CtDeviceController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('hardwaredevice:ctdevice:remove')")
     @Log(title = "电子设备", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
-    {
+    @DeleteMapping("/{ids}")
+    public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(ctDeviceService.deleteCtDeviceByIds(ids));
     }
+
+    /**
+     * 激活电子设备
+     */
+    @PreAuthorize("@ss.hasPermi('hardwaredevice:ctdevice:activate')")
+    @Log(title = "电子设备", businessType = BusinessType.INSERT)
+    @PostMapping("/activate")
+    public AjaxResult activate(@RequestBody ActivateDeviceReq param) {
+        return toAjax(ctDeviceService.activateCtDevice(param));
+    }
+
 }
