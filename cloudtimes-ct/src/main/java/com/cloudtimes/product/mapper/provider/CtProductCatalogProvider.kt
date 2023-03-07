@@ -25,17 +25,17 @@ object CtProductCatalogProvider {
     }
 
     fun insertRcygProduct(record: RcygProductRecord): GeneralInsertStatementProvider {
-        val retailPrice = record.retailPrice.multiply(oneHundred) .toInt()
-        val wholesalePrice = record.wholesalePrice.multiply(oneHundred) .toInt()
+        val retailPrice = record.retailPrice?.multiply(oneHundred)?.toInt()
+        val wholesalePrice = record.wholesalePrice?.multiply(oneHundred)?.toInt()
 
         return insertInto(catalogTable) {
-            set(catalogTable.barcode) toValue record.barcode
-            set(catalogTable.specification) toValue record.specification
-            set(catalogTable.unit) toValue record.unit
+            set(catalogTable.barcode) toValue record.barcode!!
             set(catalogTable.productName) toValue record.productName
-            set(catalogTable.retailPrice) toValue retailPrice
-            set(catalogTable.wholesalePrice) toValue wholesalePrice
-            set(catalogTable.lifeSpanDays) toValue record.lifeSpanDays
+            set(catalogTable.specification) toValueWhenPresent  record.specification
+            set(catalogTable.unit) toValueWhenPresent  record.unit
+            set(catalogTable.retailPrice) toValueWhenPresent  retailPrice
+            set(catalogTable.wholesalePrice) toValueWhenPresent  wholesalePrice
+            set(catalogTable.lifeSpanDays) toValueWhenPresent  record.lifeSpanDays
         }
     }
 }

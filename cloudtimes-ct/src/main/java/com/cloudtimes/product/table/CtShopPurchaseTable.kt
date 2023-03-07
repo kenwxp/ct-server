@@ -11,7 +11,7 @@ class CtShopPurchaseTable : AliasableSqlTable<CtShopPurchaseTable>("ct_shop_purc
 
     val shopNo = column<String>(name = "shop_no", jdbcType = JDBCType.VARCHAR)
 
-    val supplierId = column<String>(name = "supplier_id", jdbcType = JDBCType.CHAR)
+    val supplier= column<String>(name = "supplier", jdbcType = JDBCType.CHAR)
 
     val orderingDate = column<Date>(name = "ordering_date", jdbcType = JDBCType.TIMESTAMP)
 

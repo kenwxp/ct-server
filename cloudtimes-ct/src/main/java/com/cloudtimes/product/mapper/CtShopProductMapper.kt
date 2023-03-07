@@ -30,6 +30,9 @@ interface CtShopProductMapper : CommonCountMapper, CommonDeleteMapper, CommonIns
     @SelectProvider(type=SqlProviderAdapter::class, method="select")
     fun selectSuggestProducts(selectStatement: SelectStatementProvider): List<YcygSuggestPurchase>
 
+    @SelectProvider(type=SqlProviderAdapter::class, method="select")
+    fun selectManyProductBarcodes(selectStatement: SelectStatementProvider): List<String>
+
     /**
      * 查询店铺商品
      *

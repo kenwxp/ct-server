@@ -18,9 +18,9 @@ class CtShopPurchase : BaseEntity() {
     /** 采购编号  */
     var id: String? = null
 
-    /** 店铺ID  */
-    @Excel(name = "店铺ID")
-    var shopId: String? = null
+    /** 店铺No  */
+    @Excel(name = "店铺No")
+    var shopNo: String? = null
 
     /** 供货商  */
     @Excel(name = "供货商")
@@ -63,7 +63,7 @@ class CtShopPurchase : BaseEntity() {
     override fun toString(): String {
         return ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
             .append("id", id)
-            .append("shopId", shopId)
+            .append("shopNo", shopNo)
             .append("supplier", supplier)
             .append("orderingNumber", orderingNumber)
             .append("totalPrice", totalPrice)

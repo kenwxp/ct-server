@@ -6,7 +6,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <resultMap type="CtShopPurchase" id="CtShopPurchaseResult">
         <result property="id"    column="id"    />
-        <result property="shopId"    column="shop_id"    />
+        <result property="shopNo"    column="shop_no"    />
         <result property="supplier"    column="supplier"    />
         <result property="orderingNumber"    column="ordering_number"    />
         <result property="totalPrice"    column="total_price"    />
@@ -21,13 +21,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectCtShopPurchaseVo">
-        select id, shop_id, supplier, ordering_number, total_price, logistics_fee, tracking_number, ordering_status, ordering_date, delivery_time, take_time, create_time, update_time from ct_shop_purchase
+        select id, shop_no, supplier, ordering_number, total_price, logistics_fee, tracking_number, ordering_status, ordering_date, delivery_time, take_time, create_time, update_time from ct_shop_purchase
     </sql>
 
     <select id="selectCtShopPurchaseList" parameterType="CtShopPurchase" resultMap="CtShopPurchaseResult">
         <include refid="selectCtShopPurchaseVo"/>
         <where>  
-            <if test="shopId != null  and shopId != ''"> and shop_id = #{shopId}</if>
+            <if test="shopNo != null  and shopNo != ''"> and shop_no = #{shopNo}</if>
             <if test="supplier != null  and supplier != ''"> and supplier = #{supplier}</if>
             <if test="orderingNumber != null  and orderingNumber != ''"> and ordering_number = #{orderingNumber}</if>
             <if test="totalPrice != null "> and total_price = #{totalPrice}</if>
@@ -49,7 +49,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         insert into ct_shop_purchase
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
-            <if test="shopId != null and shopId != ''">shop_id,</if>
+            <if test="shopNo != null and shopNo != ''">shop_no,</if>
             <if test="supplier != null and supplier != ''">supplier,</if>
             <if test="orderingNumber != null and orderingNumber != ''">ordering_number,</if>
             <if test="totalPrice != null">total_price,</if>
@@ -64,7 +64,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
-            <if test="shopId != null and shopId != ''">#{shopId},</if>
+            <if test="shopNo != null and shopNo != ''">#{shopNo},</if>
             <if test="supplier != null and supplier != ''">#{supplier},</if>
             <if test="orderingNumber != null and orderingNumber != ''">#{orderingNumber},</if>
             <if test="totalPrice != null">#{totalPrice},</if>
@@ -82,7 +82,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updateCtShopPurchase" parameterType="CtShopPurchase">
         update ct_shop_purchase
         <trim prefix="SET" suffixOverrides=",">
-            <if test="shopId != null and shopId != ''">shop_id = #{shopId},</if>
+            <if test="shopNo != null and shopNo != ''">shop_no = #{shopNo},</if>
             <if test="supplier != null and supplier != ''">supplier = #{supplier},</if>
             <if test="orderingNumber != null and orderingNumber != ''">ordering_number = #{orderingNumber},</if>
             <if test="totalPrice != null">total_price = #{totalPrice},</if>

@@ -26,7 +26,7 @@ class RcygTask {
     private lateinit var configService: ISysConfigService
 
     private fun batchProductSyncRequest(url: String, pageNo: Int, pageSize: Int): Boolean {
-        val params = YcygBatchProductSyncRequest(pageNo = 1, size = 5)
+        val params = YcygBatchProductSyncRequest(pageNo = pageNo, size = pageSize)
         val response = restTemplate.postForObject(url,
             params,
             YcygBatchProductSyncResponse::class.java
@@ -52,10 +52,10 @@ class RcygTask {
         var hasNextPage = true
         var pageNo = 1
         while ( hasNextPage ) {
-            hasNextPage = batchProductSyncRequest(batchServiceUrl, pageNo, 5)
-            // :TODO: 调试完成后放开
-            break
+            hasNextPage = batchProductSyncRequest(batchServiceUrl, pageNo, 50)
             pageNo += 1
         }
+
+        logger.info("处理笔数 ${pageNo * 50})")
     }
 }

@@ -2,7 +2,6 @@ package com.cloudtimes.hardwaredevice.mapper.provider
 
 import com.cloudtimes.common.enums.ShopBuildState
 import com.cloudtimes.hardwaredevice.table.storeTable
-import org.apache.ibatis.annotations.Select
 import org.mybatis.dynamic.sql.util.kotlin.mybatis3.select
 import org.mybatis.dynamic.sql.select.render.SelectStatementProvider
 
@@ -25,6 +24,16 @@ object CTStoreProvider {
                 from(storeTable)
                 where { buildState isEqualTo ShopBuildState.Online.code }
                 and { agentId.isNotNull() }
+            }
+        }
+    }
+
+    /** 查询蓉城易购店铺 */
+    fun selectRcygStore(phone: String): SelectStatementProvider {
+        return with(storeTable) {
+            select(storeTable.allColumns()) {
+                from(storeTable)
+                where { rcygStorePhone isEqualTo phone }
             }
         }
     }

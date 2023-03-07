@@ -38,23 +38,23 @@ class CtShopProductTable : AliasableSqlTable<CtShopProductTable>("ct_shop_produc
 
     val style = column<String>(name = "style", jdbcType = JDBCType.VARCHAR)
 
-    val purchasePrice = column<Int>(name = "purchase_price", jdbcType = JDBCType.INTEGER)
+    val purchasePrice = column<Long>(name = "purchase_price", jdbcType = JDBCType.INTEGER)
 
-    val retailPrice = column<Int>(name = "retail_price", jdbcType = JDBCType.INTEGER)
+    val retailPrice = column<Long>(name = "retail_price", jdbcType = JDBCType.INTEGER)
 
-    val wholesalePrice = column<Int>(name = "wholesale_price", jdbcType = JDBCType.INTEGER)
+    val wholesalePrice = column<Long>(name = "wholesale_price", jdbcType = JDBCType.INTEGER)
 
-    val vipPrice = column<Int>(name = "vip_price", jdbcType = JDBCType.INTEGER)
+    val vipPrice = column<Long>(name = "vip_price", jdbcType = JDBCType.INTEGER)
 
-    val stock = column<Int>(name = "stock", jdbcType = JDBCType.INTEGER)
+    val stock = column<Long>(name = "stock", jdbcType = JDBCType.INTEGER)
 
-    val maxStock = column<Int>(name = "max_stock", jdbcType = JDBCType.INTEGER)
+    val maxStock = column<Long>(name = "max_stock", jdbcType = JDBCType.INTEGER)
 
-    val minStock = column<Int>(name = "min_stock", jdbcType = JDBCType.INTEGER)
+    val minStock = column<Long>(name = "min_stock", jdbcType = JDBCType.INTEGER)
 
-    val totalSold = column<Int>(name = "total_sold", jdbcType = JDBCType.INTEGER)
+    val totalSold = column<Long>(name = "total_sold", jdbcType = JDBCType.INTEGER)
 
-    val totalSupplied = column<Int>(name = "total_supplied", jdbcType = JDBCType.INTEGER)
+    val totalSupplied = column<Long>(name = "total_supplied", jdbcType = JDBCType.INTEGER)
 
     val pictureUrl = column<String>(name = "picture_url", jdbcType = JDBCType.VARCHAR)
 

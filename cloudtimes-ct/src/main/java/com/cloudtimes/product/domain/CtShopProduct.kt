@@ -3,6 +3,7 @@ package com.cloudtimes.product.domain
 import com.cloudtimes.common.annotation.Excel
 import com.cloudtimes.common.core.domain.BaseEntity
 import com.fasterxml.jackson.annotation.JsonFormat
+import com.fasterxml.jackson.annotation.JsonIgnore
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
 import lombok.Data
@@ -100,6 +101,10 @@ class CtShopProduct : BaseEntity() {
     @Excel(name = "库存")
     var stock: Long? = null
 
+    /** 库存增量 */
+    @JsonIgnore
+    var stockDelta: Long = 0
+
     @ApiModelProperty(value = "库存上限")
     @Excel(name = "库存上限")
     var maxStock: Long? = null
@@ -159,5 +164,9 @@ class CtShopProduct : BaseEntity() {
 
     companion object {
         private const val serialVersionUID = 1L
+    }
+
+    override fun toString(): String {
+        return "CtShopProduct(id=$id, shopNo=$shopNo, categoryCode=$categoryCode, barcode=$barcode, productName=$productName, englishName=$englishName, brand=$brand, label=$label, supplierId=$supplierId, supplier=$supplier, specification=$specification, unit=$unit, weight=$weight, color=$color, size=$size, style=$style, purchasePrice=$purchasePrice, retailPrice=$retailPrice, wholesalePrice=$wholesalePrice, vipPrice=$vipPrice, stock=$stock, maxStock=$maxStock, minStock=$minStock, totalSold=$totalSold, totalSupplied=$totalSupplied, pictureUrl=$pictureUrl, productionDate=$productionDate, qualityPeriod=$qualityPeriod, remarks=$remarks)"
     }
 }

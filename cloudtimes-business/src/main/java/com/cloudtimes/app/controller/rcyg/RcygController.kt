@@ -55,6 +55,7 @@ class RcygController(
     @ApiOperation(value = "采购商品入库")
     fun purchaseBookKeep(@Valid @RequestBody request: YcygPurchaseBookKeepRequest): YcygPurchaseBookKeepResponse {
         logger.info("request: $request")
+        ycygServcie.purchaseBookKeep(request)
         return YcygPurchaseBookKeepResponse()
     }
 }
