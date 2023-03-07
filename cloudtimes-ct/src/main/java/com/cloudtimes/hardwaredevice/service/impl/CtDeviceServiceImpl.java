@@ -95,7 +95,7 @@ public class CtDeviceServiceImpl implements ICtDeviceService {
      * @return 结果
      */
     @Override
-    public int deleteCtDeviceByIds(Long[] ids) {
+    public int deleteCtDeviceByIds(String[] ids) {
         return ctDeviceMapper.deleteCtDeviceByIds(ids);
     }
 
@@ -154,6 +154,8 @@ public class CtDeviceServiceImpl implements ICtDeviceService {
             ctPayment.setDelFlag("0");
             ctPayment.setCreateTime(DateUtils.getNowDate());
             ctPayment.setUpdateTime(DateUtils.getNowDate());
+            device.setIsActivited("1");
+            ctDeviceMapper.updateCtDevice(device);
             return paymentMapper.insertCtPayment(ctPayment);
         }
         return 0;

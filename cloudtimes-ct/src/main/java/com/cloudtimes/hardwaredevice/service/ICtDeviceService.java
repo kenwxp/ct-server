@@ -50,7 +50,7 @@ public interface ICtDeviceService {
      * @param ids 需要删除的电子设备主键集合
      * @return 结果
      */
-    public int deleteCtDeviceByIds(Long[] ids);
+    public int deleteCtDeviceByIds(String[] ids);
 
     /**
      * 删除电子设备信息

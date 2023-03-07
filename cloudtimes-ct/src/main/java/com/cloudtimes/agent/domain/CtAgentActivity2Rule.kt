@@ -16,7 +16,7 @@ import java.util.*
  * @author 沈兵
  * @date 2023-02-17
  */
-@ApiModel(value = "CtAgentActivity1Rule", description = "代理活动1规则")
+@ApiModel(value = "CtAgentActivity2Rule", description = "代理活动2规则")
 open class CtAgentActivity2Rule : BaseEntity() {
     @ApiModelProperty(value = "编号")
     var id: String? = null
@@ -71,13 +71,13 @@ open class CtAgentActivity2Rule : BaseEntity() {
     var delFlag: String? = null
 
     @ApiModelProperty(value = "开始时间")
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "开始时间", width = 30.0, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "开始时间", width = 30.0, dateFormat = "yyyy-MM-dd HH:mm:ss")
     var startTime: Date? = null
 
     @ApiModelProperty(value = "结束时间")
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "结束时间", width = 30.0, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "结束时间", width = 30.0, dateFormat = "yyyy-MM-dd HH:mm:ss")
     var endTime: Date? = null
     override fun toString(): String {
         return ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)

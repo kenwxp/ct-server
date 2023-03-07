@@ -68,6 +68,19 @@ public class CtDeviceController extends BaseController {
     }
 
     /**
+     * 收银机电子设备激活
+     */
+    @PreAuthorize("@ss.hasPermi('hardwaredevice:ctdevice:query')")
+    @GetMapping(value = "/cashActivited/{id}/{activiteCode}")
+    public AjaxResult cashActivited(@PathVariable("id") String id, @PathVariable("activiteCode") String activiteCode) {
+        ActivateDeviceReq activateDeviceReq = new ActivateDeviceReq();
+        activateDeviceReq.setDeviceId(id);
+        activateDeviceReq.setCode(activiteCode);
+        ctDeviceService.activateCtDevice(activateDeviceReq);
+        return AjaxResult.success();
+    }
+
+    /**
      * 新增电子设备
      */
     @PreAuthorize("@ss.hasPermi('hardwaredevice:ctdevice:add')")
@@ -93,7 +106,7 @@ public class CtDeviceController extends BaseController {
     @PreAuthorize("@ss.hasPermi('hardwaredevice:ctdevice:remove')")
     @Log(title = "电子设备", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids) {
+    public AjaxResult remove(@PathVariable String[] ids) {
         return toAjax(ctDeviceService.deleteCtDeviceByIds(ids));
     }
 

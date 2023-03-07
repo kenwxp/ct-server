@@ -14,7 +14,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="title != null  and title != ''"> and title = #{title}</if>
             <if test="content != null  and content != ''"> and content = #{content}</if>
             <if test="activityType != null  and activityType != ''"> and activity_type = #{activityType}</if>
-            <if test="region != null  and region != ''"> and region = #{region}</if>
+            <if test="regionCode != null  and regionCode != ''"> and region_code = #{regionCode}</if>
             <if test="storeCount != null "> and store_count = #{storeCount}</if>
             <if test="usedStoreCount != null "> and used_store_count = #{usedStoreCount}</if>
             <if test="taxRatio != null "> and tax_ratio = #{taxRatio}</if>
@@ -39,7 +39,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="title != null and title != ''">title,</if>
             <if test="content != null and content != ''">content,</if>
             <if test="activityType != null and activityType != ''">activity_type,</if>
-            <if test="region != null">region,</if>
+            <if test="regionCode != null">region_code,</if>
             <if test="storeCount != null">store_count,</if>
             <if test="usedStoreCount != null">used_store_count,</if>
             <if test="taxRatio != null">tax_ratio,</if>
@@ -58,7 +58,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="title != null and title != ''">#{title},</if>
             <if test="content != null and content != ''">#{content},</if>
             <if test="activityType != null and activityType != ''">#{activityType},</if>
-            <if test="region != null">#{region},</if>
+            <if test="regionCode != null">#{regionCode},</if>
             <if test="storeCount != null">#{storeCount},</if>
             <if test="usedStoreCount != null">#{usedStoreCount},</if>
             <if test="taxRatio != null">#{taxRatio},</if>
@@ -80,7 +80,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="title != null and title != ''">title = #{title},</if>
             <if test="content != null and content != ''">content = #{content},</if>
             <if test="activityType != null and activityType != ''">activity_type = #{activityType},</if>
-            <if test="region != null">region = #{region},</if>
+            <if test="regionCode != null">region_code = #{regionCode},</if>
             <if test="storeCount != null">store_count = #{storeCount},</if>
             <if test="usedStoreCount != null">used_store_count = #{usedStoreCount},</if>
             <if test="taxRatio != null">tax_ratio = #{taxRatio},</if>
