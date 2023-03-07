@@ -25,7 +25,7 @@ class CtRegionServiceImpl : ICtRegionService {
     /** 查询地区树 */
     override fun selectCtRegionTree(): List<CtRegion> {
         fun helper(currentList: List<CtRegion>, allList: List<CtRegion>) {
-            if ( currentList.isEmpty() ) {
+            if (currentList.isEmpty()) {
                 return
             }
 
@@ -63,4 +63,19 @@ class CtRegionServiceImpl : ICtRegionService {
     override fun selectCtRegionList(ctRegion: CtRegion): List<CtRegion> {
         return ctRegionMapper.selectCtRegionList(ctRegion)
     }
+
+    /**
+     * 获取地区名
+     *
+     * @param regionCode 地区号
+     * @return 地区名
+     */
+    override fun getRegionName(regionCode: String): String? {
+        val selectCtRegionByCode = ctRegionMapper.selectCtRegionByCode(regionCode)
+        if (selectCtRegionByCode != null) {
+            return selectCtRegionByCode.regionName;
+        }
+        return null;
+    }
+
 }

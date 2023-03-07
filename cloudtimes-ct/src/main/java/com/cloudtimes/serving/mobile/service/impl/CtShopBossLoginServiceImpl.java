@@ -6,7 +6,8 @@ import com.cloudtimes.common.annotation.DataSource;
 import com.cloudtimes.common.enums.DataSourceType;
 import com.cloudtimes.common.exception.ServiceException;
 import com.cloudtimes.common.utils.SecurityUtils;
-import com.cloudtimes.common.utils.StringUtils;
+import com.cloudtimes.serving.mobile.domain.LoginReq;
+import com.cloudtimes.serving.mobile.domain.RegisterReq;
 import com.cloudtimes.serving.mobile.service.ICtShopBossLoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,18 +28,18 @@ public class CtShopBossLoginServiceImpl implements ICtShopBossLoginService {
     private CtUserMapper userMapper;
 
     @Override
-    public CtUser shopBossRegister(String phone, String password, String account, String nickName) {
-        CtUser dbUser = userMapper.selectCtUserByMobile(phone);
+    public CtUser shopBossRegister(RegisterReq param) {
+        CtUser dbUser = userMapper.selectCtUserByMobile(param.getPhone());
         if (dbUser != null) {
             throw new ServiceException("用户已存在");
         }
         //  加密密码
-        String encryptPassword = SecurityUtils.encryptPassword(password);
+        String encryptPassword = SecurityUtils.encryptPassword(param.getPassword());
         CtUser newUser = new CtUser();
-        newUser.setAccount(account);
+        newUser.setAccount(param.getAccount());
         newUser.setPassword(encryptPassword);
-        newUser.setMobile(phone);
-        newUser.setNickName(nickName);
+        newUser.setMobile(param.getPhone());
+        newUser.setNickName(param.getNickName());
         newUser.setIsAgent("0");
         newUser.setIsShopBoss("1");
         newUser.setCreateBossTime(new Date());
@@ -52,12 +53,12 @@ public class CtShopBossLoginServiceImpl implements ICtShopBossLoginService {
     }
 
     @Override
-    public CtUser shopBossLogin(String phone, String password, String loginIp) {
-        CtUser dbUser = userMapper.selectCtUserByMobile(phone);
+    public CtUser shopBossLogin(LoginReq param,String loginIp) {
+        CtUser dbUser = userMapper.selectCtUserByMobile(param.getPhone());
         if (dbUser == null) {
             throw new ServiceException("用户名或密码不正确");
         }
-        if (!SecurityUtils.matchesPassword(password, dbUser.getPassword())) {
+        if (!SecurityUtils.matchesPassword(param.getPassword(), dbUser.getPassword())) {
             throw new ServiceException("用户名或密码不正确");
         }
         if (!"1".equals(dbUser.getIsShopBoss())) {

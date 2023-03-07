@@ -50,6 +50,14 @@ interface CtRegionMapper : CommonCountMapper, CommonDeleteMapper, CommonInsertMa
     fun selectCtRegionById(id: String): CtRegion?
 
     /**
+     * 查询地区信息
+     *
+     * @param regionCode 地区信息主键
+     * @return 地区信息
+     */
+    fun selectCtRegionByCode(regionCode: String): CtRegion?
+
+    /**
      * 查询地区信息列表
      *
      * @param ctRegion 地区信息

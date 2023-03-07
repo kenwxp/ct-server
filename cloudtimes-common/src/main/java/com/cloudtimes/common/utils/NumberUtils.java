@@ -95,11 +95,44 @@ public class NumberUtils {
         }
         return "";
     }
-    public static String getHiddenPhone(String phone ){
+
+    public static String getHiddenPhone(String phone) {
         if (phone.length() != 11) {
             return "";
         }
-        return phone.substring(0,3)+"****"+phone.substring(phone.length()-4);
+        return phone.substring(0, 3) + "****" + phone.substring(phone.length() - 4);
+    }
+
+    /**
+     * 元转分
+     *
+     * @param cent
+     * @return
+     */
+    public static BigDecimal yuanToCent(String cent) {
+        float v = Float.parseFloat(cent);
+        return new BigDecimal(v).multiply(new BigDecimal(100));
+    }
+
+    /**
+     * 分转元
+     *
+     * @param cent
+     * @return
+     */
+    public static String centToYuan(BigDecimal cent) {
+        BigDecimal divide = cent.divide(new BigDecimal(100));
+        return divide.toPlainString();
+    }
+
+    /**
+     * Decimal转整数
+     *
+     * @param number
+     * @return
+     */
+    public static String formatIntValue(BigDecimal number) {
+        return String.valueOf(number.intValue());
     }
 
     public static void main(String[] args) {

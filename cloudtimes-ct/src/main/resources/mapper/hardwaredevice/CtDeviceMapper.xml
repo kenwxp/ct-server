@@ -154,4 +154,19 @@
             #{id}
         </foreach>
     </delete>
+
+    <select id="selectDeviceNumGroupByStore"  resultType="CtDeviceNum">
+        select
+        store_id,
+        count(1) total,
+        count(case when state = '0' then 1 end) online,
+        count(case when state != '0' then 1 end) offline
+        from
+        ct_device d
+        where
+        del_flag = 0
+        and store_id is not null
+        group by
+        store_id
+    </select>
 </mapper>

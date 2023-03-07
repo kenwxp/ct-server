@@ -32,19 +32,15 @@ public class ShopBossLoginController {
 
     @ApiOperation("用户注册")
     @PostMapping("/register")
-    public ApiResult register(@RequestBody RegisterReq param, HttpServletRequest request) {
-        loginService.shopBossRegister(
-                param.getPhone(),
-                param.getPassword(),
-                param.getAccount(),
-                param.getNickName());
+    public ApiResult register(@RequestBody RegisterReq param) {
+        loginService.shopBossRegister(param);
         return new ApiResult().success();
     }
 
     @ApiOperation("用户登录")
     @PostMapping("")
     public ApiResult<LoginResp> login(@RequestBody LoginReq param, HttpServletRequest request) {
-        CtUser ctUser = loginService.shopBossLogin(param.getPhone(), param.getPassword(), IpUtils.getIpAddr(request));
+        CtUser ctUser = loginService.shopBossLogin(param, IpUtils.getIpAddr(request));
         String token = jwtManager.createToken(new AuthUser(ctUser.getId(), ChannelType.MOBILE));
         LoginResp loginResp = new LoginResp();
         loginResp.setToken(token);

@@ -43,29 +43,36 @@ public interface ICtHikApiService {
      */
     public DeviceInfoData getDeviceInfo(String deviceSerial);
 
+
     /**
      * 获取直播地址
      *
-     * @param deviceSerial 设备序列号
-     * @param protocol     流播放协议，1-ezopen、2-hls、3-rtmp、4-flv
-     * @param quality      视频清晰度，1-高清（主码流）、2-流畅（子码流）
+     * @param deviceSerial  设备序列号
+     * @param deviceChannel 通道号
+     * @param protocol      流播放协议，1-ezopen、2-hls、3-rtmp、4-flv
+     * @param quality       视频清晰度，1-高清（主码流）、2-流畅（子码流）
      * @return map
      * url 播放地址
      * token 播放token
      */
+    public VideoData getLiveAddress(String deviceSerial, int deviceChannel, String protocol, String quality, String expireSec);
+
     public VideoData getLiveAddress(String deviceSerial, String protocol, String quality, String expireSec);
 
     /**
      * 获取回放地址
      *
-     * @param deviceSerial 设备序列号
-     * @param quality      视频清晰度，1-高清（主码流）、2-流畅（子码流）
-     * @param startTime    本地录像/云存储录像回放开始时间,示例：2019-12-01 00:00:00
-     * @param stopTime     本地录像/云存储录像回放开始时间,示例：2019-12-01 00:00:00
+     * @param deviceSerial  设备序列号
+     * @param deviceChannel 通道号
+     * @param quality       视频清晰度，1-高清（主码流）、2-流畅（子码流）
+     * @param startTime     本地录像/云存储录像回放开始时间,示例：2019-12-01 00:00:00
+     * @param stopTime      本地录像/云存储录像回放开始时间,示例：2019-12-01 00:00:00
      * @return map
      * url 播放地址
      * token 播放token
      */
+    public VideoData getPlaybackAddress(String deviceSerial, int deviceChannel, String quality, String startTime, String stopTime);
+
     public VideoData getPlaybackAddress(String deviceSerial, String quality, String startTime, String stopTime);
 
     /**
@@ -85,6 +92,7 @@ public interface ICtHikApiService {
      * @return url 图片链接
      */
     public HikCommonResp getDeviceCapture(String deviceSerial);
+
     /**
      * 获取nvr在线状态及其下通道设备的状态
      *

@@ -12,7 +12,10 @@ import com.cloudtimes.common.mq.CtRocketMqProducer;
 import com.cloudtimes.common.mq.OpenDoorMqData;
 import com.cloudtimes.common.utils.DateUtils;
 import com.cloudtimes.common.utils.StringUtils;
+import com.cloudtimes.enums.DeviceType;
 import com.cloudtimes.enums.PayState;
+import com.cloudtimes.hardwaredevice.domain.CtDevice;
+import com.cloudtimes.hardwaredevice.mapper.CtDeviceMapper;
 import com.cloudtimes.mq.service.CtCashMqSenderService;
 import com.cloudtimes.mq.service.CtOpenDoorService;
 import com.cloudtimes.partner.agora.service.CtAgoraApiService;
@@ -41,7 +44,8 @@ public class CtSuperviseStationServiceImpl implements ICtSuperviseStationService
     private CtTaskCache taskCache;
     @Autowired
     private CtStoreVideoCache videoCache;
-
+    @Autowired
+    private CtDeviceMapper deviceMapper;
 
     /**
      * 门店区域视频树查询 用户编号
@@ -62,15 +66,26 @@ public class CtSuperviseStationServiceImpl implements ICtSuperviseStationService
             VideoTreeNode areaNode = new VideoTreeNode();
             areaNode.setId("0");
             areaNode.setLabel("默认区");
-            Map<String, CacheVideoData> videoMap = videoCache.getCacheVideosOfStore(task.getStoreId());
+//            Map<String, CacheVideoData> videoMap = videoCache.getCacheVideosOfStore(task.getStoreId());
+            CtDevice query = new CtDevice();
+            query.setStoreId(task.getStoreId());
+            query.setDeviceType(DeviceType.CAMERA.getCode());
+            query.setDelFlag("0");
+            List<CtDevice> cameraList = deviceMapper.selectCtDeviceList(query);
+            query.setDeviceType(DeviceType.NVR_CAMERA.getCode());
+
+            List<CtDevice> nvrCameraList = deviceMapper.selectCtDeviceList(query);
+            cameraList.addAll(nvrCameraList);
+
             List<VideoTreeNode> videoList = new ArrayList<>();
-            for (CacheVideoData videoData :
-                    videoMap.values()) {
+            for (CtDevice videoData :
+                    cameraList) {
                 VideoTreeNode videoNode = new VideoTreeNode();
-                videoNode.setId(videoData.getDeviceId());
-                videoNode.setLabel(videoData.getDeviceSerial());
-                videoNode.setVideoUrl(videoData.getUrl());
-                videoNode.setToken(videoData.getToken());
+                videoNode.setId(videoData.getId());
+                videoNode.setLabel(videoData.getName());
+                CacheVideoData cacheVideo = videoCache.getCacheVideo(task.getStoreId(), videoData.getId());
+                videoNode.setVideoUrl(cacheVideo.getUrl());
+                videoNode.setToken(cacheVideo.getToken());
                 videoList.add(videoNode);
             }
             areaNode.setChildren(videoList);

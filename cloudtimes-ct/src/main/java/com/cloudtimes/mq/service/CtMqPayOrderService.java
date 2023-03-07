@@ -97,7 +97,7 @@ public class CtMqPayOrderService {
             ctShopProduct.setStock(item.getItemCount().longValue());
             ctShopProduct.setTotalSold(item.getItemCount().longValue());
             ctShopProduct.setUpdateTime(DateUtils.getNowDate());
-            shopProductMapper.updateCtShopProduct(ctShopProduct);
+            shopProductMapper.updateCtShopProductStock(ctShopProduct);
         }
     }
 }

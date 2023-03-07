@@ -5,13 +5,17 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.validation.constraints.NotEmpty;
+
 
 @ApiModel(description = "请求参数")
 @Data
 @Slf4j
 public class GetOrderLocalVideoReq {
+    @NotEmpty
     @ApiModelProperty(value = "订单编号", required = true)
     private String orderId;
+    @NotEmpty
     @ApiModelProperty(value = "设备序列号", required = true)
     private String deviceSerial;
 }

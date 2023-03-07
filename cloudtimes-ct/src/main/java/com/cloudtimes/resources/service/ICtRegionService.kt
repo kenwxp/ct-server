@@ -27,4 +27,12 @@ interface ICtRegionService {
      * @return 地区信息集合
      */
     fun selectCtRegionList(ctRegion: CtRegion): List<CtRegion>
+
+    /**
+     * 获取地区名
+     *
+     * @param regionCode 地区号
+     * @return 地区名
+     */
+    fun getRegionName(regionCode: String): String? ;
 }

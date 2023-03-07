@@ -37,7 +37,17 @@ public class CtSuperviseLogs extends BaseEntity {
      */
     @Excel(name = "店铺编号")
     private String storeId;
+    /**
+     * 店铺名
+     */
+    @Excel(name = "门店名")
+    private String storeName;
 
+    /**
+     * 门店地址
+     */
+    @Excel(name = "门店地址")
+    private String storeAddress;
     /**
      * 值守开始时间
      */

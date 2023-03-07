@@ -6,6 +6,7 @@ import com.cloudtimes.app.manager.SuperviseWsSessionManager;
 import com.cloudtimes.app.models.WsOrderData;
 import com.cloudtimes.app.models.WsOrderDetailData;
 import com.cloudtimes.cache.CtTaskCache;
+import com.cloudtimes.common.utils.NumberUtils;
 import com.cloudtimes.common.utils.StringUtils;
 import com.cloudtimes.supervise.domain.CtOrder;
 import com.cloudtimes.supervise.domain.CtOrderDetail;
@@ -39,29 +40,14 @@ public class SuperviseOrderPolling {
 
     @PostConstruct
     public void start() {
-//        if (executorService == null || executorService.isShutdown()) {
-//            executorService = Executors.newScheduledThreadPool(5);
-//            executorService.scheduleAtFixedRate(new Runnable() {
-//                @Override
-//                public void run() {
-//                    while (true) {
-//                        try {
-//                            handle();
-//                        } catch (Exception ex) {
-//                            log.error(ex.getMessage(), ex);
-//                        }
-//                    }
-//                }
-//            }, 0, 5, TimeUnit.SECONDS);
-//        }
         if (thread == null || !thread.isAlive()) {
             thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
                     while (true) {
                         try {
-                           handle();
-                           Thread.sleep(5000);
+                            handle();
+                            Thread.sleep(5000);
                         } catch (Exception ex) {
 
                         }
@@ -98,8 +84,8 @@ public class SuperviseOrderPolling {
                             data.setShoppingId(rawOrder.getShoppingId());
                             data.setUserId(rawOrder.getUserId());
                             data.setUserPhone(rawOrder.getUserPhone());
-                            data.setActualAmount(rawOrder.getActualAmount().toPlainString());
-                            data.setTotalAmount(rawOrder.getTotalAmount().toPlainString());
+                            data.setActualAmount(NumberUtils.centToYuan(rawOrder.getActualAmount()));
+                            data.setTotalAmount(NumberUtils.centToYuan(rawOrder.getTotalAmount()));
                             data.setTotalCount(String.valueOf(rawOrder.getItemCount()));
                             data.setPaymentMode(rawOrder.getPaymentMode());
                             data.setPaymentId(rawOrder.getPaymentId());
@@ -115,10 +101,10 @@ public class SuperviseOrderPolling {
                                     detailData.setItemName(orderDetail.getItemName());
                                     detailData.setItemTypeId(orderDetail.getItemTypeId());
                                     detailData.setItemTypeName(orderDetail.getItemTypeName());
-                                    detailData.setItemCount(orderDetail.getItemCount().toPlainString());
-                                    detailData.setItemPrice(orderDetail.getItemPrice().toPlainString());
-                                    detailData.setItemPrimePrice(orderDetail.getItemPrimePrice().toPlainString());
-                                    detailData.setItemSum(orderDetail.getItemSum().toPlainString());
+                                    detailData.setItemCount(NumberUtils.formatIntValue(orderDetail.getItemCount()));
+                                    detailData.setItemPrice(NumberUtils.centToYuan(orderDetail.getItemPrice()));
+                                    detailData.setItemPrimePrice(NumberUtils.centToYuan(orderDetail.getItemPrimePrice()));
+                                    detailData.setItemSum(NumberUtils.centToYuan(orderDetail.getItemSum()));
                                     orderDetailList.add(detailData);
                                 }
                             }

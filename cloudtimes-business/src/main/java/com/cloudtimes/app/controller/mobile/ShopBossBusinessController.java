@@ -31,39 +31,23 @@ public class ShopBossBusinessController extends BaseController {
     @PostMapping("/password")
     public ApiResult changePassword(@RequestBody ChangePasswordReq param) {
         AuthUser authUser = AuthUtils.getObject();
-        if (shopBossBusinessService.changePassword(authUser.getId(), param.getPasswordNew(), param.getPasswordOld())) {
-            return new ApiResult().success();
-        } else {
-            return new ApiResult().error();
-        }
-
+        shopBossBusinessService.changePassword(authUser.getId(), param);
+        return new ApiResult().success();
     }
 
     @ApiOperation("申请云值守")
     @PostMapping("/supervise/apply")
     public ApiResult applySupervise(@RequestBody ApplySuperviseReq param) {
         AuthUser authUser = AuthUtils.getObject();
-        
-        if (StringUtils.isEmpty(param.getStoreId())) {
-            return new ApiResult().error("门店id不能为空");
-        }
-        String opFlag = param.getOptFlag();
-        if (!StringUtils.equals(opFlag, "0") && !StringUtils.equals(opFlag, "1")) {
-            return new ApiResult().error("操作标志非法");
-        }
-        if (shopBossBusinessService.applySupervise(authUser.getId(), param.getStoreId(), param.getOptFlag())) {
-            return new ApiResult().success();
-        } else {
-            return new ApiResult().error();
-        }
+        shopBossBusinessService.applySupervise(authUser.getId(), param);
+        return new ApiResult().success();
     }
 
     @ApiOperation("查询门店列表")
     @PostMapping("/shop/list")
     public ApiResult<List<GetShopListResp>> getShopList(@RequestBody GetShopListReq param) {
         AuthUser authUser = AuthUtils.getObject();
-        
-        ArrayList<GetShopListResp> shopList = new ArrayList<>();
+        List<GetShopListResp> shopList = shopBossBusinessService.getShopList(authUser.getId(), param);
         return new ApiResult().success(shopList);
     }
 
@@ -71,25 +55,23 @@ public class ShopBossBusinessController extends BaseController {
     @PostMapping("/shop/detail")
     public ApiResult<GetShopDetailResp> getShopDetail(@RequestBody GetShopDetailReq param) {
         AuthUser authUser = AuthUtils.getObject();
-        
-        GetShopDetailResp getShopDetailResp = new GetShopDetailResp();
-        return new ApiResult().success(getShopDetailResp);
+        GetShopDetailResp shopDetail = shopBossBusinessService.getShopDetail(authUser.getId(), param);
+        return new ApiResult().success(shopDetail);
     }
 
     @ApiOperation("查询门店访问人数排行")
     @PostMapping("/shop/rank")
     public ApiResult<List<GetShopRankResp>> getShopRank() {
         AuthUser authUser = AuthUtils.getObject();
-        
-        GetShopDetailResp getShopDetailResp = new GetShopDetailResp();
-        return new ApiResult().success(getShopDetailResp);
+        List<GetShopRankResp> shopRank = shopBossBusinessService.getShopRank(authUser.getId());
+        return new ApiResult().success(shopRank);
     }
 
     @ApiOperation("店家开门")
     @PostMapping("/shop/open/door")
     public ApiResult getShopOpenDoor(@RequestBody GetShopDetailReq param) {
         AuthUser authUser = AuthUtils.getObject();
-        
+        shopBossBusinessService.getShopOpenDoor(authUser.getId(), param);
         return new ApiResult().success();
     }
 
@@ -97,9 +79,8 @@ public class ShopBossBusinessController extends BaseController {
     @PostMapping("/device/list")
     public ApiResult<List<GetDeviceListResp>> getDeviceList(@RequestBody GetDeviceListReq param) {
         AuthUser authUser = AuthUtils.getObject();
-        
-        GetDeviceListResp resp = new GetDeviceListResp();
-        return new ApiResult().success(resp);
+        List<GetDeviceListResp> deviceList = shopBossBusinessService.getDeviceList(authUser.getId(), param);
+        return new ApiResult().success(deviceList);
     }
 
     @ApiOperation("查询门店值守日志列表")
@@ -107,11 +88,8 @@ public class ShopBossBusinessController extends BaseController {
     public ApiResult<List<GetSuperviseListResp>> getSuperviseList(@RequestBody GetSuperviseListReq param) {
         ApiResult apiResult = new ApiResult();
         AuthUser authUser = AuthUtils.getObject();
-   
         PageUtils.startPage(param.getPageNum(), param.getPageSize());
-        List<GetSuperviseListResp> list = new ArrayList<>();
-        GetSuperviseListResp resp = new GetSuperviseListResp();
-        list.add(resp);
+        List<GetSuperviseListResp> list = shopBossBusinessService.getSuperviseList(authUser.getId(), param);
         apiResult.setTotal(getDataTable(list).getTotal());
         return apiResult.success(list);
     }
@@ -120,8 +98,7 @@ public class ShopBossBusinessController extends BaseController {
     @PostMapping("/stat/sum/visit")
     public ApiResult<ShopVisitSumResp> getStatVisitSum(@RequestBody ShopStatSumReq param) {
         AuthUser authUser = AuthUtils.getObject();
-        
-        ShopVisitSumResp resp = new ShopVisitSumResp();
+        ShopVisitSumResp resp = shopBossBusinessService.getStatVisitSum(authUser.getId(), param);
         return new ApiResult().success(resp);
     }
 
@@ -129,10 +106,7 @@ public class ShopBossBusinessController extends BaseController {
     @PostMapping("/stat/chart/visit")
     public ApiResult<List<ShopStatChartResp>> getStatVisitChart(@RequestBody ShopStatChartReq param) {
         AuthUser authUser = AuthUtils.getObject();
-        
-        List<ShopStatChartResp> list = new ArrayList<>();
-        ShopStatChartResp resp = new ShopStatChartResp();
-        list.add(resp);
+        List<ShopStatChartResp> list = shopBossBusinessService.getStatVisitChart(authUser.getId(), param);
         return new ApiResult().success(list);
     }
 
@@ -140,8 +114,7 @@ public class ShopBossBusinessController extends BaseController {
     @PostMapping("/stat/sum/income")
     public ApiResult<ShopIncomeSumResp> getStatIncomeSum(@RequestBody ShopStatSumReq param) {
         AuthUser authUser = AuthUtils.getObject();
-        
-        ShopIncomeSumResp resp = new ShopIncomeSumResp();
+        ShopIncomeSumResp resp = shopBossBusinessService.getStatIncomeSum(authUser.getId(), param);
         return new ApiResult().success(resp);
     }
 
@@ -149,10 +122,7 @@ public class ShopBossBusinessController extends BaseController {
     @PostMapping("/stat/chart/income")
     public ApiResult<List<ShopStatChartResp>> getStatIncomeChart(@RequestBody ShopStatChartReq param) {
         AuthUser authUser = AuthUtils.getObject();
-        
-        List<ShopStatChartResp> list = new ArrayList<>();
-        ShopStatChartResp resp = new ShopStatChartResp();
-        list.add(resp);
+        List<ShopStatChartResp> list = shopBossBusinessService.getStatIncomeChart(authUser.getId(), param);
         return new ApiResult().success(list);
     }
 
@@ -160,8 +130,7 @@ public class ShopBossBusinessController extends BaseController {
     @PostMapping("/stat/sum/24h")
     public ApiResult<ShopStat24hSumResp> getStatIncomeSum(@RequestBody GetShopDetailReq param) {
         AuthUser authUser = AuthUtils.getObject();
-        
-        ShopStat24hSumResp resp = new ShopStat24hSumResp();
+        ShopStat24hSumResp resp = shopBossBusinessService.getStatIncomeSum(authUser.getId(), param);
         return new ApiResult().success(resp);
     }
 
@@ -170,21 +139,17 @@ public class ShopBossBusinessController extends BaseController {
     public ApiResult<List<GetOrderListResp>> getOrderList(@RequestBody GetOrderListReq param) {
         ApiResult apiResult = new ApiResult();
         AuthUser authUser = AuthUtils.getObject();
-   
         PageUtils.startPage(param.getPageNum(), param.getPageSize());
-        List<GetOrderListResp> list = new ArrayList<>();
-        GetOrderListResp resp = new GetOrderListResp();
-        list.add(resp);
+        List<GetOrderListResp> list = shopBossBusinessService.getOrderList(authUser.getId(), param);
         apiResult.setTotal(getDataTable(list).getTotal());
-        return apiResult.success(list);
+        return new ApiResult().success(list);
     }
 
     @ApiOperation("查询订单详情")
     @PostMapping("/order/detail")
     public ApiResult<GetOrderDetailResp> getOrderDetail(@RequestBody GetOrderDetailReq param) {
         AuthUser authUser = AuthUtils.getObject();
-        
-        GetOrderDetailResp resp = new GetOrderDetailResp();
+        GetOrderDetailResp resp = shopBossBusinessService.getOrderDetail(authUser.getId(), param);
         return new ApiResult().success(resp);
     }
 
@@ -193,8 +158,7 @@ public class ShopBossBusinessController extends BaseController {
     @PostMapping("/video/order")
     public ApiResult<GetOrderLocalVideoResp> getOrderLocalVideo(@RequestBody GetOrderLocalVideoReq param) {
         AuthUser authUser = AuthUtils.getObject();
-        
-        GetOrderLocalVideoResp resp = new GetOrderLocalVideoResp();
+        GetOrderLocalVideoResp resp = shopBossBusinessService.getOrderLocalVideo(authUser.getId(), param);
         return new ApiResult().success(resp);
     }
 
@@ -202,7 +166,7 @@ public class ShopBossBusinessController extends BaseController {
     @PostMapping("/product/sync")
     public ApiResult syncProduct(@RequestBody SyncProductReq param) {
         AuthUser authUser = AuthUtils.getObject();
-        
+        shopBossBusinessService.syncProduct(authUser.getId(), param);
         return new ApiResult().success();
     }
 }

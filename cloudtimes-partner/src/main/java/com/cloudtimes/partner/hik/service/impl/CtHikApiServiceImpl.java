@@ -86,9 +86,14 @@ public class CtHikApiServiceImpl implements ICtHikApiService {
 
     @Override
     public VideoData getLiveAddress(String deviceSerial, String protocol, String quality, String expireSec) {
+        return getLiveAddress(deviceSerial, 1, protocol, quality, expireSec);
+    }
+
+    @Override
+    public VideoData getLiveAddress(String deviceSerial, int deviceChannel, String protocol, String quality, String expireSec) {
         Map<String, String> params = new HashMap<>();
         params.put("deviceSerial", deviceSerial);
-        params.put("channelNo", "1");
+        params.put("channelNo", String.valueOf(deviceChannel));
         params.put("expireTime", expireSec);
         params.put("protocol", protocol);
         params.put("quality", quality);
@@ -100,9 +105,14 @@ public class CtHikApiServiceImpl implements ICtHikApiService {
 
     @Override
     public VideoData getPlaybackAddress(String deviceSerial, String quality, String startTime, String stopTime) {
+        return getPlaybackAddress(deviceSerial, 1, quality, startTime, stopTime);
+    }
+
+    @Override
+    public VideoData getPlaybackAddress(String deviceSerial, int deviceChannel, String quality, String startTime, String stopTime) {
         Map<String, String> params = new HashMap<>();
         params.put("deviceSerial", deviceSerial);
-        params.put("channelNo", "1");
+        params.put("channelNo", String.valueOf(deviceChannel));
         params.put("expireTime", "3600");
         params.put("protocol", "1");
         params.put("quality", quality);

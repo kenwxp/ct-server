@@ -19,12 +19,12 @@ public class GetShopDetailResp {
     private String contactName;
     @ApiModelProperty("联系方式")
     private String contactPhone;
-    @ApiModelProperty("合同扫描图片地址")
-    private String contract;
-    @ApiModelProperty("合同开始时间")
-    private String contractBeginTime;
-    @ApiModelProperty("合同结束时间")
-    private String contractEndTime;
+//    @ApiModelProperty("合同扫描图片地址")
+//    private String contract;
+//    @ApiModelProperty("合同开始时间")
+//    private String contractBeginTime;
+//    @ApiModelProperty("合同结束时间")
+//    private String contractEndTime;
     @ApiModelProperty("店铺状态（0-正常 1-异常）")
     private String state;
     @ApiModelProperty("云值守状态（0-否 1-是）")

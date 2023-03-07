@@ -21,7 +21,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectCtRegionVo"/>
         where id = #{id}
     </select>
-        
+
+    <select id="selectCtRegionByCode" parameterType="String" resultMap="CtRegionResult">
+        <include refid="selectCtRegionVo"/>
+        where region_code = #{regionCode}
+    </select>
+
     <insert id="insertCtRegion" parameterType="CtRegion" useGeneratedKeys="true" keyProperty="id">
         insert into ct_region
         <trim prefix="(" suffix=")" suffixOverrides=",">

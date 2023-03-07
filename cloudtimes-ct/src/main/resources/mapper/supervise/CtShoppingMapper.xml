@@ -166,4 +166,28 @@
             <if test="taskId != null  and taskId != ''">and o.task_id = #{taskId}</if>
         </where>
     </select>
+
+    <select id="selectShoppingNumGroupByStore" parameterType="String" resultType="CtShoppingNum">
+        select
+        t.store_id,
+        cs.name store_name,
+        t.total_visit
+        from
+        (
+        select
+        store_id ,
+        count(1) total_visit
+        from
+        ct_shopping
+        where
+        store_id is not null
+        group by
+        store_id) t,
+        ct_store cs
+        where
+        t.store_id = cs.id
+        and cs.boss_id = #{bossId}
+        and del_flag = '0'
+        order by t.total_visit desc
+    </select>
 </mapper>

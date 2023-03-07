@@ -1,6 +1,7 @@
 package com.cloudtimes.supervise.mapper;
 
 import com.cloudtimes.supervise.domain.CtShopping;
+import com.cloudtimes.supervise.domain.CtShoppingNum;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -69,4 +70,12 @@ public interface CtShoppingMapper {
      * @return
      */
     public List<CtShopping> selectCtShoppingListByTask(@Param("taskId") String taskId, @Param("state") String state);
+
+    /**
+     * 查询店老板所有门店购物数量
+     *
+     * @param bossId
+     * @return
+     */
+    public List<CtShoppingNum> selectShoppingNumGroupByStore(@Param("bossId") String bossId);
 }

@@ -1,7 +1,5 @@
 package com.cloudtimes.enums;
 
-import lombok.Data;
-
 /**
  * 设备类型
  */
@@ -24,9 +22,9 @@ public enum DeviceType {
      */
     DOOR_FACE("3"),
     /**
-     * 网线供电摄像头
+     * nvr摄像头
      */
-    POE_CAMERA("4");
+    NVR_CAMERA("4");
 
     private String code;
 

@@ -1,8 +1,10 @@
 package com.cloudtimes.hardwaredevice.mapper;
 
 import com.cloudtimes.hardwaredevice.domain.CtDevice;
+import com.cloudtimes.hardwaredevice.domain.CtDeviceNum;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 电子设备Mapper接口
@@ -66,4 +68,11 @@ public interface CtDeviceMapper {
      * @return 结果
      */
     public int deleteCtDeviceByIds(String[] ids);
+
+    /**
+     * 查询所有门店设备在线离线情况
+     * @return
+     */
+    public List<CtDeviceNum> selectDeviceNumGroupByStore();
+
 }
