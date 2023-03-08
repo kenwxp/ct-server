@@ -8,7 +8,7 @@ import lombok.Data;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)  //过滤多余json字段
 @Data
-public class ShouqianbaCommonResp {
+public class ShouqianbaCommonResp<T> {
     @JsonProperty(value = "result_code")
     private String resultCode;
     @JsonProperty(value = "error_code")
@@ -18,5 +18,5 @@ public class ShouqianbaCommonResp {
     @JsonProperty(value = "error_message")
     private String errorMessage;
     @JsonProperty(value = "biz_response")
-    private BuzResponse bizResponse;
+    private T bizResponse;
 }

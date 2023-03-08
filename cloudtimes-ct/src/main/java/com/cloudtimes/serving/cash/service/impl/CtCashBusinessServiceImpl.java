@@ -473,7 +473,7 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
             throw new ServiceException("支付失败");
         }
         if (StringUtils.equals(commonResp.getResultCode(), ShouqianbaConstant.response200)) {
-            BuzResponse bizResponse = commonResp.getBizResponse();
+            BuzResponse bizResponse = JacksonUtils.convertObject(commonResp.getBizResponse(),BuzResponse.class);
             if (bizResponse != null) {
                 if (StringUtils.equals(bizResponse.getResultCode(), ShouqianbaConstant.busiPayInProgress)) {
                     //发起订单查询轮询

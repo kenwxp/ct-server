@@ -9,12 +9,11 @@ import com.cloudtimes.partner.pay.shouqianba.service.impl.CtShouqianbaCisApiServ
 
 public class TestShouqianba {
 
-
     public void test1() {
         ICtShouqianbaApiService service = new CtShouqianbaApiServiceImpl();
-        BuzResponse bz = service.activateTerminal("test003", "61359037");
+        Object bz = service.activateTerminal("aaadfag", "24029562");
         if (bz != null) {
-            System.out.println(bz.getData());
+            System.out.println(bz);
         }
 
         //{
@@ -32,9 +31,9 @@ public class TestShouqianba {
 
     public void test2() {
         ICtShouqianbaApiService service = new CtShouqianbaApiServiceImpl();
-        BuzResponse bz = service.checkinTerminal("test003", "100051020027440980", "759ac9b16958129d3ee5707991114d8a");
+        Object bz = service.checkinTerminal("test003", "100051020027440980", "759ac9b16958129d3ee5707991114d8a");
         if (bz != null) {
-            System.out.println(bz.getData());
+            System.out.println(bz);
         }
     }
 

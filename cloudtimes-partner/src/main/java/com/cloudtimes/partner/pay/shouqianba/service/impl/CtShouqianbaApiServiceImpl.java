@@ -7,8 +7,7 @@ import com.cloudtimes.common.utils.sign.Md5Utils;
 import com.cloudtimes.partner.config.PartnerConfig;
 import com.cloudtimes.partner.pay.shouqianba.domain.*;
 import com.cloudtimes.partner.pay.shouqianba.service.ICtShouqianbaApiService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,11 +15,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
+@Slf4j
 public class CtShouqianbaApiServiceImpl implements ICtShouqianbaApiService {
     @Autowired
     private PartnerConfig config;
 
-    private Logger log = LoggerFactory.getLogger(CtShouqianbaApiServiceImpl.class);
 
     /**
      * 设备终端激活
@@ -36,7 +35,7 @@ public class CtShouqianbaApiServiceImpl implements ICtShouqianbaApiService {
      * biz_response.terminal_key    终端key
      */
     @Override
-    public BuzResponse activateTerminal(String deviceNo, String code) {
+    public ActivateResponse activateTerminal(String deviceNo, String code) {
         String appId = config.getShouqianbaAppId();
         String sn = config.getShouqianbaVendorSn();
         String key = config.getShouqianbaVendorKey();
@@ -45,8 +44,12 @@ public class CtShouqianbaApiServiceImpl implements ICtShouqianbaApiService {
         reqObj.put("device_id", deviceNo);
         reqObj.put("code", code);
         String resultStr = sendShouqianbaHttp(ShouqianbaConstant.activateTerminal, reqObj, sn, key);
-        log.info(Thread.currentThread().getStackTrace()[1].getMethodName() + ": " + resultStr);
-        return getBuzResponse(resultStr);
+        log.info(resultStr);
+        ShouqianbaCommonResp commonResp = JacksonUtils.parseObject(resultStr, ShouqianbaCommonResp.class);
+        if (commonResp != null) {
+            return JacksonUtils.convertObject(commonResp.getBizResponse(), ActivateResponse.class);
+        }
+        return null;
     }
 
     /**
@@ -58,13 +61,17 @@ public class CtShouqianbaApiServiceImpl implements ICtShouqianbaApiService {
      * @return
      */
     @Override
-    public BuzResponse checkinTerminal(String deviceNo, String terminalSN, String terminalKey) {
+    public ActivateResponse checkinTerminal(String deviceNo, String terminalSN, String terminalKey) {
         JSONObject reqObj = new JSONObject();
         reqObj.put("terminal_sn", terminalSN);
         reqObj.put("device_id", deviceNo);
         String resultStr = sendShouqianbaHttp(ShouqianbaConstant.checkinTerminal, reqObj, terminalSN, terminalKey);
-        log.info(Thread.currentThread().getStackTrace()[1].getMethodName() + ": " + resultStr);
-        return getBuzResponse(resultStr);
+        log.info(resultStr);
+        ShouqianbaCommonResp commonResp = JacksonUtils.parseObject(resultStr, ShouqianbaCommonResp.class);
+        if (commonResp != null) {
+            return JacksonUtils.convertObject(commonResp.getBizResponse(), ActivateResponse.class);
+        }
+        return null;
     }
 
     /**
@@ -125,7 +132,7 @@ public class CtShouqianbaApiServiceImpl implements ICtShouqianbaApiService {
             throw new RuntimeException("终端sn不能为空");
         }
         String resultStr = sendShouqianbaHttp(ShouqianbaConstant.b2CPay, JSONObject.parseObject(JacksonUtils.toString(params)), terminalSN, terminalKey);
-        log.info(Thread.currentThread().getStackTrace()[1].getMethodName() + ": " + resultStr);
+        log.info(resultStr);
         return getCommonResp(resultStr);
     }
 
@@ -154,7 +161,7 @@ public class CtShouqianbaApiServiceImpl implements ICtShouqianbaApiService {
         reqObj.put("sn", paySn);
         reqObj.put("client_sn", billSerial);
         String resultStr = sendShouqianbaHttp(ShouqianbaConstant.queryPayOrder, reqObj, terminalSN, terminalKey);
-        log.info(Thread.currentThread().getStackTrace()[1].getMethodName() + ": " + resultStr);
+        log.info(resultStr);
         return getData(resultStr, PayOrderData.class);
     }
 
@@ -183,7 +190,7 @@ public class CtShouqianbaApiServiceImpl implements ICtShouqianbaApiService {
         reqObj.put("sn", paySn);
         reqObj.put("client_sn", billSerial);
         String resultStr = sendShouqianbaHttp(ShouqianbaConstant.cancelPayOrder, reqObj, terminalSN, terminalKey);
-        log.info(Thread.currentThread().getStackTrace()[1].getMethodName() + ": " + resultStr);
+        log.info(resultStr);
         return getBuzResponse(resultStr);
     }
 
@@ -202,7 +209,7 @@ public class CtShouqianbaApiServiceImpl implements ICtShouqianbaApiService {
         reqObj.put("terminal_sn", terminalSN);
         reqObj.put("rawdata", rawData);
         String resultStr = sendShouqianbaHttp(ShouqianbaConstant.getWxpayFaceAuthinfo, reqObj, terminalSN, terminalKey);
-        log.info(Thread.currentThread().getStackTrace()[1].getMethodName() + ": " + resultStr);
+        log.info(resultStr);
         return getData(resultStr, AuthInfoData.class);
     }
 
@@ -237,7 +244,7 @@ public class CtShouqianbaApiServiceImpl implements ICtShouqianbaApiService {
     private BuzResponse getBuzResponse(String rawString) {
         ShouqianbaCommonResp commonResp = JacksonUtils.parseObject(rawString, ShouqianbaCommonResp.class);
         if (commonResp != null) {
-            return commonResp.getBizResponse();
+            return JacksonUtils.convertObject(commonResp.getBizResponse(), BuzResponse.class);
         }
         return null;
     }
@@ -246,7 +253,7 @@ public class CtShouqianbaApiServiceImpl implements ICtShouqianbaApiService {
     private <T> T getData(String rawString, Class<T> tClass) {
         ShouqianbaCommonResp commonResp = JacksonUtils.parseObject(rawString, ShouqianbaCommonResp.class);
         if (commonResp != null) {
-            BuzResponse bizResponse = commonResp.getBizResponse();
+            BuzResponse bizResponse = JacksonUtils.convertObject(commonResp.getBizResponse(), BuzResponse.class);
             if (bizResponse != null) {
                 Object data = bizResponse.getData();
                 if (data != null) {

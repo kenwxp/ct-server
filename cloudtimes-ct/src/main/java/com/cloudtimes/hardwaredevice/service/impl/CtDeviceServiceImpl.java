@@ -16,6 +16,7 @@ import com.cloudtimes.hardwaredevice.domain.CtPayment;
 import com.cloudtimes.hardwaredevice.mapper.CtDeviceMapper;
 import com.cloudtimes.hardwaredevice.mapper.CtPaymentMapper;
 import com.cloudtimes.hardwaredevice.service.ICtDeviceService;
+import com.cloudtimes.partner.pay.shouqianba.domain.ActivateResponse;
 import com.cloudtimes.partner.pay.shouqianba.domain.BuzResponse;
 import com.cloudtimes.partner.pay.shouqianba.domain.ShouqianbaConstant;
 import com.cloudtimes.partner.pay.shouqianba.service.ICtShouqianbaApiService;
@@ -129,39 +130,29 @@ public class CtDeviceServiceImpl implements ICtDeviceService {
             throw new ServiceException("当前收银机已激活，请勿重复激活");
         }
         String deviceNo = NoUtils.genDeviceCode();
-        BuzResponse buzResponse = shouqianbaApiService.activateTerminal(deviceNo, param.getCode());
-        if (buzResponse == null) {
+        ActivateResponse activateResponse = shouqianbaApiService.activateTerminal(deviceNo, param.getCode());
+        if (activateResponse == null) {
             throw new ServiceException("调用收钱吧激活接口失败");
         }
-        log.info("BuzResponse:"+buzResponse);
-        if (!StringUtils.equals(buzResponse.getResultCode(), ShouqianbaConstant.response200)) {
-            throw new ServiceException("调用收钱吧激活接口失败:" + buzResponse.getErrorMessage());
-        }
-        if (buzResponse.getData() != null) {
-            throw new ServiceException("调用收钱吧激活接口返回参数异常");
-        }
-        Map<String, String> map = JacksonUtils.convertObject(buzResponse.getData(), Map.class);
-        if (map != null) {
-            String terminalSn = map.get("terminal_sn");
-            String terminalKey = map.get("terminal_key");
-            ShouqianbaParam newParam = new ShouqianbaParam();
-            newParam.setDeviceNo(deviceNo);
-            newParam.setTerminalSn(terminalSn);
-            newParam.setTerminalKey(terminalKey);
-            CtPayment ctPayment = new CtPayment();
-            ctPayment.setPayeeId(device.getId());
-            ctPayment.setPayeeType(PayeeType.CASH.getCode());
-            ctPayment.setPayWay(PayWay.SHOU_QIAN_BA.getCode());
-            ctPayment.setPayParams(JSONObject.toJSONString(newParam));
-            ctPayment.setPayDesc("收钱吧支付参数");
-            ctPayment.setEnabled("1");
-            ctPayment.setDelFlag("0");
-            ctPayment.setCreateTime(DateUtils.getNowDate());
-            ctPayment.setUpdateTime(DateUtils.getNowDate());
-            device.setIsActivited("1");
-            ctDeviceMapper.updateCtDevice(device);
-            return paymentMapper.insertCtPayment(ctPayment);
-        }
-        return 0;
+        log.info("activateResponse:" + activateResponse);
+        String terminalSn = activateResponse.getTerminalSn();
+        String terminalKey = activateResponse.getTerminalKey();
+        ShouqianbaParam newParam = new ShouqianbaParam();
+        newParam.setDeviceNo(deviceNo);
+        newParam.setTerminalSn(terminalSn);
+        newParam.setTerminalKey(terminalKey);
+        CtPayment ctPayment = new CtPayment();
+        ctPayment.setPayeeId(device.getId());
+        ctPayment.setPayeeType(PayeeType.CASH.getCode());
+        ctPayment.setPayWay(PayWay.SHOU_QIAN_BA.getCode());
+        ctPayment.setPayParams(JSONObject.toJSONString(newParam));
+        ctPayment.setPayDesc("收钱吧支付参数");
+        ctPayment.setEnabled("1");
+        ctPayment.setDelFlag("0");
+        ctPayment.setCreateTime(DateUtils.getNowDate());
+        ctPayment.setUpdateTime(DateUtils.getNowDate());
+        device.setIsActivited("1");
+        ctDeviceMapper.updateCtDevice(device);
+        return paymentMapper.insertCtPayment(ctPayment);
     }
 }

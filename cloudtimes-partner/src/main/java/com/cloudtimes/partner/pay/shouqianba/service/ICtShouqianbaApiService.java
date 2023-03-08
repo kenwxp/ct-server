@@ -19,7 +19,7 @@ public interface ICtShouqianbaApiService {
      * biz_response.terminal_sn 终端sn
      * biz_response.terminal_key    终端key
      */
-    public BuzResponse activateTerminal(String deviceNo, String code);
+    public ActivateResponse activateTerminal(String deviceNo, String code);
 
     /**
      * 设备签到
@@ -35,7 +35,7 @@ public interface ICtShouqianbaApiService {
      * biz_response.terminal_sn 终端sn
      * biz_response.terminal_key    终端key
      */
-    public BuzResponse checkinTerminal(String deviceNo, String terminalSN, String terminalKey);
+    public ActivateResponse checkinTerminal(String deviceNo, String terminalSN, String terminalKey);
 
     /**
      * 支付接口(支持分账)
