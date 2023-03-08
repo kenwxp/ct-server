@@ -67,7 +67,7 @@ public class CtStoreVideoCache {
                 }
                 if (liveAddress != null) {
                     cacheVideoData.setUrl(liveAddress.getUrl());
-       //             cacheVideoData.setExpireTime(DateUtil.parseDateTime(liveAddress.getExpireTime()));
+                    cacheVideoData.setExpireTime(DateUtils.parseDateTime(liveAddress.getExpireTime()));
                     cacheVideoData.setToken(liveAddress.getToken());
                 }
                 setCacheVideo(cacheVideoData);
