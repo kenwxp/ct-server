@@ -2,6 +2,7 @@ package com.cloudtimes.agent.mapper
 
 import com.cloudtimes.agent.domain.CtAgentActivity2Rule
 import com.cloudtimes.agent.dto.response.AgentActivity2Detail
+import com.cloudtimes.agent.dto.response.CtAgentActivity2RuleDto
 
 import org.apache.ibatis.annotations.Mapper
 import org.apache.ibatis.annotations.Result
@@ -71,6 +72,8 @@ interface CtAgentActivity2RuleMapper : CommonCountMapper, CommonDeleteMapper, Co
      * @return 代理活动2规则集合
      */
     fun selectCtAgentActivity2RuleList(ctAgentActivity2Rule: CtAgentActivity2Rule): List<CtAgentActivity2Rule>
+
+    fun selectCtAgentActivity2RuleListPlus(ctAgentActivity2Rule: CtAgentActivity2Rule): List<CtAgentActivity2RuleDto>
 
     /**
      * 新增代理活动2规则

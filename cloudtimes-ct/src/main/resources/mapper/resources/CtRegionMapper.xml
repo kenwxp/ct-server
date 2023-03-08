@@ -14,6 +14,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="regionShortName != null  and regionShortName != ''"> and region_short_name like concat('%', #{regionShortName}, '%')</if>
             <if test="regionCode != null  and regionCode != ''"> and region_code = #{regionCode}</if>
             <if test="regionLevel != null  and regionLevel != ''"> and region_level = #{regionLevel}</if>
+            <if test="parentRegionCode != null  and parentRegionCode != ''"> and parent_region_code = #{parentRegionCode}</if>
         </where>
     </select>
     

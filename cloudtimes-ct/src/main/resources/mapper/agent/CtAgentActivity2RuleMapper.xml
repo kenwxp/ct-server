@@ -1,36 +1,64 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.cloudtimes.agent.mapper.CtAgentActivity2RuleMapper">
     <sql id="selectCtAgentActivity2RuleVo">
-        select * from ct_agent_activity2_rule
+        select *
+        from ct_agent_activity2_rule
     </sql>
 
-    <select id="selectCtAgentActivity2RuleList" parameterType="CtAgentActivity2Rule" resultMap="CtAgentActivity2RuleResult">
+    <select id="selectCtAgentActivity2RuleList" parameterType="CtAgentActivity2Rule"
+            resultMap="CtAgentActivity2RuleResult">
         <include refid="selectCtAgentActivity2RuleVo"/>
-        <where>  
-            <if test="activityId != null  and activityId != ''"> and activity_id = #{activityId}</if>
-            <if test="title != null  and title != ''"> and title = #{title}</if>
-            <if test="content != null  and content != ''"> and content = #{content}</if>
-            <if test="activityType != null  and activityType != ''"> and activity_type = #{activityType}</if>
-            <if test="regionCode != null  and regionCode != ''"> and region_code = #{regionCode}</if>
-            <if test="storeCount != null "> and store_count = #{storeCount}</if>
-            <if test="usedStoreCount != null "> and used_store_count = #{usedStoreCount}</if>
-            <if test="taxRatio != null "> and tax_ratio = #{taxRatio}</if>
-            <if test="operator != null  and operator != ''"> and operator = #{operator}</if>
-            <if test="isEnabled != null  and isEnabled != ''"> and is_enabled = #{isEnabled}</if>
-            <if test="state != null  and state != ''"> and state = #{state}</if>
-            <if test="startTime != null "> and start_time = #{startTime}</if>
-            <if test="endTime != null "> and end_time = #{endTime}</if>
+        <where>
+            <if test="activityId != null  and activityId != ''">and activity_id = #{activityId}</if>
+            <if test="title != null  and title != ''">and title = #{title}</if>
+            <if test="content != null  and content != ''">and content = #{content}</if>
+            <if test="activityType != null  and activityType != ''">and activity_type = #{activityType}</if>
+            <if test="regionCode != null  and regionCode != ''">and region_code = #{regionCode}</if>
+            <if test="storeCount != null ">and store_count = #{storeCount}</if>
+            <if test="usedStoreCount != null ">and used_store_count = #{usedStoreCount}</if>
+            <if test="taxRatio != null ">and tax_ratio = #{taxRatio}</if>
+            <if test="operator != null  and operator != ''">and operator = #{operator}</if>
+            <if test="isEnabled != null  and isEnabled != ''">and is_enabled = #{isEnabled}</if>
+            <if test="state != null  and state != ''">and state = #{state}</if>
+            <if test="startTime != null ">and start_time = #{startTime}</if>
+            <if test="endTime != null ">and end_time = #{endTime}</if>
         </where>
     </select>
-    
+
+    <select id="selectCtAgentActivity2RuleListPlus" parameterType="CtAgentActivity2Rule"
+            resultType="CtAgentActivity2RuleDto">
+        SELECT
+        ar.*,
+        r.region_name
+        FROM
+        ct_agent_activity2_rule ar
+        LEFT JOIN ct_region r ON r.region_code = ar.region_code
+        <where>
+            <if test="activityId != null  and activityId != ''">and ar.activity_id = #{activityId}</if>
+            <if test="title != null  and title != ''">and ar.title = #{title}</if>
+            <if test="content != null  and content != ''">and ar.content = #{content}</if>
+            <if test="activityType != null  and activityType != ''">and ar.activity_type = #{activityType}</if>
+            <if test="regionCode != null  and regionCode != ''">and ar.region_code = #{regionCode}</if>
+            <if test="storeCount != null ">and ar.store_count = #{storeCount}</if>
+            <if test="usedStoreCount != null ">and ar.used_store_count = #{usedStoreCount}</if>
+            <if test="taxRatio != null ">and ar.tax_ratio = #{taxRatio}</if>
+            <if test="operator != null  and operator != ''">and ar.operator = #{operator}</if>
+            <if test="isEnabled != null  and isEnabled != ''">and ar.is_enabled = #{isEnabled}</if>
+            <if test="state != null  and state != ''">and ar.state = #{state}</if>
+            <if test="startTime != null ">and ar.start_time = #{startTime}</if>
+            <if test="endTime != null ">and ar.end_time = #{endTime}</if>
+        </where>
+    </select>
+
+
     <select id="selectCtAgentActivity2RuleById" parameterType="String" resultMap="CtAgentActivity2RuleResult">
         <include refid="selectCtAgentActivity2RuleVo"/>
         where id = #{id}
     </select>
-        
+
     <insert id="insertCtAgentActivity2Rule" parameterType="CtAgentActivity2Rule">
         insert into ct_agent_activity2_rule
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -51,7 +79,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="endTime != null">end_time,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
             <if test="activityId != null and activityId != ''">#{activityId},</if>
@@ -70,7 +98,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="endTime != null">#{endTime},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateTime != null">#{updateTime},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateCtAgentActivity2Rule" parameterType="CtAgentActivity2Rule">
@@ -97,11 +125,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteCtAgentActivity2RuleById" parameterType="String">
-        delete from ct_agent_activity2_rule where id = #{id}
+        delete
+        from ct_agent_activity2_rule
+        where id = #{id}
     </delete>
 
     <delete id="deleteCtAgentActivity2RuleByIds" parameterType="String">
-        delete from ct_agent_activity2_rule where id in 
+        delete from ct_agent_activity2_rule where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

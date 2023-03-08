@@ -32,7 +32,7 @@ class CtAgentActivity2RuleController : BaseController() {
     @GetMapping("/list")
     fun list(ctAgentActivity2Rule: CtAgentActivity2Rule): TableDataInfo {
         startPage()
-        val list = ctAgentActivity2RuleService.selectCtAgentActivity2RuleList(ctAgentActivity2Rule)
+        val list = ctAgentActivity2RuleService.selectCtAgentActivity2RuleListPlus(ctAgentActivity2Rule)
         return getDataTable(list)
     }
 

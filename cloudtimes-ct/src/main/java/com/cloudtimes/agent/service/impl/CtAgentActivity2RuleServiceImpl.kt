@@ -3,6 +3,7 @@ package com.cloudtimes.agent.service.impl
 import com.cloudtimes.agent.domain.CtAgentActivity2Rule
 import com.cloudtimes.agent.dto.request.ActivityDetailRequest
 import com.cloudtimes.agent.dto.response.AgentActivity2Detail
+import com.cloudtimes.agent.dto.response.CtAgentActivity2RuleDto
 import com.cloudtimes.agent.mapper.CtAgentActivity2RuleMapper
 import com.cloudtimes.agent.mapper.provider.CtAgentActivity2RuleProvider
 import com.cloudtimes.agent.service.ICtAgentActivity2RuleService
@@ -56,6 +57,10 @@ class CtAgentActivity2RuleServiceImpl : ICtAgentActivity2RuleService {
      */
     override fun selectCtAgentActivity2RuleList(ctAgentActivity2Rule: CtAgentActivity2Rule): List<CtAgentActivity2Rule> {
         return activity2RuleMapper.selectCtAgentActivity2RuleList(ctAgentActivity2Rule)
+    }
+
+    override fun selectCtAgentActivity2RuleListPlus(ctAgentActivity2Rule: CtAgentActivity2Rule): List<CtAgentActivity2RuleDto> {
+        return activity2RuleMapper.selectCtAgentActivity2RuleListPlus(ctAgentActivity2Rule);
     }
 
     /**
