@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cloudtimes.promotion.mapper.CtLuckyDrawRuleMapper">
+    
+    <resultMap type="CtLuckyDrawRule" id="CtLuckyDrawRuleResult">
+        <result property="id"    column="id"    />
+        <result property="activityId"    column="activity_id"    />
+        <result property="seqno"    column="seqno"    />
+        <result property="pic"    column="pic"    />
+        <result property="percentage"    column="percentage"    />
+        <result property="name"    column="name"    />
+        <result property="reward"    column="reward"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectCtLuckyDrawRuleVo">
+        select id, activity_id, seqno, pic, percentage, name, reward, create_time, update_time from ct_lucky_draw_rule
+    </sql>
+
+    <select id="selectCtLuckyDrawRuleList" parameterType="CtLuckyDrawRule" resultMap="CtLuckyDrawRuleResult">
+        <include refid="selectCtLuckyDrawRuleVo"/>
+        <where>  
+            <if test="activityId != null  and activityId != ''"> and activity_id = #{activityId}</if>
+            <if test="seqno != null "> and seqno = #{seqno}</if>
+            <if test="pic != null  and pic != ''"> and pic = #{pic}</if>
+            <if test="percentage != null "> and percentage = #{percentage}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="reward != null "> and reward = #{reward}</if>
+        </where>
+    </select>
+    
+    <select id="selectCtLuckyDrawRuleById" parameterType="String" resultMap="CtLuckyDrawRuleResult">
+        <include refid="selectCtLuckyDrawRuleVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertCtLuckyDrawRule" parameterType="CtLuckyDrawRule">
+        insert into ct_lucky_draw_rule
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="activityId != null and activityId != ''">activity_id,</if>
+            <if test="seqno != null">seqno,</if>
+            <if test="pic != null">pic,</if>
+            <if test="percentage != null">percentage,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="reward != null">reward,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="activityId != null and activityId != ''">#{activityId},</if>
+            <if test="seqno != null">#{seqno},</if>
+            <if test="pic != null">#{pic},</if>
+            <if test="percentage != null">#{percentage},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="reward != null">#{reward},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCtLuckyDrawRule" parameterType="CtLuckyDrawRule">
+        update ct_lucky_draw_rule
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="activityId != null and activityId != ''">activity_id = #{activityId},</if>
+            <if test="seqno != null">seqno = #{seqno},</if>
+            <if test="pic != null">pic = #{pic},</if>
+            <if test="percentage != null">percentage = #{percentage},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="reward != null">reward = #{reward},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCtLuckyDrawRuleById" parameterType="String">
+        delete from ct_lucky_draw_rule where id = #{id}
+    </delete>
+
+    <delete id="deleteCtLuckyDrawRuleByIds" parameterType="String">
+        delete from ct_lucky_draw_rule where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

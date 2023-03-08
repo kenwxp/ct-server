@@ -86,6 +86,24 @@ class SwaggerConfig {
             .build()
     }
 
+    @Bean
+    fun mobileGroup(): Docket {
+        return Docket(DocumentationType.OAS_30)
+            .groupName("店主APP接口")
+            .select()
+            .paths(PathSelectors.regex(".*/mobile/.*"))
+            .build()
+    }
+
+    @Bean
+    fun mappGroup(): Docket {
+        return Docket(DocumentationType.OAS_30)
+            .groupName("小程序API")
+            .select()
+            .paths(PathSelectors.regex(".*/mapp/.*"))
+            .build()
+    }
+
     /**
      * 安全模式，这里指定token通过Authorization头请求头传递
      */

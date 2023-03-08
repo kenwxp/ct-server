@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cloudtimes.promotion.mapper.CtActivityStoreRelMapper">
+    
+    <resultMap type="CtActivityStoreRel" id="CtActivityStoreRelResult">
+        <result property="activityId"    column="activity_id"    />
+        <result property="storeId"    column="store_id"    />
+        <result property="receivedCount"    column="received_count"    />
+        <result property="receivedAmount"    column="received_amount"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createDate"    column="create_date"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectCtActivityStoreRelVo">
+        select activity_id, store_id, received_count, received_amount, del_flag, create_date, create_time, update_time from ct_activity_store_rel
+    </sql>
+
+    <select id="selectCtActivityStoreRelList" parameterType="CtActivityStoreRel" resultMap="CtActivityStoreRelResult">
+        <include refid="selectCtActivityStoreRelVo"/>
+        <where>  
+            <if test="receivedCount != null "> and received_count = #{receivedCount}</if>
+            <if test="receivedAmount != null "> and received_amount = #{receivedAmount}</if>
+            <if test="createDate != null "> and create_date = #{createDate}</if>
+        </where>
+    </select>
+    
+    <select id="selectCtActivityStoreRelByActivityId" parameterType="String" resultMap="CtActivityStoreRelResult">
+        <include refid="selectCtActivityStoreRelVo"/>
+        where activity_id = #{activityId}
+    </select>
+        
+    <insert id="insertCtActivityStoreRel" parameterType="CtActivityStoreRel">
+        insert into ct_activity_store_rel
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="activityId != null">activity_id,</if>
+            <if test="storeId != null">store_id,</if>
+            <if test="receivedCount != null">received_count,</if>
+            <if test="receivedAmount != null">received_amount,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createDate != null">create_date,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="activityId != null">#{activityId},</if>
+            <if test="storeId != null">#{storeId},</if>
+            <if test="receivedCount != null">#{receivedCount},</if>
+            <if test="receivedAmount != null">#{receivedAmount},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createDate != null">#{createDate},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCtActivityStoreRel" parameterType="CtActivityStoreRel">
+        update ct_activity_store_rel
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="storeId != null">store_id = #{storeId},</if>
+            <if test="receivedCount != null">received_count = #{receivedCount},</if>
+            <if test="receivedAmount != null">received_amount = #{receivedAmount},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createDate != null">create_date = #{createDate},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where activity_id = #{activityId}
+    </update>
+
+    <delete id="deleteCtActivityStoreRelByActivityId" parameterType="String">
+        delete from ct_activity_store_rel where activity_id = #{activityId}
+    </delete>
+
+    <delete id="deleteCtActivityStoreRelByActivityIds" parameterType="String">
+        delete from ct_activity_store_rel where activity_id in 
+        <foreach item="activityId" collection="array" open="(" separator="," close=")">
+            #{activityId}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cloudtimes.account.mapper.CtUserAppRelMapper">
+    
+    <resultMap type="CtUserAppRel" id="CtUserAppRelResult">
+        <result property="userId"    column="user_id"    />
+        <result property="appType"    column="app_type"    />
+        <result property="appUserId"    column="app_user_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectCtUserAppRelVo">
+        select user_id, app_type, app_user_id, create_time, update_time from ct_user_app_rel
+    </sql>
+
+    <select id="selectCtUserAppRelList" parameterType="CtUserAppRel" resultMap="CtUserAppRelResult">
+        <include refid="selectCtUserAppRelVo"/>
+        <where>  
+            <if test="appUserId != null  and appUserId != ''"> and app_user_id = #{appUserId}</if>
+        </where>
+    </select>
+    
+    <select id="selectCtUserAppRelByUserId" parameterType="String" resultMap="CtUserAppRelResult">
+        <include refid="selectCtUserAppRelVo"/>
+        where user_id = #{userId}
+    </select>
+        
+    <insert id="insertCtUserAppRel" parameterType="CtUserAppRel">
+        insert into ct_user_app_rel
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="appType != null">app_type,</if>
+            <if test="appUserId != null and appUserId != ''">app_user_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="appType != null">#{appType},</if>
+            <if test="appUserId != null and appUserId != ''">#{appUserId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCtUserAppRel" parameterType="CtUserAppRel">
+        update ct_user_app_rel
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="appType != null">app_type = #{appType},</if>
+            <if test="appUserId != null and appUserId != ''">app_user_id = #{appUserId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where user_id = #{userId}
+    </update>
+
+    <delete id="deleteCtUserAppRelByUserId" parameterType="String">
+        delete from ct_user_app_rel where user_id = #{userId}
+    </delete>
+
+    <delete id="deleteCtUserAppRelByUserIds" parameterType="String">
+        delete from ct_user_app_rel where user_id in 
+        <foreach item="userId" collection="array" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+    </delete>
+</mapper>
