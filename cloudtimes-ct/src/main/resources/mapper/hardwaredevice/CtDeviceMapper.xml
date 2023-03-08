@@ -24,7 +24,7 @@
                create_time,
                update_time,
                del_flag,
-               is_activited,
+               is_activated,
                login_type
         from ct_device
     </sql>
@@ -88,7 +88,7 @@
             <if test="updateTime != null">update_time,</if>
             <if test="delFlag != null">del_flag,</if>
             <if test="loginType != null ">login_type,</if>
-            <if test="isActivited != null ">is_activited,</if>
+            <if test="isActivated != null ">is_activated,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             #{id},
@@ -111,7 +111,7 @@
             <if test="updateTime != null">#{updateTime},</if>
             <if test="delFlag != null">#{delFlag},</if>
             <if test="loginType != null ">#{loginType},</if>
-            <if test="isActivited != null ">#{isActivited},</if>
+            <if test="isActivated != null ">#{isActivated},</if>
         </trim>
     </insert>
 
@@ -137,7 +137,7 @@
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="delFlag != null">del_flag = #{delFlag},</if>
             <if test="loginType != null ">login_type = #{loginType},</if>
-            <if test="isActivited != null ">is_activited = #{isActivited},</if>
+            <if test="isActivated != null ">is_activated = #{isActivated},</if>
         </trim>
         where id = #{id}
     </update>

@@ -6,8 +6,6 @@ import com.cloudtimes.common.annotation.DataSource;
 import com.cloudtimes.common.enums.DataSourceType;
 import com.cloudtimes.common.exception.ServiceException;
 import com.cloudtimes.common.utils.DateUtils;
-import com.cloudtimes.common.utils.JacksonUtils;
-import com.cloudtimes.common.utils.StringUtils;
 import com.cloudtimes.enums.PayWay;
 import com.cloudtimes.enums.PayeeType;
 import com.cloudtimes.hardwaredevice.domain.ActivateDeviceReq;
@@ -17,8 +15,6 @@ import com.cloudtimes.hardwaredevice.mapper.CtDeviceMapper;
 import com.cloudtimes.hardwaredevice.mapper.CtPaymentMapper;
 import com.cloudtimes.hardwaredevice.service.ICtDeviceService;
 import com.cloudtimes.partner.pay.shouqianba.domain.ActivateResponse;
-import com.cloudtimes.partner.pay.shouqianba.domain.BuzResponse;
-import com.cloudtimes.partner.pay.shouqianba.domain.ShouqianbaConstant;
 import com.cloudtimes.partner.pay.shouqianba.service.ICtShouqianbaApiService;
 import com.cloudtimes.serving.cash.service.domain.ShouqianbaParam;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * 电子设备Service业务层处理
@@ -151,7 +146,7 @@ public class CtDeviceServiceImpl implements ICtDeviceService {
         ctPayment.setDelFlag("0");
         ctPayment.setCreateTime(DateUtils.getNowDate());
         ctPayment.setUpdateTime(DateUtils.getNowDate());
-        device.setIsActivited("1");
+        device.setIsActivated("1");
         ctDeviceMapper.updateCtDevice(device);
         return paymentMapper.insertCtPayment(ctPayment);
     }

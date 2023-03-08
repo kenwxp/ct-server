@@ -3,11 +3,8 @@ package com.cloudtimes.hardwaredevice.domain;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import io.swagger.models.auth.In;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import com.cloudtimes.common.annotation.Excel;
 import com.cloudtimes.common.core.domain.BaseEntity;
 
@@ -147,7 +144,7 @@ public class CtDevice extends BaseEntity {
     /**
      * 是否已激活
      */
-    private String isActivited;
+    private String isActivated;
 
 
 }
