@@ -44,7 +44,7 @@ public class CashWebSocketHandler extends TextWebSocketHandler {
         Object token = session.getAttributes().get(JWTManager.AUTH_USER);
         if (token != null) {
             AuthUser authUser = (AuthUser) token;
-            if (StringUtils.equals(authUser.getChannelType().getCode(), ChannelType.CASH.getCode())) {
+            if (!StringUtils.equals(authUser.getChannelType().getCode(), ChannelType.CASH.getCode())) {
                 throw new RuntimeException("非收银渠道，连接失败！");
             }
             // 用户连接成功，放入在线用户缓存
