@@ -25,6 +25,7 @@ public class CtRocketMqProducer {
      * 普通发送（这里的参数对象User可以随意定义，可以发送个对象，也可以是字符串等）
      */
     public <T> void send(String topic, T o) {
+        log.info("发送mq消息 {}", JSON.toJSONString(o));
         rocketMQTemplate.convertAndSend(topic, o);
     }
 
@@ -34,7 +35,7 @@ public class CtRocketMqProducer {
      */
     public SendResult sendMsg(String topic, String msgBody) {
         SendResult sendResult = rocketMQTemplate.syncSend(topic, MessageBuilder.withPayload(msgBody).build());
-        log.info("【sendMsg】sendResult={}", JSON.toJSONString(sendResult));
+        log.info("发送mq消息 {}", msgBody);
         return sendResult;
     }
 
@@ -61,6 +62,7 @@ public class CtRocketMqProducer {
      * 在start版本中 延时消息一共分为18个等级分别为：1s 5s 10s 30s 1m 2m 3m 4m 5m 6m 7m 8m 9m 10m 20m 30m 1h 2h
      */
     public void sendDelayMsg(String topic, String msgBody, int delayLevel) {
+        log.info("发送mq消息 {}", msgBody);
         rocketMQTemplate.syncSend(topic, MessageBuilder.withPayload(msgBody).build(), messageTimeOut, delayLevel);
     }
 

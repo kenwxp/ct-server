@@ -22,7 +22,7 @@ public class AuthConfig implements WebMvcConfigurer {
                         "/auth/user/**",
                         "/mapp/login/check",
                         "/mapp/login",
-                        "/mobile/register",
+                        "/mobile/login/register",
                         "/mobile/login",
                         "/cash/login/check",
                         "/cash/login",

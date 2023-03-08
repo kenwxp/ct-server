@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-@RocketMQMessageListener(consumerGroup = "${rocketmq.consumer.group}", topic = RocketMQConstants.WS_CASH_DEVICE, messageModel = MessageModel.CLUSTERING)
+@RocketMQMessageListener(consumerGroup = "PayOrderMqListener", topic = RocketMQConstants.WS_CASH_DEVICE, messageModel = MessageModel.CLUSTERING)
 public class CashListenerHandler implements RocketMQListener<CashMqData>, RocketMQPushConsumerLifecycleListener {
     @Autowired
     private CashWsSessionManager wsSessionManager;

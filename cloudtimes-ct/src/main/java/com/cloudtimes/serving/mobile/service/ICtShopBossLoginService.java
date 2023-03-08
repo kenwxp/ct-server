@@ -2,6 +2,7 @@ package com.cloudtimes.serving.mobile.service;
 
 import com.cloudtimes.account.domain.CtUser;
 import com.cloudtimes.serving.mobile.domain.LoginReq;
+import com.cloudtimes.serving.mobile.domain.LoginResp;
 import com.cloudtimes.serving.mobile.domain.RegisterReq;
 
 /**
@@ -27,7 +28,7 @@ public interface ICtShopBossLoginService {
      * @param loginIp  登录ip
      * @return CtUser
      */
-    public CtUser shopBossLogin(LoginReq param, String loginIp);
+    public LoginResp shopBossLogin(LoginReq param, String loginIp);
 
 
 }

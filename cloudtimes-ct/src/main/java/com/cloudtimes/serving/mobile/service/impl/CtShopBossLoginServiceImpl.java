@@ -7,6 +7,7 @@ import com.cloudtimes.common.enums.DataSourceType;
 import com.cloudtimes.common.exception.ServiceException;
 import com.cloudtimes.common.utils.SecurityUtils;
 import com.cloudtimes.serving.mobile.domain.LoginReq;
+import com.cloudtimes.serving.mobile.domain.LoginResp;
 import com.cloudtimes.serving.mobile.domain.RegisterReq;
 import com.cloudtimes.serving.mobile.service.ICtShopBossLoginService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +54,7 @@ public class CtShopBossLoginServiceImpl implements ICtShopBossLoginService {
     }
 
     @Override
-    public CtUser shopBossLogin(LoginReq param,String loginIp) {
+    public LoginResp shopBossLogin(LoginReq param, String loginIp) {
         CtUser dbUser = userMapper.selectCtUserByMobile(param.getPhone());
         if (dbUser == null) {
             throw new ServiceException("用户名或密码不正确");
@@ -69,7 +70,11 @@ public class CtShopBossLoginServiceImpl implements ICtShopBossLoginService {
         if (userMapper.updateCtUser(dbUser) < 1) {
             throw new ServiceException("更新用户失败");
         }
-        return dbUser;
+        LoginResp loginResp = new LoginResp();
+        loginResp.setId(dbUser.getId());
+        loginResp.setName(dbUser.getNickName());
+        loginResp.setPhone(dbUser.getMobile());
+        return loginResp;
     }
 
 

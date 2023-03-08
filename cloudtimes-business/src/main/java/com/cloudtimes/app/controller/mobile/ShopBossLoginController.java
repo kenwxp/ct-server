@@ -40,9 +40,8 @@ public class ShopBossLoginController {
     @ApiOperation("用户登录")
     @PostMapping("")
     public ApiResult<LoginResp> login(@RequestBody LoginReq param, HttpServletRequest request) {
-        CtUser ctUser = loginService.shopBossLogin(param, IpUtils.getIpAddr(request));
-        String token = jwtManager.createToken(new AuthUser(ctUser.getId(), ChannelType.MOBILE));
-        LoginResp loginResp = new LoginResp();
+        LoginResp loginResp = loginService.shopBossLogin(param, IpUtils.getIpAddr(request));
+        String token = jwtManager.createToken(new AuthUser(loginResp.getId(), ChannelType.MOBILE));
         loginResp.setToken(token);
         return new ApiResult().success(loginResp);
     }

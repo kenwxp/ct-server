@@ -38,6 +38,7 @@ import com.cloudtimes.supervise.mapper.CtOrderDetailMapper;
 import com.cloudtimes.supervise.mapper.CtOrderMapper;
 import com.cloudtimes.supervise.mapper.CtShoppingMapper;
 import com.cloudtimes.supervise.mapper.CtTaskMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,6 +56,7 @@ import java.util.List;
  */
 @DataSource(DataSourceType.CT)
 @Service
+@Slf4j
 public class CtShopBossBusinessServiceImpl implements ICtShopBossBusinessService {
 
     @Autowired
@@ -301,6 +303,7 @@ public class CtShopBossBusinessServiceImpl implements ICtShopBossBusinessService
         mqData.setStoreId(param.getShopId());
         mqData.setUserId(String.valueOf(userId));
         mqData.setChannelType(ChannelType.MOBILE);
+
         producer.send(RocketMQConstants.CT_OPEN_DOOR, mqData);
     }
 
