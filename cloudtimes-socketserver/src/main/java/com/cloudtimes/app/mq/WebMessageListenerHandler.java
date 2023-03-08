@@ -5,9 +5,11 @@ import com.cloudtimes.app.manager.SuperviseWsSessionManager;
 import com.cloudtimes.common.constant.RocketMQConstants;
 import com.cloudtimes.common.mq.SendWebMsgMqData;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.spring.annotation.MessageModel;
 import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
 import org.apache.rocketmq.spring.core.RocketMQListener;
+import org.apache.rocketmq.spring.core.RocketMQPushConsumerLifecycleListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +19,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RocketMQMessageListener(consumerGroup = "${rocketmq.consumer.group}", topic = RocketMQConstants.WS_WEB_MESSAGE, messageModel = MessageModel.CLUSTERING)
-public class WebMessageListenerHandler implements RocketMQListener<SendWebMsgMqData> {
+public class WebMessageListenerHandler implements RocketMQListener<SendWebMsgMqData>, RocketMQPushConsumerLifecycleListener {
     @Autowired
     private SuperviseWsSessionManager wsSessionManager;
 
@@ -29,5 +31,10 @@ public class WebMessageListenerHandler implements RocketMQListener<SendWebMsgMqD
         } catch (Exception ex) {
             log.info("发送mq消息异常：" + JSONObject.toJSONString(data));
         }
+    }
+
+    @Override
+    public void prepareStart(DefaultMQPushConsumer consumer) {
+        consumer.setInstanceName(this.getClass().getName());
     }
 }

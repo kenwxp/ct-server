@@ -1,4 +1,4 @@
-package com.cloudtimes.app.controller.agent
+package com.cloudtimes.app.controller.mp
 
 import com.cloudtimes.agent.domain.CtAgentActivity
 import com.cloudtimes.agent.dto.request.ActivityDetailRequest

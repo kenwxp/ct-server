@@ -1,5 +1,10 @@
-package com.cloudtimes.partner.wiegand;
+package com.cloudtimes.partner.wiegand.domain;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
 public class WiegandReturning {
     private boolean success;
     private int code;
@@ -22,27 +27,4 @@ public class WiegandReturning {
         return new WiegandReturning(1, msg);
     }
 
-    public boolean isSuccess() {
-        return success;
-    }
-
-    public void setSuccess(boolean success) {
-        this.success = success;
-    }
-
-    public int getCode() {
-        return code;
-    }
-
-    public void setCode(int code) {
-        this.code = code;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
 }

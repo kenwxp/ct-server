@@ -1,4 +1,4 @@
-package com.cloudtimes.app.controller.agent
+package com.cloudtimes.app.controller.mp
 
 import com.cloudtimes.account.domain.CtUserBankCard
 import com.cloudtimes.account.dto.request.QueryByUserIdRequest
@@ -14,7 +14,6 @@ import com.cloudtimes.common.enums.UserType
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 
