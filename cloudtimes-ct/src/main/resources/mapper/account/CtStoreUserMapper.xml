@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cloudtimes.account.mapper.CtStoreUserMapper">
+    
+    <resultMap type="CtStoreUser" id="CtStoreUserResult">
+        <result property="storeId"    column="store_id"    />
+        <result property="storeName"    column="store_name"    />
+        <result property="userId"    column="user_id"    />
+        <result property="nickName"    column="nick_name"    />
+        <result property="vipType"    column="vip_type"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createDate"    column="create_date"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectCtStoreUserVo">
+        select store_id, store_name, user_id, nick_name, vip_type, del_flag, create_date, create_time, update_time from ct_store_user
+    </sql>
+
+    <select id="selectCtStoreUserList" parameterType="CtStoreUser" resultMap="CtStoreUserResult">
+        <include refid="selectCtStoreUserVo"/>
+        <where>  
+            <if test="storeName != null  and storeName != ''"> and store_name like concat('%', #{storeName}, '%')</if>
+            <if test="nickName != null  and nickName != ''"> and nick_name like concat('%', #{nickName}, '%')</if>
+            <if test="vipType != null  and vipType != ''"> and vip_type = #{vipType}</if>
+            <if test="createDate != null "> and create_date = #{createDate}</if>
+        </where>
+    </select>
+    
+    <select id="selectCtStoreUserByStoreId" parameterType="String" resultMap="CtStoreUserResult">
+        <include refid="selectCtStoreUserVo"/>
+        where store_id = #{storeId}
+    </select>
+        
+    <insert id="insertCtStoreUser" parameterType="CtStoreUser">
+        insert into ct_store_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="storeId != null">store_id,</if>
+            <if test="storeName != null">store_name,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="nickName != null">nick_name,</if>
+            <if test="vipType != null and vipType != ''">vip_type,</if>
+            <if test="delFlag != null and delFlag != ''">del_flag,</if>
+            <if test="createDate != null">create_date,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="storeId != null">#{storeId},</if>
+            <if test="storeName != null">#{storeName},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="nickName != null">#{nickName},</if>
+            <if test="vipType != null and vipType != ''">#{vipType},</if>
+            <if test="delFlag != null and delFlag != ''">#{delFlag},</if>
+            <if test="createDate != null">#{createDate},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCtStoreUser" parameterType="CtStoreUser">
+        update ct_store_user
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="storeName != null">store_name = #{storeName},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="nickName != null">nick_name = #{nickName},</if>
+            <if test="vipType != null and vipType != ''">vip_type = #{vipType},</if>
+            <if test="delFlag != null and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="createDate != null">create_date = #{createDate},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where store_id = #{storeId}
+    </update>
+
+    <delete id="deleteCtStoreUserByStoreId" parameterType="String">
+        delete from ct_store_user where store_id = #{storeId}
+    </delete>
+
+    <delete id="deleteCtStoreUserByStoreIds" parameterType="String">
+        delete from ct_store_user where store_id in 
+        <foreach item="storeId" collection="array" open="(" separator="," close=")">
+            #{storeId}
+        </foreach>
+    </delete>
+</mapper>

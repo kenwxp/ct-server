@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cloudtimes.account.mapper.CtStoreDiscountMapper">
+    
+    <resultMap type="CtStoreDiscount" id="CtStoreDiscountResult">
+        <result property="storeId"    column="store_id"    />
+        <result property="vipType"    column="vip_type"    />
+        <result property="discountRatio"    column="discount_ratio"    />
+        <result property="isEnable"    column="is_enable"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectCtStoreDiscountVo">
+        select store_id, vip_type, discount_ratio, is_enable, create_time, update_time from ct_store_discount
+    </sql>
+
+    <select id="selectCtStoreDiscountList" parameterType="CtStoreDiscount" resultMap="CtStoreDiscountResult">
+        <include refid="selectCtStoreDiscountVo"/>
+        <where>  
+            <if test="discountRatio != null "> and discount_ratio = #{discountRatio}</if>
+            <if test="isEnable != null  and isEnable != ''"> and is_enable = #{isEnable}</if>
+        </where>
+    </select>
+    
+    <select id="selectCtStoreDiscountByStoreId" parameterType="String" resultMap="CtStoreDiscountResult">
+        <include refid="selectCtStoreDiscountVo"/>
+        where store_id = #{storeId}
+    </select>
+        
+    <insert id="insertCtStoreDiscount" parameterType="CtStoreDiscount">
+        insert into ct_store_discount
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="storeId != null">store_id,</if>
+            <if test="vipType != null">vip_type,</if>
+            <if test="discountRatio != null">discount_ratio,</if>
+            <if test="isEnable != null and isEnable != ''">is_enable,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="storeId != null">#{storeId},</if>
+            <if test="vipType != null">#{vipType},</if>
+            <if test="discountRatio != null">#{discountRatio},</if>
+            <if test="isEnable != null and isEnable != ''">#{isEnable},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCtStoreDiscount" parameterType="CtStoreDiscount">
+        update ct_store_discount
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="vipType != null">vip_type = #{vipType},</if>
+            <if test="discountRatio != null">discount_ratio = #{discountRatio},</if>
+            <if test="isEnable != null and isEnable != ''">is_enable = #{isEnable},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where store_id = #{storeId}
+    </update>
+
+    <delete id="deleteCtStoreDiscountByStoreId" parameterType="String">
+        delete from ct_store_discount where store_id = #{storeId}
+    </delete>
+
+    <delete id="deleteCtStoreDiscountByStoreIds" parameterType="String">
+        delete from ct_store_discount where store_id in 
+        <foreach item="storeId" collection="array" open="(" separator="," close=")">
+            #{storeId}
+        </foreach>
+    </delete>
+</mapper>
