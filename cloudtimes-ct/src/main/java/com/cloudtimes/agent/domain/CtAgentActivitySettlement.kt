@@ -50,13 +50,13 @@ class CtAgentActivitySettlement : BaseEntity() {
     var beforeTaxAmount: BigDecimal? = null
 
     @ApiModelProperty(value = "平台审核时间")
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "平台审核时间", width = 30.0, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "平台审核时间", width = 30.0, dateFormat = "yyyy-MM-dd HH:mm:ss")
     var platformApprovedTime: Date? = null
 
     @ApiModelProperty(value = "代理审核时间")
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "代理审核时间", width = 30.0, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "代理审核时间", width = 30.0, dateFormat = "yyyy-MM-dd HH:mm:ss")
     var agentApprovedTime: Date? = null
 
     @ApiModelProperty(value = "是否已达成")
@@ -79,8 +79,8 @@ class CtAgentActivitySettlement : BaseEntity() {
     var operator: String? = null
 
     @ApiModelProperty(value = "达成日期")
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "达成日期", width = 30.0, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "达成日期", width = 30.0, dateFormat = "yyyy-MM-dd HH:mm:ss")
     var fulfilledDate: Date? = null
 
     @ApiModelProperty(value = "达成店铺列表")
