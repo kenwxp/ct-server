@@ -220,7 +220,7 @@
                     </excludes>
                     <archive>
                         <manifest>
-                            <mainClass>com.cloudtimes.DetectionServerApplication</mainClass>
+                            <mainClass>com.cloudtimes.WebSocketServerApplication</mainClass>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
                         </manifest>

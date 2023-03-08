@@ -23,8 +23,7 @@ function check_service() {
 }
 
 # declare an array variable
-# declare -a services=("admin" "business" "socketserver" "detectionserver")
-declare -a services=("admin" "business")
+declare -a services=("admin" "business" "socketserver" "detectionserver")
 
 ## now loop through the above array
 for i in "${services[@]}"
