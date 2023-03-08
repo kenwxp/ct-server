@@ -2,6 +2,8 @@ package com.cloudtimes.cache;
 
 import cn.hutool.core.date.DateUtil;
 import com.cloudtimes.common.core.redis.RedisCache;
+import com.cloudtimes.common.enums.DeviceState;
+import com.cloudtimes.common.exception.ServiceException;
 import com.cloudtimes.common.utils.DateUtils;
 import com.cloudtimes.common.utils.StringUtils;
 import com.cloudtimes.enums.DeviceType;
@@ -43,16 +45,26 @@ public class CtStoreVideoCache {
     public void initVideo() {
         log.info("=========》初始化加载直播视频网址《=========");
         CtDevice query = new CtDevice();
-        query.setDeviceType(DeviceType.CAMERA.getCode());
         query.setDelFlag("0");
+        query.setDeviceType(DeviceType.CAMERA.getCode());
         List<CtDevice> deviceList = deviceMapper.selectCtDeviceList(query);
+        query.setDeviceType(DeviceType.NVR_CAMERA.getCode());
+        List<CtDevice> nvrCameraList = deviceMapper.selectCtDeviceList(query);
+        deviceList.addAll(nvrCameraList);
         for (CtDevice device : deviceList) {
-            if (!StringUtils.isEmpty(device.getStoreId())) {
+            if (!StringUtils.isEmpty(device.getStoreId()) && !StringUtils.equals(device.getState(), DeviceState.forbidden.getCode())) {
                 CacheVideoData cacheVideoData = new CacheVideoData();
                 cacheVideoData.setStoreId(device.getStoreId());
                 cacheVideoData.setDeviceId(device.getId());
                 cacheVideoData.setDeviceSerial(device.getDeviceSerial());
-                VideoData liveAddress = hikApiService.getLiveAddress(device.getDeviceSerial(), "1", "2", String.valueOf(videoTimeoutSec));
+                cacheVideoData.setDeviceType(device.getDeviceType());
+                VideoData liveAddress = null;
+                if (StringUtils.equals(device.getDeviceType(), DeviceType.CAMERA.getCode())) {
+                    liveAddress = hikApiService.getLiveAddress(device.getDeviceSerial(), "1", "2", String.valueOf(videoTimeoutSec));
+                } else if (StringUtils.equals(device.getDeviceType(), DeviceType.NVR_CAMERA.getCode())) {
+                    // nvr摄像头需要带通道号
+                    liveAddress = hikApiService.getLiveAddress(device.getDeviceSerial(), device.getDeviceChannel(), "1", "2", String.valueOf(videoTimeoutSec));
+                }
                 if (liveAddress != null) {
                     cacheVideoData.setUrl(liveAddress.getUrl());
                     cacheVideoData.setExpireTime(DateUtil.parseDateTime(liveAddress.getExpireTime()));
@@ -61,6 +73,7 @@ public class CtStoreVideoCache {
                 setCacheVideo(cacheVideoData);
             }
         }
+
     }
 
     public CacheVideoData getCacheVideo(String storeId, String deviceId) {
@@ -128,7 +141,12 @@ public class CtStoreVideoCache {
         if (dbDevice == null) {
             return null;
         }
-        VideoData liveAddress = hikApiService.getLiveAddress(dbDevice.getDeviceSerial(), "1", "2", String.valueOf(videoTimeoutSec));
+        VideoData liveAddress = null;
+        if (StringUtils.equals(dbDevice.getDeviceType(), DeviceType.CAMERA.getCode())) {
+            liveAddress = hikApiService.getLiveAddress(dbDevice.getDeviceSerial(), "1", "2", String.valueOf(videoTimeoutSec));
+        } else if (StringUtils.equals(dbDevice.getDeviceType(), DeviceType.NVR_CAMERA.getCode())) {
+            liveAddress = hikApiService.getLiveAddress(dbDevice.getDeviceSerial(), dbDevice.getDeviceChannel(), "1", "2", String.valueOf(videoTimeoutSec));
+        }
         CacheVideoData newDevice = new CacheVideoData();
         if (liveAddress != null) {
             newDevice.setStoreId(dbDevice.getStoreId());
