@@ -12,9 +12,11 @@ import com.cloudtimes.partner.hik.domain.NvrChannelStatus;
 import com.cloudtimes.partner.hik.domain.NvrDeviceInfoData;
 import com.cloudtimes.partner.hik.service.ICtHikApiService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.spring.annotation.MessageModel;
 import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
 import org.apache.rocketmq.spring.core.RocketMQListener;
+import org.apache.rocketmq.spring.core.RocketMQPushConsumerLifecycleListener;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,7 +35,7 @@ import java.util.concurrent.ConcurrentMap;
 @Slf4j
 @Component
 @RocketMQMessageListener(consumerGroup = "${rocketmq.consumer.group}", topic = RocketMQConstants.CT_MONITOR_CAMARE_DEVICE, messageModel = MessageModel.BROADCASTING)
-public class CtCameraDeviceMonitorManager implements RocketMQListener<CtDevice> {
+public class CtCameraDeviceMonitorManager implements RocketMQListener<CtDevice>, RocketMQPushConsumerLifecycleListener {
 
     @Autowired
     private ICtDeviceService deviceService;
@@ -154,5 +156,10 @@ public class CtCameraDeviceMonitorManager implements RocketMQListener<CtDevice> 
         log.info("正在检测摄像机状态:[DeviceSerial:" + ctDevice.getDeviceSerial() + " name:" + ctDevice.getName() + "] ");
         this.checkCamera(ctDevice);
         this.loadData();
+    }
+
+    @Override
+    public void prepareStart(DefaultMQPushConsumer consumer) {
+        consumer.setInstanceName(this.getClass().getName());
     }
 }

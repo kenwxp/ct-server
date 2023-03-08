@@ -5,16 +5,18 @@ import com.cloudtimes.common.mq.OpenDoorMqData;
 import com.cloudtimes.common.constant.RocketMQConstants;
 import com.cloudtimes.mq.service.CtOpenDoorService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.spring.annotation.MessageModel;
 import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
 import org.apache.rocketmq.spring.core.RocketMQListener;
+import org.apache.rocketmq.spring.core.RocketMQPushConsumerLifecycleListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
 @RocketMQMessageListener(consumerGroup = "${rocketmq.consumer.group}", topic = RocketMQConstants.CT_OPEN_DOOR, messageModel = MessageModel.CLUSTERING)
-public class OpenDoorListener implements RocketMQListener<OpenDoorMqData> {
+public class OpenDoorListener implements RocketMQListener<OpenDoorMqData>, RocketMQPushConsumerLifecycleListener {
     @Autowired
     private CtOpenDoorService openDoorService;
 
@@ -32,5 +34,10 @@ public class OpenDoorListener implements RocketMQListener<OpenDoorMqData> {
         } else if (data.getOption() == OpenDoorOption.UNLOCK_DOOR) {
             openDoorService.unlock(data.getStoreId(), data.getUserId(), data.getChannelType());
         }
+    }
+
+    @Override
+    public void prepareStart(DefaultMQPushConsumer defaultMQPushConsumer) {
+        defaultMQPushConsumer.setInstanceName(this.getClass().getName());
     }
 }

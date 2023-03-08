@@ -5,9 +5,11 @@ import com.cloudtimes.app.manager.CashWsSessionManager;
 import com.cloudtimes.common.constant.RocketMQConstants;
 import com.cloudtimes.common.mq.CashMqData;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.spring.annotation.MessageModel;
 import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
 import org.apache.rocketmq.spring.core.RocketMQListener;
+import org.apache.rocketmq.spring.core.RocketMQPushConsumerLifecycleListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +19,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RocketMQMessageListener(consumerGroup = "${rocketmq.consumer.group}", topic = RocketMQConstants.WS_CASH_DEVICE, messageModel = MessageModel.CLUSTERING)
-public class CashListenerHandler implements RocketMQListener<CashMqData> {
+public class CashListenerHandler implements RocketMQListener<CashMqData>, RocketMQPushConsumerLifecycleListener {
     @Autowired
     private CashWsSessionManager wsSessionManager;
 
@@ -30,5 +32,10 @@ public class CashListenerHandler implements RocketMQListener<CashMqData> {
         } catch (Exception ex) {
             log.error("执行指令[" + option + "]异常：" + ex.getMessage());
         }
+    }
+
+    @Override
+    public void prepareStart(DefaultMQPushConsumer consumer) {
+        consumer.setInstanceName(this.getClass().getName());
     }
 }
