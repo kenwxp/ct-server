@@ -69,4 +69,7 @@ public interface CtPaymentMapper {
      * @return 结果
      */
     public int deleteCtPaymentByIds(String[] ids);
+
+
+    public int deleteCtPaymentByUniqueKey(CtPayment ctPayment);
 }

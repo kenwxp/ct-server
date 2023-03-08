@@ -86,4 +86,12 @@
             #{id}
         </foreach>
     </delete>
+
+    <delete id="deleteCtPaymentByUniqueKey" parameterType="CtPayment">
+        delete from ct_payment
+        where payee_id = #{payeeId}
+        and payee_type = #{payeeType}
+        and pay_way = #{payWay}
+    </delete>
+
 </mapper>

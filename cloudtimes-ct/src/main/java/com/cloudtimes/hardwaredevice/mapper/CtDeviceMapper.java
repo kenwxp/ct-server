@@ -59,7 +59,7 @@ public interface CtDeviceMapper {
      * @param id 电子设备主键
      * @return 结果
      */
-    public int deleteCtDeviceById(Long id);
+    public int deleteCtDeviceById(String id);
 
     /**
      * 批量删除电子设备

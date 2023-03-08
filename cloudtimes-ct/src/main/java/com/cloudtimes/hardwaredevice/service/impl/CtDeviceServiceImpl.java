@@ -6,6 +6,7 @@ import com.cloudtimes.common.annotation.DataSource;
 import com.cloudtimes.common.enums.DataSourceType;
 import com.cloudtimes.common.exception.ServiceException;
 import com.cloudtimes.common.utils.DateUtils;
+import com.cloudtimes.enums.DeviceType;
 import com.cloudtimes.enums.PayWay;
 import com.cloudtimes.enums.PayeeType;
 import com.cloudtimes.hardwaredevice.domain.ActivateDeviceReq;
@@ -18,8 +19,10 @@ import com.cloudtimes.partner.pay.shouqianba.domain.ActivateResponse;
 import com.cloudtimes.partner.pay.shouqianba.service.ICtShouqianbaApiService;
 import com.cloudtimes.serving.cash.service.domain.ShouqianbaParam;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -103,8 +106,18 @@ public class CtDeviceServiceImpl implements ICtDeviceService {
      * @param id 电子设备主键
      * @return 结果
      */
+    @Transactional
     @Override
-    public int deleteCtDeviceById(Long id) {
+    public int deleteCtDeviceById(String id) {
+        // 添加删除支付渠道表逻辑
+        CtDevice device = ctDeviceMapper.selectCtDeviceById(id);
+        if (StringUtils.equals(device.getDeviceType(), DeviceType.CASH.getCode())) {
+            CtPayment ctPayment = new CtPayment();
+            ctPayment.setPayeeId(id);
+            ctPayment.setPayeeType(PayeeType.CASH.getCode());
+            ctPayment.setPayWay(PayWay.SHOU_QIAN_BA.getCode());
+            paymentMapper.deleteCtPaymentByUniqueKey(ctPayment);
+        }
         return ctDeviceMapper.deleteCtDeviceById(id);
     }
 
