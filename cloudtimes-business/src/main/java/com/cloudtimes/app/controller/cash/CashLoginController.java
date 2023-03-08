@@ -1,20 +1,16 @@
 package com.cloudtimes.app.controller.cash;
 
 import com.cloudtimes.app.constant.PrefixPathConstants;
-import com.cloudtimes.app.controller.cash.model.CashLoginCheckReq;
-import com.cloudtimes.app.controller.cash.model.CashLoginCheckResp;
-import com.cloudtimes.app.controller.cash.model.CashLoginReq;
-import com.cloudtimes.app.controller.cash.model.CashLoginResp;
 import com.cloudtimes.common.core.domain.ApiResult;
 import com.cloudtimes.common.core.domain.entity.AuthUser;
 import com.cloudtimes.common.enums.ChannelType;
 import com.cloudtimes.common.utils.JWTManager;
 import com.cloudtimes.common.utils.StringUtils;
-import com.cloudtimes.hardwaredevice.domain.CtDevice;
-import com.cloudtimes.hardwaredevice.domain.CtStore;
 import com.cloudtimes.hardwaredevice.service.ICtStoreService;
-import com.cloudtimes.serving.cash.service.ICtCashBusinessService;
 import com.cloudtimes.serving.cash.service.ICtCashLoginService;
+import com.cloudtimes.serving.cash.service.domain.CashLoginCheckResp;
+import com.cloudtimes.serving.cash.service.domain.CashLoginReq;
+import com.cloudtimes.serving.cash.service.domain.CashLoginResp;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +29,7 @@ public class CashLoginController {
     private JWTManager jwtManager;
     @Autowired
     private ICtStoreService storeService;
-    @Autowired
-    private ICtCashBusinessService cashBusinessService;
+
 
     /**
      * 收银机登录校验接口
@@ -44,13 +39,11 @@ public class CashLoginController {
      */
     @ApiOperation("收银机登录校验接口")
     @PostMapping("/check")
-    public ApiResult<CashLoginCheckResp> loginCheck(@RequestBody CashLoginCheckReq param) {
+    public ApiResult<CashLoginCheckResp> loginCheck(@RequestBody CashLoginReq param) {
         if (StringUtils.isEmpty(param.getDeviceSerial())) {
             return new ApiResult().error("设备序列号不能为空");
         }
-        boolean isNew = loginService.checkCashNew(param.getDeviceSerial());
-        CashLoginCheckResp loginCheckResp = new CashLoginCheckResp();
-        loginCheckResp.setIsNew(isNew ? "1" : "0");
+        CashLoginCheckResp loginCheckResp = loginService.checkCashNew(param);
         return new ApiResult().success(loginCheckResp);
     }
 
@@ -67,21 +60,11 @@ public class CashLoginController {
             return new ApiResult().error("设备序列号不能为空");
         }
         // 收银机登录服务
-        CtDevice deviceInfo = loginService.cashLogin(param.getDeviceSerial(), param.getDeviceName(), param.getShopNo());
-        CashLoginResp loginResp = new CashLoginResp();
+        CashLoginResp loginResp = loginService.cashLogin(param);
         // 封装返回参数
         //获取token,时效为永久
-        String token = jwtManager.createToken(new AuthUser(deviceInfo.getId(), ChannelType.CASH), 0);
+        String token = jwtManager.createToken(new AuthUser(loginResp.getDeviceId(), ChannelType.CASH), 0);
         loginResp.setAccessToken(token);
-        //门店信息
-        CtStore ctStore = storeService.selectCtStoreById(deviceInfo.getStoreId());
-        loginResp.setIsSupervise(ctStore.getIsSupervise());
-        loginResp.setShopNo(ctStore.getStoreNo());
-        loginResp.setShopName(ctStore.getName());
-        loginResp.setContactName(ctStore.getContactName());
-        loginResp.setContactPhone(ctStore.getContactPhone());
-        String qrCodeUrl = cashBusinessService.genDynamicQrCodeUrl(deviceInfo.getId(), ctStore.getStoreNo());
-        loginResp.setDynamicQrCode(qrCodeUrl);
         return new ApiResult().success(loginResp);
     }
 }

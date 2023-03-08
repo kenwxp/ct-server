@@ -137,7 +137,7 @@ public class CtDevice extends BaseEntity {
     private String delFlag;
 
     /**
-     * 登录类型
+     * 登录类型 0-全部支持 1-仅支持扫码 2-仅支持刷脸
      */
     private String loginType;
 

@@ -91,5 +91,4 @@ public interface ICtCashBusinessService {
 
     public String genDynamicQrCodeUrl(String deviceId, String storeNo);
 
-
 }
