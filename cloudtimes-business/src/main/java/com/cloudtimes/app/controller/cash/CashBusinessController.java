@@ -1,7 +1,6 @@
 package com.cloudtimes.app.controller.cash;
 
 import com.cloudtimes.app.constant.PrefixPathConstants;
-import com.cloudtimes.app.controller.cash.model.*;
 import com.cloudtimes.common.constant.HttpStatus;
 import com.cloudtimes.common.core.domain.ApiResult;
 import com.cloudtimes.common.core.domain.entity.AuthUser;
@@ -9,10 +8,9 @@ import com.cloudtimes.common.utils.AuthUtils;
 import com.cloudtimes.common.utils.JWTManager;
 import com.cloudtimes.common.utils.StringUtils;
 import com.cloudtimes.partner.pay.shouqianba.domain.AuthInfoData;
-import com.cloudtimes.product.domain.CtShopProduct;
 import com.cloudtimes.serving.cash.service.ICtCashBusinessService;
 import com.cloudtimes.serving.cash.service.ICtCashLoginService;
-import com.cloudtimes.serving.cash.service.domain.VoiceTokenData;
+import com.cloudtimes.serving.cash.service.domain.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Api(tags = "收银机业务相关接口")
 @RestController
@@ -40,29 +36,15 @@ public class CashBusinessController {
     @PostMapping(value = "/face/authinfo")
     public ApiResult<AuthInfoData> getFaceAuthInfo(@RequestBody GetFaceAuthInfoReq info) {
         AuthUser authUser = AuthUtils.getObject();
-
-        if (StringUtils.isEmpty(info.getRawdata())) {
-            return new ApiResult().error("rawdata不能为空");
-        }
-        if (StringUtils.isEmpty(info.getAuthType())) {
-            return new ApiResult().error("凭证类型未设置");
-        }
         AuthInfoData faceAuthInfo = cashBusinessService.getFaceAuthInfo(authUser.getId(), info.getRawdata(), info.getAuthType());
-        if (faceAuthInfo == null) {
-            return new ApiResult().error();
-        } else {
-            return new ApiResult().success(faceAuthInfo);
-        }
+        return new ApiResult().success(faceAuthInfo);
     }
 
     @ApiOperation("根据刷脸token获取订单号")
     @PostMapping(value = "/face/order")
     public ApiResult<GetOrderIdResp> getOrderId(@RequestBody GetOrderIdReq info) {
         AuthUser authUser = AuthUtils.getObject();
-        Map<String, String> orderInfo = cashBusinessService.getOrderId(authUser.getId(), info.getToken());
-        GetOrderIdResp resp = new GetOrderIdResp();
-        resp.setOrderId(orderInfo.get("orderId"));
-        resp.setCustomerPhone(orderInfo.get("phone"));
+        GetOrderIdResp resp = cashBusinessService.getOrderId(authUser.getId(), info);
         return new ApiResult().success(resp);
     }
 
@@ -70,72 +52,39 @@ public class CashBusinessController {
     @PostMapping(value = "/product/fetch")
     public ApiResult<List<GetProductListResp>> getProductList() {
         AuthUser authUser = AuthUtils.getObject();
-        List<CtShopProduct> productList = cashBusinessService.getProductList(authUser.getId());
-        List<GetProductListResp> resp = new ArrayList<>();
-        for (CtShopProduct dbProduct :
-                productList) {
-            GetProductListResp getProductListResp = new GetProductListResp();
-            getProductListResp.setProductUid(dbProduct.getId());
-            getProductListResp.setProductName(dbProduct.getProductName());
-            getProductListResp.setCategoryCode(dbProduct.getCategoryCode());
-            getProductListResp.setBarcode(dbProduct.getBarcode());
-            getProductListResp.setImageUrl(dbProduct.getPictureUrl());
-            getProductListResp.setBuyPrice(dbProduct.getPurchasePrice().intValue());
-            getProductListResp.setSellPrice(dbProduct.getRetailPrice().intValue());
-            getProductListResp.setCustomerPrice(dbProduct.getVipPrice().intValue());
-            int isCustomerDiscount = 0;
-            if (StringUtils.equals(dbProduct.getIsEnableVipPrice().toUpperCase(), "Y")) {
-                isCustomerDiscount = 1;
-            }
-            getProductListResp.setIsCustomerDiscount(isCustomerDiscount);
-            resp.add(getProductListResp);
-        }
-        return new ApiResult().success(resp);
+        List<GetProductListResp> productList = cashBusinessService.getProductList(authUser.getId());
+        return new ApiResult().success(productList);
     }
 
     @ApiOperation("获取语音token")
     @PostMapping(value = "/voice/token")
     public ApiResult<GetVoiceTokenResp> getVoiceToken() {
         AuthUser authUser = AuthUtils.getObject();
-        VoiceTokenData voiceToken = cashBusinessService.getVoiceToken(authUser.getId());
-        GetVoiceTokenResp resp = new GetVoiceTokenResp();
-        resp.setAppId(voiceToken.getAppId());
-        resp.setVoiceToken(voiceToken.getVoiceToken());
-        resp.setChannelName(voiceToken.getChannelName());
-        resp.setUid(voiceToken.getUid());
+        GetVoiceTokenResp resp = cashBusinessService.getVoiceToken(authUser.getId());
         return new ApiResult().success(resp);
     }
 
     @ApiOperation("订单加商品")
     @PostMapping(value = "/order/item/add")
-    public ApiResult<OrderItemResp> addOrderItem(@RequestBody OrderItemReq info) {
+    public ApiResult<OrderItemResp> addOrderItem(@RequestBody OrderItemAddReq info) {
         AuthUser authUser = AuthUtils.getObject();
-        String newOrderId = cashBusinessService.addOrderItem(authUser.getId(),
-                info.getOrderId(),
-                info.getIsSupervise(),
-                info.getGoodId(),
-                info.getGoodName(),
-                info.getCategoryId(),
-                info.getCategoryName(),
-                info.getNum(),
-                info.getBuyPrice(),
-                info.getSellPrice());
-        return new ApiResult().success(new OrderItemResp(newOrderId));
+        OrderItemResp orderItemResp = cashBusinessService.addOrderItem(authUser.getId(), info);
+        return new ApiResult().success(orderItemResp);
     }
 
     @ApiOperation("订单减商品")
     @PostMapping(value = "/order/item/delete")
-    public ApiResult<OrderItemResp> deleteOrderItem(@RequestBody OrderItemReq info) {
+    public ApiResult<OrderItemResp> deleteOrderItem(@RequestBody OrderItemDeleteReq info) {
         AuthUser authUser = AuthUtils.getObject();
-        cashBusinessService.deleteOrderItem(authUser.getId(), info.getOrderId(), info.getGoodId(), info.getNum());
+        cashBusinessService.deleteOrderItem(authUser.getId(), info);
         return new ApiResult().success(new OrderItemResp(info.getOrderId()));
     }
 
     @ApiOperation("取消订单")
     @PostMapping(value = "/order/cancel")
-    public ApiResult<OrderItemResp> cancelOrder(@RequestBody OrderItemReq info) {
+    public ApiResult<OrderItemResp> cancelOrder(@RequestBody OrderItemCancelReq info) {
         AuthUser authUser = AuthUtils.getObject();
-        cashBusinessService.cancelOrder(authUser.getId(), info.getOrderId());
+        cashBusinessService.cancelOrder(authUser.getId(), info);
         return new ApiResult().success(new OrderItemResp(info.getOrderId()));
     }
 
@@ -143,7 +92,7 @@ public class CashBusinessController {
     @PostMapping(value = "/order/pay")
     public ApiResult payOrder(@RequestBody OrderPayReq info) {
         AuthUser authUser = AuthUtils.getObject();
-        String errorMsg = cashBusinessService.payOrder(authUser.getId(), info.getOrderId(), info.getPayType(), info.getPayCode(), info.getTotalAmount(), info.getTotalNum());
+        String errorMsg = cashBusinessService.payOrder(authUser.getId(), info);
         if (StringUtils.isEmpty(errorMsg)) {
             return new ApiResult().success();
         } else {
@@ -153,7 +102,7 @@ public class CashBusinessController {
 
     @ApiOperation("查询订单状态")
     @PostMapping(value = "/order/status")
-    public ApiResult<OrderPayStatusResp> payOrderStatus(@RequestBody OrderPayReq info) {
+    public ApiResult<OrderPayStatusResp> payOrderStatus(@RequestBody OrderPayStatusReq info) {
         AuthUser authUser = AuthUtils.getObject();
         int retCode = cashBusinessService.payOrderStatus(authUser.getId(), info.getOrderId());
         if (retCode == 0) {

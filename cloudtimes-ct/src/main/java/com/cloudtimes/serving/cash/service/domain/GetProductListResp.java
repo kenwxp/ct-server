@@ -1,4 +1,4 @@
-package com.cloudtimes.app.controller.cash.model;
+package com.cloudtimes.serving.cash.service.domain;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

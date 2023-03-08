@@ -1,11 +1,9 @@
 package com.cloudtimes.serving.cash.service;
 
 import com.cloudtimes.partner.pay.shouqianba.domain.AuthInfoData;
-import com.cloudtimes.product.domain.CtShopProduct;
-import com.cloudtimes.serving.cash.service.domain.VoiceTokenData;
+import com.cloudtimes.serving.cash.service.domain.*;
 
 import java.util.List;
-import java.util.Map;
 
 public interface ICtCashBusinessService {
     /**
@@ -21,13 +19,12 @@ public interface ICtCashBusinessService {
     /**
      * 获取单号和顾客信息
      *
-     * @param deviceId
-     * @param token
+     * @param info
      * @return map
      * orderId
      * phone
      */
-    public Map<String, String> getOrderId(String deviceId, String token);
+    public GetOrderIdResp getOrderId(String deviceId, GetOrderIdReq info);
 
     /**
      * 获取商品列表
@@ -35,7 +32,7 @@ public interface ICtCashBusinessService {
      * @param deviceId
      * @return
      */
-    public List<CtShopProduct> getProductList(String deviceId);
+    public List<GetProductListResp> getProductList(String deviceId);
 
     /**
      * 获取语音token相关信息
@@ -43,43 +40,28 @@ public interface ICtCashBusinessService {
      * @param deviceId
      * @return
      */
-    public VoiceTokenData getVoiceToken(String deviceId);
+    public GetVoiceTokenResp getVoiceToken(String deviceId);
 
     /**
      * 订单添加商品
-     *
-     * @param orderId
-     * @param isSupervise
-     * @param goodId
-     * @param goodName
-     * @param num
-     * @param buyPrice
-     * @param sellPrice
      */
-    public String addOrderItem(String deviceId, String orderId, String isSupervise, String goodId, String goodName, String categoryId, String categoryName, int num, int buyPrice, int sellPrice);
+    public OrderItemResp addOrderItem(String deviceId, OrderItemAddReq info);
 
     /**
      * 订单删除商品
-     *
-     * @param orderId
-     * @param goodId
-     * @param num
      */
-    public void deleteOrderItem(String deviceId, String orderId, String goodId, int num);
+    public void deleteOrderItem(String deviceId, OrderItemDeleteReq info);
 
     /**
      * 取消订单
-     *
-     * @param orderId
      */
-    public void cancelOrder(String deviceId, String orderId);
+    public void cancelOrder(String deviceId, OrderItemCancelReq info);
 
     /**
      * 支付订单
      *
-     * @param orderId
      */
-    public String payOrder(String deviceId, String orderId, int payType, String payCode, int totalAmount, int totalNum);
+    public String payOrder(String deviceId, OrderPayReq info);
 
     /**
      * 查询订单状态

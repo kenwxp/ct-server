@@ -21,7 +21,7 @@ import com.cloudtimes.enums.PayState;
 import com.cloudtimes.enums.PayWay;
 import com.cloudtimes.enums.PayeeType;
 import com.cloudtimes.hardwaredevice.domain.CtDevice;
-import com.cloudtimes.serving.cash.service.domain.ShouqianbaParam;
+import com.cloudtimes.serving.cash.service.domain.*;
 import com.cloudtimes.hardwaredevice.domain.CtPayment;
 import com.cloudtimes.hardwaredevice.domain.CtStore;
 import com.cloudtimes.hardwaredevice.mapper.CtDeviceMapper;
@@ -35,7 +35,6 @@ import com.cloudtimes.partner.weixin.domain.WxpayfaceAuthInfoResp;
 import com.cloudtimes.product.domain.CtShopProduct;
 import com.cloudtimes.product.mapper.CtShopProductMapper;
 import com.cloudtimes.serving.cash.service.ICtCashBusinessService;
-import com.cloudtimes.serving.cash.service.domain.VoiceTokenData;
 import com.cloudtimes.serving.common.CtTaskInnerService;
 import com.cloudtimes.supervise.domain.*;
 import com.cloudtimes.supervise.mapper.CtOrderDetailMapper;
@@ -155,9 +154,9 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
      */
     @Transactional
     @Override
-    public Map<String, String> getOrderId(String deviceId, String token) {
+    public GetOrderIdResp getOrderId(String deviceId, GetOrderIdReq info) {
         //通过token获取用户union_id
-        String unionId = weixinFaceApiService.getWxpayfaceUserUnionId(token);
+        String unionId = weixinFaceApiService.getWxpayfaceUserUnionId(info.getToken());
         if (StringUtils.isEmpty(unionId)) {
             throw new ServiceException("无法获取用户unionId");
         }
@@ -178,8 +177,6 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
         if (dbDevice == null) {
             throw new ServiceException("无法获取门店信息");
         }
-        Map<String, String> retMap = new HashMap<>();
-        retMap.put("phone", NumberUtils.getHiddenPhone(ctUser.getMobile()));
 
         CtShopping newShopping = OrderUtil.getInitCtShopping();
         //获取任务
@@ -219,13 +216,15 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
             throw new ServiceException("新增订单失败");
         }
         taskCache.setCacheOrder(newOrder);
-        retMap.put("orderId", newOrder.getId());
-        return retMap;
+        GetOrderIdResp resp = new GetOrderIdResp();
+        resp.setCustomerPhone(NumberUtils.getHiddenPhone(ctUser.getMobile()));
+        resp.setOrderId(newOrder.getId());
+        return resp;
     }
 
 
     @Override
-    public List<CtShopProduct> getProductList(String deviceId) {
+    public List<GetProductListResp> getProductList(String deviceId) {
         CtDevice dbDevice = deviceMapper.selectCtDeviceById(deviceId);
         if (dbDevice == null) {
             throw new ServiceException("无法获取设备信息");
@@ -237,14 +236,34 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
         if (ctStore == null) {
             throw new ServiceException("无法获取门店信息");
         }
-        return shopProductMapper.selectCtShopProductListByStore(ctStore.getStoreNo());
+        List<CtShopProduct> productList = shopProductMapper.selectCtShopProductListByStore(ctStore.getStoreNo());
+        List<GetProductListResp> resp = new ArrayList<>();
+        for (CtShopProduct dbProduct :
+                productList) {
+            GetProductListResp getProductListResp = new GetProductListResp();
+            getProductListResp.setProductUid(dbProduct.getId());
+            getProductListResp.setProductName(dbProduct.getProductName());
+            getProductListResp.setCategoryCode(dbProduct.getCategoryCode());
+            getProductListResp.setBarcode(dbProduct.getBarcode());
+            getProductListResp.setImageUrl(dbProduct.getPictureUrl());
+            getProductListResp.setBuyPrice(dbProduct.getPurchasePrice().intValue());
+            getProductListResp.setSellPrice(dbProduct.getRetailPrice().intValue());
+            getProductListResp.setCustomerPrice(dbProduct.getVipPrice().intValue());
+            int isCustomerDiscount = 0;
+            if (com.cloudtimes.common.utils.StringUtils.equals(dbProduct.getIsEnableVipPrice().toUpperCase(), "Y")) {
+                isCustomerDiscount = 1;
+            }
+            getProductListResp.setIsCustomerDiscount(isCustomerDiscount);
+            resp.add(getProductListResp);
+        }
+        return resp;
     }
 
     @Autowired
     private PartnerConfig config;
 
     @Override
-    public VoiceTokenData getVoiceToken(String deviceId) {
+    public GetVoiceTokenResp getVoiceToken(String deviceId) {
         CtDevice device = deviceMapper.selectCtDeviceById(deviceId);
         if (device == null) {
             throw new ServiceException("无法获取设备信息");
@@ -261,20 +280,21 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
         }
         String channel = device.getStoreId();
         String agoraToken = agoraApiService.getAgoraToken(uid, channel);
-        VoiceTokenData voiceTokenData = new VoiceTokenData();
-        voiceTokenData.setAppId(config.getAgoraAppId());
-        voiceTokenData.setVoiceToken(agoraToken);
-        voiceTokenData.setChannelName(channel);
-        voiceTokenData.setUid(uid);
-        return voiceTokenData;
+        GetVoiceTokenResp resp = new GetVoiceTokenResp();
+        resp.setAppId(config.getAgoraAppId());
+        resp.setVoiceToken(agoraToken);
+        resp.setChannelName(channel);
+        resp.setUid(uid);
+        return resp;
     }
 
     @Override
     @Transactional
-    public String addOrderItem(String deviceId, String orderId, String isSupervise, String goodId, String goodName, String categoryId, String categoryName, int num, int buyPrice, int sellPrice) {
+    public OrderItemResp addOrderItem(String deviceId, OrderItemAddReq info) {
+        String orderId = info.getOrderId();
         if (StringUtils.isEmpty(orderId)) {
             //只有在非值守状态才能扫商品产生新订单
-            if (StringUtils.equals(isSupervise, "1")) {
+            if (StringUtils.equals(info.getIsSupervise(), "1")) {
                 throw new ServiceException("收银机在值守模式下，不能直接扫商品");
             }
             //根据设备获取门店信息
@@ -319,26 +339,27 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
         if (!StringUtils.equals(cacheOrder.getDeviceCashId(), deviceId)) {
             throw new ServiceException("该订单不属于当前收银机");
         }
-        int increase = num * sellPrice;
+        int num = info.getNum();
+        int increase = num * info.getSellPrice();
         //更新订单中的价格参数
         cacheOrder.setTotalAmount(cacheOrder.getTotalAmount().add(BigDecimal.valueOf(increase)));
         cacheOrder.setItemCount(cacheOrder.getItemCount() + num);
         taskCache.setCacheOrder(cacheOrder);
 
-        CtOrderDetail od = taskCache.getCacheOrderDetail(orderId, goodId);
+        CtOrderDetail od = taskCache.getCacheOrderDetail(orderId, info.getGoodId());
         if (od == null) {
             //生产订单物品
             od = new CtOrderDetail();
             od.setOrderId(orderId);
-            od.setItemId(goodId);
-            od.setItemName(goodName);
+            od.setItemId(info.getGoodId());
+            od.setItemName(info.getGoodName());
             od.setStoreId(cacheOrder.getStoreId());
-            od.setItemTypeId(categoryId);
-            od.setItemTypeName(categoryName);
+            od.setItemTypeId(info.getCategoryId());
+            od.setItemTypeName(info.getCategoryName());
             od.setItemCount(BigDecimal.valueOf(num));
-            od.setItemPrice(BigDecimal.valueOf(sellPrice));
-            od.setItemPrimePrice(BigDecimal.valueOf(buyPrice));
-            od.setItemSum(BigDecimal.valueOf(num * sellPrice));
+            od.setItemPrice(BigDecimal.valueOf(info.getSellPrice()));
+            od.setItemPrimePrice(BigDecimal.valueOf(info.getBuyPrice()));
+            od.setItemSum(BigDecimal.valueOf(num * info.getSellPrice()));
             od.setDelFlag("0");
             od.setYearMonth(Long.valueOf(DateUtils.getYearMonth()));
         } else {
@@ -346,11 +367,14 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
             od.setItemSum(od.getItemSum().add(BigDecimal.valueOf(increase)));
         }
         taskCache.setCacheOrderDetail(od);
-        return orderId;
+        return new OrderItemResp(orderId);
     }
 
     @Override
-    public void deleteOrderItem(String deviceId, String orderId, String goodId, int num) {
+    public void deleteOrderItem(String deviceId, OrderItemDeleteReq info) {
+        String orderId = info.getOrderId();
+        String goodId = info.getGoodId();
+        int num = info.getNum();
         CtOrder cacheOrder = taskCache.getCacheOrder(orderId);
         if (cacheOrder == null) {
             throw new ServiceException("无法获取订单信息");
@@ -384,7 +408,8 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
 
     @Override
     @Transactional
-    public void cancelOrder(String deviceId, String orderId) {
+    public void cancelOrder(String deviceId, OrderItemCancelReq info) {
+        String orderId = info.getOrderId();
         CtOrder cacheOrder = taskCache.getCacheOrder(orderId);
         if (cacheOrder == null) {
             throw new ServiceException("无法获取订单信息");
@@ -401,7 +426,12 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
 
     @Override
     @Transactional
-    public String payOrder(String deviceId, String orderId, int payType, String payCode, int totalAmount, int totalNum) {
+    public String payOrder(String deviceId, OrderPayReq info) {
+        String orderId = info.getOrderId();
+        int payType = info.getPayType();
+        String payCode = info.getPayCode();
+        int totalAmount = info.getTotalAmount();
+        int totalNum = info.getTotalNum();
         CtOrder cacheOrder = taskCache.getCacheOrder(orderId);
         if (cacheOrder == null) {
             throw new ServiceException("无法获取订单信息");
@@ -473,7 +503,7 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
             throw new ServiceException("支付失败");
         }
         if (StringUtils.equals(commonResp.getResultCode(), ShouqianbaConstant.response200)) {
-            BuzResponse bizResponse = JacksonUtils.convertObject(commonResp.getBizResponse(),BuzResponse.class);
+            BuzResponse bizResponse = JacksonUtils.convertObject(commonResp.getBizResponse(), BuzResponse.class);
             if (bizResponse != null) {
                 if (StringUtils.equals(bizResponse.getResultCode(), ShouqianbaConstant.busiPayInProgress)) {
                     //发起订单查询轮询
