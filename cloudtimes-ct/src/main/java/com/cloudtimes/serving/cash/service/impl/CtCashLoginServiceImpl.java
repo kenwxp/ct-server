@@ -73,6 +73,7 @@ public class CtCashLoginServiceImpl implements ICtCashLoginService {
             if (deviceMapper.insertCtDevice(newDevice) < 1) {
                 throw new ServiceException("新增设备失败");
             }
+            dbDevice = newDevice;
         } else {
             dbStore = storeMapper.selectCtStoreById(dbDevice.getStoreId());
         }
