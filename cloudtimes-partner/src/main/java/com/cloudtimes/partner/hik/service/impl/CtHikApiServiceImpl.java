@@ -175,13 +175,15 @@ public class CtHikApiServiceImpl implements ICtHikApiService {
 
     private VideoData getAddressUrl(Map<String, String> params) {
         HikCommonResp commonResp = sendHikHttp(HikConstant.getLiveAddressUri, params);
-        VideoData videoData = new VideoData();
+
         if (commonResp != null && StringUtils.equals(commonResp.getCode(), HikConstant.CODE200)
                 && commonResp.getData() != null) {
+            VideoData videoData = new VideoData();
             videoData = JacksonUtils.convertObject(commonResp.getData(), VideoData.class);
+            videoData.setToken(getAccessToken());
+            return videoData;
         }
-        videoData.setToken(getAccessToken());
-        return videoData;
+        return null;
     }
 
     private Map<String, String> getHikHeader() {

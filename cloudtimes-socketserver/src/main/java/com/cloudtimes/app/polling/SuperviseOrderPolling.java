@@ -1,11 +1,11 @@
 package com.cloudtimes.app.polling;
 
-import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson2.JSON;
 import com.cloudtimes.app.manager.SuperviseWsSessionManager;
 import com.cloudtimes.app.models.WsOrderData;
 import com.cloudtimes.app.models.WsOrderDetailData;
 import com.cloudtimes.cache.CtTaskCache;
+import com.cloudtimes.common.utils.DateUtils;
 import com.cloudtimes.common.utils.NumberUtils;
 import com.cloudtimes.common.utils.StringUtils;
 import com.cloudtimes.supervise.domain.CtOrder;
@@ -90,7 +90,7 @@ public class SuperviseOrderPolling {
                             data.setPaymentMode(rawOrder.getPaymentMode());
                             data.setPaymentId(rawOrder.getPaymentId());
                             data.setState(rawOrder.getState());
-                            data.setCreateDate(DateUtil.formatDateTime(rawOrder.getCreateDate()));
+                            data.setCreateDate(DateUtils.formatDateTime(rawOrder.getCreateDate()));
                             Map<String, CtOrderDetail> orderDetailsMap = taskCache.getCacheOrderDetails(rawOrder.getId());
                             List<WsOrderDetailData> orderDetailList = new ArrayList<>();
                             if (orderDetailsMap != null) {

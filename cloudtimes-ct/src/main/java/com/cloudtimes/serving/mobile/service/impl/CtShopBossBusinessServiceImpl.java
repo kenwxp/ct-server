@@ -1,6 +1,7 @@
 package com.cloudtimes.serving.mobile.service.impl;
 
 import cn.hutool.core.date.DateField;
+
 import cn.hutool.core.date.DateUtil;
 import com.cloudtimes.account.domain.CtUser;
 import com.cloudtimes.account.mapper.CtUserMapper;
@@ -14,6 +15,7 @@ import com.cloudtimes.common.enums.OpenDoorOption;
 import com.cloudtimes.common.exception.ServiceException;
 import com.cloudtimes.common.mq.CtRocketMqProducer;
 import com.cloudtimes.common.mq.OpenDoorMqData;
+import com.cloudtimes.common.utils.DateUtils;
 import com.cloudtimes.common.utils.NumberUtils;
 import com.cloudtimes.common.utils.SecurityUtils;
 import com.cloudtimes.common.utils.StringUtils;
@@ -38,6 +40,7 @@ import com.cloudtimes.supervise.mapper.CtOrderDetailMapper;
 import com.cloudtimes.supervise.mapper.CtOrderMapper;
 import com.cloudtimes.supervise.mapper.CtShoppingMapper;
 import com.cloudtimes.supervise.mapper.CtTaskMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,6 +58,7 @@ import java.util.List;
  */
 @DataSource(DataSourceType.CT)
 @Service
+@Slf4j
 public class CtShopBossBusinessServiceImpl implements ICtShopBossBusinessService {
 
     @Autowired
@@ -301,6 +305,7 @@ public class CtShopBossBusinessServiceImpl implements ICtShopBossBusinessService
         mqData.setStoreId(param.getShopId());
         mqData.setUserId(String.valueOf(userId));
         mqData.setChannelType(ChannelType.MOBILE);
+
         producer.send(RocketMQConstants.CT_OPEN_DOOR, mqData);
     }
 
@@ -333,7 +338,7 @@ public class CtShopBossBusinessServiceImpl implements ICtShopBossBusinessService
                 temp.setDeviceSerial(camera.getDeviceSerial());
                 temp.setDevicePosition(camera.getDeviceArea());
                 temp.setDeviceStatus(camera.getState());
-                temp.setUpdateTime(DateUtil.formatDateTime(camera.getUpdateTime()));
+                temp.setUpdateTime(DateUtils.formatDateTime(camera.getUpdateTime()));
                 CacheVideoData cacheVideo = videoCache.getCacheVideo(camera.getStoreId(), camera.getId());
                 temp.setToken(cacheVideo.getToken());
                 temp.setVideoUrl(cacheVideo.getUrl());
@@ -347,7 +352,7 @@ public class CtShopBossBusinessServiceImpl implements ICtShopBossBusinessService
                 temp.setDeviceSerial(camera.getDeviceSerial());
                 temp.setDevicePosition(camera.getDeviceArea());
                 temp.setDeviceStatus(camera.getState());
-                temp.setUpdateTime(DateUtil.formatDateTime(camera.getUpdateTime()));
+                temp.setUpdateTime(DateUtils.formatDateTime(camera.getUpdateTime()));
             }
         }
         return retList;
@@ -374,9 +379,9 @@ public class CtShopBossBusinessServiceImpl implements ICtShopBossBusinessService
             temp.setShopId(superviseLog.getStoreId());
             temp.setShopName(superviseLog.getStoreName());
             temp.setShopAddress(superviseLog.getStoreAddress());
-            temp.setBeginTime(DateUtil.formatTime(superviseLog.getStartTime()));
+            temp.setBeginTime(DateUtils.formatTime(superviseLog.getStartTime()));
             if (superviseLog.getEndTime() != null) {
-                temp.setEndTime(DateUtil.formatTime(superviseLog.getEndTime()));
+                temp.setEndTime(DateUtils.formatTime(superviseLog.getEndTime()));
                 temp.setState("1");
             } else {
                 temp.setState("0");
@@ -473,8 +478,8 @@ public class CtShopBossBusinessServiceImpl implements ICtShopBossBusinessService
             if (StringUtils.isEmpty(param.getBeginTime()) || StringUtils.isEmpty(param.getEndTime())) {
                 throw new ServiceException("自定义时间不能为空");
             }
-            beginTime = DateUtil.parseDate(param.getBeginTime());
-            endTime = DateUtil.parseDate(param.getEndTime());
+            beginTime = DateUtils.parseDate(param.getBeginTime());
+            endTime = DateUtils.parseDate(param.getEndTime());
         } else if (StringUtils.equals(param.getPeriodType(), PeriodType.TODAY.getCode())) {
 
         } else if (StringUtils.equals(param.getPeriodType(), PeriodType.YESTERDAY.getCode())) {
@@ -515,8 +520,8 @@ public class CtShopBossBusinessServiceImpl implements ICtShopBossBusinessService
             getOrderDetailResp.setPaymentMode(order.getPaymentMode());
             getOrderDetailResp.setPaymentId(order.getPaymentId());
             getOrderDetailResp.setState(order.getState());
-            getOrderDetailResp.setCreateTime(DateUtil.formatDateTime(order.getCreateTime()));
-            getOrderDetailResp.setUpdateTime(DateUtil.formatDateTime(order.getUpdateTime()));
+            getOrderDetailResp.setCreateTime(DateUtils.formatDateTime(order.getCreateTime()));
+            getOrderDetailResp.setUpdateTime(DateUtils.formatDateTime(order.getUpdateTime()));
             List<OrderDetailData> detailList = new ArrayList<>();
             CtOrderDetail query = new CtOrderDetail();
             query.setOrderId(order.getId());
@@ -580,9 +585,9 @@ public class CtShopBossBusinessServiceImpl implements ICtShopBossBusinessService
         }
         VideoData playbackAddress = null;
         if (StringUtils.equals(device.getDeviceType(), DeviceType.CAMERA.getCode())) {
-            playbackAddress = hikApiService.getPlaybackAddress(device.getDeviceSerial(), "1", DateUtil.formatDateTime(beginTime), DateUtil.formatDateTime(endTime));
+            playbackAddress = hikApiService.getPlaybackAddress(device.getDeviceSerial(), "1", DateUtils.formatDateTime(beginTime), DateUtils.formatDateTime(endTime));
         } else if (StringUtils.equals(device.getDeviceType(), DeviceType.NVR_CAMERA.getCode())) {
-            playbackAddress = hikApiService.getPlaybackAddress(device.getDeviceSerial(), device.getDeviceChannel(), "1", DateUtil.formatDateTime(beginTime), DateUtil.formatDateTime(endTime));
+            playbackAddress = hikApiService.getPlaybackAddress(device.getDeviceSerial(), device.getDeviceChannel(), "1", DateUtils.formatDateTime(beginTime), DateUtils.formatDateTime(endTime));
         }
         if (playbackAddress == null) {
             throw new ServiceException("获取回放连接失败");

@@ -28,9 +28,9 @@ class CtLuckyDrawRule : BaseEntity() {
     @Excel(name = "奖项图片")
     var pic: String? = null
 
-    /** 中奖几率,100表示100%中奖  */
-    @Excel(name = "中奖几率,100表示100%中奖")
-    var percentage: Int? = null
+    /** 中奖几率,1表示100%中奖,0.90表示90%中奖  */
+    @Excel(name = "中奖几率")
+    var winRatio: BigDecimal? = null
 
     /** 奖项名称  */
     @Excel(name = "奖项名称")
@@ -45,7 +45,7 @@ class CtLuckyDrawRule : BaseEntity() {
             .append("activityId", activityId)
             .append("seqno", seqno)
             .append("pic", pic)
-            .append("percentage", percentage)
+            .append("winRatio", winRatio)
             .append("name", name)
             .append("reward", reward)
             .append("createTime", createTime)

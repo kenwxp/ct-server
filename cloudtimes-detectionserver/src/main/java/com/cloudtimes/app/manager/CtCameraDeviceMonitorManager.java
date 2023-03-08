@@ -34,7 +34,7 @@ import java.util.concurrent.ConcurrentMap;
 
 @Slf4j
 @Component
-@RocketMQMessageListener(consumerGroup = "${rocketmq.consumer.group}", topic = RocketMQConstants.CT_MONITOR_CAMARE_DEVICE, messageModel = MessageModel.BROADCASTING)
+@RocketMQMessageListener(consumerGroup = "CtCameraDeviceMonitorManager", topic = RocketMQConstants.CT_MONITOR_CAMERA_DEVICE, messageModel = MessageModel.BROADCASTING)
 public class CtCameraDeviceMonitorManager implements RocketMQListener<CtDevice>, RocketMQPushConsumerLifecycleListener {
 
     @Autowired
@@ -144,7 +144,7 @@ public class CtCameraDeviceMonitorManager implements RocketMQListener<CtDevice>,
     }
 
     public void sendToMQ(CtDevice ctDevice) {
-        mqTemplate.syncSend(RocketMQConstants.CT_MONITOR_CAMARE_DEVICE, MessageBuilder.withPayload(ctDevice).build(), 10000, 6);
+        mqTemplate.syncSend(RocketMQConstants.CT_MONITOR_CAMERA_DEVICE, MessageBuilder.withPayload(ctDevice).build(), 10000, 6);
         log.info("摄像机状态检测:[DeviceSerial:" + ctDevice.getDeviceSerial() + " name:" + ctDevice.getName() + "] 发送到延时消息队列成功...");
     }
 
