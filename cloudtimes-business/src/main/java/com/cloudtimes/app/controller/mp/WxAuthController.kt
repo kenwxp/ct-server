@@ -1,9 +1,10 @@
-package com.cloudtimes.app.controller.agent
+package com.cloudtimes.app.controller.mp
 
 import com.alibaba.fastjson.JSONObject
 import com.cloudtimes.account.domain.CtUser
 import com.cloudtimes.account.dto.request.WxLoginRequest
 import com.cloudtimes.account.service.ICtUserService
+import com.cloudtimes.app.constant.PrefixPathConstants
 import com.cloudtimes.common.constant.CacheConstants
 import com.cloudtimes.common.core.domain.AjaxResult
 import com.cloudtimes.common.core.domain.RestResult
@@ -32,7 +33,7 @@ class WxLoginResponse(override var data: CtUser?) : RestResult<CtUser>(data)
 
 
 @RestController
-@RequestMapping("/agent/wx_auth")
+@RequestMapping(PrefixPathConstants.WX_OFFICIAL_PATH_PREFIX + "/wx_auth")
 @Api(tags = ["代理-微信登陆授权"])
 class WxAuthController {
     private val logger: Logger = LoggerFactory.getLogger(javaClass);

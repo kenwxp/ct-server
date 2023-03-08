@@ -1,4 +1,4 @@
-package com.cloudtimes.app.controller.agent
+package com.cloudtimes.app.controller.mp
 
 import com.cloudtimes.account.domain.CtUser
 import com.cloudtimes.account.dto.request.H5LoginRequest

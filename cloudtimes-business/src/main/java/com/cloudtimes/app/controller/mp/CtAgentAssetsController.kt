@@ -1,4 +1,4 @@
-package com.cloudtimes.app.controller.agent
+package com.cloudtimes.app.controller.mp
 
 import com.cloudtimes.account.domain.CtWithdrawalBook
 import com.cloudtimes.account.dto.request.*
