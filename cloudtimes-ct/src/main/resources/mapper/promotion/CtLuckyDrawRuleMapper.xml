@@ -9,7 +9,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="activityId"    column="activity_id"    />
         <result property="seqno"    column="seqno"    />
         <result property="pic"    column="pic"    />
-        <result property="percentage"    column="percentage"    />
+        <result property="winRatio"    column="win_ratio"    />
         <result property="name"    column="name"    />
         <result property="reward"    column="reward"    />
         <result property="createTime"    column="create_time"    />
@@ -17,7 +17,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectCtLuckyDrawRuleVo">
-        select id, activity_id, seqno, pic, percentage, name, reward, create_time, update_time from ct_lucky_draw_rule
+        select * from ct_lucky_draw_rule
     </sql>
 
     <select id="selectCtLuckyDrawRuleList" parameterType="CtLuckyDrawRule" resultMap="CtLuckyDrawRuleResult">
@@ -26,7 +26,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="activityId != null  and activityId != ''"> and activity_id = #{activityId}</if>
             <if test="seqno != null "> and seqno = #{seqno}</if>
             <if test="pic != null  and pic != ''"> and pic = #{pic}</if>
-            <if test="percentage != null "> and percentage = #{percentage}</if>
+            <if test="winRatio != null "> and win_ratio = #{winRatio}</if>
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="reward != null "> and reward = #{reward}</if>
         </where>
@@ -44,7 +44,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="activityId != null and activityId != ''">activity_id,</if>
             <if test="seqno != null">seqno,</if>
             <if test="pic != null">pic,</if>
-            <if test="percentage != null">percentage,</if>
+            <if test="winRatio != null">win_ratio,</if>
             <if test="name != null and name != ''">name,</if>
             <if test="reward != null">reward,</if>
             <if test="createTime != null">create_time,</if>
@@ -55,7 +55,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="activityId != null and activityId != ''">#{activityId},</if>
             <if test="seqno != null">#{seqno},</if>
             <if test="pic != null">#{pic},</if>
-            <if test="percentage != null">#{percentage},</if>
+            <if test="winRatio != null">#{winRatio},</if>
             <if test="name != null and name != ''">#{name},</if>
             <if test="reward != null">#{reward},</if>
             <if test="createTime != null">#{createTime},</if>
@@ -69,7 +69,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="activityId != null and activityId != ''">activity_id = #{activityId},</if>
             <if test="seqno != null">seqno = #{seqno},</if>
             <if test="pic != null">pic = #{pic},</if>
-            <if test="percentage != null">percentage = #{percentage},</if>
+            <if test="winRatio != null">win_ratio = #{winRatio},</if>
             <if test="name != null and name != ''">name = #{name},</if>
             <if test="reward != null">reward = #{reward},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
