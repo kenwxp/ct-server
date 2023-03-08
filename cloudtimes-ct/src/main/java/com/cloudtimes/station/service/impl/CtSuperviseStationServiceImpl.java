@@ -115,8 +115,8 @@ public class CtSuperviseStationServiceImpl implements ICtSuperviseStationService
             temp.setTemplateName(template.getTemplateName());
             temp.setMediaUuid(template.getMediaId());
             temp.setOssLink(template.getOssLink());
-            temp.setCreateTime(DateUtil.formatDateTime(template.getCreateTime()));
-            temp.setUpdateTime(DateUtil.formatDateTime(template.getUpdateTime()));
+            temp.setCreateTime(DateUtils.formatDateTime(template.getCreateTime()));
+            temp.setUpdateTime(DateUtils.formatDateTime(template.getUpdateTime()));
             respList.add(temp);
         }
         return respList;

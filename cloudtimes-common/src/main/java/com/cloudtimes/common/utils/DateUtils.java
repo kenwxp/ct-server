@@ -11,6 +11,10 @@ import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
 
+import cn.hutool.core.date.DatePattern;
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.date.format.DateParser;
 import org.apache.commons.lang3.time.DateFormatUtils;
 
 /**
@@ -186,5 +190,38 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
     public static int getYearMonth() {
         var localDate = LocalDate.now();
         return localDate.getYear() * 100 + localDate.getMonthValue();
+    }
+
+    public static DateTime parseDateTime(CharSequence dateString) {
+        if (StringUtils.isEmpty(dateString)) {
+            return null;
+        }
+        return DateUtil.parseDateTime(dateString);
+    }
+
+    public static DateTime parseDate(CharSequence dateString) {
+        if (StringUtils.isEmpty(dateString)) {
+            return null;
+        }
+        return DateUtil.parseDate(dateString);
+    }
+
+    public static DateTime parseTime(CharSequence timeString) {
+        if (StringUtils.isEmpty(timeString)) {
+            return null;
+        }
+        return DateUtil.parseTime(timeString);
+    }
+
+    public static String formatDateTime(Date date) {
+        return DateUtil.formatDateTime(date);
+    }
+
+    public static String formatDate(Date date) {
+        return DateUtil.formatDate(date);
+    }
+
+    public static String formatTime(Date date) {
+        return DateUtil.formatTime(date);
     }
 }

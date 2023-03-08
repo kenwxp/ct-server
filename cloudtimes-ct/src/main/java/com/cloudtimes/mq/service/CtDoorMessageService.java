@@ -4,6 +4,7 @@ import cn.hutool.core.date.DateUtil;
 import com.cloudtimes.cache.CtDoorStateCache;
 import com.cloudtimes.common.enums.ChannelType;
 import com.cloudtimes.common.mq.DoorMessageMqData;
+import com.cloudtimes.common.utils.DateUtils;
 import com.cloudtimes.common.utils.StringUtils;
 import com.cloudtimes.common.enums.OpenDoorOption;
 import com.cloudtimes.hardwaredevice.domain.CtDevice;
@@ -32,7 +33,7 @@ public class CtDoorMessageService {
 
     public void handleStateMessage(DoorMessageMqData data) {
         // 处理门禁状态
-        doorStateCache.put(data.getDeviceSerial(), DateUtil.parseDateTime(data.getUpdateTime()));
+        doorStateCache.put(data.getDeviceSerial(), DateUtils.parseDateTime(data.getUpdateTime()));
     }
 
     @Transactional
@@ -57,7 +58,7 @@ public class CtDoorMessageService {
         ctOpenDoorLogs.setState("0");
         ctOpenDoorLogs.setDelFlag("0");
         ctOpenDoorLogs.setDate(new Date());
-        ctOpenDoorLogs.setCreateTime(DateUtil.parseDateTime(data.getUpdateTime()));
+        ctOpenDoorLogs.setCreateTime(DateUtils.parseDateTime(data.getUpdateTime()));
         ctOpenDoorLogs.setUpdateTime(new Date());
         ctOpenDoorLogs.setRemark("红外开门");
         if (doorLogsMapper.insertCtOpenDoorLogs(ctOpenDoorLogs) < 1) {

@@ -65,9 +65,10 @@ public class CtStoreVideoCache {
                     // nvr摄像头需要带通道号
                     liveAddress = hikApiService.getLiveAddress(device.getDeviceSerial(), device.getDeviceChannel(), "1", "2", String.valueOf(videoTimeoutSec));
                 }
-                if (liveAddress != null) {
+                if (liveAddress != null && StringUtils.isNotEmpty(liveAddress.getExpireTime())
+                ) {
                     cacheVideoData.setUrl(liveAddress.getUrl());
-                    cacheVideoData.setExpireTime(DateUtil.parseDateTime(liveAddress.getExpireTime()));
+                    cacheVideoData.setExpireTime(DateUtils.parseDateTime(liveAddress.getExpireTime()));
                     cacheVideoData.setToken(liveAddress.getToken());
                 }
                 setCacheVideo(cacheVideoData);
@@ -148,12 +149,12 @@ public class CtStoreVideoCache {
             liveAddress = hikApiService.getLiveAddress(dbDevice.getDeviceSerial(), dbDevice.getDeviceChannel(), "1", "2", String.valueOf(videoTimeoutSec));
         }
         CacheVideoData newDevice = new CacheVideoData();
-        if (liveAddress != null) {
+        if (liveAddress != null && StringUtils.isNotEmpty(liveAddress.getExpireTime())) {
             newDevice.setStoreId(dbDevice.getStoreId());
             newDevice.setDeviceId(dbDevice.getId());
             newDevice.setDeviceSerial(dbDevice.getDeviceSerial());
             newDevice.setUrl(liveAddress.getUrl());
-            newDevice.setExpireTime(DateUtil.parseDateTime(liveAddress.getExpireTime()));
+            newDevice.setExpireTime(DateUtils.parseDateTime(liveAddress.getExpireTime()));
             newDevice.setToken(liveAddress.getToken());
         }
         setCacheVideo(newDevice);
