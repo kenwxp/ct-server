@@ -72,7 +72,7 @@ public class CtCameraDeviceMonitorManager implements RocketMQListener<CtDevice> 
             query.setDeviceType(DeviceType.CAMERA.getCode());
             List<CtDevice> devices = deviceService.selectCtDeviceList(query);
             // 查询连接nvr的poe摄像头列表
-            query.setDeviceType(DeviceType.POE_CAMERA.getCode());
+            query.setDeviceType(DeviceType.NVR_CAMERA.getCode());
             devices.addAll(deviceService.selectCtDeviceList(query));
             for (CtDevice ctDevice : devices) {
                 if (ctCameraDevices.containsKey(ctDevice.getDeviceSerial())) {
@@ -108,13 +108,13 @@ public class CtCameraDeviceMonitorManager implements RocketMQListener<CtDevice> 
                 }
                 ctDevice.setName(deviceInfoData.getDeviceName());
                 deviceService.updateCtDevice(ctDevice);
-            } else if (StringUtils.equals(ctDevice.getDeviceType(), DeviceType.POE_CAMERA.getCode())) {
+            } else if (StringUtils.equals(ctDevice.getDeviceType(), DeviceType.NVR_CAMERA.getCode())) {
                 // POE摄像头，实际查询nvr状态
                 NvrDeviceInfoData nvrChannelStatus = ctHikApiService.getNvrChannelStatus(ctDevice.getDeviceSerial());
                 List<NvrChannelStatus> channelInfoList = nvrChannelStatus.getChannelInfoList();
                 CtDevice query = new CtDevice();
                 query.setDeviceSerial(ctDevice.getDeviceSerial());
-                query.setDeviceType(DeviceType.POE_CAMERA.getCode());
+                query.setDeviceType(DeviceType.NVR_CAMERA.getCode());
                 List<CtDevice> poeDeviceList = deviceService.selectCtDeviceList(query);
                 for (CtDevice device :
                         poeDeviceList) {

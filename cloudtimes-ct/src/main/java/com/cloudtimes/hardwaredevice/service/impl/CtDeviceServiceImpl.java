@@ -1,9 +1,9 @@
 package com.cloudtimes.hardwaredevice.service.impl;
 
-import java.util.List;
-import java.util.Map;
-
 import com.alibaba.fastjson2.JSONObject;
+import com.cloudtimes.common.NoUtils;
+import com.cloudtimes.common.annotation.DataSource;
+import com.cloudtimes.common.enums.DataSourceType;
 import com.cloudtimes.common.exception.ServiceException;
 import com.cloudtimes.common.utils.DateUtils;
 import com.cloudtimes.common.utils.JacksonUtils;
@@ -11,20 +11,21 @@ import com.cloudtimes.common.utils.StringUtils;
 import com.cloudtimes.enums.PayWay;
 import com.cloudtimes.enums.PayeeType;
 import com.cloudtimes.hardwaredevice.domain.ActivateDeviceReq;
+import com.cloudtimes.hardwaredevice.domain.CtDevice;
 import com.cloudtimes.hardwaredevice.domain.CtPayment;
+import com.cloudtimes.hardwaredevice.mapper.CtDeviceMapper;
 import com.cloudtimes.hardwaredevice.mapper.CtPaymentMapper;
+import com.cloudtimes.hardwaredevice.service.ICtDeviceService;
 import com.cloudtimes.partner.pay.shouqianba.domain.BuzResponse;
 import com.cloudtimes.partner.pay.shouqianba.domain.ShouqianbaConstant;
 import com.cloudtimes.partner.pay.shouqianba.service.ICtShouqianbaApiService;
 import com.cloudtimes.serving.cash.service.domain.ShouqianbaParam;
-import com.ctc.wstx.util.StringUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.cloudtimes.common.annotation.DataSource;
-import com.cloudtimes.common.enums.DataSourceType;
-import com.cloudtimes.hardwaredevice.mapper.CtDeviceMapper;
-import com.cloudtimes.hardwaredevice.domain.CtDevice;
-import com.cloudtimes.hardwaredevice.service.ICtDeviceService;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 电子设备Service业务层处理
@@ -34,6 +35,7 @@ import com.cloudtimes.hardwaredevice.service.ICtDeviceService;
  */
 @DataSource(DataSourceType.CT)
 @Service
+@Slf4j
 public class CtDeviceServiceImpl implements ICtDeviceService {
     @Autowired
     private CtDeviceMapper ctDeviceMapper;
@@ -126,10 +128,12 @@ public class CtDeviceServiceImpl implements ICtDeviceService {
         if (paymentParam != null) {
             throw new ServiceException("当前收银机已激活，请勿重复激活");
         }
-        BuzResponse buzResponse = shouqianbaApiService.activateTerminal(device.getDeviceCode(), param.getCode());
+        String deviceNo = NoUtils.genDeviceCode();
+        BuzResponse buzResponse = shouqianbaApiService.activateTerminal(deviceNo, param.getCode());
         if (buzResponse == null) {
             throw new ServiceException("调用收钱吧激活接口失败");
         }
+        log.info("BuzResponse:"+buzResponse);
         if (!StringUtils.equals(buzResponse.getResultCode(), ShouqianbaConstant.response200)) {
             throw new ServiceException("调用收钱吧激活接口失败:" + buzResponse.getErrorMessage());
         }
@@ -141,11 +145,11 @@ public class CtDeviceServiceImpl implements ICtDeviceService {
             String terminalSn = map.get("terminal_sn");
             String terminalKey = map.get("terminal_key");
             ShouqianbaParam newParam = new ShouqianbaParam();
-            newParam.setDeviceNo(device.getDeviceCode());
+            newParam.setDeviceNo(deviceNo);
             newParam.setTerminalSn(terminalSn);
             newParam.setTerminalKey(terminalKey);
             CtPayment ctPayment = new CtPayment();
-            ctPayment.setPayeeId(device.getDeviceCode());
+            ctPayment.setPayeeId(device.getId());
             ctPayment.setPayeeType(PayeeType.CASH.getCode());
             ctPayment.setPayWay(PayWay.SHOU_QIAN_BA.getCode());
             ctPayment.setPayParams(JSONObject.toJSONString(newParam));
