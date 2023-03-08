@@ -1,5 +1,7 @@
 package com.cloudtimes.partner.wiegand;
 
+import com.cloudtimes.partner.wiegand.domain.WiegandReturning;
+
 public interface ICtWiegandApiService {
     /**
      * 远程开门

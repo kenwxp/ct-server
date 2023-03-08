@@ -3,10 +3,12 @@ package com.cloudtimes.partner.wiegand.impl;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
+import com.cloudtimes.common.utils.JacksonUtils;
 import com.cloudtimes.common.utils.http.HttpUtils;
 import com.cloudtimes.partner.config.PartnerConfig;
 import com.cloudtimes.partner.wiegand.ICtWiegandApiService;
-import com.cloudtimes.partner.wiegand.WiegandReturning;
+import com.cloudtimes.partner.wiegand.domain.CommonResp;
+import com.cloudtimes.partner.wiegand.domain.WiegandReturning;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -180,11 +182,10 @@ public class CtWiegandApiServiceImpl implements ICtWiegandApiService {
             log.error(e.getMessage());
             return WiegandReturning.error(e.getMessage());
         }
-        if (!StringUtils.equals(result, "")) {
-            JSONObject resultObj = JSON.parseObject(result);
-            if (resultObj != null) {
-                String retString = resultObj.getString("result");
-                return JSON.parseObject(retString, WiegandReturning.class);
+        if (StringUtils.isNotEmpty(result)) {
+            CommonResp commonResp = JacksonUtils.parseObject(result, CommonResp.class);
+            if (commonResp != null) {
+                return commonResp.getResult();
             }
         }
         return WiegandReturning.error("无法获取返回报文");
