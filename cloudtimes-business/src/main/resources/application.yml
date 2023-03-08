@@ -50,6 +50,14 @@ knife4j:
   setting:
      enableOpenApi: false
      enableFooter: false
+  # 开启Swagger的Basic认证功能,默认是false
+  basic:
+    enable: true
+    # Basic认证用户名
+    username: admin
+    # Basic认证密码
+    password: hty@dev
+
 # 用户配置
 user:
   password:
