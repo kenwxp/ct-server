@@ -35,15 +35,16 @@ public class AppSpringbootTest {
         }
 
     }
-@Test
+
+    @Test
     public void testJSON() {
         AuthUser authUser = new AuthUser();
         authUser.setId("1315161");
-        authUser.setChannelType("web");
+    //    authUser.setChannelType("web");
         String s = JSONObject.toJSONString(authUser);
         System.out.println(s);
-    AuthUser authUser1 = JSONObject.parseObject(s, AuthUser.class);
-    System.out.println(authUser1);
-}
+        AuthUser authUser1 = JSONObject.parseObject(s, AuthUser.class);
+        System.out.println(authUser1);
+    }
 
 }
