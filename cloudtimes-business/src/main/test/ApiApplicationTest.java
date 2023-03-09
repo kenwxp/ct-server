@@ -4,12 +4,11 @@ import com.cloudtimes.common.core.domain.entity.AuthUser;
 import com.cloudtimes.common.enums.ChannelType;
 import com.cloudtimes.common.mq.DoorMessageMqData;
 import com.cloudtimes.common.utils.JWTManager;
-import com.cloudtimes.hardwaredevice.domain.ActivateDeviceReq;
+import com.cloudtimes.hardwaredevice.domain.DeviceActivateReq;
 import com.cloudtimes.hardwaredevice.service.ICtDeviceService;
 import com.cloudtimes.mq.service.CtDoorMessageService;
 import com.cloudtimes.partner.hik.domain.NvrDeviceInfoData;
 import com.cloudtimes.partner.hik.service.ICtHikApiService;
-import com.cloudtimes.partner.pay.shouqianba.service.ICtShouqianbaApiService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.junit.Test;
@@ -57,7 +56,7 @@ public class ApiApplicationTest {
     }
     @Test
     public void testActivateCtDevice() {
-        ActivateDeviceReq query = new ActivateDeviceReq();
+        DeviceActivateReq query = new DeviceActivateReq();
         query.setDeviceId("e5b00b8d-b0c8-11ed-8957-0242ac110003");
         query.setCode("24029562");
         deviceService.activateCtDevice(query);

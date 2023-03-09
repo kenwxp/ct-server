@@ -6,6 +6,7 @@ import com.cloudtimes.station.domain.*;
 import com.cloudtimes.station.service.ICtSuperviseStationService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +20,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/station/supervise")
 public class CtSuperviseStationController {
+    @Autowired
     private ICtSuperviseStationService superviseStationService;
 
     // 门店区域视频树查询
