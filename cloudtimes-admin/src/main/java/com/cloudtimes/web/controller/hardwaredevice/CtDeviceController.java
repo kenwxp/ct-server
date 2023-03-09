@@ -3,7 +3,7 @@ package com.cloudtimes.web.controller.hardwaredevice;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
-import com.cloudtimes.hardwaredevice.domain.ActivateDeviceReq;
+import com.cloudtimes.hardwaredevice.domain.DeviceActivateReq;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -73,10 +73,10 @@ public class CtDeviceController extends BaseController {
     @PreAuthorize("@ss.hasPermi('hardwaredevice:ctdevice:query')")
     @GetMapping(value = "/cashActivited/{id}/{activiteCode}")
     public AjaxResult cashActivited(@PathVariable("id") String id, @PathVariable("activiteCode") String activiteCode) {
-        ActivateDeviceReq activateDeviceReq = new ActivateDeviceReq();
-        activateDeviceReq.setDeviceId(id);
-        activateDeviceReq.setCode(activiteCode);
-        ctDeviceService.activateCtDevice(activateDeviceReq);
+        DeviceActivateReq deviceActivateReq = new DeviceActivateReq();
+        deviceActivateReq.setDeviceId(id);
+        deviceActivateReq.setCode(activiteCode);
+        ctDeviceService.activateCtDevice(deviceActivateReq);
         return AjaxResult.success();
     }
 
@@ -116,7 +116,7 @@ public class CtDeviceController extends BaseController {
     @PreAuthorize("@ss.hasPermi('hardwaredevice:ctdevice:activate')")
     @Log(title = "电子设备", businessType = BusinessType.INSERT)
     @PostMapping("/activate")
-    public AjaxResult activate(@RequestBody ActivateDeviceReq param) {
+    public AjaxResult activate(@RequestBody DeviceActivateReq param) {
         return toAjax(ctDeviceService.activateCtDevice(param));
     }
 

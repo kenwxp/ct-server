@@ -46,7 +46,7 @@ public class CtHikApiServiceImpl implements ICtHikApiService {
         String result = HttpUtils.sendFormPost("https://" + HikConstant.hikHost + HikConstant.getAccessTokenUri, params, getHikHeader());
         HikCommonResp commonResp = JacksonUtils.parseObject(result, HikCommonResp.class);
         if (commonResp != null) {
-            if (StringUtils.equals(commonResp.getCode(), HikConstant.CODE200) && commonResp.getData() != null) {
+            if (StringUtils.equals(commonResp.getCode(), HikCodeEnum.CODE200.getCode()) && commonResp.getData() != null) {
                 Map<String, Object> map = JacksonUtils.convertObject(commonResp.getData(), Map.class);
                 String newToken = (String) map.get("accessToken");
                 Long expireTs = (Long) map.get("expireTime");
@@ -78,7 +78,7 @@ public class CtHikApiServiceImpl implements ICtHikApiService {
         Map<String, String> params = new HashMap<>();
         params.put("deviceSerial", deviceSerial);
         HikCommonResp commonResp = sendHikHttp(HikConstant.getDeviceInfoUri, params);
-        if (commonResp != null && StringUtils.equals(commonResp.getCode(), HikConstant.CODE200) && commonResp.getData() != null) {
+        if (commonResp != null && StringUtils.equals(commonResp.getCode(), HikCodeEnum.CODE200.getCode()) && commonResp.getData() != null) {
             return JacksonUtils.convertObject(commonResp.getData(), DeviceInfoData.class);
         }
         return null;
@@ -161,7 +161,7 @@ public class CtHikApiServiceImpl implements ICtHikApiService {
         String result = HttpUtils.sendFormPost("https://" + HikConstant.hikHost + path, params, getHikHeader());
         HikCommonResp commonResp = JacksonUtils.parseObject(result, HikCommonResp.class);
         if (commonResp != null) {
-            if (StringUtils.equals(commonResp.getCode(), HikConstant.CODE10002)) {
+            if (StringUtils.equals(commonResp.getCode(), HikCodeEnum.CODE200.getCode())) {
                 //token 过时，则刷新token后，重新请求
                 String newToken = fetchAccessToken();
                 params.put("accessToken", newToken);
@@ -176,7 +176,7 @@ public class CtHikApiServiceImpl implements ICtHikApiService {
     private VideoData getAddressUrl(Map<String, String> params) {
         HikCommonResp commonResp = sendHikHttp(HikConstant.getLiveAddressUri, params);
 
-        if (commonResp != null && StringUtils.equals(commonResp.getCode(), HikConstant.CODE200)
+        if (commonResp != null && StringUtils.equals(commonResp.getCode(), HikCodeEnum.CODE200.getCode())
                 && commonResp.getData() != null) {
             VideoData videoData = new VideoData();
             videoData = JacksonUtils.convertObject(commonResp.getData(), VideoData.class);
@@ -207,12 +207,12 @@ public class CtHikApiServiceImpl implements ICtHikApiService {
             Object resultObj = resultMap.get("result");
             if (resultObj != null) {
                 HikCommonResp hikCommonResp = JacksonUtils.convertObject(resultObj, HikCommonResp.class);
-                if (StringUtils.equals(hikCommonResp.getCode(), HikConstant.CODE10002)) {
+                if (StringUtils.equals(hikCommonResp.getCode(), HikCodeEnum.CODE200.getCode())) {
                     //token 过时，则刷新token后，重新请求
                     fetchAccessToken();
                     return getNvrChannelStatus(nvrSerial);
                 }
-                if (StringUtils.equals(hikCommonResp.getCode(), HikConstant.CODE200)) {
+                if (StringUtils.equals(hikCommonResp.getCode(), HikCodeEnum.CODE200.getCode())) {
                     return JacksonUtils.convertObject(hikCommonResp.getData(), NvrDeviceInfoData.class);
                 }
             }

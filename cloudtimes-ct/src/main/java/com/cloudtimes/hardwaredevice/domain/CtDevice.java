@@ -107,16 +107,21 @@ public class CtDevice extends BaseEntity {
     private String deviceAscription;
 
     /**
-     * 状态
+     * 运行状态
      * 在线	0
      * 异常	1
      * 维护	2
      * 下线	3
      * 停用	4
      */
-    @Excel(name = "状态")
+    @Excel(name = "运行状态")
     private String state;
 
+    /**
+     * 是否上云
+     */
+    @Excel(name = "是否上云")
+    private String isOnline;
     /**
      * 最近上云时间
      */

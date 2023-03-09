@@ -6,26 +6,27 @@
 
     <sql id="selectCtDeviceVo">
         select id,
-               name,
-               store_id,
-               device_code,
-               device_type,
-               device_model,
-               brand_name,
-               device_serial,
-               device_area,
-               validate_code,
-               device_channel,
-               device_ascription,
-               state,
-               last_online_time,
-               last_offline_time,
-               remark,
-               create_time,
-               update_time,
-               del_flag,
-               is_activated,
-               login_type
+        name,
+        store_id,
+        device_code,
+        device_type,
+        device_model,
+        brand_name,
+        device_serial,
+        device_area,
+        validate_code,
+        device_channel,
+        device_ascription,
+        state,
+        is_online,
+        last_online_time,
+        last_offline_time,
+        remark,
+        create_time,
+        update_time,
+        del_flag,
+        is_activated,
+        login_type
         from ct_device
     </sql>
 
@@ -46,6 +47,7 @@
                 #{deviceAscription}
             </if>
             <if test="state != null  and state != ''">and state = #{state}</if>
+            <if test="isOnline != null and isOnline != ''">and is_online = #{isOnline}</if>
             <if test="lastOnlineTime != null ">and last_online_time = #{lastOnlineTime}</if>
             <if test="lastOfflineTime != null ">and last_offline_time = #{lastOfflineTime}</if>
             <if test="loginType != null ">and login_type = #{loginType}</if>
@@ -81,6 +83,7 @@
             <if test="deviceChannel != null">device_channel,</if>
             <if test="deviceAscription != null">device_ascription,</if>
             <if test="state != null">state,</if>
+            <if test="isOnline != null">is_online,</if>
             <if test="lastOnlineTime != null">last_online_time,</if>
             <if test="lastOfflineTime != null">last_offline_time,</if>
             <if test="remark != null">remark,</if>
@@ -104,6 +107,7 @@
             <if test="deviceChannel != null">#{deviceChannel},</if>
             <if test="deviceAscription != null">#{deviceAscription},</if>
             <if test="state != null">#{state},</if>
+            <if test="isOnline != null">#{isOnline},</if>
             <if test="lastOnlineTime != null">#{lastOnlineTime},</if>
             <if test="lastOfflineTime != null">#{lastOfflineTime},</if>
             <if test="remark != null">#{remark},</if>
@@ -130,6 +134,7 @@
             <if test="deviceChannel != null">device_channel = #{deviceChannel},</if>
             <if test="deviceAscription != null">device_ascription = #{deviceAscription},</if>
             <if test="state != null">state = #{state},</if>
+            <if test="isOnline != null">is_online = #{isOnline},</if>
             <if test="lastOnlineTime != null">last_online_time = #{lastOnlineTime},</if>
             <if test="lastOfflineTime != null">last_offline_time = #{lastOfflineTime},</if>
             <if test="remark != null">remark = #{remark},</if>
@@ -155,14 +160,14 @@
         </foreach>
     </delete>
 
-    <select id="selectDeviceNumGroupByStore"  resultType="CtDeviceNum">
+    <select id="selectDeviceNumGroupByStore" resultType="CtDeviceNum">
         select store_id,
-               count(1)                                 total,
-               count(case when state = '0' then 1 end)  online,
-               count(case when state != '0' then 1 end) offline
+        count(1) total,
+        count(case when state = '0' then 1 end) online,
+        count(case when state != '0' then 1 end) offline
         from ct_device d
         where del_flag = 0
-          and store_id is not null
+        and store_id is not null
         group by store_id
     </select>
 </mapper>

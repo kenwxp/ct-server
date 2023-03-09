@@ -1,7 +1,8 @@
 package com.cloudtimes.hardwaredevice.service;
 
-import com.cloudtimes.hardwaredevice.domain.ActivateDeviceReq;
+import com.cloudtimes.hardwaredevice.domain.DeviceActivateReq;
 import com.cloudtimes.hardwaredevice.domain.CtDevice;
+import com.cloudtimes.hardwaredevice.domain.DeviceOnlineReq;
 
 import java.util.List;
 
@@ -66,6 +67,15 @@ public interface ICtDeviceService {
      * @param param 电子设备
      * @return 结果
      */
-    public int activateCtDevice(ActivateDeviceReq param);
+    public int activateCtDevice(DeviceActivateReq param);
+
+
+    /**
+     * 新增电子设备
+     *
+     * @param param 电子设备
+     * @return 结果
+     */
+    public int onlineCtDevice(DeviceOnlineReq param);
 
 }
