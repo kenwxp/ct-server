@@ -97,6 +97,7 @@ object CtUserProvider {
                 set(mobile) equalTo request.mobile!!
                 set(agentState) equalTo AgentState.Signing.code
                 set(isAgent) equalTo YesNoState.Yes.code
+                set(realName) equalTo request.userName!!
                 set(agentType) equalTo request.agentType
                 set(updateTime).equalTo(Date())
                 set(isAgent)

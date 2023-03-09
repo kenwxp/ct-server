@@ -19,6 +19,11 @@ class AgentRegisterRequest {
     @field:NotNull(message =  "手机号不能为空")
     var mobile: String? = null
 
+    @ApiModelProperty(value = "用户名", required = true)
+    @field:NotEmpty(message =  "用户名不能为空")
+    @field:NotNull(message =  "用户名不能为空")
+    var userName: String? = null
+
     @ApiModelProperty(value = "邀请码-代理拓展时，下级代理注册使用", required = false)
     var inviteCode: String? = null
 
