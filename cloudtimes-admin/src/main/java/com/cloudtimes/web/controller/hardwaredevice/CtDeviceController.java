@@ -4,6 +4,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import com.cloudtimes.hardwaredevice.domain.DeviceActivateReq;
+import com.cloudtimes.hardwaredevice.domain.DeviceOnlineReq;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -120,4 +121,16 @@ public class CtDeviceController extends BaseController {
         return toAjax(ctDeviceService.activateCtDevice(param));
     }
 
+    /**
+     * 电子设备上下云
+     */
+    @Log(title = "电子设备上下云", businessType = BusinessType.UPDATE)
+    @GetMapping(value = "/onlineCtDevice/{deviceId}/{isOnline}")
+    public AjaxResult onlineCtDevice(@PathVariable("deviceId") String deviceId, @PathVariable("isOnline") String isOnline) {
+        DeviceOnlineReq req = new DeviceOnlineReq();
+        req.setDeviceId(deviceId);
+        req.setOption(isOnline);
+        ctDeviceService.onlineCtDevice(req);
+        return AjaxResult.success();
+    }
 }

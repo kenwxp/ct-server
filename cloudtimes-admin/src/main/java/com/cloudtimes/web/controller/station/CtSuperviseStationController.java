@@ -34,7 +34,7 @@ public class CtSuperviseStationController {
 
     // 获取语音模版列表
     @ApiOperation(value = "获取语音模版列表", notes = "station:supervise:audioTemplate")
-    @PreAuthorize("@ss.hasPermi('station:supervise:audioTemplate')")
+//    @PreAuthorize("@ss.hasPermi('station:supervise:audioTemplate')")
     @PostMapping(value = "/audioTemplate")
     public ApiResult<List<GetAudioTemplateResp>> getAudioTemplate() {
         List<GetAudioTemplateResp> audioTemplate = superviseStationService.getAudioTemplate();
