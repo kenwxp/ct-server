@@ -127,7 +127,7 @@ public class CtCustomerServiceServiceImpl implements ICtCustomerServiceService {
 
 
     /**
-     * 同步客服特性参数
+     * 同步客服特性参数(按钮功能)
      *
      * @return 结果
      */

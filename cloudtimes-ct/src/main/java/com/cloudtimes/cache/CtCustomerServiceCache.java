@@ -5,6 +5,8 @@ import com.cloudtimes.common.core.redis.RedisCache;
 import com.cloudtimes.common.utils.StringUtils;
 import com.cloudtimes.supervise.domain.CtCustomerService;
 import com.cloudtimes.supervise.mapper.CtCustomerServiceMapper;
+import com.cloudtimes.supervise.service.ICtCustomerServiceService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
@@ -17,6 +19,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 @Component
+@Slf4j
 public class CtCustomerServiceCache {
     private static final String CACHE_NAME = "CUSTOMER_SERVICE:";//
     //读写锁
@@ -29,10 +32,14 @@ public class CtCustomerServiceCache {
     private RedisCache redisCache;
     @Autowired
     private CtCustomerServiceMapper customerServiceMapper;
+    @Autowired
+    private ICtCustomerServiceService sysCustomerServiceService;
     private final long SERVICE_DEPT_ID = 201;
 
     @PostConstruct
     public void init() {
+        log.info("===========> 初始化客服参数加载 <===============");
+        sysCustomerServiceService.syncCtCustomerService();
         //初始化加载进行中的任务
         refresh(true);
     }
