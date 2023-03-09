@@ -1,6 +1,6 @@
 hik:
-  app_key: "392b99f5d3084816829393369cde9de2"
-  app_secret: "7f578e0863bcd258975fd0e6795a362e"
+  app_key: e69b05304140449997738272d2afa7cc
+  app_secret: 2bcca73bb23c65af91f5fcd79e713409
 wx:
   #小程序appid
   appid: wxdee2b19db3be8517
@@ -18,12 +18,12 @@ wx:
   cert_serial: 73C3AEF33ECD9C7E71FA11C155BFAF99694230F8
   cert_private_pem_path: apiclient_key.pem
   cert_public_pem_path: apiclient_cert.pem
-  #公众号appid
-  official_appid: wxdee2b19db3be8517
-  #公众号秘钥
-  official_secret: 99887628a67e7d8a23d4d8410bcf47a1
+  # 公众号appid
+  official_appid: wxbcba794e0e6361a1
+  official_secret: 8910ff4f38a756a693e6941e78569001
   # 微信回调地址
-  login_callback_api_url: https://ctdev.htymeta.com/h5#/pages/login/wxLogin?type=wxauth
+  login_callback_api_url: https://ct.htymeta.com/agent/pages/login/wxLogin
+
 agora:
   appid: 7be11df0b1b547e0b67b7960a4d7ff05
   app_certificate: 7066736b8f59453fb3e55f59361f987a
