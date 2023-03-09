@@ -2,6 +2,7 @@ package com.cloudtimes.agent.service.impl
 
 import com.cloudtimes.agent.domain.*
 import com.cloudtimes.agent.dto.request.ActivityRuleRequest
+import com.cloudtimes.agent.dto.response.CtAgentActivitySettlementDto
 import com.cloudtimes.agent.mapper.*
 import com.cloudtimes.agent.mapper.provider.CtAgentActivitySettlementProvider
 import com.cloudtimes.agent.service.*
@@ -33,7 +34,7 @@ class CtAgentActivitySettlementServiceImpl : ICtAgentActivitySettlementService {
             CtAgentActivitySettlementProvider.selectByKey(request.activityRuleId!!, request.userId!!)
         ) ?: throw ServiceException("活动未完成，不能确定")
 
-        if ( settlement.isFulfilled === null || settlement.isFulfilled != YesNoState.Yes.code) {
+        if (settlement.isFulfilled === null || settlement.isFulfilled != YesNoState.Yes.code) {
             throw ServiceException("活动未完成，不能确定")
         }
 
@@ -61,6 +62,10 @@ class CtAgentActivitySettlementServiceImpl : ICtAgentActivitySettlementService {
      */
     override fun selectCtAgentActivitySettlementList(ctAgentActivitySettlement: CtAgentActivitySettlement): List<CtAgentActivitySettlement> {
         return settlementMapper.selectCtAgentActivitySettlementList(ctAgentActivitySettlement)
+    }
+
+    override fun selectCtAgentActivitySettlementListPlus(ctAgentActivitySettlement: CtAgentActivitySettlement): List<CtAgentActivitySettlementDto> {
+        return settlementMapper.selectCtAgentActivitySettlementListPlus(ctAgentActivitySettlement)
     }
 
     /**

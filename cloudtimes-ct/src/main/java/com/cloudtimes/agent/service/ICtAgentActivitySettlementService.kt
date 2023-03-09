@@ -2,6 +2,7 @@ package com.cloudtimes.agent.service
 
 import com.cloudtimes.agent.domain.CtAgentActivitySettlement
 import com.cloudtimes.agent.dto.request.ActivityRuleRequest
+import com.cloudtimes.agent.dto.response.CtAgentActivitySettlementDto
 
 /**
  * 代理活动结算Service接口
@@ -27,6 +28,8 @@ interface ICtAgentActivitySettlementService {
      * @return 代理活动结算集合
      */
     fun selectCtAgentActivitySettlementList(ctAgentActivitySettlement: CtAgentActivitySettlement): List<CtAgentActivitySettlement>
+
+    fun selectCtAgentActivitySettlementListPlus(ctAgentActivitySettlement: CtAgentActivitySettlement): List<CtAgentActivitySettlementDto>
 
     /**
      * 新增代理活动结算

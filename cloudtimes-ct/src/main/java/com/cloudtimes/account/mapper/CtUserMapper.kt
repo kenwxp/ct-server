@@ -1,6 +1,7 @@
 package com.cloudtimes.account.mapper
 
 import com.cloudtimes.account.domain.CtUser
+import com.cloudtimes.account.dto.response.CtUserDto
 import org.apache.ibatis.annotations.*
 
 import org.apache.ibatis.type.JdbcType
@@ -116,6 +117,9 @@ interface CtUserMapper : CommonCountMapper, CommonDeleteMapper, CommonInsertMapp
      * @return 用户集合
      */
     fun selectCtUserList(ctUser: CtUser): List<CtUser>
+
+
+    fun selectCtUserListPlus(ctUser: CtUser): List<CtUserDto>
 
     /**
      * 新增用户

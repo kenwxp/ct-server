@@ -13,4 +13,5 @@ public class CacheVideoData {
     private String url;
     private Date expireTime;
     private String token;
+
 }

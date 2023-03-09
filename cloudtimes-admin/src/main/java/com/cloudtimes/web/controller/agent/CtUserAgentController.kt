@@ -1,6 +1,7 @@
 package com.cloudtimes.web.controller.agent
 
 import com.cloudtimes.account.domain.CtUser
+import com.cloudtimes.account.dto.response.CtUserDto
 import com.cloudtimes.account.service.ICtUserService
 import com.cloudtimes.agent.domain.CtUserAgent
 import com.cloudtimes.agent.service.ICtUserAgentService
@@ -46,11 +47,11 @@ class CtUserAgentController : BaseController() {
     /**
      * 查询用户列表
      */
-   // @PreAuthorize("@ss.hasPermi('agent:agent:agentUserlist')")
+    // @PreAuthorize("@ss.hasPermi('agent:agent:agentUserlist')")
     @GetMapping("/agentUserlist")
     fun listUser(ctUser: CtUser?): TableDataInfo? {
         startPage()
-        val list: List<CtUser?> = ctUserService.selectCtUserList(ctUser!!)
+        val list: List<CtUserDto?> = ctUserService.selectCtUserListPlus(ctUser!!)
         return getDataTable(list)
     }
 
@@ -99,7 +100,7 @@ class CtUserAgentController : BaseController() {
     }
 
 
-  //  @PreAuthorize("@ss.hasPermi('agent:agent:edit')")
+    //  @PreAuthorize("@ss.hasPermi('agent:agent:edit')")
     @Log(title = "代理", businessType = BusinessType.UPDATE)
     @PutMapping("/updateAgnetUser")
     fun updateAgnetUser(@RequestBody ctUser: CtUser): AjaxResult? {

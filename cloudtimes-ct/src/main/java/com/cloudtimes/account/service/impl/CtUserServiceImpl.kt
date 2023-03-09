@@ -3,6 +3,7 @@ package com.cloudtimes.account.service.impl
 import com.cloudtimes.account.domain.CtUser
 import com.cloudtimes.account.dto.request.QueryByUserIdRequest
 import com.cloudtimes.account.dto.request.VerifyRealNameRequest
+import com.cloudtimes.account.dto.response.CtUserDto
 import com.cloudtimes.account.mapper.CtUserMapper
 import com.cloudtimes.account.mapper.provider.CtUserProvider
 import com.cloudtimes.account.service.ICtUserService
@@ -156,6 +157,10 @@ class CtUserServiceImpl : ICtUserService {
      */
     override fun selectCtUserList(ctUser: CtUser): List<CtUser> {
         return userMapper.selectCtUserList(ctUser)
+    }
+
+    override fun selectCtUserListPlus(ctUser: CtUser): List<CtUserDto> {
+        return userMapper.selectCtUserListPlus(ctUser);
     }
 
     /**

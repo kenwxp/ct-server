@@ -3,6 +3,7 @@ package com.cloudtimes.account.service
 import com.cloudtimes.account.domain.CtUser
 import com.cloudtimes.account.dto.request.QueryByUserIdRequest
 import com.cloudtimes.account.dto.request.VerifyRealNameRequest
+import com.cloudtimes.account.dto.response.CtUserDto
 import com.cloudtimes.agent.dto.request.AgentRegisterRequest
 import com.cloudtimes.agent.dto.response.InviteResponse
 
@@ -62,6 +63,8 @@ interface ICtUserService {
      * @return 用户集合
      */
     fun selectCtUserList(ctUser: CtUser): List<CtUser>
+
+    fun selectCtUserListPlus(ctUser: CtUser): List<CtUserDto>
 
     /**
      * 新增用户

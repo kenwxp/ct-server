@@ -7,6 +7,7 @@ import com.cloudtimes.common.core.controller.BaseController
 import com.cloudtimes.common.core.domain.AjaxResult
 import com.cloudtimes.common.core.page.TableDataInfo
 import com.cloudtimes.common.enums.BusinessType
+import com.cloudtimes.common.utils.DateUtils
 import com.cloudtimes.common.utils.poi.ExcelUtil
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.prepost.PreAuthorize
@@ -32,7 +33,7 @@ class CtAgentActivitySettlementController : BaseController() {
     @GetMapping("/list")
     fun list(ctAgentActivitySettlement: CtAgentActivitySettlement): TableDataInfo {
         startPage()
-        val list = ctAgentActivitySettlementService.selectCtAgentActivitySettlementList(ctAgentActivitySettlement)
+        val list = ctAgentActivitySettlementService.selectCtAgentActivitySettlementListPlus(ctAgentActivitySettlement)
         return getDataTable(list)
     }
 
@@ -76,6 +77,7 @@ class CtAgentActivitySettlementController : BaseController() {
     @Log(title = "代理活动结算", businessType = BusinessType.UPDATE)
     @PutMapping
     fun edit(@RequestBody ctAgentActivitySettlement: CtAgentActivitySettlement): AjaxResult {
+        ctAgentActivitySettlement.platformApprovedTime = DateUtils.getNowDate();
         return toAjax(ctAgentActivitySettlementService.updateCtAgentActivitySettlement(ctAgentActivitySettlement))
     }
 }

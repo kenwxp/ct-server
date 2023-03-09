@@ -61,6 +61,31 @@
         </where>
     </select>
 
+
+    <select id="selectCtUserListPlus" parameterType="CtUser"
+            resultType="CtUserDto">
+        SELECT
+        u.*,
+        uu.id as parent_user_id,
+        uu.mobile as parent_mobile,
+        uu.real_name as parent_real_name
+        FROM
+        ct_user u
+        LEFT JOIN ct_user_agent ua ON ua.user_id = u.id
+        LEFT JOIN ct_user uu ON uu.id = ua.parent_user_id
+        <where>
+            <if test="account != null  and account != ''">and u.account = #{account}</if>
+            <if test="mobile != null  and mobile != ''">and u.mobile = #{mobile}</if>
+            <if test="realName != null  and realName != ''">and u.real_name like concat('%', #{realName}, '%')</if>
+            <if test="isAgent != null  and isAgent != ''">and u.is_agent = #{isAgent}</if>
+            <if test="isShopBoss != null  and isShopBoss != ''">and u.is_shop_boss = #{isShopBoss}</if>
+            <if test="agentState != null  and agentState != ''">and u.agent_state = #{agentState}</if>
+            <if test="agentType != null  and agentType != ''">and u.agent_type = #{agentType}</if>
+            <if test="bossState != null  and bossState != ''">and u.boss_state = #{bossState}</if>
+            <if test="customerState != null  and customerState != ''">and u.customer_state = #{customerState}</if>
+        </where>
+    </select>
+
     <select id="selectCtUserById" parameterType="String" resultType="CtUser">
         <include refid="selectCtUserVo"/>
         where id = #{id}

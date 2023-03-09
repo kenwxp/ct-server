@@ -28,6 +28,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createDate != null "> and create_date = #{createDate}</if>
         </where>
     </select>
+
+    <select id="selectCtAgentActivitySettlementListPlus" parameterType="CtAgentActivitySettlement" resultType="CtAgentActivitySettlementDto">
+        SELECT
+        cas.*,
+        u.account as agentUserAccount
+        FROM
+        ct_agent_activity_settlement cas
+        LEFT JOIN ct_user u ON u.id = cas.user_id
+        <where>
+            <if test="activityType != null  and activityType != ''">and cas.activity_type = #{activityType}</if>
+            <if test="userId != null  and userId != ''">and cas.user_id = #{userId}</if>
+            <if test="isFulfilled != null  and isFulfilled != ''">and cas.is_fulfilled = #{isFulfilled}</if>
+            <if test="verifyState != null  and verifyState != ''">and cas.verify_state = #{verifyState}</if>
+            <if test="state != null  and state != ''">and cas.state = #{state}</if>
+        </where>
+    </select>
     
     <select id="selectCtAgentActivitySettlementById" parameterType="String" resultMap="CtAgentActivitySettlementResult">
         <include refid="selectCtAgentActivitySettlementVo"/>

@@ -1,6 +1,7 @@
 package com.cloudtimes.agent.mapper
 
 import com.cloudtimes.agent.domain.CtAgentActivitySettlement
+import com.cloudtimes.agent.dto.response.CtAgentActivitySettlementDto
 
 import org.apache.ibatis.annotations.Mapper
 import org.apache.ibatis.annotations.Result
@@ -21,7 +22,8 @@ import org.mybatis.dynamic.sql.util.mybatis3.CommonInsertMapper
  * @date 2023-02-17
  */
 @Mapper
-interface CtAgentActivitySettlementMapper : CommonCountMapper, CommonInsertMapper<CtAgentActivitySettlement>, CommonUpdateMapper {
+interface CtAgentActivitySettlementMapper : CommonCountMapper, CommonInsertMapper<CtAgentActivitySettlement>,
+    CommonUpdateMapper {
     @SelectProvider(type = SqlProviderAdapter::class, method = "select")
     @Results(
         id = "CtAgentActivitySettlementResult", value = [
@@ -69,6 +71,8 @@ interface CtAgentActivitySettlementMapper : CommonCountMapper, CommonInsertMappe
      * @return 代理活动结算集合
      */
     fun selectCtAgentActivitySettlementList(ctAgentActivitySettlement: CtAgentActivitySettlement): List<CtAgentActivitySettlement>
+
+    fun selectCtAgentActivitySettlementListPlus(ctAgentActivitySettlement: CtAgentActivitySettlement): List<CtAgentActivitySettlementDto>
 
     /**
      * 新增代理活动结算
