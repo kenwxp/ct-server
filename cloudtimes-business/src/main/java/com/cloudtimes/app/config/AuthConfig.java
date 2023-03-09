@@ -33,11 +33,12 @@ public class AuthConfig implements WebMvcConfigurer {
                         "/system/**",
                         "/test/**",
                         "/sms/**",
-                        "/agent/wx_auth",
-                        "/agent/user/h5_login",
-                        "/agent/user/register",
+                        "/mp/wx_auth",
+                        "/mp/user/h5_login",
+                        "/mp/user/register",
                         "/agent/store/register",
-                        "/rcyg/**"
+                        "/rcyg/**",
+                        "/mp/**"
                 )
                 .excludePathPatterns("/js/**", "/css/**", "/images/**", "/lib/**",
                         "/fonts/**")

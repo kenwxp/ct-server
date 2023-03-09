@@ -62,9 +62,9 @@ class SwaggerConfig {
     @Bean
     fun agentGroup(): Docket {
         return Docket(DocumentationType.OAS_30)
-            .groupName("代理API")
+            .groupName("公众号API")
             .select()
-            .paths(PathSelectors.regex(".*/agent/.*"))
+            .paths(PathSelectors.regex(".*/mp/.*"))
             .build()
     }
 
