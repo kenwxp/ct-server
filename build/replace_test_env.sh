@@ -24,6 +24,11 @@ ADMIN_TEST_CONTEXT='context-path: /admin-api'
 
 # 3. 通用函数
 
+function replace_active_profiles {
+  APP_YML=$1
+  sed -i -E -e "s#^    (active: .*)\$#    \1,test#" $APP_YML
+}
+
 function replace_admin_app_config() {
     ADMIN_YML=$1
     sed -i -E -e "s#^(\s+)$ADMIN_DEV_CONTEXT\$#\1$ADMIN_TEST_CONTEXT#" $ADMIN_YML
@@ -66,6 +71,7 @@ ADMIN_DRUID_YML='./cloudtimes-admin/target/resources/application-druid.yml'
 ADMIN_ROCKETMQ_YML='./cloudtimes-admin/target/resources/application-rocketmq.yml'
 ADMIN_WECHAT_YML='./cloudtimes-admin/target/resources/application-partner.yml'
 replace_admin_app_config $ADMIN_APP_YML
+replace_active_profiles $ADMIN_APP_YML
 replace_app_config $ADMIN_APP_YML
 replace_mysql_config $ADMIN_DRUID_YML
 replace_mq_config $ADMIN_ROCKETMQ_YML
@@ -77,6 +83,7 @@ BUSINESS_DRUID_YML='./cloudtimes-business/target/resources/application-druid.yml
 BUSINESS_ROCKETMQ_YML='./cloudtimes-business/target/resources/application-rocketmq.yml'
 BUSINESS_WECHAT_YML='./cloudtimes-business/target/resources/application-partner.yml'
 replace_app_config    $BUSINESS_APP_YML
+replace_active_profiles $BUSINESS_APP_YML
 replace_mysql_config  $BUSINESS_DRUID_YML
 replace_mq_config     $BUSINESS_ROCKETMQ_YML
 replace_wechat_config $BUSINESS_WECHAT_YML
@@ -86,14 +93,15 @@ SOCKETSERVER_APP_YML='./cloudtimes-socketserver/target/resources/application.yml
 SOCKETSERVER_DRUID_YML='./cloudtimes-socketserver/target/resources/application-druid.yml'
 SOCKETSERVER_ROCKETMQ_YML='./cloudtimes-socketserver/target/resources/application-rocketmq.yml'
 replace_app_config    $SOCKETSERVER_APP_YML
+replace_active_profiles $SOCKETSERVER_APP_YML
 replace_mysql_config  $SOCKETSERVER_DRUID_YML
 replace_mq_config     $SOCKETSERVER_ROCKETMQ_YML
-
 
 # 7 修改detectionserver服务配置文件
 DETECTIONSERVER_APP_YML='./cloudtimes-detectionserver/target/resources/application.yml'
 DETECTIONSERVER_ROCKETMQ_YML='./cloudtimes-detectionserver/target/resources/application-rocketmq.yml'
 replace_app_config    $DETECTIONSERVER_APP_YML
+replace_active_profiles $DETECTIONSERVER_APP_YML
 replace_mq_config     $DETECTIONSERVER_ROCKETMQ_YML
 
 exit 0
