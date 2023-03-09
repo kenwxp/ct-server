@@ -67,10 +67,12 @@ class CtUserServiceImpl : ICtUserService {
         if (! request.inviteCode.isNullOrEmpty()) {
             val parentAgent = userMapper.selectOne(CtUserProvider.selectUserByInviteCode(request.inviteCode!!))
                 ?: throw ServiceException("查询邀请人失败")
-
-            request.agentType = AgentType.SubAgent.code
-            newAgent.parentUserId = parentAgent.id
-            newAgent.agentType = AgentType.SubAgent.code
+            // 普通代理可以邀请，邀请的人归属公司
+            if (parentAgent.agentType != AgentType.GeneralAgent.code) {
+                request.agentType = AgentType.SubAgent.code
+                newAgent.parentUserId = parentAgent.id
+                newAgent.agentType = AgentType.SubAgent.code
+            }
         }
         userMapper.update(CtUserProvider.agentRegister(request))
         agentMapper.generalInsert(CtUserAgentProvider.createAgent(newAgent))
