@@ -1,13 +1,10 @@
-package com.cloudtimes.app.controller.wechat.model;
+package com.cloudtimes.serving.wechat.domain;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * 小程序登录校验接口返回体
@@ -17,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 @NoArgsConstructor
 @Accessors(chain = true)
 @ApiModel(description = "返回参数")
-public class LoginCheckResp {
+public class MpLoginCheckResp {
     /**
      * 是否新用户 0-否 1-是
      */

@@ -6,4 +6,5 @@ import lombok.Data;
 public class SendOrderData {
     private String orderId;
     private String dynamicQrCode;
+    private String customerPhone;
 }

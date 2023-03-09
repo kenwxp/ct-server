@@ -14,6 +14,8 @@ import com.cloudtimes.hardwaredevice.mapper.CtStoreMapper;
 import com.cloudtimes.mq.service.CtCashMqSenderService;
 import com.cloudtimes.serving.cash.service.ICtCashBusinessService;
 import com.cloudtimes.serving.common.CtTaskInnerService;
+import com.cloudtimes.serving.wechat.domain.ScanCodeReq;
+import com.cloudtimes.serving.wechat.domain.ScanCodeResp;
 import com.cloudtimes.serving.wechat.service.ICtCustomerBusinessService;
 import com.cloudtimes.supervise.domain.CtOrder;
 import com.cloudtimes.supervise.domain.CtShopping;
@@ -56,9 +58,10 @@ public class CtCustomerBusinessServiceImpl implements ICtCustomerBusinessService
 
     @Override
     @Transactional
-    public Map<String, String> scanCode(String userId, String storeNo, String dynamicCode, String deviceId) {
-        Map<String, String> retMap = new HashMap<>();
-
+    public ScanCodeResp scanCode(String userId, ScanCodeReq param) {
+        String storeNo = param.getShopId();
+        String dynamicCode = param.getDynamicCode();
+        String deviceId = param.getDid();
         // 获取门店信息
         CtStore dbStore = storeMapper.selectCtStoreByStoreNo(storeNo);
         if (dbStore == null) {
@@ -68,7 +71,7 @@ public class CtCustomerBusinessServiceImpl implements ICtCustomerBusinessService
         if ("0".equals(dbStore.getIsSupervise())) {
             throw new ServiceException("当前门店不在营业中");
         }
-        retMap.put("isSupervise", dbStore.getIsSupervise());
+
 
         CtUser dbUser = userMapper.selectCtUserById(userId);
         if (dbUser == null) {
@@ -90,8 +93,10 @@ public class CtCustomerBusinessServiceImpl implements ICtCustomerBusinessService
                 }
             });
             if (ctShoppings != null && ctShoppings.size() > 0) {
-                retMap.put("shoppingId", ctShoppings.get(0).getId());
-                return retMap;
+                ScanCodeResp scanCodeResp = new ScanCodeResp();
+                scanCodeResp.setIsSupervise(dbStore.getIsSupervise());
+                scanCodeResp.setShoppingId(ctShoppings.get(0).getId());
+                return scanCodeResp;
             }
 
         }
@@ -99,7 +104,7 @@ public class CtCustomerBusinessServiceImpl implements ICtCustomerBusinessService
             // 若为动态码，则校验内存中动态码是否一致，不一致则产生新的二维码，推送收银机，一致流程继续
             if (!StringUtils.equals(deviceCache.get(deviceId), dynamicCode)) {
                 String newUrl = cashBusinessService.genDynamicQrCodeUrl(deviceId, dbStore.getStoreNo());
-                cashMqSender.sendBillSerial(dbStore.getId(), "", newUrl);
+                cashMqSender.sendBillSerial(dbStore.getId(), "", newUrl, dbUser.getMobile());
                 throw new ServiceException("二维码失效，请重试");
             }
         }
@@ -120,7 +125,6 @@ public class CtCustomerBusinessServiceImpl implements ICtCustomerBusinessService
         }
         //加入内存
         taskCache.setCacheShopping(newShopping);
-        retMap.put("shoppingId", newShopping.getId());
 
         if (!StringUtils.isEmpty(dynamicCode)) {
             //扫动态码流程，新增订单
@@ -149,8 +153,11 @@ public class CtCustomerBusinessServiceImpl implements ICtCustomerBusinessService
             taskCache.setCacheOrder(newOrder);
             String newUrl = cashBusinessService.genDynamicQrCodeUrl(deviceId, dbStore.getStoreNo());
             // 推送收银机单号
-            cashMqSender.sendBillSerial(dbStore.getId(), newOrder.getId(), newUrl);
+            cashMqSender.sendBillSerial(dbStore.getId(), newOrder.getId(), newUrl, dbUser.getMobile());
         }
-        return retMap;
+        ScanCodeResp scanCodeResp = new ScanCodeResp();
+        scanCodeResp.setIsSupervise(dbStore.getIsSupervise());
+        scanCodeResp.setShoppingId(newShopping.getId());
+        return scanCodeResp;
     }
 }

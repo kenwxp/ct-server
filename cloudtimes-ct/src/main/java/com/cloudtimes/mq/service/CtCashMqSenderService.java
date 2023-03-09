@@ -2,6 +2,7 @@ package com.cloudtimes.mq.service;
 
 import com.cloudtimes.common.constant.RocketMQConstants;
 import com.cloudtimes.common.mq.*;
+import com.cloudtimes.common.utils.NumberUtils;
 import com.cloudtimes.enums.DeviceType;
 import com.cloudtimes.hardwaredevice.domain.CtDevice;
 import com.cloudtimes.hardwaredevice.mapper.CtDeviceMapper;
@@ -60,7 +61,7 @@ public class CtCashMqSenderService {
         }
     }
 
-    public void sendBillSerial(String storeId, String orderId, String dynamicQrCode) {
+    public void sendBillSerial(String storeId, String orderId, String dynamicQrCode, String phone) {
         log.info("推送收银机单号: 门店id=" + storeId + " 单号：" + orderId);
         List<CtDevice> ctDevices = getCashDevicesOfShop(storeId);
         for (CtDevice device :
@@ -71,6 +72,7 @@ public class CtCashMqSenderService {
             SendOrderData data = new SendOrderData();
             data.setOrderId(orderId);
             data.setDynamicQrCode(dynamicQrCode);
+            data.setCustomerPhone(NumberUtils.getHiddenPhone(phone));
             cashMqData.setData(data);
             log.info("发送mq信息：" + cashMqData);
             mqProducer.send(RocketMQConstants.WS_CASH_DEVICE, cashMqData);

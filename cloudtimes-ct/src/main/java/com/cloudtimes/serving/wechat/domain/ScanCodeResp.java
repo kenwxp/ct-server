@@ -1,14 +1,12 @@
-package com.cloudtimes.app.controller.wechat.model;
+package com.cloudtimes.serving.wechat.domain;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
 
 
 @ApiModel(description = "返回参数")
 @Data
-@Slf4j
 public class ScanCodeResp {
     @ApiModelProperty(value = "购物流水号")
     private String shoppingId;

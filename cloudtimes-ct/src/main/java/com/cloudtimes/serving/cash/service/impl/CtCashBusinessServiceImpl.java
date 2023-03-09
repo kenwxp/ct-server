@@ -248,12 +248,6 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
             getProductListResp.setImageUrl(dbProduct.getPictureUrl());
             getProductListResp.setBuyPrice(dbProduct.getPurchasePrice().intValue());
             getProductListResp.setSellPrice(dbProduct.getRetailPrice().intValue());
-            getProductListResp.setCustomerPrice(dbProduct.getVipPrice().intValue());
-            int isCustomerDiscount = 0;
-            if (com.cloudtimes.common.utils.StringUtils.equals(dbProduct.getIsEnableVipPrice().toUpperCase(), "Y")) {
-                isCustomerDiscount = 1;
-            }
-            getProductListResp.setIsCustomerDiscount(isCustomerDiscount);
             resp.add(getProductListResp);
         }
         return resp;

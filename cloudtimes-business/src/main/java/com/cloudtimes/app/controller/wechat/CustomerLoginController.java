@@ -1,12 +1,11 @@
 package com.cloudtimes.app.controller.wechat;
 
 
-import com.cloudtimes.account.domain.CtUser;
 import com.cloudtimes.app.constant.PrefixPathConstants;
-import com.cloudtimes.app.controller.wechat.model.LoginCheckReq;
-import com.cloudtimes.app.controller.wechat.model.LoginCheckResp;
-import com.cloudtimes.app.controller.wechat.model.LoginReq;
-import com.cloudtimes.app.controller.wechat.model.LoginResp;
+import com.cloudtimes.serving.wechat.domain.MpLoginCheckReq;
+import com.cloudtimes.serving.wechat.domain.MpLoginCheckResp;
+import com.cloudtimes.serving.wechat.domain.MpLoginReq;
+import com.cloudtimes.serving.wechat.domain.MpLoginResp;
 import com.cloudtimes.common.core.domain.ApiResult;
 import com.cloudtimes.common.core.domain.entity.AuthUser;
 import com.cloudtimes.common.enums.ChannelType;
@@ -41,10 +40,8 @@ public class CustomerLoginController {
      */
     @ApiOperation("小程序用户登录校验")
     @PostMapping("/check")
-    public ApiResult<LoginCheckResp> loginCheck(@RequestBody LoginCheckReq param) {
-        boolean isNewCustomer = loginService.checkCustomerNew(param.getLoginCode());
-        LoginCheckResp loginCheckResp = new LoginCheckResp();
-        loginCheckResp.setIsNew(isNewCustomer ? "1" : "0");
+    public ApiResult<MpLoginCheckResp> loginCheck(@RequestBody MpLoginCheckReq param) {
+        MpLoginCheckResp loginCheckResp = loginService.checkCustomerNew(param.getLoginCode());
         return new ApiResult().success(loginCheckResp);
     }
 
@@ -56,13 +53,12 @@ public class CustomerLoginController {
      */
     @ApiOperation("小程序用户登录接口")
     @PostMapping("")
-    public ApiResult<LoginResp> login(@RequestBody LoginReq param, HttpServletRequest request) {
+    public ApiResult<MpLoginResp> login(@RequestBody MpLoginReq param, HttpServletRequest request) {
         String loginIp = IpUtils.getIpAddr(request);
-        CtUser customerInfo = loginService.customerLogin(param.getLoginCode(), param.getPhoneCode(), loginIp);
-        LoginResp loginResp = new LoginResp();
+        MpLoginResp loginResp = loginService.customerLogin(param, loginIp);
         // 封装返回参数
         //获取token
-        String token = jwtManager.createToken(new AuthUser(customerInfo.getId(), ChannelType.WX_MP));
+        String token = jwtManager.createToken(new AuthUser(loginResp.getUserId(), ChannelType.WX_MP));
         loginResp.setAccessToken(token);
         return new ApiResult().success(loginResp);
     }

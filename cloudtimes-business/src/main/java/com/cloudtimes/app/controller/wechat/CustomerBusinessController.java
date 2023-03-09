@@ -1,11 +1,10 @@
 package com.cloudtimes.app.controller.wechat;
 
 import com.cloudtimes.app.constant.PrefixPathConstants;
-import com.cloudtimes.app.controller.wechat.model.ScanCodeReq;
-import com.cloudtimes.app.controller.wechat.model.ScanCodeResp;
+import com.cloudtimes.serving.wechat.domain.ScanCodeReq;
+import com.cloudtimes.serving.wechat.domain.ScanCodeResp;
 import com.cloudtimes.common.core.domain.ApiResult;
 import com.cloudtimes.common.core.domain.entity.AuthUser;
-import com.cloudtimes.common.enums.ChannelType;
 import com.cloudtimes.common.utils.AuthUtils;
 import com.cloudtimes.common.utils.StringUtils;
 import com.cloudtimes.serving.wechat.service.ICtCustomerBusinessService;
@@ -41,10 +40,7 @@ public class CustomerBusinessController {
         if (StringUtils.isEmpty(param.getDid())) {
             return new ApiResult().error("设备号不能为空");
         }
-        Map<String, String> retMap = businessService.scanCode(authUser.getId(), param.getShopId(), param.getDynamicCode(), param.getDid());
-        ScanCodeResp respData = new ScanCodeResp();
-        respData.setIsSupervise(retMap.get("isSupervise"));
-        respData.setShoppingId(retMap.get("shoppingId"));
+        ScanCodeResp respData = businessService.scanCode(authUser.getId(), param);
         return new ApiResult().success(respData);
     }
 

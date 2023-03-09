@@ -1,5 +1,8 @@
 package com.cloudtimes.serving.wechat.service;
 
+import com.cloudtimes.serving.wechat.domain.ScanCodeReq;
+import com.cloudtimes.serving.wechat.domain.ScanCodeResp;
+
 import java.util.Map;
 
 /**
@@ -10,12 +13,9 @@ import java.util.Map;
  */
 public interface ICtCustomerBusinessService {
     /**
-     * @param storeNo
-     * @param dynamicCode
-     * @param deviceId
      * @return map
      * shoppingId
      * isSupervise
      */
-    public Map<String, String> scanCode(String userId, String storeNo, String dynamicCode, String deviceId);
+    public ScanCodeResp scanCode(String userId, ScanCodeReq param);
 }

@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 @Data
 @Slf4j
 public class GetProductListResp {
-
     @ApiModelProperty(value = "商品的唯一标识", required = true)
     private String productUid;
     @ApiModelProperty(value = "商品名称", required = true)
@@ -24,8 +23,4 @@ public class GetProductListResp {
     private int buyPrice;
     @ApiModelProperty(value = "商品销售价", required = true)
     private int sellPrice;
-    @ApiModelProperty(value = "商品会员价", required = true)
-    private int customerPrice;
-    @ApiModelProperty(value = "是否开启会员折扣支持，0-否，1-是，", required = true)
-    private int isCustomerDiscount;
 }

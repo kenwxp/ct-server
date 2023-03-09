@@ -9,6 +9,9 @@ import com.cloudtimes.common.enums.DataSourceType;
 import com.cloudtimes.common.exception.ServiceException;
 import com.cloudtimes.common.utils.StringUtils;
 import com.cloudtimes.partner.weixin.ICtWeixinApiService;
+import com.cloudtimes.serving.wechat.domain.MpLoginCheckResp;
+import com.cloudtimes.serving.wechat.domain.MpLoginReq;
+import com.cloudtimes.serving.wechat.domain.MpLoginResp;
 import com.cloudtimes.serving.wechat.service.ICtCustomerLoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,22 +39,26 @@ public class CtCustomerLoginServiceImpl implements ICtCustomerLoginService {
     private CtUserAssetsMapper userAssetsMapper;
 
     @Override
-    public boolean checkCustomerNew(String loginCode) {
+    public MpLoginCheckResp checkCustomerNew(String loginCode) {
         Map<String, Object> userSession = weixinApiService.getUserSession(loginCode);
         if (StringUtils.isNotEmpty(StringUtils.getStringFromObjectMap(userSession, "errcode"))) {
             throw new ServiceException(userSession.get("errmsg").toString());
         }
         String openId = StringUtils.getStringFromObjectMap(userSession, "openid");
         CtUser user = userMapper.selectCtUserByWxOpenId(openId);
+        MpLoginCheckResp loginCheckResp = new MpLoginCheckResp();
+        loginCheckResp.setIsNew("0");
         if (user == null) {
-            return true;
+            loginCheckResp.setIsNew("1");
         }
-        return false;
+        return loginCheckResp;
     }
 
     @Override
     @Transactional
-    public CtUser customerLogin(String loginCode, String phoneCode, String loginIp) {
+    public MpLoginResp customerLogin(MpLoginReq param, String loginIp) {
+        String loginCode = param.getLoginCode();
+        String phoneCode = param.getLoginCode();
         Map<String, Object> userSession = weixinApiService.getUserSession(loginCode);
         if (StringUtils.isNotEmpty(StringUtils.getStringFromObjectMap(userSession, "errcode"))) {
             throw new ServiceException(userSession.get("errmsg").toString());
@@ -59,6 +66,7 @@ public class CtCustomerLoginServiceImpl implements ICtCustomerLoginService {
         String openId = StringUtils.getStringFromObjectMap(userSession, "openid");
         String unionId = StringUtils.getStringFromObjectMap(userSession, "unionid");
         CtUser user = userMapper.selectCtUserByWxOpenId(openId);
+        MpLoginResp loginResp = new MpLoginResp();
         if (user == null) {
             //新用户流程,获取手机号
             Map<String, Object> userPhoneInfo = weixinApiService.getUserPhoneInfo(phoneCode);
@@ -95,7 +103,8 @@ public class CtCustomerLoginServiceImpl implements ICtCustomerLoginService {
                 if (userAssetsMapper.insertCtUserAssets(newUserAssets) < 1) {
                     throw new ServiceException("新增用户资产失败");
                 }
-                return newUser;
+                loginResp.setUserId(newUser.getId());
+                return loginResp;
             } else {
                 //此流程为，当前unionId在本系统已有其它身份，现在增加顾客身份
                 dbUser.setId(dbUser.getId());
@@ -119,13 +128,15 @@ public class CtCustomerLoginServiceImpl implements ICtCustomerLoginService {
                         throw new ServiceException("新增用户资产失败");
                     }
                 }
-                return dbUser;
+                loginResp.setUserId(dbUser.getId());
+                return loginResp;
             }
         } else {
             if ("2".equals(user.getCustomerState())) {
                 throw new ServiceException("当前用户已被禁用");
             }
-            return user;
+            loginResp.setUserId(user.getId());
+            return loginResp;
         }
     }
 }

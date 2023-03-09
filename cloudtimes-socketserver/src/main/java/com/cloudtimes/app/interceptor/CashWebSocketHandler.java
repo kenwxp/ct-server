@@ -11,8 +11,6 @@ import com.cloudtimes.common.core.domain.entity.AuthUser;
 import com.cloudtimes.common.enums.ChannelType;
 import com.cloudtimes.common.enums.DeviceState;
 import com.cloudtimes.common.exception.ServiceException;
-import com.cloudtimes.common.mq.CashMqData;
-import com.cloudtimes.common.mq.SendOrderData;
 import com.cloudtimes.common.utils.DateUtils;
 import com.cloudtimes.common.utils.JWTManager;
 import com.cloudtimes.common.utils.StringUtils;
