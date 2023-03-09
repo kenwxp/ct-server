@@ -74,6 +74,9 @@ class CtUserAgentServiceImpl : ICtUserAgentService {
             agentMapper.generalInsert(CtUserAgentProvider.createAgent(newAgent))
         } else {
             existAgent.agentType = agent.agentType
+            existUser.agentType = agent.agentType
+            existUser.agentState = agent.agentState
+            userMapper.updateCtUser(existUser)
             agentMapper.update(CtUserAgentProvider.updateAgentTypeAndState(existAgent))
         }
         return ret
@@ -246,7 +249,7 @@ class CtUserAgentServiceImpl : ICtUserAgentService {
         val payeeId = payee.userId!!
 
         if (payer.cashAmount!! < transferCashRequest.amount!!) {
-            throw ServiceException("余额不足");
+            throw ServiceException("余额不足")
         }
 
         val transferAmount = transferCashRequest.amount

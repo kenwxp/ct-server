@@ -28,21 +28,10 @@ import javax.servlet.http.HttpServletResponse
 @RequestMapping("/agent/agent")
 class CtUserAgentController : BaseController() {
     @Autowired
-    private lateinit var ctUserAgentService: ICtUserAgentService
+    private lateinit var userAgentService: ICtUserAgentService
 
     @Autowired
-    private lateinit var ctUserService: ICtUserService
-
-//    /**
-//     * 查询代理列表
-//     */
-//    @PreAuthorize("@ss.hasPermi('agent:agent:list')")
-//    @GetMapping("/list")
-//    fun list(ctUserAgent: CtUserAgent): TableDataInfo {
-//        startPage()
-//        val list: List<CtUserAgent?> = ctUserAgentService.selectCtUserAgentList(ctUserAgent)
-//        return getDataTable(list)
-//    }
+    private lateinit var userService: ICtUserService
 
     /**
      * 查询用户列表
@@ -51,7 +40,7 @@ class CtUserAgentController : BaseController() {
     @GetMapping("/agentUserlist")
     fun listUser(ctUser: CtUser?): TableDataInfo? {
         startPage()
-        val list: List<CtUserDto?> = ctUserService.selectCtUserListPlus(ctUser!!)
+        val list: List<CtUserDto?> = userService.selectCtUserListPlus(ctUser!!)
         return getDataTable(list)
     }
 
@@ -60,9 +49,9 @@ class CtUserAgentController : BaseController() {
      * 获取代理详细信息
      */
 //    @PreAuthorize("@ss.hasPermi('agent:agent:query')")
-    @GetMapping(value = ["/getAgnetUser/{userId}"])
-    fun getAgnetUser(@PathVariable("userId") userId: String): AjaxResult {
-        return AjaxResult.success(ctUserService.selectCtUserById(userId))
+    @GetMapping(value = ["/getAgentUser/{userId}"])
+    fun getAgentUser(@PathVariable("userId") userId: String): AjaxResult {
+        return AjaxResult.success(userService.selectCtUserById(userId))
     }
 
 
@@ -73,7 +62,7 @@ class CtUserAgentController : BaseController() {
     @Log(title = "代理", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     fun export(response: HttpServletResponse, ctUserAgent: CtUserAgent) {
-        val list = ctUserAgentService.selectCtUserAgentList(ctUserAgent)
+        val list = userAgentService.selectCtUserAgentList(ctUserAgent)
         val util = ExcelUtil(
             CtUserAgent::class.java
         )
@@ -86,7 +75,7 @@ class CtUserAgentController : BaseController() {
     @PreAuthorize("@ss.hasPermi('agent:agent:query')")
     @GetMapping(value = ["/{userId}"])
     fun getInfo(@PathVariable("userId") userId: String): AjaxResult {
-        return AjaxResult.success(ctUserAgentService.selectCtUserAgentByUserId(userId))
+        return AjaxResult.success(userAgentService.selectCtUserAgentByUserId(userId))
     }
 
     /**
@@ -96,27 +85,17 @@ class CtUserAgentController : BaseController() {
     @Log(title = "代理", businessType = BusinessType.INSERT)
     @PostMapping
     fun add(@RequestBody ctUserAgent: CtUserAgent): AjaxResult {
-        return toAjax(ctUserAgentService.insertCtUserAgent(ctUserAgent))
+        return toAjax(userAgentService.insertCtUserAgent(ctUserAgent))
     }
 
 
     //  @PreAuthorize("@ss.hasPermi('agent:agent:edit')")
     @Log(title = "代理", businessType = BusinessType.UPDATE)
-    @PutMapping("/updateAgnetUser")
-    fun updateAgnetUser(@RequestBody ctUser: CtUser): AjaxResult? {
+    @PutMapping("/updateAgentUser")
+    fun updateAgentUser(@RequestBody ctUser: CtUser): AjaxResult? {
         if (AgentState.None.code != ctUser.agentState) {
             ctUser.createAgentTime = DateUtils.getNowDate()
         }
-        return toAjax(ctUserService.updateCtUser(ctUser))
+        return toAjax(userAgentService.updateAgentStatus(ctUser))
     }
-
-//    /**
-//     * 修改代理
-//     */
-//    @PreAuthorize("@ss.hasPermi('agent:agent:edit')")
-//    @Log(title = "代理", businessType = BusinessType.UPDATE)
-//    @PutMapping
-//    fun edit(@RequestBody ctUserAgent: CtUserAgent): AjaxResult {
-//        return toAjax(ctUserAgentService.updateCtUserAgent(ctUserAgent))
-//    }
 }
