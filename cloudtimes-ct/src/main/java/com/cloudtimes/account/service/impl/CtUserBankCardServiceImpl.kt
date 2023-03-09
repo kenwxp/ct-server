@@ -72,24 +72,4 @@ class CtUserBankCardServiceImpl : ICtUserBankCardService {
         ctUserBankCard.updateTime = DateUtils.getNowDate()
         return ctUserBankCardMapper.updateCtUserBankCard(ctUserBankCard)
     }
-
-    /**
-     * 批量删除用户银行卡
-     *
-     * @param ids 需要删除的用户银行卡主键
-     * @return 结果
-     */
-    override fun deleteCtUserBankCardByIds(ids: Array<String>): Int {
-        return ctUserBankCardMapper.deleteCtUserBankCardByIds(ids)
-    }
-
-    /**
-     * 删除用户银行卡信息
-     *
-     * @param id 用户银行卡主键
-     * @return 结果
-     */
-    override fun deleteCtUserBankCardById(id: String): Int {
-        return ctUserBankCardMapper.deleteCtUserBankCardById(id)
-    }
 }

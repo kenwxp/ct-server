@@ -58,20 +58,4 @@ interface CtUserBankCardMapper {
      * @return 结果
      */
     fun updateCtUserBankCard(ctUserBankCard: CtUserBankCard?): Int
-
-    /**
-     * 删除用户银行卡
-     *
-     * @param id 用户银行卡主键
-     * @return 结果
-     */
-    fun deleteCtUserBankCardById(id: String?): Int
-
-    /**
-     * 批量删除用户银行卡
-     *
-     * @param ids 需要删除的数据主键集合
-     * @return 结果
-     */
-    fun deleteCtUserBankCardByIds(ids: Array<String>): Int
 }

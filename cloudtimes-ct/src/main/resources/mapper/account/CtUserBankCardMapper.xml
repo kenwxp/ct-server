@@ -3,27 +3,11 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.cloudtimes.account.mapper.CtUserBankCardMapper">
-    <resultMap type="CtUserBankCard" id="CtUserBankCardResult">
-        <result property="id"    column="id"    />
-        <result property="userId"    column="user_id"    />
-        <result property="userType"    column="user_type"    />
-        <result property="openBankName"    column="open_bank_name"    />
-        <result property="userName"    column="user_name"    />
-        <result property="mobile"    column="mobile"    />
-        <result property="cardNo"    column="card_no"    />
-        <result property="remark"    column="remark"    />
-        <result property="isUnbind"    column="is_unbind"    />
-        <result property="delFlag"    column="del_flag"    />
-        <result property="createDate"    column="create_date"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateTime"    column="update_time"    />
-    </resultMap>
-
     <sql id="selectCtUserBankCardVo">
-        select id, user_id, user_type, open_bank_name, user_name, mobile, card_no, remark, is_unbind, del_flag, create_date, create_time, update_time from ct_user_bank_card
+        select * from ct_user_bank_card
     </sql>
 
-    <select id="selectCtUserBankCardList" parameterType="CtUserBankCard" resultMap="CtUserBankCardResult">
+    <select id="selectCtUserBankCardList" parameterType="CtUserBankCard" resultType="CtUserBankCard">
         <include refid="selectCtUserBankCardVo"/>
         <where>  
             <if test="userId != null  and userId != ''"> and user_id = #{userId}</if>
@@ -34,12 +18,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
     </select>
     
-    <select id="selectCtUserBankCardById" parameterType="String" resultMap="CtUserBankCardResult">
+    <select id="selectCtUserBankCardById" parameterType="String" resultType="CtUserBankCard">
         <include refid="selectCtUserBankCardVo"/>
         where id = #{id}
     </select>
         
-    <select id="insertCtUserBankCard" parameterType="CtUserBankCard" resultMap="CtUserBankCardResult">
+    <select id="insertCtUserBankCard" parameterType="CtUserBankCard" resultType="CtUserBankCard">
         insert into ct_user_bank_card
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
@@ -86,19 +70,4 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </trim>
         where id = #{id}
     </update>
-
-    <delete id="deleteCtUserBankCardById" parameterType="String">
-        update ct_user_bank_card
-        set del_flag = '1'
-        where id = #{id}
-    </delete>
-
-    <delete id="deleteCtUserBankCardByIds" parameterType="String">
-        update ct_user_bank_card
-        set del_flag = '1'
-        where id in
-        <foreach item="id" collection="array" open="(" separator="," close=")">
-            #{id}
-        </foreach>
-    </delete>
 </mapper>

@@ -6,10 +6,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.cloudtimes.common.annotation.Log;
@@ -67,27 +64,5 @@ public class CtUserBankCardController extends BaseController
     public AjaxResult getInfo(@PathVariable("id") String id)
     {
         return AjaxResult.success(ctUserBankCardService.selectCtUserBankCardById(id));
-    }
-
-    /**
-     * 修改用户银行卡
-     */
-    @PreAuthorize("@ss.hasPermi('account:bank_card:edit')")
-    @Log(title = "用户银行卡", businessType = BusinessType.UPDATE)
-    @PutMapping
-    public AjaxResult edit(@RequestBody CtUserBankCard ctUserBankCard)
-    {
-        return toAjax(ctUserBankCardService.updateCtUserBankCard(ctUserBankCard));
-    }
-
-    /**
-     * 删除用户银行卡
-     */
-    @PreAuthorize("@ss.hasPermi('account:bank_card:remove')")
-    @Log(title = "用户银行卡", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable String[] ids)
-    {
-        return toAjax(ctUserBankCardService.deleteCtUserBankCardByIds(ids));
     }
 }
