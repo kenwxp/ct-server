@@ -81,7 +81,9 @@ public class CashWebSocketHandler extends TextWebSocketHandler {
             String errorMsg = process.process(authUser, receive.getData());
             if (StringUtils.isNotEmpty(errorMsg)) {
                 session.sendMessage(new TextMessage(JSONObject.toJSONString(AjaxResult.error(errorMsg))));
+                return;
             }
+            session.sendMessage(new TextMessage(JSONObject.toJSONString(AjaxResult.success())));
         } catch (Exception ex) {
             AjaxResult ajaxResult = AjaxResult.error("执行指令异常：[" + payload + "]");
             session.sendMessage(new TextMessage(JSONObject.toJSONString(ajaxResult)));
