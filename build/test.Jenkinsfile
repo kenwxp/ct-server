@@ -46,7 +46,7 @@ pipeline {
         // 3. 替换环境变量
         stage('Replace Env') {
             steps {
-                sh 'bash ./build/replace_test_env.sh'
+                sh 'bash ./build/replace_env.sh test'
             }
         }
 
@@ -59,6 +59,7 @@ pipeline {
                 // 3.2 上传(./build/)脚本
                 // sshPut remote: remote234, from: './build/{start_all.sh,stop_all.sh,backup_all.sh}', into: "$REMOTE_WORK_DIR/"
                 sshPut remote: remote234, from: './build/start_all.sh', into: "$REMOTE_WORK_DIR/"
+                sshPut remote: remote234, from: './build/check_all.sh', into: "$REMOTE_WORK_DIR/"
                 sshPut remote: remote234, from: './build/stop_all.sh', into: "$REMOTE_WORK_DIR/"
                 sshPut remote: remote234, from: './build/backup_all.sh', into: "$REMOTE_WORK_DIR/"
 
@@ -91,7 +92,8 @@ pipeline {
         stage('Restart') {
             steps {
                 sshCommand remote: remote234, command: "bash $REMOTE_WORK_DIR/start_all.sh"
-                sshCommand remote: remote234, command: 'systemctl restart nginx.service'
+                sleep 10
+                sshCommand remote: remote234, command: "bash $REMOTE_WORK_DIR/check_all.sh"
             }
         }
     }

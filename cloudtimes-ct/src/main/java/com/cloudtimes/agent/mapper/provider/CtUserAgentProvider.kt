@@ -49,6 +49,7 @@ object CtUserAgentProvider {
         return with(agentTable) {
             insertInto(agentTable) {
                 set(userId) toValue newAgent.userId!!
+                set(parentUserId) toValueWhenPresent newAgent.parentUserId
                 set(agentType) toValue (newAgent.agentType ?: AgentType.None.code)
                 set(nickName) toValueWhenPresent  newAgent.nickName
             }
