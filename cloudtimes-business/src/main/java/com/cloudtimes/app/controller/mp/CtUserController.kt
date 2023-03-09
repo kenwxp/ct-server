@@ -98,7 +98,7 @@ class CtUserController : BaseController() {
     @ApiOperation("代理用户注册")
     fun register(@Valid @RequestBody request: AgentRegisterRequest): UserDetailResponse {
         // Step 1. 校验手机验证码
-        smsController.validateSMS(request.mobile, request.verifyCode, request.verifyUUID)
+//        smsController.validateSMS(request.mobile, request.verifyCode, request.verifyUUID)
 
         // Step 2. 业务处理
         val user = userService.agentRegister(request)

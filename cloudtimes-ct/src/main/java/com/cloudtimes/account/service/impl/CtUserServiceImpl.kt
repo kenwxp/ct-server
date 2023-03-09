@@ -7,8 +7,11 @@ import com.cloudtimes.account.dto.response.CtUserDto
 import com.cloudtimes.account.mapper.CtUserMapper
 import com.cloudtimes.account.mapper.provider.CtUserProvider
 import com.cloudtimes.account.service.ICtUserService
+import com.cloudtimes.agent.domain.CtUserAgent
 import com.cloudtimes.agent.dto.request.AgentRegisterRequest
 import com.cloudtimes.agent.dto.response.InviteResponse
+import com.cloudtimes.agent.mapper.CtUserAgentMapper
+import com.cloudtimes.agent.mapper.provider.CtUserAgentProvider
 import com.cloudtimes.common.annotation.DataSource
 import com.cloudtimes.common.enums.*
 import com.cloudtimes.common.exception.ServiceException
@@ -32,6 +35,9 @@ class CtUserServiceImpl : ICtUserService {
     private lateinit var userMapper: CtUserMapper
 
     @Autowired
+    private lateinit var agentMapper: CtUserAgentMapper
+
+    @Autowired
     private lateinit var eventsMapper: CtEventsMapper
 
     @Autowired
@@ -53,7 +59,21 @@ class CtUserServiceImpl : ICtUserService {
             ?: throw ServiceException("数据库异常，查询微信用户失败")
 
         // Step 2. 登记为代理
+        val newAgent = CtUserAgent().apply {
+            userId = existUser.id
+            nickName = existUser.nickName
+            agentType = existUser.agentType
+        }
+        if (! request.inviteCode.isNullOrEmpty()) {
+            val parentAgent = userMapper.selectOne(CtUserProvider.selectUserByInviteCode(request.inviteCode!!))
+                ?: throw ServiceException("查询邀请人失败")
+
+            request.agentType = AgentType.SubAgent.code
+            newAgent.parentUserId = parentAgent.id
+            newAgent.agentType = AgentType.SubAgent.code
+        }
         userMapper.update(CtUserProvider.agentRegister(request))
+        agentMapper.generalInsert(CtUserAgentProvider.createAgent(newAgent))
 
         // Step 3. 登记事件表
         val events = CtEvents().apply {

@@ -22,6 +22,13 @@ object CtUserProvider {
         }
     }
 
+    fun selectUserByInviteCode(inviteCode: String): SelectStatementProvider {
+        return select(userTable.allColumns()) {
+            from(userTable)
+            where { userTable.id isLike  "$inviteCode%" }
+        }
+    }
+
     fun selectUserByUnionId(unionId: String): SelectStatementProvider {
         return select(userTable.allColumns()) {
             from(userTable)
@@ -90,6 +97,7 @@ object CtUserProvider {
                 set(mobile) equalTo request.mobile!!
                 set(agentState) equalTo AgentState.Signing.code
                 set(isAgent) equalTo YesNoState.Yes.code
+                set(agentType) equalTo request.agentType
                 set(updateTime).equalTo(Date())
                 set(isAgent)
                 where {
