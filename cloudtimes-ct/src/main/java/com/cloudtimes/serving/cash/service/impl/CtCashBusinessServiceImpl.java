@@ -448,6 +448,7 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
             throw new ServiceException("支付未对接，无法付款");
         }
         if (cacheOrder.getTotalAmount().intValue() != totalAmount || cacheOrder.getItemCount().intValue() != totalNum) {
+            log.info("cache:totalAmount={},totalCount={} : req: totalAmount={},totalCount={}", cacheOrder.getTotalAmount().intValue(), cacheOrder.getItemCount().intValue(), totalAmount, totalNum);
             throw new ServiceException("订单总额不一致");
         }
         // 持久化订单
