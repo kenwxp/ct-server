@@ -120,6 +120,7 @@ public class CashWebSocketHandler extends TextWebSocketHandler {
             session.sendMessage(new TextMessage(JSONObject.toJSONString(cashWsData)));
         } catch (Exception ex) {
             CashWsData cashWsData = new CashWsData();
+            cashWsData.setOptions("ERROR_MSG");
             cashWsData.setData(AjaxResult.error("执行指令异常"));
             session.sendMessage(new TextMessage(JSONObject.toJSONString(cashWsData)));
         }
@@ -143,7 +144,7 @@ public class CashWebSocketHandler extends TextWebSocketHandler {
             // 设备设置离线
             // 更新收银机状态
             CtDevice device = deviceMapper.selectCtDeviceById(authUser.getId());
-            if (StringUtils.equals(device.getState(), DeviceState.Online.getCode())) {
+            if (device != null && StringUtils.equals(device.getState(), DeviceState.Online.getCode())) {
                 device.setState(DeviceState.Offline.getCode());
                 device.setUpdateTime(DateUtils.getNowDate());
                 deviceMapper.updateCtDevice(device);
