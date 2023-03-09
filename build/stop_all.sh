@@ -7,5 +7,5 @@ if [[ -n "$pids" ]]; then
 else
   echo "no cloudtimes services is running"
 fi
-
+#test
 exit 0
