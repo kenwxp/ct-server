@@ -1,6 +1,15 @@
 package com.cloudtimes.promotion.mapper
 
 import com.cloudtimes.promotion.domain.CtLuckyDrawRule
+import org.apache.ibatis.annotations.Mapper
+import org.apache.ibatis.annotations.SelectProvider
+
+import org.mybatis.dynamic.sql.select.render.SelectStatementProvider
+import org.mybatis.dynamic.sql.util.SqlProviderAdapter
+import org.mybatis.dynamic.sql.util.mybatis3.CommonCountMapper
+import org.mybatis.dynamic.sql.util.mybatis3.CommonDeleteMapper
+import org.mybatis.dynamic.sql.util.mybatis3.CommonInsertMapper
+import org.mybatis.dynamic.sql.util.mybatis3.CommonUpdateMapper
 
 /**
  * 幸运大抽奖规则Mapper接口
@@ -8,7 +17,14 @@ import com.cloudtimes.promotion.domain.CtLuckyDrawRule
  * @author tank
  * @date 2023-03-08
  */
-interface CtLuckyDrawRuleMapper {
+@Mapper
+interface CtLuckyDrawRuleMapper : CommonCountMapper, CommonDeleteMapper, CommonInsertMapper<CtLuckyDrawRule>, CommonUpdateMapper {
+    @SelectProvider(type=SqlProviderAdapter::class, method="select")
+    fun selectMany(selectStatement: SelectStatementProvider): List<CtLuckyDrawRule>
+
+    @SelectProvider(type=SqlProviderAdapter::class, method="select")
+    fun selectOne(selectStatement: SelectStatementProvider): CtLuckyDrawRule?
+
     /**
      * 查询幸运大抽奖规则
      *

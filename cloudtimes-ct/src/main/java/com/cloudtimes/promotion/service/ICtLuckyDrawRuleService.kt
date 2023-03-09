@@ -9,6 +9,9 @@ import com.cloudtimes.promotion.domain.CtLuckyDrawRule
  * @date 2023-03-08
  */
 interface ICtLuckyDrawRuleService {
+    /** 根据活动编号查询活动规则列表 */
+    fun selectCtLuckyDrawRuleListByActivityId(activityId: String): List<CtLuckyDrawRule>
+
     /**
      * 查询幸运大抽奖规则
      *

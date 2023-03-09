@@ -5,6 +5,7 @@ import com.cloudtimes.common.enums.DataSourceType
 import com.cloudtimes.common.utils.DateUtils
 import com.cloudtimes.promotion.domain.CtLuckyDrawRule
 import com.cloudtimes.promotion.mapper.CtLuckyDrawRuleMapper
+import com.cloudtimes.promotion.mapper.provider.CtLuckyDrawRuleProvider
 import com.cloudtimes.promotion.service.ICtLuckyDrawRuleService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -19,7 +20,13 @@ import org.springframework.stereotype.Service
 @Service
 class CtLuckyDrawRuleServiceImpl : ICtLuckyDrawRuleService {
     @Autowired
-    private lateinit var ctLuckyDrawRuleMapper: CtLuckyDrawRuleMapper
+    private lateinit var ruleMapper: CtLuckyDrawRuleMapper
+
+    override fun selectCtLuckyDrawRuleListByActivityId(activityId: String): List<CtLuckyDrawRule> {
+        return ruleMapper.selectMany(
+            CtLuckyDrawRuleProvider.findRulesByActivityIdStmt(activityId)
+        )
+    }
 
     /**
      * 查询幸运大抽奖规则
@@ -28,7 +35,7 @@ class CtLuckyDrawRuleServiceImpl : ICtLuckyDrawRuleService {
      * @return 幸运大抽奖规则
      */
     override fun selectCtLuckyDrawRuleById(id: String): CtLuckyDrawRule? {
-        return ctLuckyDrawRuleMapper.selectCtLuckyDrawRuleById(id)
+        return ruleMapper.selectCtLuckyDrawRuleById(id)
     }
 
     /**
@@ -38,7 +45,7 @@ class CtLuckyDrawRuleServiceImpl : ICtLuckyDrawRuleService {
      * @return 幸运大抽奖规则
      */
     override fun selectCtLuckyDrawRuleList(ctLuckyDrawRule: CtLuckyDrawRule): List<CtLuckyDrawRule> {
-        return ctLuckyDrawRuleMapper.selectCtLuckyDrawRuleList(ctLuckyDrawRule)
+        return ruleMapper.selectCtLuckyDrawRuleList(ctLuckyDrawRule)
     }
 
     /**
@@ -49,7 +56,7 @@ class CtLuckyDrawRuleServiceImpl : ICtLuckyDrawRuleService {
      */
     override fun insertCtLuckyDrawRule(ctLuckyDrawRule: CtLuckyDrawRule): Int {
         ctLuckyDrawRule.createTime = DateUtils.getNowDate()
-        return ctLuckyDrawRuleMapper.insertCtLuckyDrawRule(ctLuckyDrawRule)
+        return ruleMapper.insertCtLuckyDrawRule(ctLuckyDrawRule)
     }
 
     /**
@@ -60,7 +67,7 @@ class CtLuckyDrawRuleServiceImpl : ICtLuckyDrawRuleService {
      */
     override fun updateCtLuckyDrawRule(ctLuckyDrawRule: CtLuckyDrawRule): Int {
         ctLuckyDrawRule.updateTime = DateUtils.getNowDate()
-        return ctLuckyDrawRuleMapper.updateCtLuckyDrawRule(ctLuckyDrawRule)
+        return ruleMapper.updateCtLuckyDrawRule(ctLuckyDrawRule)
     }
 
     /**
@@ -70,7 +77,7 @@ class CtLuckyDrawRuleServiceImpl : ICtLuckyDrawRuleService {
      * @return 结果
      */
     override fun deleteCtLuckyDrawRuleByIds(ids: Array<String>): Int {
-        return ctLuckyDrawRuleMapper.deleteCtLuckyDrawRuleByIds(ids)
+        return ruleMapper.deleteCtLuckyDrawRuleByIds(ids)
     }
 
     /**
@@ -80,6 +87,6 @@ class CtLuckyDrawRuleServiceImpl : ICtLuckyDrawRuleService {
      * @return 结果
      */
     override fun deleteCtLuckyDrawRuleById(id: String): Int {
-        return ctLuckyDrawRuleMapper.deleteCtLuckyDrawRuleById(id)
+        return ruleMapper.deleteCtLuckyDrawRuleById(id)
     }
 }
