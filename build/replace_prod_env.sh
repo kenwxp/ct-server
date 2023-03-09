@@ -5,7 +5,7 @@
 # 1. 开发环境参数配置
 
 DEV_HOST='10.1.65.233'
-DEV_DOMAIN='http://ctdev.htymeta.com'
+DEV_DOMAIN='https://ctdev.htymeta.com'
 DEV_MYSQL_USERNAME='username: root'
 DEV_MYSQL_PASSWORD='password: 123456'
 DEV_REDIS_PASSWORD='# password: ybf@2022'

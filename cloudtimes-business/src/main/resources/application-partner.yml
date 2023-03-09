@@ -22,7 +22,7 @@ wx:
   official_appid: wx29331e0cdcf56bec
   official_secret: cea61daf6976317b5c6f5fafb9400de8
   # 微信回调地址
-  login_callback_api_url: http://ctdev.htymeta.com/agent/pages/login/wxLogin
+  login_callback_api_url: https://ctdev.htymeta.com/agent/pages/login/wxLogin
 
 agora:
   appid: 7be11df0b1b547e0b67b7960a4d7ff05
