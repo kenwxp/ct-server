@@ -3,18 +3,24 @@ package com.cloudtimes.app.interceptor;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.cloudtimes.app.manager.CashWsSessionManager;
+import com.cloudtimes.app.models.AfterConnectedData;
 import com.cloudtimes.app.models.CashWsData;
 import com.cloudtimes.app.process.BaseEventProcess;
 import com.cloudtimes.common.core.domain.AjaxResult;
 import com.cloudtimes.common.core.domain.entity.AuthUser;
 import com.cloudtimes.common.enums.ChannelType;
 import com.cloudtimes.common.enums.DeviceState;
+import com.cloudtimes.common.exception.ServiceException;
+import com.cloudtimes.common.mq.CashMqData;
+import com.cloudtimes.common.mq.SendOrderData;
 import com.cloudtimes.common.utils.DateUtils;
 import com.cloudtimes.common.utils.JWTManager;
 import com.cloudtimes.common.utils.StringUtils;
 import com.cloudtimes.common.utils.spring.SpringUtils;
 import com.cloudtimes.hardwaredevice.domain.CtDevice;
+import com.cloudtimes.hardwaredevice.domain.CtStore;
 import com.cloudtimes.hardwaredevice.mapper.CtDeviceMapper;
+import com.cloudtimes.hardwaredevice.mapper.CtStoreMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +37,12 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 public class CashWebSocketHandler extends TextWebSocketHandler {
     @Autowired
     private CashWsSessionManager sessionManager;
+    @Autowired
+    private CtDeviceMapper deviceMapper;
+    @Autowired
+    private CtStoreMapper storeMapper;
+
+    private final String AFTER_CONNECT_DATA = "AFTER_CONNECT_DATA";
 
     /**
      * socket 建立成功事件
@@ -40,7 +52,6 @@ public class CashWebSocketHandler extends TextWebSocketHandler {
      */
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-
         Object token = session.getAttributes().get(JWTManager.AUTH_USER);
         if (token != null) {
             AuthUser authUser = (AuthUser) token;
@@ -50,6 +61,22 @@ public class CashWebSocketHandler extends TextWebSocketHandler {
             // 用户连接成功，放入在线用户缓存
             log.info("收银websocket链接成功！！:{}", authUser.getId());
             sessionManager.add(authUser.getId(), session);
+            CtDevice device = deviceMapper.selectCtDeviceById(authUser.getId());
+            if (device == null) {
+                throw new ServiceException("收银机不存在");
+            }
+            if (StringUtils.isEmpty(device.getStoreId())) {
+                throw new ServiceException("收银机未绑定门店");
+            }
+            CtStore ctStore = storeMapper.selectCtStoreById(device.getStoreId());
+            if (ctStore == null) {
+                throw new ServiceException("收银机绑定门店不存在");
+            }
+            CashWsData cashWsData = new CashWsData();
+            cashWsData.setOptions(AFTER_CONNECT_DATA);
+            AfterConnectedData afterConnectedData = new AfterConnectedData(ctStore.getIsSupervise());
+            cashWsData.setData(afterConnectedData);
+            session.sendMessage(new TextMessage(JSONObject.toJSONString(cashWsData)));
         } else {
             throw new RuntimeException("用户登录已经失效!");
         }
@@ -66,32 +93,37 @@ public class CashWebSocketHandler extends TextWebSocketHandler {
     @ApiOperation("接受消息处理")
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         AuthUser authUser = (AuthUser) session.getAttributes().get(JWTManager.AUTH_USER);
-        // 获得客户端传来的消息
-        String payload = message.getPayload();
-        CashWsData receive = JSON.parseObject(payload, CashWsData.class);
-        String options = receive.getOptions();
-        log.info("CashWebSocketHandler receive CMD:[" + options + "] DeviceId:[" + authUser.getId() + "],");
-        BaseEventProcess process = SpringUtils.getBean(options);
-        if (process == null) {
-            AjaxResult ajaxResult = AjaxResult.error("无效指令：[" + payload + "]");
-            session.sendMessage(new TextMessage(JSONObject.toJSONString(ajaxResult)));
-            return;
-        }
-        try {
-            String errorMsg = process.process(authUser, receive.getData());
-            if (StringUtils.isNotEmpty(errorMsg)) {
-                session.sendMessage(new TextMessage(JSONObject.toJSONString(AjaxResult.error(errorMsg))));
+        try { // 获得客户端传来的消息
+            String payload = message.getPayload();
+            CashWsData receive = JSON.parseObject(payload, CashWsData.class);
+            String options = receive.getOptions();
+            log.info("CashWebSocketHandler receive CMD:[" + options + "] DeviceId:[" + authUser.getId() + "],");
+            BaseEventProcess process = SpringUtils.getBean(options);
+            if (process == null) {
+                CashWsData cashWsData = new CashWsData();
+                cashWsData.setOptions(options);
+                cashWsData.setData(AjaxResult.error("无效指令：[" + payload + "]"));
+                session.sendMessage(new TextMessage(JSONObject.toJSONString(cashWsData)));
                 return;
             }
-            session.sendMessage(new TextMessage(JSONObject.toJSONString(AjaxResult.success())));
+            String errorMsg = process.process(authUser, receive.getData());
+            if (StringUtils.isNotEmpty(errorMsg)) {
+                CashWsData cashWsData = new CashWsData();
+                cashWsData.setOptions(options);
+                cashWsData.setData(AjaxResult.error(errorMsg));
+                session.sendMessage(new TextMessage(JSONObject.toJSONString(cashWsData)));
+                return;
+            }
+            CashWsData cashWsData = new CashWsData();
+            cashWsData.setOptions(options);
+            cashWsData.setData(AjaxResult.success());
+            session.sendMessage(new TextMessage(JSONObject.toJSONString(cashWsData)));
         } catch (Exception ex) {
-            AjaxResult ajaxResult = AjaxResult.error("执行指令异常：[" + payload + "]");
-            session.sendMessage(new TextMessage(JSONObject.toJSONString(ajaxResult)));
+            CashWsData cashWsData = new CashWsData();
+            cashWsData.setData(AjaxResult.error("执行指令异常"));
+            session.sendMessage(new TextMessage(JSONObject.toJSONString(cashWsData)));
         }
     }
-
-    @Autowired
-    private CtDeviceMapper deviceMapper;
 
     /**
      * socket 断开连接时
