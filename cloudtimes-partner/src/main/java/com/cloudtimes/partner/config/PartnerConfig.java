@@ -17,8 +17,6 @@ public class PartnerConfig {
     private String wxAppSecret;
     @Value("${wx.mch_id}")
     private String wxMchId;
-    @Value("${wx.mch_key}")
-    private String wxMchKey;
     @Value("${wx.apiV2_secret}")
     private String wxApiV2Secret;
     @Value("${wx.apiV3_secret}")

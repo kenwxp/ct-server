@@ -8,8 +8,6 @@ wx:
   secret: 99887628a67e7d8a23d4d8410bcf47a1
   #商户号
   mch_id: 1631185974
-  #商户秘钥
-  mch_key: QAZ12wsxcdQAZ12wsxcdQAZ12wsxcd21
   #apiV2 秘钥
   apiV2_secret: QBmbglkLDeZrVDYrfj75zN2yiTY8BToI
   #apiV3 秘钥

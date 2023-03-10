@@ -81,7 +81,7 @@ public class CtWeixinFaceApiServiceImpl implements ICtWeixinFaceApiService {
         }
         StringBuffer stringBuffer = new StringBuffer();
         map.forEach((key, value) -> stringBuffer.append(key).append("=").append(value).append("&"));
-        String raw = stringBuffer.deleteCharAt(stringBuffer.length() - 1).append("&key=").append(config.getWxMchKey()).toString();
+        String raw = stringBuffer.deleteCharAt(stringBuffer.length() - 1).append("&key=").append(config.getWxApiV2Secret()).toString();
         log.info("微信签名字符串：" + raw);
         String sign = Md5Utils.hash(raw).toUpperCase();
         return sign;
