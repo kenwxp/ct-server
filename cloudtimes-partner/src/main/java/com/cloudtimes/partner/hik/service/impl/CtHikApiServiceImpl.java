@@ -166,7 +166,7 @@ public class CtHikApiServiceImpl implements ICtHikApiService {
         String result = HttpUtils.sendFormPost("https://" + HikConstant.hikHost + path, params, getHikHeader());
         HikCommonResp commonResp = JacksonUtils.parseObject(result, HikCommonResp.class);
         if (commonResp != null) {
-            if (StringUtils.equals(commonResp.getCode(), HikCodeEnum.CODE200.getCode())) {
+            if (StringUtils.equals(commonResp.getCode(), HikCodeEnum.CODE10002.getCode())) {
                 //token 过时，则刷新token后，重新请求
                 String newToken = fetchAccessToken();
                 params.put("accessToken", newToken);
@@ -208,7 +208,7 @@ public class CtHikApiServiceImpl implements ICtHikApiService {
             Object resultObj = resultMap.get("result");
             if (resultObj != null) {
                 HikCommonResp hikCommonResp = JacksonUtils.convertObject(resultObj, HikCommonResp.class);
-                if (StringUtils.equals(hikCommonResp.getCode(), HikCodeEnum.CODE200.getCode())) {
+                if (StringUtils.equals(hikCommonResp.getCode(), HikCodeEnum.CODE10002.getCode())) {
                     //token 过时，则刷新token后，重新请求
                     fetchAccessToken();
                     return getNvrChannelStatus(nvrSerial);
