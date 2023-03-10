@@ -63,8 +63,7 @@ public class CashWsSessionManager {
     public void sendSuccess(String id, Object data) {
         WebSocketSession session = get(id);
         if (session != null) {
-            AjaxResult success = AjaxResult.success(data);
-            TextMessage textMessage = new TextMessage(JSONObject.toJSONString(success));
+            TextMessage textMessage = new TextMessage(JSONObject.toJSONString(data));
             try {
                 session.sendMessage(textMessage);
             } catch (IOException e) {
