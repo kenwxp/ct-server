@@ -10,6 +10,7 @@ import com.cloudtimes.common.core.domain.AjaxResult
 import com.cloudtimes.common.core.domain.RestResult
 import com.cloudtimes.common.core.domain.entity.AuthUser
 import com.cloudtimes.common.core.redis.RedisCache
+import com.cloudtimes.common.enums.AppType
 import com.cloudtimes.common.enums.ChannelType
 import com.cloudtimes.common.exception.ServiceException
 import com.cloudtimes.common.utils.JWTManager
@@ -36,7 +37,7 @@ class WxLoginResponse(override var data: CtUser?) : RestResult<CtUser>(data)
 @RequestMapping(PrefixPathConstants.WX_OFFICIAL_PATH_PREFIX + "/wx_auth")
 @Api(tags = ["代理-微信登陆授权"])
 class WxAuthController {
-    private val logger: Logger = LoggerFactory.getLogger(javaClass);
+    private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
     @Autowired
     private lateinit var weixinOfficialApiService: ICtWeixinOfficialApiService
@@ -45,10 +46,10 @@ class WxAuthController {
     private lateinit var userService: ICtUserService
 
     @Autowired
-    private lateinit var jwtManager: JWTManager;
+    private lateinit var jwtManager: JWTManager
 
     @Autowired
-    private lateinit var redisCache: RedisCache;
+    private lateinit var redisCache: RedisCache
 
     @GetMapping()
     @ApiOperation(value = "微信授权")
@@ -57,8 +58,8 @@ class WxAuthController {
         @RequestParam(name = "ic") inviteCode: String?,
         response: HttpServletResponse
     ) {
-        val url = weixinOfficialApiService.getWXAuthURL(type, inviteCode);
-        response.sendRedirect(url);
+        val url = weixinOfficialApiService.getWXAuthURL(type, inviteCode)
+        response.sendRedirect(url)
     }
 
     @PostMapping()
@@ -69,7 +70,7 @@ class WxAuthController {
         callback.state = request.state
 
         // 获取微信用户信息
-        val ds: AuthResponse<me.zhyd.oauth.model.AuthUser> = weixinOfficialApiService.login(callback);
+        val ds: AuthResponse<me.zhyd.oauth.model.AuthUser> = weixinOfficialApiService.login(callback)
         if (ds.code !== 2000) {
             logger.info("${ds.code}")
             logger.info(ds.msg)
@@ -77,7 +78,9 @@ class WxAuthController {
         }
 
         val userInfo = ds.data
-        val unionId: String = userInfo.rawUserInfo.getString("unionid");
+        val unionId: String = userInfo.rawUserInfo.getString("unionid")
+        val openId: String = userInfo.rawUserInfo.getString("openid")
+        logger.info("rawUserInfo: ${userInfo.rawUserInfo.toString()}")
         logger.info("unionid: $unionId")
 
 
@@ -87,12 +90,12 @@ class WxAuthController {
             nickName = userInfo.nickname
             wxAvatar = userInfo.avatar
         }
-        val loggedUser = userService.wxLoginOrCreateNewUser(loginUser)
-        val token = jwtManager.createToken(AuthUser(loggedUser.id, ChannelType.WX_OFFICIAL));
+        val loggedUser = userService.wxLoginOrCreateNewUser(loginUser, AppType.WX_OFFICIAL, openId)
+        val token = jwtManager.createToken(AuthUser(loggedUser.id, ChannelType.WX_OFFICIAL))
         loggedUser.token = token
 
         //缓存一下accesstoken
-        redisCache.setCacheObject(CacheConstants.WX_LOGIN_ACCESS_TOKEN_KEY + loggedUser.id, ds.data.token.accessToken);
+        redisCache.setCacheObject(CacheConstants.WX_LOGIN_ACCESS_TOKEN_KEY + loggedUser.id, ds.data.token.accessToken)
 
         return WxLoginResponse(loggedUser)
     }
@@ -100,25 +103,25 @@ class WxAuthController {
     @GetMapping("/jsSign")
     @ApiOperation(value = "微信JSSDK签发授权")
     fun wxJSSDKSign(url: String): AjaxResult {
-        redisCache.deleteObject(CacheConstants.WX_ACCESS_TOKEN_KEY);
+        redisCache.deleteObject(CacheConstants.WX_ACCESS_TOKEN_KEY)
         var accessToken = ""
         if (redisCache.hasKey(CacheConstants.WX_ACCESS_TOKEN_KEY)) {
-            accessToken = redisCache.getCacheObject(CacheConstants.WX_ACCESS_TOKEN_KEY);
+            accessToken = redisCache.getCacheObject(CacheConstants.WX_ACCESS_TOKEN_KEY)
         } else {
-            var accessTokenResult = weixinOfficialApiService.getMPAccessToken()
-            var wxResultObj = JSONObject.parseObject(accessTokenResult);
+            val accessTokenResult = weixinOfficialApiService.getMPAccessToken()
+            val wxResultObj = JSONObject.parseObject(accessTokenResult)
             accessToken = wxResultObj.getString("access_token")
-            redisCache.setCacheObject(CacheConstants.WX_ACCESS_TOKEN_KEY, accessToken, 7200, TimeUnit.SECONDS);
+            redisCache.setCacheObject(CacheConstants.WX_ACCESS_TOKEN_KEY, accessToken, 7200, TimeUnit.SECONDS)
         }
 
         var ticket = ""
         if (redisCache.hasKey(CacheConstants.WX_TICKET_KEY)) {
-            ticket = redisCache.getCacheObject(CacheConstants.WX_TICKET_KEY);
+            ticket = redisCache.getCacheObject(CacheConstants.WX_TICKET_KEY)
         } else {
-            var wxResult = weixinOfficialApiService.getJSSDKSign(accessToken)
-            var wxResultObj = JSONObject.parseObject(wxResult);
+            val wxResult = weixinOfficialApiService.getJSSDKSign(accessToken)
+            val wxResultObj = JSONObject.parseObject(wxResult)
             ticket = wxResultObj.getString("ticket")
-            redisCache.setCacheObject(CacheConstants.WX_TICKET_KEY, ticket, 7200, TimeUnit.SECONDS);
+            redisCache.setCacheObject(CacheConstants.WX_TICKET_KEY, ticket, 7200, TimeUnit.SECONDS)
         }
         return weixinOfficialApiService.getJSSDKSign(accessToken, ticket, url)
     }

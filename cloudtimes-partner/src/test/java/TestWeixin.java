@@ -1,6 +1,5 @@
 import com.cloudtimes.partner.weixin.ICtWeixinApiService;
 import com.cloudtimes.partner.weixin.impl.CtWeixinApiServiceImpl;
-import org.junit.Test;
 
 import java.util.Map;
 

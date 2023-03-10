@@ -32,8 +32,8 @@ public class WebSocketConfig implements WebSocketConfigurer {
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry
-                .addHandler(cashWebSocketHandler, "/ws/cash")
-                .addHandler(superviseWebSocketHandler, "/ws/supervise")
+                .addHandler(cashWebSocketHandler, "/cash")
+                .addHandler(superviseWebSocketHandler, "/supervise")
                 .addInterceptors(tokenInterceptor)
                 .setAllowedOrigins("*");
     }

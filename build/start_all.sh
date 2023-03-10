@@ -11,7 +11,7 @@ function restart_service() {
 
 # declare an array variable
 # declare -a services=("admin" "business" "socketserver" "detectionserver")
-declare -a services=("admin" "business")
+declare -a services=("admin" "business" "socketserver")
 
 # 启动服务
 for i in "${services[@]}"

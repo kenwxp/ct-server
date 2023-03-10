@@ -32,7 +32,7 @@ import com.cloudtimes.common.core.page.TableDataInfo;
  * @date 2023-03-03
  */
 @RestController
-@RequestMapping("/system/service")
+@RequestMapping("/supervise/service")
 @Api("客服特性参数相关接口")
 public class CtCustomerServiceController extends BaseController
 {
@@ -42,7 +42,7 @@ public class CtCustomerServiceController extends BaseController
     /**
      * 查询客服特性参数列表
      */
-    @PreAuthorize("@ss.hasPermi('system:service:list')")
+    @PreAuthorize("@ss.hasPermi('supervise:service:list')")
     @GetMapping("/list")
     public TableDataInfo list(CtCustomerService sysCustomerService)
     {
@@ -54,7 +54,7 @@ public class CtCustomerServiceController extends BaseController
     /**
      * 导出客服特性参数列表
      */
-    @PreAuthorize("@ss.hasPermi('system:service:export')")
+    @PreAuthorize("@ss.hasPermi('supervise:service:export')")
     @Log(title = "客服特性参数", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, CtCustomerService sysCustomerService)
@@ -67,7 +67,7 @@ public class CtCustomerServiceController extends BaseController
     /**
      * 获取客服特性参数详细信息
      */
-    @PreAuthorize("@ss.hasPermi('system:service:query')")
+    @PreAuthorize("@ss.hasPermi('supervise:service:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") String id)
     {
@@ -77,7 +77,7 @@ public class CtCustomerServiceController extends BaseController
     /**
      * 新增客服特性参数
      */
-    @PreAuthorize("@ss.hasPermi('system:service:add')")
+    @PreAuthorize("@ss.hasPermi('supervise:service:add')")
     @Log(title = "客服特性参数", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody CtCustomerService sysCustomerService)
@@ -88,7 +88,7 @@ public class CtCustomerServiceController extends BaseController
     /**
      * 修改客服特性参数
      */
-    @PreAuthorize("@ss.hasPermi('system:service:edit')")
+    @PreAuthorize("@ss.hasPermi('supervise:service:edit')")
     @Log(title = "客服特性参数", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody CtCustomerService sysCustomerService)
@@ -98,7 +98,7 @@ public class CtCustomerServiceController extends BaseController
     /**
      * 删除客服特性参数
      */
-    @PreAuthorize("@ss.hasPermi('system:service:remove')")
+    @PreAuthorize("@ss.hasPermi('supervise:service:remove')")
     @Log(title = "客服特性参数", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable String[] ids)
@@ -110,7 +110,7 @@ public class CtCustomerServiceController extends BaseController
      * 同步客服参数特性
      */
     @ApiOperation(value = "同步客服参数特性")
-    @PreAuthorize("@ss.hasPermi('system:service:sync')")
+    @PreAuthorize("@ss.hasPermi('supervise:service:sync')")
     @Log(title = "客服特性参数", businessType = BusinessType.OTHER)
     @GetMapping("/sync")
     public ApiResult sync()

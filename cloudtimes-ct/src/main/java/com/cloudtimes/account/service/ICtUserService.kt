@@ -6,6 +6,7 @@ import com.cloudtimes.account.dto.request.VerifyRealNameRequest
 import com.cloudtimes.account.dto.response.CtUserDto
 import com.cloudtimes.agent.dto.request.AgentRegisterRequest
 import com.cloudtimes.agent.dto.response.InviteResponse
+import com.cloudtimes.common.enums.AppType
 
 /**
  * 用户Service接口
@@ -15,7 +16,7 @@ import com.cloudtimes.agent.dto.response.InviteResponse
  */
 interface ICtUserService {
     /** 微信登陆或创建新用户 */
-    fun wxLoginOrCreateNewUser(loginUser: CtUser): CtUser
+    fun wxLoginOrCreateNewUser(loginUser: CtUser, appType: AppType, appUserId: String): CtUser
 
     /** 代理用户注册 */
     fun agentRegister(request: AgentRegisterRequest): CtUser
