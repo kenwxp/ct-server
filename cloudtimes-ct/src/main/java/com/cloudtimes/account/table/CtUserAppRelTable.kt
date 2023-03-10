@@ -7,7 +7,7 @@ import org.mybatis.dynamic.sql.AliasableSqlTable
 import java.time.LocalDate
 
 class CtUserAppRelTable : AliasableSqlTable<CtUserAppRelTable>("ct_user_app_rel", ::CtUserAppRelTable) {
-    val userId = column<String>(name = "userId", jdbcType = JDBCType.OTHER)
+    val userId = column<String>(name = "user_id", jdbcType = JDBCType.OTHER)
 
     val appType = column<String>(name = "app_type", jdbcType = JDBCType.VARCHAR)
 
