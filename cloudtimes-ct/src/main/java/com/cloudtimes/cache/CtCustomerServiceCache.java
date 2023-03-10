@@ -123,7 +123,6 @@ public class CtCustomerServiceCache {
         putMapValue(serviceId, "maxAcceptOrder", acceptState);
     }
 
-
     public <T> T getMapValue(String serviceId, String hKey) {
         rLock.lock();
         try {

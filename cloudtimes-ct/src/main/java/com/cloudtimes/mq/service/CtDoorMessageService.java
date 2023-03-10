@@ -38,6 +38,7 @@ public class CtDoorMessageService {
 
     @Transactional
     public void handleTriggerMessage(DoorMessageMqData data) {
+        log.info("处理红外开门报文：门禁序列号：{}", data.getDeviceSerial());
         // 处理触发开门逻辑状态
         CtDevice ctDevice = deviceMapper.selectCtDeviceByDeviceSerial(String.valueOf(data.getDeviceSerial()));
         if (ctDevice == null) {

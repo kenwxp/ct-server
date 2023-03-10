@@ -17,6 +17,7 @@ import com.cloudtimes.supervise.domain.CtEvents;
 import com.cloudtimes.supervise.domain.CtOrder;
 import com.cloudtimes.supervise.domain.CtTask;
 import com.cloudtimes.supervise.mapper.CtTaskMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@Slf4j
 public class CtTaskInnerService {
     @Autowired
     private CtStoreMapper storeMapper;
@@ -49,6 +51,7 @@ public class CtTaskInnerService {
      * @return
      */
     public CtTask distributeTask(String storeId, String doorLogId) {
+        log.info("开始分配任务：门店编号：{}", storeId);
         CtStore dbStore = storeMapper.selectCtStoreById(storeId);
         if (dbStore == null) {
             throw new ServiceException("无法获取门店信息");
@@ -70,6 +73,7 @@ public class CtTaskInnerService {
                 if (StringUtils.isEmpty(staffCode)) {
                     throw new ServiceException("当前无值守员在岗");
                 }
+                log.info("分配客服编号：{}", staffCode);
                 newTask.setStaffCode(staffCode);
                 newTask.setTaskType("0");
                 newTask.setDescText("门禁触发产生任务");
@@ -128,6 +132,7 @@ public class CtTaskInnerService {
      * @return
      */
     public String distributeStaff() {
+        log.info("开始分配客服...");
         // 获取全部客服人员
         List<CtCustomerService> allCustomerServiceList = customerServiceCache.getAllCtCustomerServiceList();
         // 遍历每个客服人员，根据接单标志，当前任务数，分配期望任务量最少的人员
