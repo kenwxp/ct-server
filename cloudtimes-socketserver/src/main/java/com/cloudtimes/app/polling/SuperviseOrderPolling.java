@@ -24,7 +24,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 @Slf4j
 public class SuperviseOrderPolling {
     private static Map<String, Map<String, Set<String>>> subscribers;
-    private Thread thread;
+    private static Thread thread;
     @Autowired
     private SuperviseWsSessionManager sessionManager;
     //读写锁

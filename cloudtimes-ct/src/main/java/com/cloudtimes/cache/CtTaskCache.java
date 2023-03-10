@@ -1,5 +1,6 @@
 package com.cloudtimes.cache;
 
+import com.alibaba.fastjson2.JSON;
 import com.cloudtimes.common.core.redis.RedisCache;
 import com.cloudtimes.common.utils.StringUtils;
 import com.cloudtimes.supervise.domain.CtOrder;
@@ -10,6 +11,7 @@ import com.cloudtimes.supervise.mapper.CtOrderDetailMapper;
 import com.cloudtimes.supervise.mapper.CtOrderMapper;
 import com.cloudtimes.supervise.mapper.CtShoppingMapper;
 import com.cloudtimes.supervise.mapper.CtTaskMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 @Component
+@Slf4j
 public class CtTaskCache {
     private static final String STAFF_TASK_REL_CACHE = "staff_task:";//客服任务关联
     private static final String STORE_TASK_REL_CACHE = "store_task:";//门店任务关联
@@ -47,24 +50,28 @@ public class CtTaskCache {
 
     @PostConstruct
     public void initTask() {
-        //初始化加载进行中的任务
+        log.info("初始化加载进行中的任务....");
         CtTask query = new CtTask();
         query.setState("0");
         List<CtTask> taskList = taskMapper.selectCtTaskList(query);
+        log.info("taskList：" + JSON.toJSONString(taskList));
         for (CtTask task : taskList) {
             setCacheTask(task);
         }
         //初始化加载进行中的任务的订单
+        log.info("初始化加载进行中的任务的订单....");
         List<CtOrder> ctOrders = orderMapper.selectCtOrderListByTask("", "0");
         for (CtOrder order : ctOrders) {
             setCacheOrder(order);
         }
-        //初始化加载进行中的任务的订单
+        //初始化加载进行中的任务的购物
+        log.info("初始化加载进行中的任务的购物....");
         List<CtShopping> ctShoppingList = shoppingMapper.selectCtShoppingListByTask("", "0");
         for (CtShopping shopping : ctShoppingList) {
             setCacheShopping(shopping);
         }
-        //初始化加载进行中的任务的订单
+        //初始化加载进行中的任务的物品清单
+        log.info("初始化加载进行中的物品清单....");
         List<CtOrderDetail> ctOrderDetails = orderDetailMapper.selectCtOrderDetailListByTaskOrOrder("", "0");
         for (CtOrderDetail orderDetail : ctOrderDetails) {
             setCacheOrderDetail(orderDetail);
