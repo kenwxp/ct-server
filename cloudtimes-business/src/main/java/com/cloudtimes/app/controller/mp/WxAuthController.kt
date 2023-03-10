@@ -12,6 +12,7 @@ import com.cloudtimes.common.core.domain.entity.AuthUser
 import com.cloudtimes.common.core.redis.RedisCache
 import com.cloudtimes.common.enums.AppType
 import com.cloudtimes.common.enums.ChannelType
+import com.cloudtimes.common.enums.YesNoState
 import com.cloudtimes.common.exception.ServiceException
 import com.cloudtimes.common.utils.JWTManager
 import com.cloudtimes.partner.weixin.ICtWeixinOfficialApiService
@@ -26,8 +27,6 @@ import org.springframework.web.bind.annotation.*
 import java.util.concurrent.TimeUnit
 import javax.servlet.http.HttpServletResponse
 import javax.validation.Valid
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestParam
 
 
 class WxLoginResponse(override var data: CtUser?) : RestResult<CtUser>(data)
@@ -54,12 +53,31 @@ class WxAuthController {
     @GetMapping()
     @ApiOperation(value = "微信授权")
     fun mpAuth(
-        @RequestParam(name = "ty")  type: String?,
+        @RequestParam(name = "ty") type: String?,
         @RequestParam(name = "ic") inviteCode: String?,
         response: HttpServletResponse
     ) {
         val url = weixinOfficialApiService.getWXAuthURL(type, inviteCode)
         response.sendRedirect(url)
+    }
+
+    @GetMapping("/autoLogin")
+    @ApiOperation(value = "自动登录接口")
+    fun autoLogin(
+        @RequestParam(name = "token") token: String?,
+        response: HttpServletResponse
+    ): AjaxResult {
+        try {
+            //验证令牌
+            val user = JWTManager.getInstance().getAuthUser(token)
+            if (user != null) {
+                return AjaxResult.success(YesNoState.Yes.code);
+            } else {
+                return AjaxResult.success(YesNoState.No.code);
+            }
+        } catch (ex: Exception) {
+            return AjaxResult.success(YesNoState.No.code);
+        }
     }
 
     @PostMapping()
@@ -95,7 +113,10 @@ class WxAuthController {
         loggedUser.token = token
 
         //缓存一下accesstoken
-        redisCache.setCacheObject(CacheConstants.WX_LOGIN_ACCESS_TOKEN_KEY + loggedUser.id, ds.data.token.accessToken)
+        redisCache.setCacheObject(
+            CacheConstants.WX_LOGIN_ACCESS_TOKEN_KEY + loggedUser.id,
+            ds.data.token.accessToken
+        )
 
         return WxLoginResponse(loggedUser)
     }
