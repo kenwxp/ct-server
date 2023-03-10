@@ -101,7 +101,7 @@ public class CtWeixinFaceApiServiceImpl implements ICtWeixinFaceApiService {
         header.put("Content-Type", "application/json; charset=utf-8");
         header.put("Accept", "application/json; charset=utf-8");
         String authToken = getAuthToken("GET", url, "");
-        System.out.println(authToken);
+        log.info("authToken:{}", authToken);
         header.put("Authorization", "WECHATPAY2-SHA256-RSA2048" + " " + authToken);
         String resultStr = HttpUtils.sendGet(domain + url, "", Constants.UTF8, header);
 
@@ -119,7 +119,7 @@ public class CtWeixinFaceApiServiceImpl implements ICtWeixinFaceApiService {
         long timestamp = System.currentTimeMillis() / 1000;
         String message = buildMessage(method, url, timestamp, nonceStr, body);
         String signature = getSign(message);
-        System.out.println(signature);
+        log.info("signature:{}", signature);
         return "mchid=\"" + config.getWxMchId() + "\","
                 + "nonce_str=\"" + nonceStr + "\","
                 + "timestamp=\"" + timestamp + "\","
