@@ -71,7 +71,7 @@ public class CashWebSocketHandler extends TextWebSocketHandler {
                 throw new ServiceException("收银机绑定门店不存在");
             }
             CashWsData cashWsData = new CashWsData();
-            cashWsData.setOptions(AFTER_CONNECT_DATA);
+            cashWsData.setOption(AFTER_CONNECT_DATA);
             AfterConnectedData afterConnectedData = new AfterConnectedData(ctStore.getIsSupervise());
             cashWsData.setData(afterConnectedData);
             session.sendMessage(new TextMessage(JSONObject.toJSONString(cashWsData)));
@@ -94,12 +94,12 @@ public class CashWebSocketHandler extends TextWebSocketHandler {
         try { // 获得客户端传来的消息
             String payload = message.getPayload();
             CashWsData receive = JSON.parseObject(payload, CashWsData.class);
-            String options = receive.getOptions();
+            String options = receive.getOption();
             log.info("CashWebSocketHandler receive CMD:[" + options + "] DeviceId:[" + authUser.getId() + "],");
             BaseEventProcess process = SpringUtils.getBean(options);
             if (process == null) {
                 CashWsData cashWsData = new CashWsData();
-                cashWsData.setOptions(options);
+                cashWsData.setOption(options);
                 cashWsData.setData(AjaxResult.error("无效指令：[" + payload + "]"));
                 session.sendMessage(new TextMessage(JSONObject.toJSONString(cashWsData)));
                 return;
@@ -107,18 +107,18 @@ public class CashWebSocketHandler extends TextWebSocketHandler {
             String errorMsg = process.process(authUser, receive.getData());
             if (StringUtils.isNotEmpty(errorMsg)) {
                 CashWsData cashWsData = new CashWsData();
-                cashWsData.setOptions(options);
+                cashWsData.setOption(options);
                 cashWsData.setData(AjaxResult.error(errorMsg));
                 session.sendMessage(new TextMessage(JSONObject.toJSONString(cashWsData)));
                 return;
             }
             CashWsData cashWsData = new CashWsData();
-            cashWsData.setOptions(options);
+            cashWsData.setOption(options);
             cashWsData.setData(AjaxResult.success());
             session.sendMessage(new TextMessage(JSONObject.toJSONString(cashWsData)));
         } catch (Exception ex) {
             CashWsData cashWsData = new CashWsData();
-            cashWsData.setOptions("ERROR_MSG");
+            cashWsData.setOption("ERROR_MSG");
             cashWsData.setData(AjaxResult.error("执行指令异常"));
             session.sendMessage(new TextMessage(JSONObject.toJSONString(cashWsData)));
         }

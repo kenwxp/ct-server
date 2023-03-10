@@ -2,6 +2,7 @@ package com.cloudtimes.app.mq;
 
 import com.alibaba.fastjson.JSONObject;
 import com.cloudtimes.app.manager.CashWsSessionManager;
+import com.cloudtimes.app.models.CashWsData;
 import com.cloudtimes.common.constant.RocketMQConstants;
 import com.cloudtimes.common.mq.CashMqData;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +30,10 @@ public class CashListenerHandler implements RocketMQListener<CashMqData>, Rocket
         log.info("接收到MQ消息：" + JSONObject.toJSONString(cashMqData));
         String option = cashMqData.getOption();
         try {
-            wsSessionManager.sendSuccess(cashMqData.getDeviceId(), cashMqData);
+            CashWsData cashWsData = new CashWsData();
+            cashWsData.setOption(option);
+            cashWsData.setData(cashMqData.getData());
+            wsSessionManager.sendSuccess(cashMqData.getDeviceId(), cashWsData);
         } catch (Exception ex) {
             log.error("执行指令[" + option + "]异常：" + ex.getMessage());
         }

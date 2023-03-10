@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class CashWsData {
-    private String options;
+    private String option;
     private Object data;
 }
