@@ -13,6 +13,9 @@ class AgentStoreListRequest : PageRequest {
     @field:NotNull(message =  "用户编号不能为空")
     var userId: String = ""
 
+    @ApiModelProperty(value = "下级用户编号", required = true)
+    var subUserId: String? = null
+
     @ApiModelProperty(value = "店铺开设状态")
     var buildState: String? = null
 

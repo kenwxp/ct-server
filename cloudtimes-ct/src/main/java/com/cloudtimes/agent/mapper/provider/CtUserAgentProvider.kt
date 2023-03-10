@@ -1,19 +1,15 @@
 package com.cloudtimes.agent.mapper.provider
 
-import com.cloudtimes.account.domain.CtUser
 import com.cloudtimes.agent.domain.CtUserAgent
 import com.cloudtimes.agent.table.agentTable
 import com.cloudtimes.account.table.userTable
-import com.cloudtimes.agent.domain.CtAgentDividend
 import com.cloudtimes.agent.dto.request.AgentStoreDetailRequest
 import com.cloudtimes.agent.dto.request.AgentStoreListRequest
 import com.cloudtimes.agent.table.commissionSettlementTable
-import com.cloudtimes.agent.table.dividendTable
 import com.cloudtimes.common.enums.AgentType
 import com.cloudtimes.hardwaredevice.table.storeTable
 import org.mybatis.dynamic.sql.BasicColumn
 import org.mybatis.dynamic.sql.insert.render.GeneralInsertStatementProvider
-import org.mybatis.dynamic.sql.insert.render.InsertStatementProvider
 import org.mybatis.dynamic.sql.util.kotlin.mybatis3.select
 
 import org.mybatis.dynamic.sql.select.render.SelectStatementProvider
@@ -91,6 +87,12 @@ object CtUserAgentProvider {
     }
 
     fun selectAgentStoresStmt(request: AgentStoreListRequest): SelectStatementProvider {
+        var userId = request.userId
+
+        if (! request.subUserId.isNullOrEmpty()) {
+            userId = request.subUserId!!
+        }
+
         return select(*storeDetailColumns) {
             from(storeTable)
             leftJoin(commissionSettlementTable) {
@@ -100,8 +102,8 @@ object CtUserAgentProvider {
                 storeTable.agentId isIn {
                     select(agentTable.userId) {
                         from(agentTable)
-                        where { agentTable.userId isEqualTo request.userId}
-                        or { agentTable.parentUserId isEqualTo request.userId }
+                        where { agentTable.userId isEqualTo userId}
+                        or { agentTable.parentUserId isEqualTo userId }
                     }
                 }
             }
