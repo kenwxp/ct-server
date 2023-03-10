@@ -49,7 +49,7 @@ class CtUserAgentController : BaseController() {
      * 获取代理详细信息
      */
 //    @PreAuthorize("@ss.hasPermi('agent:agent:query')")
-    @GetMapping(value = ["/getAgentUser/{userId}"])
+    @GetMapping("/getAgentUser/{userId}")
     fun getAgentUser(@PathVariable("userId") userId: String): AjaxResult {
         return AjaxResult.success(userService.selectCtUserById(userId))
     }
