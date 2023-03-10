@@ -27,22 +27,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectCtTaskList" parameterType="CtTask" resultType="CtTask">
         <include refid="selectCtTaskVo"/>
         <where>  
-            <if test="storeId != null  and storeId != ''"> and store_id = #{storeId}</if>
-            <if test="staffCode != null  and staffCode != ''"> and staff_code = #{staffCode}</if>
-            <if test="taskType != null  and taskType != ''"> and task_type = #{taskType}</if>
-            <if test="descText != null  and descText != ''"> and desc_text = #{descText}</if>
-            <if test="startTime != null "> and start_time = #{startTime}</if>
-            <if test="endTime != null "> and end_time = #{endTime}</if>
-            <if test="isExceptional != null  and isExceptional != ''"> and is_exceptional = #{isExceptional}</if>
-            <if test="doorLogId != null  and doorLogId != ''"> and door_log_id = #{doorLogId}</if>
-            <if test="superviseArea != null  and superviseArea != ''"> and supervise_area = #{superviseArea}</if>
-            <if test="state != null  and state != ''"> and state = #{state}</if>
+            <if test="storeId != null  and storeId != ''"> and t.store_id = #{storeId}</if>
+            <if test="staffCode != null  and staffCode != ''"> and t.staff_code = #{staffCode}</if>
+            <if test="taskType != null  and taskType != ''"> and t.task_type = #{taskType}</if>
+            <if test="descText != null  and descText != ''"> and t.desc_text = #{descText}</if>
+            <if test="startTime != null "> and t.start_time = #{startTime}</if>
+            <if test="endTime != null "> and t.end_time = #{endTime}</if>
+            <if test="isExceptional != null  and isExceptional != ''"> and t.is_exceptional = #{isExceptional}</if>
+            <if test="doorLogId != null  and doorLogId != ''"> and t.door_log_id = #{doorLogId}</if>
+            <if test="superviseArea != null  and superviseArea != ''"> and t.supervise_area = #{superviseArea}</if>
+            <if test="state != null  and state != ''"> and t.state = #{state}</if>
         </where>
     </select>
     
     <select id="selectCtTaskById" parameterType="String" resultType="CtTask">
         <include refid="selectCtTaskVo"/>
-        where id = #{id}
+        where t.id = #{id}
     </select>
         
     <insert id="insertCtTask" parameterType="CtTask">
