@@ -2,7 +2,6 @@ package com.cloudtimes.common.utils.sign;
 
 import com.cloudtimes.common.utils.file.FileReadUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.xmlbeans.impl.util.HexBin;
 import org.bouncycastle.asn1.ASN1Sequence;
 import org.bouncycastle.asn1.pkcs.RSAPrivateKey;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -108,6 +107,7 @@ public class RSAUtil {
             raw = FileReadUtils.readFileToString(path);
             log.info("rawPrivateKey string:" + raw);
         } catch (IOException e) {
+            log.error("getPrivateKeyFromPath:" + e.getMessage());
             return null;
         }
         raw = raw.replace("-----BEGIN PRIVATE KEY-----", "").replace("-----END PRIVATE KEY-----", "");

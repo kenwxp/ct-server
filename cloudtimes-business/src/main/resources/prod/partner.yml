@@ -14,8 +14,8 @@ wx:
   apiV3_secret: ERuAkVmMaiYRiFNNaNMyvnuNEQHksRBC
   #商户证书序列号
   cert_serial: 73C3AEF33ECD9C7E71FA11C155BFAF99694230F8
-  cert_private_pem_path: apiclient_key.pem
-  cert_public_pem_path: apiclient_cert.pem
+  cert_private_pem_path: wechat/apiclient_key.pem
+  cert_public_pem_path: wechat/apiclient_key.pem
   # 公众号appid
   official_appid: wxbcba794e0e6361a1
   official_secret: 8910ff4f38a756a693e6941e78569001
