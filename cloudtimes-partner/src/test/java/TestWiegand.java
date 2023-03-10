@@ -1,6 +1,5 @@
 import com.cloudtimes.partner.wiegand.ICtWiegandApiService;
 import com.cloudtimes.partner.wiegand.impl.CtWiegandApiServiceImpl;
-import org.junit.Test;
 
 public class TestWiegand {
     public void test1() {

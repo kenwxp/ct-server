@@ -34,8 +34,8 @@
 
         <!-- Mysql驱动包 -->
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
         </dependency>
 
 
@@ -80,19 +80,6 @@
             </exclusions>
         </dependency>
 
-        <!-- 测试单元 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-test</artifactId>
-            <version>2.2.2.RELEASE</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-            <version>5.2.2.RELEASE</version>
-        </dependency>
-
         <dependency>
             <groupId>cloudtimes</groupId>
             <artifactId>cloudtimes-ct</artifactId>
@@ -130,13 +117,6 @@
             <artifactId>hutool-all</artifactId>
             <version>5.8.11</version>
         </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.13.2</version>
-        </dependency>
-
-
     </dependencies>
 
     <build>

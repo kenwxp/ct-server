@@ -10,6 +10,7 @@ import com.cloudtimes.common.core.domain.AjaxResult
 import com.cloudtimes.common.core.domain.RestResult
 import com.cloudtimes.common.core.domain.entity.AuthUser
 import com.cloudtimes.common.core.redis.RedisCache
+import com.cloudtimes.common.enums.AppType
 import com.cloudtimes.common.enums.ChannelType
 import com.cloudtimes.common.exception.ServiceException
 import com.cloudtimes.common.utils.JWTManager
@@ -78,6 +79,7 @@ class WxAuthController {
 
         val userInfo = ds.data
         val unionId: String = userInfo.rawUserInfo.getString("unionid")
+        val openId: String = userInfo.rawUserInfo.getString("openid")
         logger.info("rawUserInfo: ${userInfo.rawUserInfo.toString()}")
         logger.info("unionid: $unionId")
 
@@ -88,7 +90,7 @@ class WxAuthController {
             nickName = userInfo.nickname
             wxAvatar = userInfo.avatar
         }
-        val loggedUser = userService.wxLoginOrCreateNewUser(loginUser)
+        val loggedUser = userService.wxLoginOrCreateNewUser(loginUser, AppType.WX_OFFICIAL, openId)
         val token = jwtManager.createToken(AuthUser(loggedUser.id, ChannelType.WX_OFFICIAL))
         loggedUser.token = token
 

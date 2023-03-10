@@ -1,10 +1,13 @@
 package com.cloudtimes.account.service.impl
 
 import com.cloudtimes.account.domain.CtUser
+import com.cloudtimes.account.domain.CtUserAppRel
 import com.cloudtimes.account.dto.request.QueryByUserIdRequest
 import com.cloudtimes.account.dto.request.VerifyRealNameRequest
 import com.cloudtimes.account.dto.response.CtUserDto
+import com.cloudtimes.account.mapper.CtUserAppRelMapper
 import com.cloudtimes.account.mapper.CtUserMapper
+import com.cloudtimes.account.mapper.provider.CtUserAppRelProvider
 import com.cloudtimes.account.mapper.provider.CtUserProvider
 import com.cloudtimes.account.service.ICtUserService
 import com.cloudtimes.agent.domain.CtUserAgent
@@ -35,6 +38,9 @@ class CtUserServiceImpl : ICtUserService {
     private lateinit var userMapper: CtUserMapper
 
     @Autowired
+    private lateinit var userAppMapper: CtUserAppRelMapper
+
+    @Autowired
     private lateinit var agentMapper: CtUserAgentMapper
 
     @Autowired
@@ -43,14 +49,21 @@ class CtUserServiceImpl : ICtUserService {
     @Autowired
     private lateinit var configService: ISysConfigService
 
-    override fun wxLoginOrCreateNewUser(loginUser: CtUser): CtUser {
+    override fun wxLoginOrCreateNewUser(loginUser: CtUser, appType: AppType, appUserId: String): CtUser {
         val existUser = userMapper.selectOne(CtUserProvider.selectUserByUnionId(loginUser.wxUnionId!!))
-        if (existUser != null) {
-            return existUser
-        }
 
-        userMapper.insert(CtUserProvider.insertWxUser(loginUser))
-        return loginUser
+        if (existUser != null) {
+            val existUserApp = userAppMapper.selectOne(CtUserAppRelProvider.selectOneStmt(existUser.id!!, appType))
+            if (existUserApp == null) {
+                userAppMapper.generalInsert(CtUserAppRelProvider.insertStmt(existUser.id!!, appType,  appUserId))
+            }
+
+            return existUser
+        } else {
+            userMapper.insert(CtUserProvider.insertWxUser(loginUser))
+            userAppMapper.generalInsert(CtUserAppRelProvider.insertStmt(loginUser.id!!, appType,  appUserId))
+            return loginUser
+        }
     }
 
     override fun agentRegister(request: AgentRegisterRequest): CtUser {
