@@ -1,6 +1,7 @@
 package com.cloudtimes.resources.service
 
 import com.cloudtimes.resources.domain.CtRegion
+import com.cloudtimes.resources.dto.response.CtRegionResponse
 
 /**
  * 地区信息Service接口
@@ -10,7 +11,7 @@ import com.cloudtimes.resources.domain.CtRegion
  */
 interface ICtRegionService {
     /** 查询地区树 */
-    fun selectCtRegionTree(): List<CtRegion>
+    fun selectCtRegionTree(): List<CtRegionResponse>
 
     /**
      * 查询地区信息
@@ -18,7 +19,7 @@ interface ICtRegionService {
      * @param id 地区信息主键
      * @return 地区信息
      */
-    fun selectCtRegionById(id: String): CtRegion?
+    fun selectCtRegionByCode(id: String): CtRegion?
 
     /**
      * 查询地区信息列表
@@ -34,5 +35,5 @@ interface ICtRegionService {
      * @param regionCode 地区号
      * @return 地区名
      */
-    fun getRegionName(regionCode: String): String? ;
+    fun getRegionName(regionCode: String): String?
 }

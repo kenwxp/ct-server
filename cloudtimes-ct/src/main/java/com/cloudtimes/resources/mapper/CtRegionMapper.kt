@@ -25,11 +25,10 @@ import org.mybatis.dynamic.sql.util.mybatis3.CommonUpdateMapper
 interface CtRegionMapper : CommonCountMapper, CommonDeleteMapper, CommonInsertMapper<CtRegion>, CommonUpdateMapper {
     @SelectProvider(type=SqlProviderAdapter::class, method="select")
     @Results(id="CtRegionResult", value = [
-        Result(column="id", property="id", jdbcType=JdbcType.OTHER, id=true),
         Result(column="region_name", property="regionName", jdbcType=JdbcType.VARCHAR),
         Result(column="region_short_name", property="regionShortName", jdbcType=JdbcType.VARCHAR),
         Result(column="region_code", property="regionCode", jdbcType=JdbcType.VARCHAR),
-        Result(column="region_parent_id", property="regionParentId", jdbcType=JdbcType.OTHER),
+        Result(column="region_parent_code", property="regionParentCode", jdbcType=JdbcType.VARCHAR),
         Result(column="region_level", property="regionLevel", jdbcType=JdbcType.INTEGER),
         Result(column="create_time", property="createTime", jdbcType=JdbcType.TIMESTAMP),
         Result(column="update_time", property="updateTime", jdbcType=JdbcType.TIMESTAMP),
@@ -40,14 +39,6 @@ interface CtRegionMapper : CommonCountMapper, CommonDeleteMapper, CommonInsertMa
     @SelectProvider(type=SqlProviderAdapter::class, method="select")
     @ResultMap("CtRegionResult")
     fun selectOne(selectStatement: SelectStatementProvider): CtRegion?
-
-    /**
-     * 查询地区信息
-     *
-     * @param id 地区信息主键
-     * @return 地区信息
-     */
-    fun selectCtRegionById(id: String): CtRegion?
 
     /**
      * 查询地区信息

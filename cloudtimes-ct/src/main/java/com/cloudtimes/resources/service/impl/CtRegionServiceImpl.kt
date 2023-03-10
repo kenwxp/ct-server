@@ -2,8 +2,8 @@ package com.cloudtimes.resources.service.impl
 
 import com.cloudtimes.common.annotation.DataSource
 import com.cloudtimes.common.enums.DataSourceType
-import com.cloudtimes.common.utils.DateUtils
 import com.cloudtimes.resources.domain.CtRegion
+import com.cloudtimes.resources.dto.response.CtRegionResponse
 import com.cloudtimes.resources.mapper.CtRegionMapper
 import com.cloudtimes.resources.mapper.provider.CtRegionProvider
 import com.cloudtimes.resources.service.ICtRegionService
@@ -23,8 +23,8 @@ class CtRegionServiceImpl : ICtRegionService {
     private lateinit var ctRegionMapper: CtRegionMapper
 
     /** 查询地区树 */
-    override fun selectCtRegionTree(): List<CtRegion> {
-        fun helper(currentList: List<CtRegion>, allList: List<CtRegion>) {
+    override fun selectCtRegionTree(): List<CtRegionResponse> {
+        fun helper(currentList: List<CtRegionResponse>, allList: List<CtRegionResponse>) {
             if (currentList.isEmpty()) {
                 return
             }
@@ -32,26 +32,27 @@ class CtRegionServiceImpl : ICtRegionService {
             for (item in currentList) {
                 val children = allList.filter { it.parentRegionCode == item.regionCode }
                 if (children.isNotEmpty()) {
-                    item.children = children;
+                    item.children = children
                     helper(children, allList)
                 }
             }
         }
 
-        val regionList = ctRegionMapper.selectMany(CtRegionProvider.selectAllRegions());
+        val regionList = ctRegionMapper.selectMany(CtRegionProvider.selectAllRegions())
+            .map { it.toRegionResponse() }
         val level1Regions = regionList.filter { it.regionLevel == "1" }
-        helper(level1Regions, regionList);
-        return level1Regions;
+        helper(level1Regions, regionList)
+        return level1Regions
     }
 
     /**
      * 查询地区信息
      *
-     * @param id 地区信息主键
+     * @param regionCode 地区信息主键
      * @return 地区信息
      */
-    override fun selectCtRegionById(id: String): CtRegion? {
-        return ctRegionMapper.selectCtRegionById(id)
+    override fun selectCtRegionByCode(regionCode: String): CtRegion? {
+        return ctRegionMapper.selectCtRegionByCode(regionCode)
     }
 
     /**
@@ -73,9 +74,9 @@ class CtRegionServiceImpl : ICtRegionService {
     override fun getRegionName(regionCode: String): String? {
         val selectCtRegionByCode = ctRegionMapper.selectCtRegionByCode(regionCode)
         if (selectCtRegionByCode != null) {
-            return selectCtRegionByCode.regionName;
+            return selectCtRegionByCode.regionName
         }
-        return null;
+        return null
     }
 
 }

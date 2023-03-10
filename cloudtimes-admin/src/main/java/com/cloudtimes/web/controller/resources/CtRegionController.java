@@ -6,10 +6,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.cloudtimes.common.annotation.Log;
@@ -63,9 +60,9 @@ public class CtRegionController extends BaseController
      * 获取地区信息详细信息
      */
     @PreAuthorize("@ss.hasPermi('resources:ctregion:query')")
-    @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") String id)
+    @GetMapping(value = "/{code}")
+    public AjaxResult getInfo(@PathVariable("code") String code)
     {
-        return AjaxResult.success(ctRegionService.selectCtRegionById(id));
+        return AjaxResult.success(ctRegionService.selectCtRegionByCode(code));
     }
 }

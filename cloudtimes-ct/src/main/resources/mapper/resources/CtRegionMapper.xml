@@ -7,7 +7,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select * from ct_region
     </sql>
 
-    <select id="selectCtRegionList" parameterType="CtRegion" resultMap="CtRegionResult">
+    <select id="selectCtRegionList" parameterType="CtRegion" resultType="CtRegion">
         <include refid="selectCtRegionVo"/>
         <where>  
             <if test="regionName != null  and regionName != ''"> and region_name like concat('%', #{regionName}, '%')</if>
@@ -18,12 +18,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
     </select>
     
-    <select id="selectCtRegionById" parameterType="String" resultMap="CtRegionResult">
-        <include refid="selectCtRegionVo"/>
-        where id = #{id}
-    </select>
-
-    <select id="selectCtRegionByCode" parameterType="String" resultMap="CtRegionResult">
+    <select id="selectCtRegionByCode" parameterType="String" resultType="CtRegion">
         <include refid="selectCtRegionVo"/>
         where region_code = #{regionCode}
     </select>

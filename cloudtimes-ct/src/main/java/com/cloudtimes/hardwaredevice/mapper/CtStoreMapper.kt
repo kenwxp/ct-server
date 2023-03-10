@@ -31,7 +31,7 @@ interface CtStoreMapper : CommonCountMapper, CommonDeleteMapper, CommonInsertMap
         Result(column="address", property="address", jdbcType=JdbcType.VARCHAR),
         Result(column="short_address", property="shortAddress", jdbcType=JdbcType.VARCHAR),
         Result(column="store_no", property="storeNo", jdbcType=JdbcType.VARCHAR),
-        Result(column="region_id", property="regionId", jdbcType=JdbcType.OTHER),
+        Result(column="regionCode", property="regionCode", jdbcType=JdbcType.VARCHAR),
         Result(column="longitude", property="longitude", jdbcType=JdbcType.DECIMAL),
         Result(column="latitude", property="latitude", jdbcType=JdbcType.DECIMAL),
         Result(column="area", property="area", jdbcType=JdbcType.VARCHAR),

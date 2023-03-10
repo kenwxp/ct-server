@@ -4,6 +4,7 @@ import com.cloudtimes.agent.dto.request.CtRegionRequest
 import com.cloudtimes.app.constant.PrefixPathConstants
 import com.cloudtimes.common.core.domain.RestPageResult
 import com.cloudtimes.resources.domain.CtRegion
+import com.cloudtimes.resources.dto.response.CtRegionResponse
 import com.cloudtimes.resources.service.ICtRegionService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController
 import javax.validation.Valid
 
 class RegionListResponse: RestPageResult<CtRegion>()
+class RegionTreeListResponse: RestPageResult<CtRegionResponse>()
 
 @RestController
 @RequestMapping(PrefixPathConstants.WX_OFFICIAL_PATH_PREFIX + "/region")
@@ -37,10 +39,10 @@ class CtRegionController {
 
     @PostMapping("/tree")
     @ApiOperation("查询地区树")
-    fun tree(): RegionListResponse {
-        val regions: List<CtRegion> = ctRegionService.selectCtRegionTree()
+    fun tree(): RegionTreeListResponse {
+        val regions: List<CtRegionResponse> = ctRegionService.selectCtRegionTree()
 
-        return RegionListResponse().apply {
+        return RegionTreeListResponse().apply {
             data = regions
             total = regions.size.toLong()
         }

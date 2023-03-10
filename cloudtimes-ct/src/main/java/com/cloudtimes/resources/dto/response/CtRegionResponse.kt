@@ -1,20 +1,13 @@
-package com.cloudtimes.resources.domain
+package com.cloudtimes.resources.dto.response
 
 import com.cloudtimes.common.annotation.Excel
-import com.cloudtimes.common.core.domain.BaseEntity
-import com.cloudtimes.resources.dto.response.CtRegionResponse
 import io.swagger.annotations.ApiModel
 import org.apache.commons.lang3.builder.ToStringBuilder
 import org.apache.commons.lang3.builder.ToStringStyle
 
-/**
- * 地区信息对象 ct_region
- *
- * @author tank
- * @date 2023-01-17
- */
-@ApiModel(value = "CtRegion", description = "地区")
-class CtRegion : BaseEntity() {
+
+@ApiModel(value = "CtRegionResponse", description = "地区")
+class CtRegionResponse {
     /** 地区编码  */
     @Excel(name = "地区编码")
     var regionCode: String? = null
@@ -35,8 +28,8 @@ class CtRegion : BaseEntity() {
     @Excel(name = "地区级别")
     var regionLevel: String? = null
 
-    /** 是否删除  */
-    var delFlag: Long? = null
+    /** 下级节点 */
+    var children: List<CtRegionResponse>? = null
 
     override fun toString(): String {
         return ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
@@ -45,23 +38,10 @@ class CtRegion : BaseEntity() {
             .append("regionShortName", regionShortName)
             .append("parentRegionCode", parentRegionCode)
             .append("regionLevel", regionLevel)
-            .append("createTime", createTime)
-            .append("updateTime", updateTime)
-            .append("delFlag", delFlag)
             .toString()
     }
 
     companion object {
         private const val serialVersionUID = 1L
-    }
-
-    fun toRegionResponse() : CtRegionResponse {
-        return CtRegionResponse().also {
-            it.regionCode = regionCode
-            it.regionName = regionName
-            it.regionShortName = regionShortName
-            it.parentRegionCode = parentRegionCode
-            it.regionLevel = regionLevel
-        }
     }
 }
