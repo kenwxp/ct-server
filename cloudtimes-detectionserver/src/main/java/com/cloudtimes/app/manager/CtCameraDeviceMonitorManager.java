@@ -17,6 +17,9 @@ import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * 视频摄像头状态检测管理器
@@ -36,6 +39,12 @@ public class CtCameraDeviceMonitorManager {
     private CtRocketMqProducer mqProducer;
 
     private static ConcurrentMap<String, CtDevice> ctCameraDevices = new ConcurrentHashMap<>();
+    //读写锁
+    private final ReadWriteLock rwLock = new ReentrantReadWriteLock();
+    //获取写锁
+    private final Lock wLock = rwLock.writeLock();
+    //获取读锁
+    private final Lock rLock = rwLock.readLock();
 
     @PostConstruct
     public void init() {
@@ -47,33 +56,39 @@ public class CtCameraDeviceMonitorManager {
     }
 
     public void loadData() {
-        CtDevice query = new CtDevice();
-        // 查询普通摄像头列表
-        query.setDeviceType(DeviceType.CAMERA.getCode());
-        List<CtDevice> devices = deviceService.selectCtDeviceList(query);
-        // 查询连接nvr的poe摄像头列表
-        query.setDeviceType(DeviceType.NVR_CAMERA.getCode());
-        devices.addAll(deviceService.selectCtDeviceList(query));
-        for (CtDevice ctDevice : devices) {
-            if (ctCameraDevices.containsKey(ctDevice.getDeviceSerial())) {
-                if (ctDevice.getState().equals(DeviceState.forbidden.getCode())) {
-                    ctCameraDevices.remove(ctDevice.getDeviceSerial());
+        wLock.lock();
+        try {
+            log.info("当前监控中的摄头机设备数量：[" + ctCameraDevices.size() + "]");
+            CtDevice query = new CtDevice();
+            // 查询普通摄像头列表
+            query.setDeviceType(DeviceType.CAMERA.getCode());
+            List<CtDevice> devices = deviceService.selectCtDeviceList(query);
+            // 查询连接nvr的poe摄像头列表
+            query.setDeviceType(DeviceType.NVR_CAMERA.getCode());
+            devices.addAll(deviceService.selectCtDeviceList(query));
+            for (CtDevice ctDevice : devices) {
+                if (ctCameraDevices.containsKey(ctDevice.getDeviceSerial())) {
+                    if (ctDevice.getState().equals(DeviceState.forbidden.getCode())) {
+                        ctCameraDevices.remove(ctDevice.getDeviceSerial());
+                    }
+                }
+                if (!ctDevice.getState().equals(DeviceState.forbidden.getCode())) {
+                    if (!ctCameraDevices.containsKey(ctDevice.getDeviceSerial())) {
+                        ctCameraDevices.put(ctDevice.getDeviceSerial(), ctDevice);
+                        DetectionData detectionData = new DetectionData();
+                        detectionData.setOption(1);
+                        detectionData.setDevice(ctDevice);
+                        sendToMQ(detectionData, 6);//2min延迟发送
+                    }
                 }
             }
-            if (!ctDevice.getState().equals(DeviceState.forbidden.getCode())) {
-                if (!ctCameraDevices.containsKey(ctDevice.getDeviceSerial())) {
-                    ctCameraDevices.put(ctDevice.getDeviceSerial(), ctDevice);
-                    DetectionData detectionData = new DetectionData();
-                    detectionData.setOption(1);
-                    detectionData.setDevice(ctDevice);
-                    sendToMQ(detectionData, 6);//2min延迟发送
-                }
-            }
+            DetectionData detectionData = new DetectionData();
+            detectionData.setOption(0);
+            sendToMQ(detectionData, 4);// 30s检查新设备
+
+        } finally {
+            wLock.unlock();
         }
-        DetectionData detectionData = new DetectionData();
-        detectionData.setOption(0);
-        sendToMQ(detectionData, 4);// 30s检查新设备
-        log.info("当前监控中的摄头机设备数量：[" + ctCameraDevices.size() + "]");
     }
 
     public void sendToMQ(DetectionData detectionData, int delayLevel) {
