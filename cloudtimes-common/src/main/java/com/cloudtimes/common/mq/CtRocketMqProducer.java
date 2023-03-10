@@ -29,7 +29,7 @@ public class CtRocketMqProducer {
      */
     public <T> void send(String topic, T o) {
         log.info("发送mq消息 {}", JSON.toJSONString(o));
-        rocketMQTemplate.convertAndSend(prefix + topic, o);
+        rocketMQTemplate.convertAndSend(topic + ":" + prefix, o);
     }
 
     /**
@@ -37,7 +37,7 @@ public class CtRocketMqProducer {
      * （msgBody也可以是对象，sendResult为返回的发送结果）
      */
     public SendResult sendMsg(String topic, String msgBody) {
-        SendResult sendResult = rocketMQTemplate.syncSend(prefix + topic, MessageBuilder.withPayload(msgBody).build());
+        SendResult sendResult = rocketMQTemplate.syncSend(topic + ":" + prefix, MessageBuilder.withPayload(msgBody).build());
         log.info("发送mq消息 {}", msgBody);
         return sendResult;
     }
@@ -47,7 +47,7 @@ public class CtRocketMqProducer {
      * （适合对响应时间敏感的业务场景）
      */
     public void sendAsyncMsg(String topic, String msgBody) {
-        rocketMQTemplate.asyncSend(prefix + topic, MessageBuilder.withPayload(msgBody).build(), new SendCallback() {
+        rocketMQTemplate.asyncSend(topic + ":" + prefix, MessageBuilder.withPayload(msgBody).build(), new SendCallback() {
             @Override
             public void onSuccess(SendResult sendResult) {
                 // 处理消息发送成功逻辑
@@ -66,14 +66,14 @@ public class CtRocketMqProducer {
      */
     public void sendDelayMsg(String topic, String msgBody, int delayLevel) {
         log.info("发送mq消息 {}", msgBody);
-        rocketMQTemplate.syncSend(prefix + topic, MessageBuilder.withPayload(msgBody).build(), messageTimeOut, delayLevel);
+        rocketMQTemplate.syncSend(topic + ":" + prefix, MessageBuilder.withPayload(msgBody).build(), messageTimeOut, delayLevel);
     }
 
     /**
      * 发送单向消息（只负责发送消息，不等待应答，不关心发送结果，如日志）
      */
     public void sendOneWayMsg(String topic, String msgBody) {
-        rocketMQTemplate.sendOneWay(prefix + topic, MessageBuilder.withPayload(msgBody).build());
+        rocketMQTemplate.sendOneWay(topic + ":" + prefix, MessageBuilder.withPayload(msgBody).build());
     }
 
 }

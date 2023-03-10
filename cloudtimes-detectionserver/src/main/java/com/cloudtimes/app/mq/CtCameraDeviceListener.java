@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.spring.annotation.MessageModel;
 import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
+import org.apache.rocketmq.spring.annotation.SelectorType;
 import org.apache.rocketmq.spring.core.RocketMQListener;
 import org.apache.rocketmq.spring.core.RocketMQPushConsumerLifecycleListener;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,7 @@ import java.util.List;
 
 @Slf4j
 @Component
-@RocketMQMessageListener(consumerGroup = "CtCameraDeviceListener", topic = "${spring.profiles.active}" + RocketMQConstants.CT_MONITOR_CAMERA_DEVICE, messageModel = MessageModel.BROADCASTING)
+@RocketMQMessageListener(consumerGroup = "CtCameraDeviceListener", topic = RocketMQConstants.CT_MONITOR_CAMERA_DEVICE, selectorType = SelectorType.TAG, selectorExpression = "${spring.profiles.active}", messageModel = MessageModel.BROADCASTING)
 public class CtCameraDeviceListener implements RocketMQListener<DetectionData>, RocketMQPushConsumerLifecycleListener {
 
     @Autowired
