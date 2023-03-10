@@ -32,7 +32,7 @@ import com.cloudtimes.common.core.page.TableDataInfo;
  * @date 2023-03-03
  */
 @RestController
-@RequestMapping("/system/service")
+@RequestMapping("/supervise/service")
 @Api("客服特性参数相关接口")
 public class CtCustomerServiceController extends BaseController
 {
