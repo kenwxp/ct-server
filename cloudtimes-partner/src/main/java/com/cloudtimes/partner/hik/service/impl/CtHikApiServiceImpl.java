@@ -1,11 +1,15 @@
 package com.cloudtimes.partner.hik.service.impl;
 
+import cn.hutool.core.date.DateUtil;
 import com.cloudtimes.common.constant.Constants;
+import com.cloudtimes.common.core.redis.RedisCache;
+import com.cloudtimes.common.utils.DateUtils;
 import com.cloudtimes.common.utils.JacksonUtils;
 import com.cloudtimes.common.utils.http.HttpUtils;
 import com.cloudtimes.partner.config.PartnerConfig;
 import com.cloudtimes.partner.hik.domain.*;
 import com.cloudtimes.partner.hik.service.ICtHikApiService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,21 +22,26 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
+@Slf4j
 public class CtHikApiServiceImpl implements ICtHikApiService {
-    private static String accessToken;
-    private static Date expireTime;
-    static Logger log = LoggerFactory.getLogger(CtHikApiServiceImpl.class);
     @Autowired
     private PartnerConfig config;
+    @Autowired
+    private RedisCache redisCache;
+    private final String HIK_ACCESS_TOKEN = "HIK_ACCESS_TOKEN";
 
     @Override
     public String getAccessToken() {
-        if (expireTime != null) {
-            Calendar c = Calendar.getInstance();
-            c.setTime(expireTime);
+        Map<String, Object> cacheMap = redisCache.getCacheMap(HIK_ACCESS_TOKEN);
+        log.info("getAccessToken:" + cacheMap.toString());
+        if (cacheMap != null) {
+            Date expireTime = (Date) cacheMap.get("expireTime");
+            log.info("expireTime:" + expireTime.toString());
+            log.info("nowDate:" + DateUtils.getNowDate());
+            log.info("compare:" + DateUtil.compare(DateUtils.getNowDate(), expireTime));
             // token 未过期 直接返回
-            if (new Date().before(c.getTime())) {
-                return accessToken;
+            if (DateUtil.compare(DateUtils.getNowDate(), expireTime) < 0) {
+                return (String) cacheMap.get("accessToken");
             }
         }
         return fetchAccessToken();
@@ -45,15 +54,15 @@ public class CtHikApiServiceImpl implements ICtHikApiService {
         params.put("appSecret", config.getHikAppSecret());
         String result = HttpUtils.sendFormPost("https://" + HikConstant.hikHost + HikConstant.getAccessTokenUri, params, getHikHeader());
         HikCommonResp commonResp = JacksonUtils.parseObject(result, HikCommonResp.class);
-        if (commonResp != null) {
-            if (StringUtils.equals(commonResp.getCode(), HikCodeEnum.CODE200.getCode()) && commonResp.getData() != null) {
-                Map<String, Object> map = JacksonUtils.convertObject(commonResp.getData(), Map.class);
-                String newToken = (String) map.get("accessToken");
-                Long expireTs = (Long) map.get("expireTime");
-                accessToken = newToken;
-                expireTime = new Date(expireTs);
-                return newToken;
-            }
+        if (commonResp != null && StringUtils.equals(commonResp.getCode(), HikCodeEnum.CODE200.getCode()) && commonResp.getData() != null) {
+            AccessTokenData accessTokenData = JacksonUtils.convertObject(commonResp.getData(), AccessTokenData.class);
+            String newToken = accessTokenData.getAccessToken();
+            long expireTs = accessTokenData.getExpireTime();
+            Map<String, Object> cacheMap = new HashMap<>();
+            cacheMap.put("accessToken", newToken);
+            cacheMap.put("expireTime", new Date(expireTs));
+            redisCache.setCacheMap(HIK_ACCESS_TOKEN, cacheMap);
+            return newToken;
         }
         return "";
     }
@@ -153,11 +162,7 @@ public class CtHikApiServiceImpl implements ICtHikApiService {
     }
 
     private HikCommonResp sendHikHttp(String path, Map<String, String> params) {
-        String at = getAccessToken();
-        if ("".equals(at)) {
-            return null;
-        }
-        params.put("accessToken", at);
+        params.put("accessToken", getAccessToken());
         String result = HttpUtils.sendFormPost("https://" + HikConstant.hikHost + path, params, getHikHeader());
         HikCommonResp commonResp = JacksonUtils.parseObject(result, HikCommonResp.class);
         if (commonResp != null) {
@@ -194,12 +199,8 @@ public class CtHikApiServiceImpl implements ICtHikApiService {
     }
 
     public NvrDeviceInfoData getNvrChannelStatus(String nvrSerial) {
-        String at = getAccessToken();
-        if ("".equals(at)) {
-            return null;
-        }
         Map<String, String> hikHeader = getHikHeader();
-        hikHeader.put("accessToken", accessToken);
+        hikHeader.put("accessToken", getAccessToken());
         hikHeader.put("deviceSerial", nvrSerial);
         String result = HttpUtils.sendGet("https://" + HikConstant.hikHost + HikConstant.getNvrChannelStatus, null, Constants.UTF8, hikHeader);
         Map resultMap = JacksonUtils.parseObject(result, Map.class);

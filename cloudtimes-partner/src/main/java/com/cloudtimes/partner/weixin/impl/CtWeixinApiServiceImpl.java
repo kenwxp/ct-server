@@ -1,10 +1,15 @@
 package com.cloudtimes.partner.weixin.impl;
 
+import cn.hutool.core.date.DateField;
+import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
+import com.cloudtimes.common.core.redis.RedisCache;
+import com.cloudtimes.common.utils.DateUtils;
 import com.cloudtimes.common.utils.http.HttpUtils;
 import com.cloudtimes.partner.config.PartnerConfig;
 import com.cloudtimes.partner.weixin.ICtWeixinApiService;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +24,13 @@ import java.util.Map;
  * 微信小程序接口调用service服务
  */
 @Service
+@Slf4j
 public class CtWeixinApiServiceImpl implements ICtWeixinApiService {
-    static Logger log = LoggerFactory.getLogger(CtWeixinApiServiceImpl.class);
-    private static String accessToken;
-    private static Date expireTime;
     @Autowired
     private PartnerConfig config;
+    @Autowired
+    private RedisCache redisCache;
+    private final String WEIXIN_ACCESS_TOKEN = "WEIXIN_ACCESS_TOKEN";
 
     /**
      * 获取微信access token
@@ -33,12 +39,16 @@ public class CtWeixinApiServiceImpl implements ICtWeixinApiService {
      */
     @Override
     public String getAccessToken() {
-        if (expireTime != null) {
-            Calendar c = Calendar.getInstance();
-            c.setTime(expireTime);
+        Map<String, Object> cacheMap = redisCache.getCacheMap(WEIXIN_ACCESS_TOKEN);
+        log.info("getAccessToken:" + cacheMap.toString());
+        if (cacheMap != null) {
+            Date expireTime = (Date) cacheMap.get("expireTime");
+            log.info("expireTime:" + expireTime.toString());
+            log.info("nowDate:" + DateUtils.getNowDate());
+            log.info("compare:" + DateUtil.compare(DateUtils.getNowDate(), expireTime));
             // token 未过期 直接返回
-            if (new Date().before(c.getTime())) {
-                return accessToken;
+            if (DateUtil.compare(DateUtils.getNowDate(), expireTime) < 0) {
+                return (String) cacheMap.get("accessToken");
             }
         }
         return fetchAccessToken();
@@ -50,11 +60,10 @@ public class CtWeixinApiServiceImpl implements ICtWeixinApiService {
         Map<String, Object> map = JSON.parseObject(responseStr, Map.class);
         String newToken = (String) map.get("access_token");
         int expireIn = (int) map.get("expires_in");
-        Calendar c = Calendar.getInstance();
-        c.setTime(new Date());
-        c.add(Calendar.SECOND, expireIn);
-        accessToken = newToken;
-        expireTime = c.getTime();
+        Map<String, Object> cacheMap = new HashMap<>();
+        cacheMap.put("accessToken", newToken);
+        cacheMap.put("expireTime", DateUtil.offset(DateUtils.getNowDate(), DateField.SECOND, expireIn));
+        redisCache.setCacheMap(WEIXIN_ACCESS_TOKEN, cacheMap);
         return newToken;
     }
 
