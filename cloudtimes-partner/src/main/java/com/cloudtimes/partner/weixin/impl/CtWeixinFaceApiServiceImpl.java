@@ -128,7 +128,10 @@ public class CtWeixinFaceApiServiceImpl implements ICtWeixinFaceApiService {
     }
 
     private String getSign(String message) {
+        log.info("config.getWxCertPrivatePemPath()" + config.getWxCertPrivatePemPath().toString());
         PrivateKey certPrivate = RSAUtil.getPrivateKeyFromPath(config.getWxCertPrivatePemPath());
+        log.info("certPrivate:" + certPrivate);
+        log.info("message:" + message);
         byte[] sha256withRSAS = RSAUtil.sign(certPrivate, message, "SHA256withRSA");
         return Base64.encode(sha256withRSAS);
     }

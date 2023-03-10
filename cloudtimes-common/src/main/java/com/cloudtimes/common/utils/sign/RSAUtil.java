@@ -1,6 +1,7 @@
 package com.cloudtimes.common.utils.sign;
 
 import com.cloudtimes.common.utils.file.FileReadUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.xmlbeans.impl.util.HexBin;
 import org.bouncycastle.asn1.ASN1Sequence;
 import org.bouncycastle.asn1.pkcs.RSAPrivateKey;
@@ -13,6 +14,7 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.RSAPrivateKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 
+@Slf4j
 public class RSAUtil {
     public static final int PKCS1 = 1;
     public static final int PKCS8 = 8;
@@ -104,6 +106,7 @@ public class RSAUtil {
         String raw = "";
         try {
             raw = FileReadUtils.readFileToString(path);
+            log.info("rawPrivateKey string:" + raw);
         } catch (IOException e) {
             return null;
         }
