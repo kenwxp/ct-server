@@ -46,6 +46,7 @@ public class CacheController {
         caches.add(new SysCache(CacheConstants.APP_LOGIN_TOKEN_KEY, "APP用户登录信息"));
         caches.add(new SysCache(CacheConstants.SMS_CODE_KEY, "APP用户短信验证码"));
         caches.add(new SysCache(CacheConstants.MEMBER_DAILY_BUY, "会员每日购买消费记录"));
+        caches.add(new SysCache(CacheConstants.CAMERQ_DEVICE_MONITOR, "摄像头在线监控记录"));
     }
 
     @PreAuthorize("@ss.hasPermi('monitor:cache:list')")

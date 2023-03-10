@@ -2,8 +2,10 @@ package com.cloudtimes.app.manager;
 
 import com.cloudtimes.app.domain.DetectionData;
 import com.cloudtimes.common.constant.RocketMQConstants;
+import com.cloudtimes.common.core.redis.RedisCache;
 import com.cloudtimes.common.enums.DeviceState;
 import com.cloudtimes.common.mq.CtRocketMqProducer;
+import com.cloudtimes.common.utils.DateUtils;
 import com.cloudtimes.common.utils.JacksonUtils;
 import com.cloudtimes.enums.DeviceType;
 import com.cloudtimes.hardwaredevice.domain.CtDevice;
@@ -21,6 +23,8 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import static com.cloudtimes.common.constant.CacheConstants.CAMERQ_DEVICE_MONITOR;
+
 /**
  * 视频摄像头状态检测管理器
  */
@@ -34,17 +38,23 @@ public class CtCameraDeviceMonitorManager {
 
     @Value("${monitor.camera}")
     private boolean enabled;
+    @Value("${monitor.loadgaptime}")
+    private long loadGapTime;
+
+    private long lastLoadDataTime;
 
     @Autowired
     private CtRocketMqProducer mqProducer;
 
-    private static ConcurrentMap<String, CtDevice> ctCameraDevices = new ConcurrentHashMap<>();
     //读写锁
     private final ReadWriteLock rwLock = new ReentrantReadWriteLock();
     //获取写锁
     private final Lock wLock = rwLock.writeLock();
     //获取读锁
     private final Lock rLock = rwLock.readLock();
+
+    @Autowired
+    private RedisCache redisCache;
 
     @PostConstruct
     public void init() {
@@ -55,10 +65,32 @@ public class CtCameraDeviceMonitorManager {
         this.loadData();
     }
 
+    public String getCacheKey(CtDevice ctDevice) {
+        return CAMERQ_DEVICE_MONITOR + ctDevice.getDeviceSerial();
+    }
+
+    public int getDeviceNumber() {
+        return redisCache.keys(CAMERQ_DEVICE_MONITOR + ":*").size();
+    }
+
+    public boolean isLoadDataTime() {
+        long now = DateUtils.getNowDate().getTime();
+        long nextLoadTime = lastLoadDataTime + loadGapTime * 60L * 1000L;
+        if (now >= nextLoadTime) {
+            lastLoadDataTime = now;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public void loadData() {
         wLock.lock();
         try {
-            log.info("当前监控中的摄头机设备数量：[" + ctCameraDevices.size() + "]");
+            if (!this.isLoadDataTime()) {
+                return;
+            }
+            log.info("当前监控中的摄头机设备数量：[" + getDeviceNumber() + "]");
             CtDevice query = new CtDevice();
             // 查询普通摄像头列表
             query.setDeviceType(DeviceType.CAMERA.getCode());
@@ -67,14 +99,15 @@ public class CtCameraDeviceMonitorManager {
             query.setDeviceType(DeviceType.NVR_CAMERA.getCode());
             devices.addAll(deviceService.selectCtDeviceList(query));
             for (CtDevice ctDevice : devices) {
-                if (ctCameraDevices.containsKey(ctDevice.getDeviceSerial())) {
+                String cacheKey = getCacheKey(ctDevice);
+                if (redisCache.hasKey(cacheKey)) {
                     if (ctDevice.getState().equals(DeviceState.forbidden.getCode())) {
-                        ctCameraDevices.remove(ctDevice.getDeviceSerial());
+                        redisCache.deleteObject(cacheKey);
                     }
                 }
                 if (!ctDevice.getState().equals(DeviceState.forbidden.getCode())) {
-                    if (!ctCameraDevices.containsKey(ctDevice.getDeviceSerial())) {
-                        ctCameraDevices.put(ctDevice.getDeviceSerial(), ctDevice);
+                    if (!redisCache.hasKey(cacheKey)) {
+                        redisCache.setCacheObject(cacheKey, ctDevice);
                         DetectionData detectionData = new DetectionData();
                         detectionData.setOption(1);
                         detectionData.setDevice(ctDevice);

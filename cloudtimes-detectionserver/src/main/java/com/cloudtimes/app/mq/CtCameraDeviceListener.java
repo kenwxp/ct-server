@@ -52,40 +52,44 @@ public class CtCameraDeviceListener implements RocketMQListener<DetectionData>, 
             if (StringUtils.equals(ctDevice.getDeviceType(), DeviceType.CAMERA.getCode())) {
                 // IPC摄像头
                 DeviceInfoData deviceInfoData = ctHikApiService.getDeviceInfo(ctDevice.getDeviceSerial());
-                log.info("摄像机[DeviceSerial:" + ctDevice.getDeviceSerial() + " name: " + ctDevice.getName() + "],状态检测三方返回结果:[" + JSONObject.toJSONString(deviceInfoData) + "]");
-                ctDevice.setState(String.valueOf(deviceInfoData.getStatus()));
-                CtDevice update = new CtDevice();
-                update.setId(ctDevice.getId());
-                if (deviceInfoData.getStatus() == 1) {
-                    update.setState(DeviceState.Online.getCode());
-                } else {
-                    update.setState(DeviceState.Offline.getCode());
+                if (deviceInfoData != null) {
+                    log.info("摄像机[DeviceSerial:" + ctDevice.getDeviceSerial() + " name: " + ctDevice.getName() + "],状态检测三方返回结果:[" + JSONObject.toJSONString(deviceInfoData) + "]");
+                    ctDevice.setState(String.valueOf(deviceInfoData.getStatus()));
+                    CtDevice update = new CtDevice();
+                    update.setId(ctDevice.getId());
+                    if (deviceInfoData.getStatus() == 1) {
+                        update.setState(DeviceState.Online.getCode());
+                    } else {
+                        update.setState(DeviceState.Offline.getCode());
+                    }
+                    ctDevice.setName(deviceInfoData.getDeviceName());
+                    deviceService.updateCtDevice(ctDevice);
                 }
-                ctDevice.setName(deviceInfoData.getDeviceName());
-                deviceService.updateCtDevice(ctDevice);
             } else if (StringUtils.equals(ctDevice.getDeviceType(), DeviceType.NVR_CAMERA.getCode())) {
                 // POE摄像头，实际查询nvr状态
                 NvrDeviceInfoData nvrChannelStatus = ctHikApiService.getNvrChannelStatus(ctDevice.getDeviceSerial());
-                List<NvrChannelStatus> channelInfoList = nvrChannelStatus.getChannelInfoList();
-                CtDevice query = new CtDevice();
-                query.setDeviceSerial(ctDevice.getDeviceSerial());
-                query.setDeviceType(DeviceType.NVR_CAMERA.getCode());
-                List<CtDevice> poeDeviceList = deviceService.selectCtDeviceList(query);
-                for (CtDevice device :
-                        poeDeviceList) {
-                    for (NvrChannelStatus channel :
-                            channelInfoList) {
-                        if (channel.getSuperDevChannel() == device.getDeviceChannel()) {
-                            CtDevice update = new CtDevice();
-                            update.setId(ctDevice.getId());
-                            if (channel.getStatus() == 0) {
-                                update.setState(DeviceState.Offline.getCode());
-                            } else if (channel.getStatus() == 0) {
-                                update.setState(DeviceState.Online.getCode());
-                            } else {
-                                update.setState(DeviceState.Error.getCode());
+                if (nvrChannelStatus != null) {
+                    List<NvrChannelStatus> channelInfoList = nvrChannelStatus.getChannelInfoList();
+                    CtDevice query = new CtDevice();
+                    query.setDeviceSerial(ctDevice.getDeviceSerial());
+                    query.setDeviceType(DeviceType.NVR_CAMERA.getCode());
+                    List<CtDevice> poeDeviceList = deviceService.selectCtDeviceList(query);
+                    for (CtDevice device :
+                            poeDeviceList) {
+                        for (NvrChannelStatus channel :
+                                channelInfoList) {
+                            if (channel.getSuperDevChannel() == device.getDeviceChannel()) {
+                                CtDevice update = new CtDevice();
+                                update.setId(ctDevice.getId());
+                                if (channel.getStatus() == 0) {
+                                    update.setState(DeviceState.Offline.getCode());
+                                } else if (channel.getStatus() == 0) {
+                                    update.setState(DeviceState.Online.getCode());
+                                } else {
+                                    update.setState(DeviceState.Error.getCode());
+                                }
+                                deviceService.updateCtDevice(ctDevice);
                             }
-                            deviceService.updateCtDevice(ctDevice);
                         }
                     }
                 }
@@ -101,6 +105,7 @@ public class CtCameraDeviceListener implements RocketMQListener<DetectionData>, 
 
     @Override
     public void onMessage(DetectionData data) {
+        log.info("onMessage：" + JSONObject.toJSONString(data));
         if (!enabled) {
             return;
         }

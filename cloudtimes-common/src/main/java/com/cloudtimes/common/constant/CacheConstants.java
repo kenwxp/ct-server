@@ -32,6 +32,8 @@ public class CacheConstants {
      */
     public static final String MEMBER_DAILY_BUY = "member_daily_buy:";
 
+    public static final String CAMERQ_DEVICE_MONITOR = "Camera_Device_Monitor:";
+
     /**
      * 会员每日提现记录 redis key
      */
