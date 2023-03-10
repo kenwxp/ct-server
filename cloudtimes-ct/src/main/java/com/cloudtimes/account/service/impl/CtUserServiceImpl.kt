@@ -126,9 +126,6 @@ class CtUserServiceImpl : ICtUserService {
         val userId = request.userId
         val user = userMapper.selectOne(CtUserProvider.selectUserById(userId))
             ?: throw ServiceException("数据库异常，查询微信用户失败")
-        if (arrayOf(AgentType.SubAgent, AgentType.None).any { it.code == user.agentType }) {
-            throw ServiceException("下级代理不能团队拓展")
-        }
 
         // Step 2. 查询邀请地址
         val configUrl: String? = configService.selectConfigByKey("ct_invite_store_url")
