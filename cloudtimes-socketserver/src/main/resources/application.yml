@@ -1,9 +1,6 @@
 spring:
   profiles:
     active: dev
-#mq消息主题统一前缀
-mq_topic:
-  env: dev
 
 
 

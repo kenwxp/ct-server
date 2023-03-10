@@ -21,7 +21,7 @@ public class CtRocketMqProducer {
     @Autowired
     private RocketMQTemplate rocketMQTemplate;
 
-    @Value("${mq_topic.env}")
+    @Value("${spring.profiles.active}")
     private String prefix;
 
     /**
