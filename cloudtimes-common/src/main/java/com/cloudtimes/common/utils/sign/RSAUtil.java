@@ -105,7 +105,6 @@ public class RSAUtil {
         String raw = "";
         try {
             raw = FileReadUtils.readFileToString(path);
-            log.info("rawPrivateKey string:" + raw);
         } catch (IOException e) {
             log.error("getPrivateKeyFromPath:" + e.getMessage());
             return null;

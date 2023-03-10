@@ -1,8 +1,7 @@
 package com.cloudtimes.partner.weixin.impl;
 
-import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.JSONObject;
 import com.cloudtimes.common.constant.Constants;
+import com.cloudtimes.common.utils.JacksonUtils;
 import com.cloudtimes.common.utils.NumberUtils;
 import com.cloudtimes.common.utils.StringUtils;
 import com.cloudtimes.common.utils.XmlUtils;
@@ -12,6 +11,7 @@ import com.cloudtimes.common.utils.sign.Md5Utils;
 import com.cloudtimes.common.utils.sign.RSAUtil;
 import com.cloudtimes.partner.config.PartnerConfig;
 import com.cloudtimes.partner.weixin.ICtWeixinFaceApiService;
+import com.cloudtimes.partner.weixin.domain.WxUnionIdData;
 import com.cloudtimes.partner.weixin.domain.WxpayfaceAuthInfoReq;
 import com.cloudtimes.partner.weixin.domain.WxpayfaceAuthInfoResp;
 import org.slf4j.Logger;
@@ -21,7 +21,9 @@ import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
 import java.security.PrivateKey;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.TreeMap;
 
 /**
  * 微信小程序接口调用service服务
@@ -104,11 +106,10 @@ public class CtWeixinFaceApiServiceImpl implements ICtWeixinFaceApiService {
         log.info("authToken:{}", authToken);
         header.put("Authorization", "WECHATPAY2-SHA256-RSA2048" + " " + authToken);
         String resultStr = HttpUtils.sendGet(domain + url, "", Constants.UTF8, header);
-
         if (StringUtils.isNotBlank(resultStr)) {
-            JSONObject jsonObject = JSON.parseObject(resultStr);
-            if (jsonObject != null) {
-                return jsonObject.getString("union_id");
+            WxUnionIdData wxUnionIdData = JacksonUtils.parseObject(resultStr, WxUnionIdData.class);
+            if (wxUnionIdData != null) {
+                return wxUnionIdData.getUnionId();
             }
         }
         return "";
@@ -128,10 +129,7 @@ public class CtWeixinFaceApiServiceImpl implements ICtWeixinFaceApiService {
     }
 
     private String getSign(String message) {
-        log.info("config.getWxCertPrivatePemPath()" + config.getWxCertPrivatePemPath().toString());
         PrivateKey certPrivate = RSAUtil.getPrivateKeyFromPath(config.getWxCertPrivatePemPath());
-        log.info("certPrivate:" + certPrivate);
-        log.info("message:" + message);
         byte[] sha256withRSAS = RSAUtil.sign(certPrivate, message, "SHA256withRSA");
         return Base64.encode(sha256withRSAS);
     }

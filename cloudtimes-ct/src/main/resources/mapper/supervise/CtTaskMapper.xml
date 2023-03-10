@@ -5,20 +5,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="com.cloudtimes.supervise.mapper.CtTaskMapper">
     <sql id="selectCtTaskVo">
         select id, 
-               store_id,
-               staff_code, 
-               task_type, 
-               desc_text, 
-               start_time, 
-               end_time, 
-               is_exceptional, 
-               door_log_id, 
-               supervise_area, 
-               state, 
-               create_time, 
-               update_time, 
-               del_flag 
-        from ct_task
+               t.store_id,
+               t.staff_code,
+               t.task_type,
+               t.desc_text,
+               t.start_time,
+               t.end_time,
+               t.is_exceptional,
+               t.door_log_id,
+               t.supervise_area,
+               t.state,
+               t.create_time,
+               t.update_time,
+               t.del_flag ,
+                s.name store_name,
+                s.contact_name,
+                s.contact_phone
+        from ct_task t left join  ct_store s on t.store_id = s.id
     </sql>
 
     <select id="selectCtTaskList" parameterType="CtTask" resultType="CtTask">
