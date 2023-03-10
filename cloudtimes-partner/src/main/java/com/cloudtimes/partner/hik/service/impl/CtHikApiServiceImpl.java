@@ -33,12 +33,8 @@ public class CtHikApiServiceImpl implements ICtHikApiService {
     @Override
     public String getAccessToken() {
         Map<String, Object> cacheMap = redisCache.getCacheMap(HIK_ACCESS_TOKEN);
-        log.info("getAccessToken:" + cacheMap.toString());
         if (cacheMap != null) {
             Date expireTime = (Date) cacheMap.get("expireTime");
-            log.info("expireTime:" + expireTime.toString());
-            log.info("nowDate:" + DateUtils.getNowDate());
-            log.info("compare:" + DateUtil.compare(DateUtils.getNowDate(), expireTime));
             // token 未过期 直接返回
             if (DateUtil.compare(DateUtils.getNowDate(), expireTime) < 0) {
                 return (String) cacheMap.get("accessToken");
