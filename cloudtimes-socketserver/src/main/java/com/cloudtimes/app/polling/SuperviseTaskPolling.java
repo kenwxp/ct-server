@@ -116,8 +116,8 @@ public class SuperviseTaskPolling {
                 wsTaskData.setCurrentTaskCount(String.valueOf(currentTaskCount));
                 wsTaskData.setOverflowTaskCount(String.valueOf(overflowTaskCount));
                 wsTaskData.setOverdueTaskCount(String.valueOf(overdueTaskCount));
-                wsTaskData.setCurrentOrderCount(String.valueOf(currentOrderCount));
-                wsTaskData.setAcceptStatus(customerServiceCache.getAcceptState(userId));
+                wsTaskData.setCurrentOrderCount(String.valueOf(currentOrderCount));;
+                wsTaskData.setAcceptState(customerServiceCache.getAcceptState(userId));
                 wsTaskData.setTaskList(taskList);
                 for (String sessionId : sessionSet) {
                     sessionManager.sendSuccess(userId, sessionId, OPTION_NAME, wsTaskData);

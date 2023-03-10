@@ -6,7 +6,7 @@
 
     <sql id="selectCtCustomerServiceVo">
         select id, service_id, service_name, superior_id, superior_name, dept_id, dept_name, level, max_accept_task,
-        max_accept_order, del_flag, create_time, update_time from ct_customer_service
+        max_accept_order, accept_state, del_flag, create_time, update_time from ct_customer_service
     </sql>
 
     <select id="selectCtCustomerServiceList" parameterType="CtCustomerService" resultType="CtCustomerService">
@@ -83,6 +83,7 @@
             <if test="level != null">level,</if>
             <if test="maxAcceptTask != null">max_accept_task,</if>
             <if test="maxAcceptOrder != null">max_accept_order,</if>
+            <if test="acceptState != null">accept_state,</if>
             <if test="delFlag != null">del_flag,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
@@ -98,6 +99,7 @@
             <if test="level != null">#{level},</if>
             <if test="maxAcceptTask != null">#{maxAcceptTask},</if>
             <if test="maxAcceptOrder != null">#{maxAcceptOrder},</if>
+            <if test="acceptState != null">#{acceptState},</if>
             <if test="delFlag != null">#{delFlag},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateTime != null">#{updateTime},</if>
@@ -116,6 +118,7 @@
             <if test="level != null">level = #{level},</if>
             <if test="maxAcceptTask != null">max_accept_task = #{maxAcceptTask},</if>
             <if test="maxAcceptOrder != null">max_accept_order = #{maxAcceptOrder},</if>
+            <if test="acceptState != null">accept_state = #{acceptState},</if>
             <if test="delFlag != null">del_flag = #{delFlag},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>

@@ -16,7 +16,7 @@ public class WsTaskData {
     @ApiModelProperty("当前订单数")
     private String currentOrderCount;
     @ApiModelProperty("接单状态 0-接单中 1-暂停接单")
-    private String acceptStatus;
+    private String acceptState;
     @ApiModelProperty("任务列表")
     private List<WsTaskListData> taskList;
 }
