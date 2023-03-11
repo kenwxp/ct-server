@@ -1,3 +1,5 @@
+source /etc/profile
+. ~/.bash_profile
 #!/usr/bin/bash
 
 pids=$( ps -ef | grep java | grep cloudtimes | grep -v grep | awk '{print $2}' )
