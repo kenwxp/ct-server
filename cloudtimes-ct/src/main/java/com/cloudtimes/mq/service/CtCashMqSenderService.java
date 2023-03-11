@@ -1,12 +1,14 @@
 package com.cloudtimes.mq.service;
 
 import com.cloudtimes.common.constant.RocketMQConstants;
+import com.cloudtimes.common.enums.DeviceState;
 import com.cloudtimes.common.mq.*;
 import com.cloudtimes.common.utils.NumberUtils;
 import com.cloudtimes.enums.DeviceType;
 import com.cloudtimes.hardwaredevice.domain.CtDevice;
 import com.cloudtimes.hardwaredevice.mapper.CtDeviceMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,14 +36,16 @@ public class CtCashMqSenderService {
         List<CtDevice> ctDevices = getCashDevicesOfShop(storeId);
         for (CtDevice device :
                 ctDevices) {
-            CashMqData cashMqData = new CashMqData();
-            cashMqData.setDeviceId(device.getId());
-            cashMqData.setOption(SEND_DUTY_STATUS);
-            DutyStatusData data = new DutyStatusData();
-            data.setIsSupervise(isSupervise);
-            cashMqData.setData(data);
-            log.info("发送mq信息：" + cashMqData.toString());
-            mqProducer.send(RocketMQConstants.WS_CASH_DEVICE, cashMqData);
+            if (StringUtils.equals(device.getState(), DeviceState.Online.getCode())) {
+                CashMqData cashMqData = new CashMqData();
+                cashMqData.setDeviceId(device.getId());
+                cashMqData.setOption(SEND_DUTY_STATUS);
+                DutyStatusData data = new DutyStatusData();
+                data.setIsSupervise(isSupervise);
+                cashMqData.setData(data);
+                log.info("发送mq信息：" + cashMqData.toString());
+                mqProducer.send(RocketMQConstants.WS_CASH_DEVICE, cashMqData);
+            }
         }
     }
 
@@ -50,45 +54,53 @@ public class CtCashMqSenderService {
         List<CtDevice> ctDevices = getCashDevicesOfShop(storeId);
         for (CtDevice device :
                 ctDevices) {
-            CashMqData cashMqData = new CashMqData();
-            cashMqData.setDeviceId(device.getId());
-            cashMqData.setOption(SEND_CALL_DO);
-            CallDoData data = new CallDoData();
-            data.setDoJoin(isJoin);
-            cashMqData.setData(data);
-            log.info("发送mq信息：" + cashMqData);
-            mqProducer.send(RocketMQConstants.WS_CASH_DEVICE, cashMqData);
+            if (StringUtils.equals(device.getState(), DeviceState.Online.getCode())) {
+                CashMqData cashMqData = new CashMqData();
+                cashMqData.setDeviceId(device.getId());
+                cashMqData.setOption(SEND_CALL_DO);
+                CallDoData data = new CallDoData();
+                data.setDoJoin(isJoin);
+                cashMqData.setData(data);
+                log.info("发送mq信息：" + cashMqData);
+                mqProducer.send(RocketMQConstants.WS_CASH_DEVICE, cashMqData);
+            }
         }
     }
 
-    public void sendBillSerial(String storeId, String orderId, String dynamicQrCode, String phone) {
-        log.info("推送收银机单号: 门店id=" + storeId + " 单号：" + orderId);
+    public void sendBillSerial(String storeId, String deviceId, String orderId, String dynamicQrCode, String phone) {
+        log.info("推送收银机单号: 门店编号：{} \n设备标号：{}  \n 单号:{}", storeId, deviceId, orderId);
         List<CtDevice> ctDevices = getCashDevicesOfShop(storeId);
         for (CtDevice device :
                 ctDevices) {
-            CashMqData cashMqData = new CashMqData();
-            cashMqData.setDeviceId(device.getId());
-            cashMqData.setOption(SEND_BILL_SERIAL);
-            SendOrderData data = new SendOrderData();
-            data.setOrderId(orderId);
-            data.setDynamicQrCode(dynamicQrCode);
-            data.setCustomerPhone(NumberUtils.getHiddenPhone(phone));
-            cashMqData.setData(data);
-            log.info("发送mq信息：" + cashMqData);
-            mqProducer.send(RocketMQConstants.WS_CASH_DEVICE, cashMqData);
+            if (StringUtils.equals(device.getState(), DeviceState.Online.getCode()) &&
+                    StringUtils.equals(device.getId(), deviceId)) {
+                CashMqData cashMqData = new CashMqData();
+                cashMqData.setDeviceId(device.getId());
+                cashMqData.setOption(SEND_BILL_SERIAL);
+                SendOrderData data = new SendOrderData();
+                data.setOrderId(orderId);
+                data.setDynamicQrCode(dynamicQrCode);
+                data.setCustomerPhone(NumberUtils.getHiddenPhone(phone));
+                cashMqData.setData(data);
+                log.info("发送mq信息：" + cashMqData);
+                mqProducer.send(RocketMQConstants.WS_CASH_DEVICE, cashMqData);
+            }
         }
     }
+
 
     public void sendSyncProduct(String storeId) {
         log.info("同步商品列表: 门店id=" + storeId);
         List<CtDevice> ctDevices = getCashDevicesOfShop(storeId);
         for (CtDevice device :
                 ctDevices) {
-            CashMqData cashMqData = new CashMqData();
-            cashMqData.setDeviceId(device.getId());
-            cashMqData.setOption(SEND_SYNC_PRODUCT);
-            log.info("发送mq信息：" + cashMqData);
-            mqProducer.send(RocketMQConstants.WS_CASH_DEVICE, cashMqData);
+            if (StringUtils.equals(device.getState(), DeviceState.Online.getCode())) {
+                CashMqData cashMqData = new CashMqData();
+                cashMqData.setDeviceId(device.getId());
+                cashMqData.setOption(SEND_SYNC_PRODUCT);
+                log.info("发送mq信息：" + cashMqData);
+                mqProducer.send(RocketMQConstants.WS_CASH_DEVICE, cashMqData);
+            }
         }
     }
 

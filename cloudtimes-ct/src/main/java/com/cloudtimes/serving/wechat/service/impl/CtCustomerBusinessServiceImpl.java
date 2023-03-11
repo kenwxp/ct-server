@@ -104,7 +104,7 @@ public class CtCustomerBusinessServiceImpl implements ICtCustomerBusinessService
             // 若为动态码，则校验内存中动态码是否一致，不一致则产生新的二维码，推送收银机，一致流程继续
             if (!StringUtils.equals(deviceCache.get(deviceId), dynamicCode)) {
                 String newUrl = cashBusinessService.genDynamicQrCodeUrl(deviceId, dbStore.getStoreNo());
-                cashMqSender.sendBillSerial(dbStore.getId(), "", newUrl, dbUser.getMobile());
+                cashMqSender.sendBillSerial(dbStore.getId(), deviceId, "", newUrl, dbUser.getMobile());
                 throw new ServiceException("二维码失效，请重试");
             }
         }
@@ -153,7 +153,7 @@ public class CtCustomerBusinessServiceImpl implements ICtCustomerBusinessService
             taskCache.setCacheOrder(newOrder);
             String newUrl = cashBusinessService.genDynamicQrCodeUrl(deviceId, dbStore.getStoreNo());
             // 推送收银机单号
-            cashMqSender.sendBillSerial(dbStore.getId(), newOrder.getId(), newUrl, dbUser.getMobile());
+            cashMqSender.sendBillSerial(dbStore.getId(), deviceId, newOrder.getId(), newUrl, dbUser.getMobile());
         }
         ScanCodeResp scanCodeResp = new ScanCodeResp();
         scanCodeResp.setIsSupervise(dbStore.getIsSupervise());

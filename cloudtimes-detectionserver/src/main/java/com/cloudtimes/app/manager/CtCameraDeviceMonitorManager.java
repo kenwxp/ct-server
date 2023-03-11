@@ -17,8 +17,6 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -101,11 +99,11 @@ public class CtCameraDeviceMonitorManager {
             for (CtDevice ctDevice : devices) {
                 String cacheKey = getCacheKey(ctDevice);
                 if (redisCache.hasKey(cacheKey)) {
-                    if (ctDevice.getState().equals(DeviceState.forbidden.getCode())) {
+                    if (ctDevice.getState().equals(DeviceState.Forbidden.getCode())) {
                         redisCache.deleteObject(cacheKey);
                     }
                 }
-                if (!ctDevice.getState().equals(DeviceState.forbidden.getCode())) {
+                if (!ctDevice.getState().equals(DeviceState.Forbidden.getCode())) {
                     if (!redisCache.hasKey(cacheKey)) {
                         redisCache.setCacheObject(cacheKey, ctDevice);
                         DetectionData detectionData = new DetectionData();

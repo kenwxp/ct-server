@@ -3,7 +3,6 @@ package com.cloudtimes.cache;
 import cn.hutool.core.date.DateUtil;
 import com.cloudtimes.common.core.redis.RedisCache;
 import com.cloudtimes.common.enums.DeviceState;
-import com.cloudtimes.common.exception.ServiceException;
 import com.cloudtimes.common.utils.DateUtils;
 import com.cloudtimes.common.utils.StringUtils;
 import com.cloudtimes.enums.DeviceType;
@@ -52,7 +51,7 @@ public class CtStoreVideoCache {
         List<CtDevice> nvrCameraList = deviceMapper.selectCtDeviceList(query);
         deviceList.addAll(nvrCameraList);
         for (CtDevice device : deviceList) {
-            if (!StringUtils.isEmpty(device.getStoreId()) && !StringUtils.equals(device.getState(), DeviceState.forbidden.getCode())) {
+            if (!StringUtils.isEmpty(device.getStoreId()) && !StringUtils.equals(device.getState(), DeviceState.Forbidden.getCode())) {
                 CacheVideoData cacheVideoData = new CacheVideoData();
                 cacheVideoData.setStoreId(device.getStoreId());
                 cacheVideoData.setDeviceId(device.getId());

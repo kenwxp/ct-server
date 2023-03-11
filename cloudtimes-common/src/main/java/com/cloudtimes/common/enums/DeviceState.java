@@ -13,7 +13,7 @@ public enum DeviceState {
     Error("1", "异常"),
     Maintain("2", "维护"),
     Offline("3", "下线"),
-    forbidden("4", "停用");
+    Forbidden("4", "停用");
 
     private String code;
     private String msg;
