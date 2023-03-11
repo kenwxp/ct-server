@@ -136,7 +136,7 @@ object CtUserAgentProvider {
     fun selectTeamMember(userId: String): SelectStatementProvider {
         return select(
             userTable.id, userTable.nickName, userTable.realName, userTable.mobile,
-            userTable.sex, userTable.agentState, userTable.createDate,
+            userTable.sex, userTable.agentType, userTable.agentState, userTable.createDate,
             agentTable.totalSalesReward, agentTable.totalDividend, agentTable.totalActivityReward
         ) {
             from(userTable)

@@ -31,6 +31,9 @@ class TeamMember {
     @ApiModelProperty(value = "代理状态")
     var agentState: String? = null
 
+    @ApiModelProperty(value = "代理类型")
+    var agentType: String? = null
+
     @ApiModelProperty(value = "累计销售提成(累计产品销售佣金)")
     var totalSalesReward: BigDecimal? = null
 
