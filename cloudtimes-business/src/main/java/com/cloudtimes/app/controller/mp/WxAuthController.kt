@@ -70,13 +70,13 @@ class WxAuthController {
         try {
             //验证令牌
             val user = JWTManager.getInstance().getAuthUser(token)
-            if (user != null) {
-                return AjaxResult.success(YesNoState.Yes.code);
+            return if (user != null) {
+                AjaxResult.success("", YesNoState.Yes.code)
             } else {
-                return AjaxResult.success(YesNoState.No.code);
+                AjaxResult.success("", YesNoState.No.code)
             }
         } catch (ex: Exception) {
-            return AjaxResult.success(YesNoState.No.code);
+            return AjaxResult.success("", YesNoState.No.code)
         }
     }
 

@@ -129,7 +129,7 @@ class CtUserServiceImpl : ICtUserService {
 
         // Step 3. 返回邀请码和和邀请地址
         val inviteCode = userId.substring(0, 8).uppercase()
-        val inviteUrl = "$configUrl?ty=${UserType.Agent.code}&ic=${inviteCode}"
+        val inviteUrl = "$configUrl?cy=1&ty=${UserType.Agent.code}&ic=${inviteCode}"
         return InviteResponse(inviteCode = inviteCode, inviteUrl = inviteUrl)
     }
 
@@ -148,7 +148,7 @@ class CtUserServiceImpl : ICtUserService {
 
         // Step 3. 返回邀请码和和邀请地址
         val inviteCode = userId.substring(0, 8).uppercase()
-        val inviteUrl = "$configUrl?ty=${UserType.Shopkeeper.code}&ic=$inviteCode"
+        val inviteUrl = "$configUrl?cy=1&ty=${UserType.Shopkeeper.code}&ic=$inviteCode"
         return InviteResponse(inviteCode = inviteCode, inviteUrl = inviteUrl)
     }
 
