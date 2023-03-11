@@ -37,6 +37,7 @@ public class SuperviseOrderPolling {
     private CtTaskCache taskCache;
     private final String OPTION_NAME = "ORDER_DATA";
 
+    private final long INTERVAL_SECOND = 2;
 
     @PostConstruct
     public void start() {
@@ -48,10 +49,10 @@ public class SuperviseOrderPolling {
                         try {
                             handle();
                         } catch (Exception ex) {
-                            log.error("发生异常：",ex);
+                            log.error("发生异常：", ex);
                         }
                         try {
-                            Thread.sleep(5000);
+                            Thread.sleep(INTERVAL_SECOND * 1000);
                         } catch (InterruptedException e) {
                             throw new RuntimeException(e);
                         }
@@ -65,7 +66,7 @@ public class SuperviseOrderPolling {
     }
 
     private void handle() {
-        log.info(JSON.toJSONString(subscribers));
+//        log.info(JSON.toJSONString(subscribers));
 //        log.info("轮询订单列表开始");
         if (subscribers != null && !StringUtils.isEmpty(subscribers)) {
             for (Map.Entry<String, Map<String, Set<String>>> userEntry :

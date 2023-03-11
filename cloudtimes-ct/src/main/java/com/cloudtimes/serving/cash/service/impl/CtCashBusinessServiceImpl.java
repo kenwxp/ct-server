@@ -147,7 +147,6 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
      * 获取单号和顾客信息
      *
      * @param deviceId
-     * @param token
      * @return map
      * orderId
      * phone
@@ -192,8 +191,6 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
         if (shoppingMapper.insertCtShopping(newShopping) < 1) {
             throw new ServiceException("新增购物失败");
         }
-        //加入内存
-        taskCache.setCacheShopping(newShopping);
         //新增购物记录，开始时间设置成任务开始时间
         CtOrder newOrder = OrderUtil.getInitCtOrder();
         if (task != null) {
@@ -215,6 +212,8 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
         if (orderMapper.insertCtOrder(newOrder) < 1) {
             throw new ServiceException("新增订单失败");
         }
+        //加入内存
+        taskCache.setCacheShopping(newShopping);
         taskCache.setCacheOrder(newOrder);
         GetOrderIdResp resp = new GetOrderIdResp();
         resp.setCustomerPhone(NumberUtils.getHiddenPhone(ctUser.getMobile()));
@@ -324,7 +323,7 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
             }
             taskCache.setCacheOrder(newOrder);
             orderId = newOrder.getId();
-            System.out.println("产生新订单号：" + orderId);
+            log.info("产生新订单号：" + orderId);
         }
         CtOrder cacheOrder = taskCache.getCacheOrder(orderId);
         if (cacheOrder == null) {

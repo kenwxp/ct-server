@@ -42,5 +42,10 @@ public class WsTaskListData {
      * 已结束	1
      */
     private String state;
-
+    /**
+     * 任务门锁
+     * true 锁
+     * false 解锁
+     */
+    private boolean openLock;
 }

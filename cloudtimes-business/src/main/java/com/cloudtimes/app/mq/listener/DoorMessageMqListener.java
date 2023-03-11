@@ -1,7 +1,11 @@
 package com.cloudtimes.app.mq.listener;
 
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUnit;
+import cn.hutool.core.date.DateUtil;
 import com.cloudtimes.common.constant.RocketMQConstants;
 import com.cloudtimes.common.mq.DoorMessageMqData;
+import com.cloudtimes.common.utils.DateUtils;
 import com.cloudtimes.mq.service.CtDoorMessageService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
@@ -22,11 +26,13 @@ public class DoorMessageMqListener implements RocketMQListener<DoorMessageMqData
 
     @Override
     public void onMessage(DoorMessageMqData data) {
-        log.info("接收到mq消息，并开始处理门禁报文" + data.toString());
-        if (data.getOption() == 0) {
-            doorMessageService.handleStateMessage(data);
-        } else if (data.getOption() == 1) {
-            doorMessageService.handleTriggerMessage(data);
+        DateTime dateTime = DateUtils.parseDateTime(data.getUpdateTime());
+        if (DateUtil.between(dateTime, DateUtils.getNowDate(), DateUnit.SECOND,true) < 90) {
+            if (data.getOption() == 0) {
+                doorMessageService.handleStateMessage(data);
+            } else if (data.getOption() == 1) {
+                doorMessageService.handleTriggerMessage(data);
+            }
         }
     }
 

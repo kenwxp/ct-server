@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -51,76 +52,83 @@ public class CtTaskInnerService {
      * @return
      */
     public CtTask distributeTask(String storeId, String doorLogId) {
+
+
         log.info("开始分配任务：门店编号：{}", storeId);
         CtStore dbStore = storeMapper.selectCtStoreById(storeId);
         if (dbStore == null) {
             throw new ServiceException("无法获取门店信息");
         }
         if (StringUtils.equals(dbStore.getIsSupervise(), "1")) {
-            // 值守中分配新任务
-            CtTask query = new CtTask();
-            query.setStoreId(dbStore.getId());
-            query.setState("0");
-            List<CtTask> dbTasks = taskMapper.selectCtTaskList(query);
-            if (dbTasks == null || dbTasks.size() == 0) {
-                CtTask newTask = new CtTask();
-                newTask.setStoreId(storeId);
-                newTask.setStoreName(dbStore.getName());
-                newTask.setContactName(dbStore.getContactName());
-                newTask.setContactPhone(dbStore.getContactPhone());
-                // 分配客服
-                String staffCode = distributeStaff();
-                if (StringUtils.isEmpty(staffCode)) {
-                    throw new ServiceException("当前无值守员在岗");
-                }
-                log.info("分配客服编号：{}", staffCode);
-                newTask.setStaffCode(staffCode);
-                newTask.setTaskType("0");
-                newTask.setDescText("门禁触发产生任务");
-                newTask.setStartTime(new Date());
-                newTask.setEndTime(new Date());
-                newTask.setIsExceptional("0");
-                if (StringUtils.isEmpty(doorLogId)) {
-                    newTask.setDescText("顾客扫码或扫脸生产任务");
-                    // 开门日志获取
-                    CtOpenDoorLogs openLog = openDoorLogsMapper.selectLatestOpenDoorLogByStore(storeId, OpenDoorOption.TRIGGER_OPEN_DOOR.getCode());
-                    if (openLog != null) {
-                        doorLogId = openLog.getId();
+            synchronized (CtTaskInnerService.class) {
+                // 值守中分配新任务
+                Map<String, CtTask> dbTasks = taskCache.getAllTasksOfStore(dbStore.getId());
+                if (StringUtils.isEmpty(dbTasks)) {
+                    CtTask newTask = new CtTask();
+                    newTask.setStoreId(storeId);
+                    newTask.setStoreName(dbStore.getName());
+                    newTask.setContactName(dbStore.getContactName());
+                    newTask.setContactPhone(dbStore.getContactPhone());
+                    // 分配客服
+                    String staffCode = distributeStaff();
+                    if (StringUtils.isEmpty(staffCode)) {
+                        throw new ServiceException("当前无值守员在岗");
+                    }
+                    log.info("分配客服编号：{}", staffCode);
+                    newTask.setStaffCode(staffCode);
+                    newTask.setTaskType("0");
+                    newTask.setDescText("门禁触发产生任务");
+                    newTask.setStartTime(new Date());
+                    newTask.setEndTime(new Date());
+                    newTask.setIsExceptional("0");
+                    if (StringUtils.isEmpty(doorLogId)) {
+                        newTask.setDescText("顾客扫码或扫脸生产任务");
+                        // 开门日志获取
+                        CtOpenDoorLogs openLog = openDoorLogsMapper.selectLatestOpenDoorLogByStore(storeId, OpenDoorOption.TRIGGER_OPEN_DOOR.getCode());
+                        if (openLog != null) {
+                            doorLogId = openLog.getId();
+                        }
+                    }
+                    newTask.setDoorLogId(doorLogId);
+                    newTask.setSuperviseArea("");
+                    newTask.setState("0");
+                    newTask.setDelFlag("0");
+                    newTask.setCreateTime(new Date());
+                    newTask.setUpdateTime(new Date());
+                    newTask.setCreateTime(new Date());
+                    newTask.setUpdateTime(new Date());
+                    // 设置任务锁
+                    newTask.setOpenLock(false);
+                    if (taskMapper.insertCtTask(newTask) < 1) {
+                        throw new ServiceException("新增任务失败");
+                    }
+                    // 放入内存
+                    taskCache.setCacheTask(newTask);
+                    //发送新任务提醒给客服
+                    CtEvents newEvent = new CtEvents();
+                    newEvent.setEventName("新任务提醒");
+                    newEvent.setContent("你有新的值守任务，请留意值守门店：" + dbStore.getName());
+                    newEvent.setReceiver(staffCode);
+                    newEvent.setTaskId(newTask.getId());
+                    mqSenderService.sendCustomerServiceMessage(newEvent);
+                    return newTask;
+                } else {
+                    CtTask task = null;
+                    Iterator<CtTask> iterator = dbTasks.values().iterator();
+                    if (iterator.hasNext()) {
+                        task = iterator.next();
+                    }
+                    if (task != null) {
+                        // 发送进客提醒给客服
+                        CtEvents newEvent = new CtEvents();
+                        newEvent.setEventName("新任务提醒");
+                        newEvent.setContent(dbStore.getName() + "有人进店，请留意值守");
+                        newEvent.setReceiver(task.getStaffCode());
+                        newEvent.setTaskId(task.getId());
+                        mqSenderService.sendCustomerServiceMessage(newEvent);
+                        return task;
                     }
                 }
-                newTask.setDoorLogId(doorLogId);
-                newTask.setSuperviseArea("");
-                newTask.setState("0");
-                newTask.setDelFlag("0");
-                newTask.setCreateTime(new Date());
-                newTask.setUpdateTime(new Date());
-                newTask.setCreateTime(new Date());
-                newTask.setUpdateTime(new Date());
-                // 设置任务锁
-                newTask.setOpenLock(false);
-                if (taskMapper.insertCtTask(newTask) < 1) {
-                    throw new ServiceException("新增任务失败");
-                }
-                // 放入内存
-                taskCache.setCacheTask(newTask);
-                //发送新任务提醒给客服
-                CtEvents newEvent = new CtEvents();
-                newEvent.setEventName("新任务提醒");
-                newEvent.setContent("你有新的值守任务，请留意值守门店：" + dbStore.getName());
-                newEvent.setReceiver(staffCode);
-                newEvent.setTaskId(newTask.getId());
-                mqSenderService.sendCustomerServiceMessage(newEvent);
-                return newTask;
-            } else {
-                CtTask task = dbTasks.get(0);
-                // 发送进客提醒给客服
-                CtEvents newEvent = new CtEvents();
-                newEvent.setEventName("新任务提醒");
-                newEvent.setContent(dbStore.getName() + "有人进店，请留意值守");
-                newEvent.setReceiver(task.getStaffCode());
-                newEvent.setTaskId(task.getId());
-                mqSenderService.sendCustomerServiceMessage(newEvent);
-                return task;
             }
         }
         return null;

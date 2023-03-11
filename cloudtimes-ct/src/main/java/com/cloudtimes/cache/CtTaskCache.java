@@ -175,6 +175,7 @@ public class CtTaskCache {
     }
 
     public void setCacheOrder(CtOrder order) {
+        log.info("设置新订单：购物编号：{}", order.getId());
         wLock.lock();
         try {
             if (StringUtils.isEmpty(order.getTaskId())) {
@@ -232,6 +233,7 @@ public class CtTaskCache {
     }
 
     public void setCacheShopping(CtShopping shopping) {
+        log.info("设置新购物：购物编号：{}", shopping.getId());
         wLock.lock();
         try {
             if (StringUtils.isEmpty(shopping.getTaskId())) {
@@ -250,7 +252,9 @@ public class CtTaskCache {
         wLock.lock();
         try {
             String cacheKey = getCacheKey(TASK_SHOPPING_REL_CACHE, shoppingId);
+            log.info("查找key：{}，购物编号：{}", cacheKey, shoppingId);
             if (!StringUtils.isEmpty(cacheKey)) {
+                log.info("删除购物：key：{}，购物编号：{}", cacheKey, shoppingId);
                 return redisCache.deleteCacheMapValue(cacheKey, shoppingId);
             }
         } finally {
@@ -258,6 +262,7 @@ public class CtTaskCache {
         }
         return true;
     }
+
 
     public CtOrderDetail getCacheOrderDetail(String itemId) {
         rLock.lock();

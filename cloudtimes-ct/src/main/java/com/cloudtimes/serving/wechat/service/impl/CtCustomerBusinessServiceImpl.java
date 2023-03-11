@@ -119,13 +119,9 @@ public class CtCustomerBusinessServiceImpl implements ICtCustomerBusinessService
         newShopping.setUserId(userId);
         newShopping.setStoreId(dbStore.getId());
         newShopping.setDescText("扫码购物");
-
         if (shoppingMapper.insertCtShopping(newShopping) < 1) {
             throw new ServiceException("新增购物失败");
         }
-        //加入内存
-        taskCache.setCacheShopping(newShopping);
-
         if (!StringUtils.isEmpty(dynamicCode)) {
             //扫动态码流程，新增订单
             //新增购物记录，开始时间设置成任务开始时间
@@ -149,11 +145,12 @@ public class CtCustomerBusinessServiceImpl implements ICtCustomerBusinessService
             if (orderMapper.insertCtOrder(newOrder) < 1) {
                 throw new ServiceException("新增订单失败");
             }
-            // 订单加入内存
-            taskCache.setCacheOrder(newOrder);
             String newUrl = cashBusinessService.genDynamicQrCodeUrl(deviceId, dbStore.getStoreNo());
             // 推送收银机单号
             cashMqSender.sendBillSerial(dbStore.getId(), deviceId, newOrder.getId(), newUrl, dbUser.getMobile());
+            // 订单加入内存
+            taskCache.setCacheShopping(newShopping); // 与订单绑定的购物加入内存
+            taskCache.setCacheOrder(newOrder);
         }
         ScanCodeResp scanCodeResp = new ScanCodeResp();
         scanCodeResp.setIsSupervise(dbStore.getIsSupervise());

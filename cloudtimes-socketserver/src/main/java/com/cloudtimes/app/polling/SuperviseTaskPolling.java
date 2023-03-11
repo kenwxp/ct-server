@@ -35,7 +35,7 @@ public class SuperviseTaskPolling {
     private static final Lock wLock = rwLock.writeLock();
     //获取读锁
     private static final Lock rLock = rwLock.readLock();
-
+    private final long INTERVAL_SECOND = 5;
     @Autowired
     private SuperviseWsSessionManager sessionManager;
     @Autowired
@@ -58,7 +58,7 @@ public class SuperviseTaskPolling {
                             log.error("发生异常：", ex);
                         }
                         try {
-                            Thread.sleep(5000);
+                            Thread.sleep(INTERVAL_SECOND * 1000);
                         } catch (InterruptedException e) {
                             throw new RuntimeException(e);
                         }
@@ -72,7 +72,7 @@ public class SuperviseTaskPolling {
     }
 
     private void handle() {
-        log.info(JSON.toJSONString(subscribers));
+//        log.info(JSON.toJSONString(subscribers));
 //        log.info("轮询任务列表开始");
         if (subscribers != null && !StringUtils.isEmpty(subscribers)) {
             for (Map.Entry<String, Set<String>> userEntry :
@@ -109,6 +109,7 @@ public class SuperviseTaskPolling {
                         data.setStaffCode(rawTask.getStaffCode());
                         data.setSuperviseArea(rawTask.getSuperviseArea());
                         data.setState(rawTask.getState());
+                        data.setOpenLock(rawTask.isOpenLock());
                         Map<String, CtOrder> ordersMap = taskCache.getOrdersByTask(rawTask.getId());
                         if (!StringUtils.isEmpty(ordersMap)) {
                             currentOrderCount = currentOrderCount + ordersMap.size();

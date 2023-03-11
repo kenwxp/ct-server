@@ -493,9 +493,8 @@ public class CtOpenDoorService {
             log.setStoreId(storeId);
         }
         if (!StringUtils.isEmpty(userId)) {
-            log.setStoreId(userId);
+            log.setMemberId(userId);
         }
-        log.setMemberId(userId);
         log.setOptChannel(channelType.getCode());
         log.setOptType(openType.getCode());
         log.setDelFlag("0");
