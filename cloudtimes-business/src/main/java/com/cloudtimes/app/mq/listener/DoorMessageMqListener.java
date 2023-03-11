@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-@RocketMQMessageListener(consumerGroup = "DoorMessageMqListener", topic = RocketMQConstants.CT_DOOR_MESSAGE, selectorType = SelectorType.TAG, selectorExpression = "${spring.profiles.active}", messageModel = MessageModel.CLUSTERING)
+@RocketMQMessageListener(consumerGroup = "DoorMessageMqListener_${spring.profiles.active}", topic = RocketMQConstants.CT_DOOR_MESSAGE, selectorType = SelectorType.TAG, selectorExpression = "${spring.profiles.active}", messageModel = MessageModel.CLUSTERING)
 public class DoorMessageMqListener implements RocketMQListener<DoorMessageMqData>, RocketMQPushConsumerLifecycleListener {
     @Autowired
     private CtDoorMessageService doorMessageService;

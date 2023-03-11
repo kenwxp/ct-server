@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-@RocketMQMessageListener(consumerGroup = "WebMessageListenerHandler", topic = RocketMQConstants.WS_WEB_MESSAGE, selectorType = SelectorType.TAG, selectorExpression = "${spring.profiles.active}", messageModel = MessageModel.CLUSTERING)
+@RocketMQMessageListener(consumerGroup = "WebMessageListenerHandler_${spring.profiles.active}", topic = RocketMQConstants.WS_WEB_MESSAGE, selectorType = SelectorType.TAG, selectorExpression = "${spring.profiles.active}", messageModel = MessageModel.CLUSTERING)
 public class WebMessageListenerHandler implements RocketMQListener<SendWebMsgMqData>, RocketMQPushConsumerLifecycleListener {
     @Autowired
     private SuperviseWsSessionManager wsSessionManager;

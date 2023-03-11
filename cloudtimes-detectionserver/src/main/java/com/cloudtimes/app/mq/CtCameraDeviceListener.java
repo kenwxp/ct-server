@@ -32,7 +32,7 @@ import java.util.List;
 
 @Slf4j
 @Component
-@RocketMQMessageListener(consumerGroup = "CtCameraDeviceListener", topic = RocketMQConstants.CT_MONITOR_CAMERA_DEVICE, selectorType = SelectorType.TAG, selectorExpression = "${spring.profiles.active}", messageModel = MessageModel.BROADCASTING)
+@RocketMQMessageListener(consumerGroup = "CtCameraDeviceListener_${spring.profiles.active}", topic = RocketMQConstants.CT_MONITOR_CAMERA_DEVICE, selectorType = SelectorType.TAG, selectorExpression = "${spring.profiles.active}", messageModel = MessageModel.BROADCASTING)
 public class CtCameraDeviceListener implements RocketMQListener<DetectionData>, RocketMQPushConsumerLifecycleListener {
 
     @Autowired

@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-@RocketMQMessageListener(consumerGroup = "OpenDoorListener", topic = RocketMQConstants.CT_OPEN_DOOR, selectorType = SelectorType.TAG, selectorExpression = "${spring.profiles.active}", messageModel = MessageModel.CLUSTERING)
+@RocketMQMessageListener(consumerGroup = "OpenDoorListener_${spring.profiles.active}", topic = RocketMQConstants.CT_OPEN_DOOR, selectorType = SelectorType.TAG, selectorExpression = "${spring.profiles.active}", messageModel = MessageModel.CLUSTERING)
 public class OpenDoorListener implements RocketMQListener<OpenDoorMqData>, RocketMQPushConsumerLifecycleListener {
     @Autowired
     private CtOpenDoorService openDoorService;

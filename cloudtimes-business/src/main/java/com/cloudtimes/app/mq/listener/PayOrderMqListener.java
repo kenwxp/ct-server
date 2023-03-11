@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-@RocketMQMessageListener(consumerGroup = "PayOrderMqListener", topic = RocketMQConstants.CT_PAY_ORDER, selectorType = SelectorType.TAG, selectorExpression = "${spring.profiles.active}", messageModel = MessageModel.CLUSTERING)
+@RocketMQMessageListener(consumerGroup = "PayOrderMqListener_${spring.profiles.active}", topic = RocketMQConstants.CT_PAY_ORDER, selectorType = SelectorType.TAG, selectorExpression = "${spring.profiles.active}", messageModel = MessageModel.CLUSTERING)
 public class PayOrderMqListener implements RocketMQListener<PayOrderMqData>, RocketMQPushConsumerLifecycleListener {
     @Autowired
     private CtMqPayOrderService mqPayOrderService;
