@@ -24,6 +24,19 @@
         </where>
     </select>
 
+    <select id="selectCtDeviceDoorListPlus" parameterType="CtDeviceDoor" resultType="CtDeviceDoorDto">
+        SELECT
+        d.*,
+        s.`name` as device_name,
+        s.device_serial
+        FROM
+        ct_device_door d
+        LEFT JOIN ct_device s ON s.id = d.device_id
+        <where>
+            <if test="deviceId != null ">and d.device_id = #{deviceId}</if>
+        </where>
+    </select>
+
     <select id="selectCtDeviceDoorListByStoreId" parameterType="CtDevice" resultType="CtDeviceDoor">
         select
         dd.id,
@@ -60,17 +73,15 @@
             <if test="accessPassword != null">access_password,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
-            <if test="delFlag != null">del_flag,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
             <if test="doorNo != null">#{doorNo},</if>
+            <if test="deviceId != null">#{deviceId},</if>
+            <if test="doorDesc != null">#{doorDesc},</if>
             <if test="accessPassword != null">#{accessPassword},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateTime != null">#{updateTime},</if>
-            <if test="delFlag != null">#{delFlag},</if>
-            <if test="deviceId != null">#{deviceId},</if>
-            <if test="doorDesc != null">#{doorDesc},</if>
         </trim>
     </insert>
 

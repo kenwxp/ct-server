@@ -4,12 +4,13 @@ import com.alibaba.fastjson.JSON;
 import com.cloudtimes.cache.CtTaskCache;
 import com.cloudtimes.common.constant.RocketMQConstants;
 import com.cloudtimes.common.enums.ChannelType;
+import com.cloudtimes.common.enums.OpenDoorOption;
+import com.cloudtimes.common.exception.ServiceException;
 import com.cloudtimes.common.mq.CtRocketMqProducer;
 import com.cloudtimes.common.mq.OpenDoorMqData;
 import com.cloudtimes.common.utils.NumberUtils;
 import com.cloudtimes.common.utils.StringUtils;
 import com.cloudtimes.enums.DeviceType;
-import com.cloudtimes.common.enums.OpenDoorOption;
 import com.cloudtimes.hardwaredevice.domain.CtDevice;
 import com.cloudtimes.hardwaredevice.domain.CtDeviceDoor;
 import com.cloudtimes.hardwaredevice.domain.CtOpenDoorLogs;
@@ -293,6 +294,59 @@ public class CtOpenDoorService {
             }
         }
         return false;
+    }
+
+    public String setDoorAccessPasswrd(String storeId, String userId, ChannelType channelType, boolean once, String beginTime, String endTime) {
+        CtOpenDoorLogs initLog = initInsertLog(storeId, userId, channelType, OpenDoorOption.SETTING_DOOR_ACCESS);
+        CtDevice queryDevice = new CtDevice();
+        queryDevice.setStoreId(storeId);
+        queryDevice.setDeviceType(DeviceType.DOOR_GUARD.getCode());
+        queryDevice.setDelFlag("0");
+        List<CtDevice> doorGuardList = deviceMapper.selectCtDeviceList(queryDevice);
+        if (StringUtils.isEmpty(doorGuardList)) {
+            logFail(initLog, "", "无法获取门禁设备");
+            throw new ServiceException("无法获取门禁设备");
+        }
+        WiegandReturning ret;
+        int password = Integer.parseInt(NumberUtils.genRandNum(6));
+        for (CtDevice doorGuard : doorGuardList) {
+            String serial = doorGuard.getDeviceSerial();
+            //开启密码设置
+            ret = wiegandApiService.enablePassword(serial, true);
+            if (!ret.isSuccess()) {
+                logError(initLog, doorGuard.getId(), ret.getMsg());
+                throw new ServiceException("设置门禁密码失败");
+            }
+            //设置门禁密码
+            ret = wiegandApiService.settingAccess(doorGuard.getDeviceSerial(), password, once, beginTime, endTime);
+            if (!ret.isSuccess()) {
+                logError(initLog, doorGuard.getId(), ret.getMsg());
+                throw new ServiceException("设置门禁密码失败");
+            }
+            CtDeviceDoor dbDoor = deviceDoorMapper.selectCtDeviceDoorById(doorGuard.getId());
+            if (dbDoor == null) {
+                CtDeviceDoor insert = new CtDeviceDoor();
+                insert.setId(doorGuard.getId());
+                insert.setDoorNo(0L);
+                insert.setAccessPassword(String.valueOf(password));
+                insert.setDelFlag("0");
+                insert.setCreateTime(new Date());
+                insert.setUpdateTime(new Date());
+                insert.setRemark("");
+                if (deviceDoorMapper.insertCtDeviceDoor(insert) < 0) {
+                    logError(initLog, doorGuard.getId(), "设置门禁密码失败");
+                    throw new ServiceException("设置门禁密码失败");
+                }
+            } else {
+                dbDoor.setAccessPassword(String.valueOf(password));
+                dbDoor.setUpdateTime(new Date());
+                if (deviceDoorMapper.updateCtDeviceDoor(dbDoor) < 0) {
+                    logError(initLog, doorGuard.getId(), "设置门禁密码失败");
+                    throw new ServiceException("设置门禁密码失败");
+                }
+            }
+        }
+        return String.valueOf(password);
     }
 
     /**

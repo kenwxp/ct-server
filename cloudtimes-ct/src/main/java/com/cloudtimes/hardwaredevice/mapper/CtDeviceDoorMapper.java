@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.cloudtimes.hardwaredevice.domain.CtDevice;
 import com.cloudtimes.hardwaredevice.domain.CtDeviceDoor;
+import com.cloudtimes.hardwaredevice.domain.dto.CtDeviceDoorDto;
 
 /**
  * 门禁设备密码Mapper接口
@@ -27,6 +28,8 @@ public interface CtDeviceDoorMapper {
      * @return 门禁设备密码集合
      */
     public List<CtDeviceDoor> selectCtDeviceDoorList(CtDeviceDoor ctDeviceDoor);
+
+    public List<CtDeviceDoorDto> selectCtDeviceDoorListPlus(CtDeviceDoor ctDeviceDoor);
 
     /**
      * 查询门禁设备密码列表
