@@ -1,6 +1,7 @@
 package com.cloudtimes.hardwaredevice.service.impl;
 
 import com.alibaba.fastjson2.JSONObject;
+import com.cloudtimes.cache.CtStoreVideoCache;
 import com.cloudtimes.common.NoUtils;
 import com.cloudtimes.common.annotation.DataSource;
 import com.cloudtimes.common.enums.DataSourceType;
@@ -97,6 +98,9 @@ public class CtDeviceServiceImpl implements ICtDeviceService {
         return ctDeviceMapper.updateCtDevice(ctDevice);
     }
 
+    @Autowired
+    private CtStoreVideoCache videoCache;
+
     /**
      * 批量删除电子设备
      *
@@ -105,6 +109,10 @@ public class CtDeviceServiceImpl implements ICtDeviceService {
      */
     @Override
     public int deleteCtDeviceByIds(String[] ids) {
+        for (String id :
+                ids) {
+            videoCache.deleteCacheVideo(id);
+        }
         return ctDeviceMapper.deleteCtDeviceByIds(ids);
     }
 

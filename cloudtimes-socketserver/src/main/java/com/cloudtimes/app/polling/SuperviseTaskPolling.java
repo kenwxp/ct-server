@@ -54,9 +54,13 @@ public class SuperviseTaskPolling {
                     while (true) {
                         try {
                             handle();
-                            Thread.sleep(5000);
                         } catch (Exception ex) {
-
+                            log.error("发生异常：", ex);
+                        }
+                        try {
+                            Thread.sleep(5000);
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
                         }
                     }
                 }
@@ -116,7 +120,8 @@ public class SuperviseTaskPolling {
                 wsTaskData.setCurrentTaskCount(String.valueOf(currentTaskCount));
                 wsTaskData.setOverflowTaskCount(String.valueOf(overflowTaskCount));
                 wsTaskData.setOverdueTaskCount(String.valueOf(overdueTaskCount));
-                wsTaskData.setCurrentOrderCount(String.valueOf(currentOrderCount));;
+                wsTaskData.setCurrentOrderCount(String.valueOf(currentOrderCount));
+                ;
                 wsTaskData.setAcceptState(customerServiceCache.getAcceptState(userId));
                 wsTaskData.setTaskList(taskList);
                 for (String sessionId : sessionSet) {

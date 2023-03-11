@@ -92,12 +92,10 @@ public class CtStoreVideoCache {
                     return videoData;
                 }
             }
-            // 先释放读锁
-            rLock.unlock();
-            return setCacheVideo(deviceId);
         } finally {
             rLock.unlock();
         }
+        return setCacheVideo(deviceId);
     }
 
     public CacheVideoData getCacheVideo(String deviceId) {
@@ -114,12 +112,10 @@ public class CtStoreVideoCache {
                     }
                 }
             }
-            // 先释放读锁
-            rLock.unlock();
-            return setCacheVideo(deviceId);
         } finally {
             rLock.unlock();
         }
+        return setCacheVideo(deviceId);
     }
 
 
@@ -158,7 +154,7 @@ public class CtStoreVideoCache {
             newDevice.setDeviceId(dbDevice.getId());
             newDevice.setDeviceSerial(dbDevice.getDeviceSerial());
             newDevice.setUrl(liveAddress.getUrl());
-            newDevice.setExpireTime(DateUtil.parseDateTime(liveAddress.getExpireTime()));
+            newDevice.setExpireTime(DateUtils.parseDateTime(liveAddress.getExpireTime()));
             newDevice.setToken(liveAddress.getToken());
         }
         setCacheVideo(newDevice);

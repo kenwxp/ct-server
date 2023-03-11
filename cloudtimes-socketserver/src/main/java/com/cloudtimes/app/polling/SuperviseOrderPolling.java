@@ -47,9 +47,13 @@ public class SuperviseOrderPolling {
                     while (true) {
                         try {
                             handle();
-                            Thread.sleep(5000);
                         } catch (Exception ex) {
-
+                            log.error("发生异常：",ex);
+                        }
+                        try {
+                            Thread.sleep(5000);
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
                         }
                     }
                 }

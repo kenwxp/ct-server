@@ -121,6 +121,9 @@ public class NumberUtils {
      * @return
      */
     public static String centToYuan(BigDecimal cent) {
+        if (cent == null) {
+            return null;
+        }
         BigDecimal divide = cent.divide(new BigDecimal(100));
         return divide.toPlainString();
     }
