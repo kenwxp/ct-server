@@ -32,6 +32,7 @@ public class CtDoorMessageService {
     private CtTaskInnerService taskInnerService;
 
     public void handleStateMessage(DoorMessageMqData data) {
+        log.info("处理门禁状态报文：门禁序列号：{}", data.getDeviceSerial());
         // 处理门禁状态
         doorStateCache.put(data.getDeviceSerial(), DateUtils.parseDateTime(data.getUpdateTime()));
     }

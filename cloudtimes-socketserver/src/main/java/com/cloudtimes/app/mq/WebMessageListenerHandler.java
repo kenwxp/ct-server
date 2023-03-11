@@ -26,7 +26,7 @@ public class WebMessageListenerHandler implements RocketMQListener<SendWebMsgMqD
 
     @Override
     public void onMessage(SendWebMsgMqData data) {
-        log.info("接收到MQ消息：" + JSONObject.toJSONString(data));
+        log.info("接受mq消息，并转发至管理端：{}" + JSONObject.toJSONString(data));
         try {
             wsSessionManager.batchSendSuccess(data.getUserId(), "MESSAGE_DATA", data);
         } catch (Exception ex) {

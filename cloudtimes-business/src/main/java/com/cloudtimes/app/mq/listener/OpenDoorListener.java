@@ -23,7 +23,7 @@ public class OpenDoorListener implements RocketMQListener<OpenDoorMqData>, Rocke
 
     @Override
     public void onMessage(OpenDoorMqData data) {
-        log.info("======> 接受mq消息：" + data);
+        log.info("接受mq消息，开始处理开门请求，门店编号:{}", data.getStoreId());
         if (data.getOption() == OpenDoorOption.TRANS_OPEN_DOOR) {
             openDoorService.transOpen(data.getStoreId(), data.getUserId(), data.getChannelType());
         } else if (data.getOption() == OpenDoorOption.EMERGENCY_OPEN_DOOR) {

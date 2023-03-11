@@ -27,7 +27,7 @@ public class CashListenerHandler implements RocketMQListener<CashMqData>, Rocket
 
     @Override
     public void onMessage(CashMqData cashMqData) {
-        log.info("接收到MQ消息：" + JSONObject.toJSONString(cashMqData));
+        log.info("接收MQ消息,并发送到收银端：" + JSONObject.toJSONString(cashMqData));
         String option = cashMqData.getOption();
         try {
             CashWsData cashWsData = new CashWsData();

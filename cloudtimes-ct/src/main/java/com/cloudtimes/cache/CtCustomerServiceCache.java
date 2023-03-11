@@ -7,7 +7,9 @@ import com.cloudtimes.supervise.domain.CtCustomerService;
 import com.cloudtimes.supervise.mapper.CtCustomerServiceMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +23,8 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 @Slf4j
 public class CtCustomerServiceCache {
     private static final String CACHE_NAME = "CUSTOMER_SERVICE:";//
+    @Value("${cache_switch.customer_service}")
+    private boolean enabled;
     //读写锁
     private final ReadWriteLock rwLock = new ReentrantReadWriteLock();
     //获取写锁
@@ -35,6 +39,9 @@ public class CtCustomerServiceCache {
 
     @PostConstruct
     public void init() {
+        if (!enabled) {
+            return;
+        }
         log.info("===========> 初始化客服参数加载 <===============");
         //初始化加载进行中的任务
         refresh(true);

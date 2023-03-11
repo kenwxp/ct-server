@@ -21,6 +21,7 @@ import com.cloudtimes.hardwaredevice.mapper.CtStoreMapper;
 import com.cloudtimes.partner.wiegand.ICtWiegandApiService;
 import com.cloudtimes.partner.wiegand.domain.WiegandReturning;
 import com.cloudtimes.supervise.domain.CtTask;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -29,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
+@Slf4j
 public class CtOpenDoorService {
     @Autowired
     private CtStoreMapper storeMapper;
@@ -55,6 +57,7 @@ public class CtOpenDoorService {
      * @return
      */
     public boolean transOpen(String storeId, String userId, ChannelType channelType) {
+        log.info("准备交易开门，门店编号:{}，操作者：{}", storeId, userId);
         CtOpenDoorLogs initLog = initInsertLog(storeId, userId, channelType, OpenDoorOption.TRANS_OPEN_DOOR);
         CtStore dbStore = storeMapper.selectCtStoreById(storeId);
         if (dbStore == null) {
@@ -123,6 +126,7 @@ public class CtOpenDoorService {
      * @return
      */
     public boolean emergentOpen(String storeId, String userId) {
+        log.info("准备应急开门，门店编号:{}，操作员：{}", storeId, userId);
         CtOpenDoorLogs initLog = initInsertLog(storeId, userId, ChannelType.WEB, OpenDoorOption.EMERGENCY_OPEN_DOOR);
         CtStore dbStore = storeMapper.selectCtStoreById(storeId);
         if (dbStore == null) {
@@ -182,6 +186,7 @@ public class CtOpenDoorService {
      * @return
      */
     public boolean ownerOpen(String storeId, String userId) {
+        log.info("准备店家开门，门店编号:{}，店家编号：{}", storeId, userId);
         CtOpenDoorLogs initLog = initInsertLog(storeId, userId, ChannelType.MOBILE, OpenDoorOption.OWNER_OPEN_DOOR);
         CtStore dbStore = storeMapper.selectCtStoreById(storeId);
         if (dbStore == null) {
@@ -235,6 +240,7 @@ public class CtOpenDoorService {
      * @return
      */
     public boolean forceLock(String storeId, String userId, ChannelType channelType) {
+        log.info("开启强锁模式，门店编号:{}", storeId);
         CtOpenDoorLogs initLog = initInsertLog(storeId, userId, channelType, OpenDoorOption.FORCE_LOCK_DOOR);
         CtDevice queryDevice = new CtDevice();
         queryDevice.setStoreId(storeId);
@@ -266,6 +272,7 @@ public class CtOpenDoorService {
      * @return
      */
     public boolean unlock(String storeId, String userId, ChannelType channelType) {
+        log.info("关闭强锁模式，门店编号:{}", storeId);
         CtOpenDoorLogs initLog = initInsertLog(storeId, userId, channelType, OpenDoorOption.UNLOCK_DOOR);
         CtDevice queryDevice = new CtDevice();
         queryDevice.setStoreId(storeId);

@@ -12,6 +12,7 @@ import com.cloudtimes.partner.hik.domain.VideoData;
 import com.cloudtimes.partner.hik.service.ICtHikApiService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -26,6 +27,8 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 @Slf4j
 public class CtStoreVideoCache {
     private static final String STORE_VIDEO_REL_CACHE = "store_video:";//门店视频
+    @Value("${cache_switch.store_video}")
+    private boolean enabled;
     //读写锁
     private final ReadWriteLock rwLock = new ReentrantReadWriteLock();
     //获取写锁
@@ -42,6 +45,9 @@ public class CtStoreVideoCache {
 
     @PostConstruct
     public void initVideo() {
+        if (!enabled) {
+            return;
+        }
         log.info("=========》初始化加载直播视频网址《=========");
         CtDevice query = new CtDevice();
         query.setDelFlag("0");

@@ -13,6 +13,7 @@ import com.cloudtimes.supervise.mapper.CtShoppingMapper;
 import com.cloudtimes.supervise.mapper.CtTaskMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +32,9 @@ public class CtTaskCache {
     private static final String TASK_ORDER_REL_CACHE = "task_order:";//任务订单关联
     private static final String ORDER_DETAIL_CACHE = "order_detail:";//订单详情关联
     private static final String OUT_SUPERVISE_TASK_ID = "out_supervise_task_orders"; //无任务ID
+    @Value("${cache_switch.supervise_task}")
+    private boolean enabled;
+
     //读写锁
     private final ReadWriteLock rwLock = new ReentrantReadWriteLock();
     //获取写锁
@@ -50,6 +54,9 @@ public class CtTaskCache {
 
     @PostConstruct
     public void initTask() {
+        if (!enabled) {
+            return;
+        }
         log.info("初始化加载进行中的任务....");
         CtTask query = new CtTask();
         query.setState("0");

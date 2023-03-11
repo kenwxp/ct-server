@@ -48,6 +48,7 @@ public class CtCameraDeviceListener implements RocketMQListener<DetectionData>, 
     private CtCameraDeviceMonitorManager monitorManager;
 
     public void checkCamera(CtDevice ctDevice) {
+        log.info("开始检测摄像头，设备序列号:{}", ctDevice.getDeviceSerial());
         try {
             if (StringUtils.equals(ctDevice.getDeviceType(), DeviceType.CAMERA.getCode())) {
                 // IPC摄像头

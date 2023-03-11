@@ -22,7 +22,7 @@ public class DoorMessageMqListener implements RocketMQListener<DoorMessageMqData
 
     @Override
     public void onMessage(DoorMessageMqData data) {
-        log.info("=====> 接收mq消息：" + data.toString());
+        log.info("接收到mq消息，并开始处理门禁报文" + data.toString());
         if (data.getOption() == 0) {
             doorMessageService.handleStateMessage(data);
         } else if (data.getOption() == 1) {

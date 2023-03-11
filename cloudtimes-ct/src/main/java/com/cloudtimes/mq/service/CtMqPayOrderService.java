@@ -44,6 +44,7 @@ public class CtMqPayOrderService {
     private CtShopProductMapper shopProductMapper;
 
     public void queryPayOrderService(PayOrderMqData data) {
+        log.info("查询订单，订单编号:{}", data.getOrderId());
         PayOrderData payOrderData = shouqianbaApiService.queryPayOrder(data.getPaySn(), "", data.getTerminalSN(), data.getTerminalKey());
         if (payOrderData != null && payOrderUtils.handlePayOrder(payOrderData) == 1) {
             // 发起订单库存维护
@@ -70,6 +71,7 @@ public class CtMqPayOrderService {
     }
 
     public void cancelPayOrder(PayOrderMqData data) {
+        log.info("发起撤单，订单编号:{}", data.getOrderId());
         BuzResponse buzResponse = shouqianbaApiService.cancelPayOrder(data.getPaySn(), "", data.getTerminalSN(), data.getTerminalKey());
         if (buzResponse != null) {
             if (StringUtils.equals(buzResponse.getResultCode(), ShouqianbaConstant.busiCancelInProgress)) {
@@ -89,6 +91,7 @@ public class CtMqPayOrderService {
     }
 
     public void maintainStock(PayOrderMqData data) {
+        log.info("维护库存，订单编号:{}", data.getOrderId());
         Map<String, CtOrderDetail> cacheOrderDetails = taskCache.getCacheOrderDetails(data.getOrderId());
         for (CtOrderDetail item :
                 cacheOrderDetails.values()) {

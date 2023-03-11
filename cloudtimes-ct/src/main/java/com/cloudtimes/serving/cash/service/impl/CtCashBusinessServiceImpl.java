@@ -512,7 +512,7 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
                     mqData.setTerminalSN(shouqianbaParam.getTerminalSn());
                     mqData.setTerminalKey(shouqianbaParam.getTerminalKey());
                     mqData.setPaySn(payOrderSerial);
-                    mqData.setOrderId(orderId);// 注意这里传的是真实订单号，非随机数，故不能一次查询支付订单
+                    mqData.setOrderId(orderId);// 注意这里传的是真实订单号，非随机数，故不能以此查询支付订单
                     mqData.setCreateTime(DateUtils.getNowDate());
                     mqData.setCancelFlag(false);
                     mqProducer.send(RocketMQConstants.CT_PAY_ORDER, mqData);

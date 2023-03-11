@@ -59,3 +59,12 @@ pagehelper:
   helperDialect: mysql
   supportMethodsArguments: true
   params: count=countSql
+
+#内存初始化开关
+cache_switch:
+  #客服
+  customer_service: true
+  #门店视频链接
+  store_video: true
+  #值守任务
+  supervise_task: true

@@ -11,7 +11,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 @Component
 public class CtDoorStateCache {
-    private static final String CACHE_NAME = "door_state";//收银机动态码
+    private static final String CACHE_NAME = "door_state";//门禁状态
     //读写锁
     private final ReadWriteLock rwLock = new ReentrantReadWriteLock();
     //获取写锁
