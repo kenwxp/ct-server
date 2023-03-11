@@ -62,14 +62,4 @@ class CtProductCatalogServiceImpl : ICtProductCatalogService {
         ctProductCatalog.updateTime = DateUtils.getNowDate()
         return ctProductCatalogMapper.updateCtProductCatalog(ctProductCatalog)
     }
-
-    /**
-     * 删除商品目录信息
-     *
-     * @param id 商品目录主键
-     * @return 结果
-     */
-    override fun deleteCtProductCatalogByBarcode(barcode: String): Int {
-        return ctProductCatalogMapper.deleteCtProductCatalogByBarcode(barcode)
-    }
 }

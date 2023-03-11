@@ -40,12 +40,4 @@ interface ICtProductCatalogService {
      * @return 结果
      */
     fun updateCtProductCatalog(ctProductCatalog: CtProductCatalog): Int
-
-    /**
-     * 删除商品目录信息
-     *
-     * @param id 商品目录主键
-     * @return 结果
-     */
-    fun deleteCtProductCatalogByBarcode(barcode: String): Int
 }

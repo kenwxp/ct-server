@@ -14,7 +14,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="productName != null  and productName != ''"> and product_name like concat('%', #{productName}, '%')</if>
             <if test="englishName != null  and englishName != ''"> and english_name like concat('%', #{englishName}, '%')</if>
             <if test="productBrand != null  and productBrand != ''"> and product_brand = #{productBrand}</if>
-            <if test="productCode != null  and productCode != ''"> and product_code = #{productCode}</if>
+            <if test="categoryCode != null  and categoryCode != ''"> and category_code = #{categoryCode}</if>
             <if test="manufacturer != null  and manufacturer != ''"> and manufacturer = #{manufacturer}</if>
             <if test="originCountry != null  and originCountry != ''"> and origin_country = #{originCountry}</if>
             <if test="specification != null  and specification != ''"> and specification = #{specification}</if>
@@ -39,7 +39,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="productName != null and productName != ''">product_name,</if>
             <if test="englishName != null">english_name,</if>
             <if test="productBrand != null">product_brand,</if>
-            <if test="productCode != null and productCode != ''">product_code,</if>
+            <if test="categoryCode != null and categoryCode != ''">category_code,</if>
             <if test="manufacturer != null">manufacturer,</if>
             <if test="originCountry != null">origin_country,</if>
             <if test="specification != null">specification,</if>
@@ -57,7 +57,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="productName != null and productName != ''">#{productName},</if>
             <if test="englishName != null">#{englishName},</if>
             <if test="productBrand != null">#{productBrand},</if>
-            <if test="productCode != null and productCode != ''">#{productCode},</if>
+            <if test="categoryCode != null and categoryCode != ''">#{categoryCode},</if>
             <if test="manufacturer != null">#{manufacturer},</if>
             <if test="originCountry != null">#{originCountry},</if>
             <if test="specification != null">#{specification},</if>
@@ -75,11 +75,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updateCtProductCatalog" parameterType="CtProductCatalog">
         update ct_product_catalog
         <trim prefix="SET" suffixOverrides=",">
-            <if test="barcode != null and barcode != ''">barcode = #{barcode},</if>
             <if test="productName != null and productName != ''">product_name = #{productName},</if>
             <if test="englishName != null">english_name = #{englishName},</if>
             <if test="productBrand != null">product_brand = #{productBrand},</if>
-            <if test="productCode != null and productCode != ''">product_code = #{productCode},</if>
+            <if test="categoryCode != null and categoryCode != ''">category_code = #{categoryCode},</if>
             <if test="manufacturer != null">manufacturer = #{manufacturer},</if>
             <if test="originCountry != null">origin_country = #{originCountry},</if>
             <if test="specification != null">specification = #{specification},</if>
@@ -92,10 +91,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
         </trim>
-        where id = #{id}
+        where barcode = #{barcode}
     </update>
-
-    <delete id="deleteCtProductCatalogByBarcode" parameterType="String">
-        delete from ct_product_catalog where barcode = #{barcode}
-    </delete>
 </mapper>
