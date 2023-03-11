@@ -42,6 +42,7 @@ public class CtWeixinApiServiceImpl implements ICtWeixinApiService {
         Map<String, Object> cacheMap = redisCache.getCacheMap(WEIXIN_ACCESS_TOKEN);
         if (cacheMap != null) {
             Date expireTime = (Date) cacheMap.get("expireTime");
+            //前比后，负数，前面小于后面，0相等，正数 前面大于后面
             // token 未过期 直接返回
             if (DateUtil.compare(DateUtils.getNowDate(), expireTime) < 0) {
                 return (String) cacheMap.get("accessToken");

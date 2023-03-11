@@ -58,7 +58,7 @@ public class CtCustomerLoginServiceImpl implements ICtCustomerLoginService {
     @Transactional
     public MpLoginResp customerLogin(MpLoginReq param, String loginIp) {
         String loginCode = param.getLoginCode();
-        String phoneCode = param.getLoginCode();
+        String phoneCode = param.getPhoneCode();
         Map<String, Object> userSession = weixinApiService.getUserSession(loginCode);
         if (StringUtils.isNotEmpty(StringUtils.getStringFromObjectMap(userSession, "errcode"))) {
             throw new ServiceException(userSession.get("errmsg").toString());
