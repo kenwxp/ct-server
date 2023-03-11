@@ -33,14 +33,6 @@ interface CtProductCategoryMapper : CommonCountMapper, CommonDeleteMapper, Commo
     fun selectCtProductCategoryByCategoryCode(categoryCode: String): CtProductCategory?
 
     /**
-     * 查询商品分类列表
-     *
-     * @param ctProductCategory 商品分类
-     * @return 商品分类集合
-     */
-    fun selectCtProductCategoryList(ctProductCategory: CtProductCategory): List<CtProductCategory>
-
-    /**
      * 新增商品分类
      *
      * @param ctProductCategory 商品分类

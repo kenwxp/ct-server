@@ -5,6 +5,7 @@ import com.cloudtimes.common.enums.DataSourceType
 import com.cloudtimes.common.utils.DateUtils
 import com.cloudtimes.product.domain.CtProductCategory
 import com.cloudtimes.product.mapper.CtProductCategoryMapper
+import com.cloudtimes.product.mapper.provider.CtProductCategoryProvider
 import com.cloudtimes.product.service.ICtProductCategoryService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -38,7 +39,9 @@ class CtProductCategoryServiceImpl : ICtProductCategoryService {
      * @return 商品分类
      */
     override fun selectCtProductCategoryList(ctProductCategory: CtProductCategory): List<CtProductCategory> {
-        return ctProductCategoryMapper.selectCtProductCategoryList(ctProductCategory)
+        return ctProductCategoryMapper.selectMany(
+            CtProductCategoryProvider.selectManyStmt(ctProductCategory)
+        )
     }
 
     /**

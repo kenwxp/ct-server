@@ -74,7 +74,7 @@ class CtStoreServiceImpl : ICtStoreService {
 
         // Step 3. 获取代理用户
         var agent: CtUser? = null;
-        if (request.inviteCode != null) {
+        if (!request.inviteCode.isNullOrEmpty()) {
             agent = userMapper.selectOne(CtUserProvider.selectAgentByInviteCode(request.inviteCode!!));
         }
 

@@ -17,15 +17,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select category_code, tier, category_name, comment, create_time, update_time from ct_product_category
     </sql>
 
-    <select id="selectCtProductCategoryList" parameterType="CtProductCategory" resultMap="CtProductCategoryResult">
-        <include refid="selectCtProductCategoryVo"/>
-        <where>  
-            <if test="tier != null  and tier != ''"> and tier = #{tier}</if>
-            <if test="categoryName != null  and categoryName != ''"> and category_name like concat('%', #{categoryName}, '%')</if>
-            <if test="comment != null  and comment != ''"> and comment = #{comment}</if>
-        </where>
-    </select>
-    
     <select id="selectCtProductCategoryByCategoryCode" parameterType="String" resultMap="CtProductCategoryResult">
         <include refid="selectCtProductCategoryVo"/>
         where category_code = #{categoryCode}
