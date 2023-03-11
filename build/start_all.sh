@@ -1,3 +1,5 @@
+source /etc/profile
+. ~/.bash_profile
 #!/usr/bin/bash
 
 WORK_DIR=/home/cloudtimes-server
