@@ -10,10 +10,10 @@ spring:
 # 开发环境配置
 server:
   # 服务器的HTTP端口，默认为80
-  port: 8080
+  port: 9090
   servlet:
     # 应用的访问路径
-    context-path: /admin-api
+    context-path: /api
   # undertow 配置
   undertow:
     # HTTP post内容的最大大小。当值为-1时，默认值为大小是无限的

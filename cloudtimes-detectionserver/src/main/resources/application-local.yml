@@ -10,10 +10,10 @@ spring:
 # 开发环境配置
 server:
   # 服务器的HTTP端口，默认为80
-  port: 8080
+  port: 9099
   servlet:
     # 应用的访问路径
-    context-path: /admin-api
+    context-path: /
   # undertow 配置
   undertow:
     # HTTP post内容的最大大小。当值为-1时，默认值为大小是无限的
@@ -74,3 +74,13 @@ token:
   secret: onv8PKZNWk11L8NfRF21pigkWVblYostI8rIRnZiHMBqxlcbyXk5nmvtHzn1747p
   # 令牌有效期（单位分钟，默认7天）
   expireTime: 10080
+
+# 营石云websocket server 地址
+wiegand:
+    server_url: ws://10.1.65.231:61081
+
+# 是否开始摄像机状态监控
+monitor:
+  camera: true
+  # 间隔5分钟加载设备数据
+  loadgaptime: 5
