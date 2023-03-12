@@ -1,9 +1,11 @@
-package com.cloudtimes.web.controller.account;
+package com.cloudtimes.web.controller.agent;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import com.cloudtimes.agent.dto.response.CtAgentDividendDto;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,14 +32,13 @@ import com.cloudtimes.common.core.page.TableDataInfo;
  * @date 2023-02-03
  */
 @RestController
-@RequestMapping("/account/agent_dividend")
+@RequestMapping("/agent/agent_dividend")
+@Tag(name = "分润配置")
 public class CtAgentDividendController extends BaseController {
     @Autowired
     private ICtAgentDividendService ctAgentDividendService;
 
-    /**
-     * 查询分润配置列表
-     */
+    @Operation(summary = "查询分润配置列表")
     @PreAuthorize("@ss.hasPermi('account:agent_dividend:list')")
     @GetMapping("/list")
     public TableDataInfo list(CtAgentDividendDto ctAgentDividend) {
@@ -46,9 +47,7 @@ public class CtAgentDividendController extends BaseController {
         return getDataTable(list);
     }
 
-    /**
-     * 导出分润配置列表
-     */
+    @Operation(summary = "导出分润配置列表")
     @PreAuthorize("@ss.hasPermi('account:agent_dividend:export')")
     @Log(title = "分润配置", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
@@ -58,18 +57,14 @@ public class CtAgentDividendController extends BaseController {
         util.exportExcel(response, list, "分润配置数据");
     }
 
-    /**
-     * 获取分润配置详细信息
-     */
+    @Operation(summary = "获取分润配置详细信息")
     //   @PreAuthorize("@ss.hasPermi('account:agent_dividend:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") String id) {
         return AjaxResult.success(ctAgentDividendService.selectCtAgentDividendById(id));
     }
 
-    /**
-     * 新增分润配置
-     */
+    @Operation(summary = "新增分润配置")
     //  @PreAuthorize("@ss.hasPermi('account:agent_dividend:add')")
     @Log(title = "分润配置", businessType = BusinessType.INSERT)
     @PostMapping
@@ -77,9 +72,7 @@ public class CtAgentDividendController extends BaseController {
         return toAjax(ctAgentDividendService.insertCtAgentDividend(ctAgentDividend));
     }
 
-    /**
-     * 修改分润配置
-     */
+    @Operation(summary = "修改分润配置")
     // @PreAuthorize("@ss.hasPermi('account:agent_dividend:edit')")
     @Log(title = "分润配置", businessType = BusinessType.UPDATE)
     @PutMapping
@@ -87,9 +80,7 @@ public class CtAgentDividendController extends BaseController {
         return toAjax(ctAgentDividendService.updateCtAgentDividend(ctAgentDividend));
     }
 
-    /**
-     * 删除分润配置
-     */
+    @Operation(summary = "删除分润配置")
     //  @PreAuthorize("@ss.hasPermi('account:agent_dividend:remove')")
     @Log(title = "分润配置", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")

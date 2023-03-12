@@ -8,6 +8,8 @@ import com.cloudtimes.common.enums.BusinessType
 import com.cloudtimes.common.utils.poi.ExcelUtil
 import com.cloudtimes.promotion.domain.CtUserDrawRel
 import com.cloudtimes.promotion.service.ICtUserDrawRelService
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
@@ -21,6 +23,7 @@ import javax.servlet.http.HttpServletResponse
  */
 @RestController
 @RequestMapping("/promotion/user_draw")
+@Tag(name = "用户中奖")
 class CtUserDrawRelController : BaseController() {
     @Autowired
     private lateinit var ctUserDrawRelService: ICtUserDrawRelService
@@ -30,6 +33,7 @@ class CtUserDrawRelController : BaseController() {
      */
     @PreAuthorize("@ss.hasPermi('promotion:user_draw:list')")
     @GetMapping("/list")
+    @Operation(summary = "查询用户中奖列表")
     fun list(ctUserDrawRel: CtUserDrawRel): TableDataInfo {
         startPage()
         val list: List<CtUserDrawRel> = ctUserDrawRelService.selectCtUserDrawRelList(
@@ -44,6 +48,7 @@ class CtUserDrawRelController : BaseController() {
     @PreAuthorize("@ss.hasPermi('promotion:user_draw:export')")
     @Log(title = "用户中奖", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
+    @Operation(summary = "导出用户中奖列表")
     fun export(response: HttpServletResponse, ctUserDrawRel: CtUserDrawRel) {
         val list = ctUserDrawRelService.selectCtUserDrawRelList(ctUserDrawRel)
         val util = ExcelUtil(
@@ -57,6 +62,7 @@ class CtUserDrawRelController : BaseController() {
      */
     @PreAuthorize("@ss.hasPermi('promotion:user_draw:query')")
     @GetMapping(value = ["/{userId}"])
+    @Operation(summary = "获取用户中奖详细信息")
     fun getInfo(@PathVariable("userId") userId: String): AjaxResult {
         return AjaxResult.success(ctUserDrawRelService.selectCtUserDrawRelByUserId(userId))
     }

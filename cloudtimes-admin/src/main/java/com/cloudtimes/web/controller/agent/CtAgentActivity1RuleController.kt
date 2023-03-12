@@ -8,6 +8,8 @@ import com.cloudtimes.common.core.domain.AjaxResult
 import com.cloudtimes.common.core.page.TableDataInfo
 import com.cloudtimes.common.enums.BusinessType
 import com.cloudtimes.common.utils.poi.ExcelUtil
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
@@ -21,14 +23,13 @@ import javax.servlet.http.HttpServletResponse
  */
 @RestController
 @RequestMapping("/agent/activity1_rule")
+@Tag(name = "代理活动1规则")
 class CtAgentActivity1RuleController : BaseController() {
     @Autowired
     private lateinit var ctAgentActivity1RuleService: ICtAgentActivity1RuleService
 
 
-    /**
-     * 查询代理活动1规则列表
-     */
+    @Operation(summary = "查询代理活动1规则列表")
     @PreAuthorize("@ss.hasPermi('agent:activity1_rule:list')")
     @GetMapping("/list")
     fun list(ctAgentActivity1Rule: CtAgentActivity1Rule): TableDataInfo {
@@ -37,9 +38,7 @@ class CtAgentActivity1RuleController : BaseController() {
         return getDataTable(list)
     }
 
-    /**
-     * 导出代理活动1规则列表
-     */
+    @Operation(summary = "导出代理活动1规则列表")
     @PreAuthorize("@ss.hasPermi('agent:activity1_rule:export')")
     @Log(title = "代理活动1规则", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
@@ -51,18 +50,14 @@ class CtAgentActivity1RuleController : BaseController() {
         util.exportExcel(response, list, "代理活动1规则数据")
     }
 
-    /**
-     * 获取代理活动1规则详细信息
-     */
+    @Operation(summary = "获取代理活动1规则详细信息")
     @PreAuthorize("@ss.hasPermi('agent:activity1_rule:query')")
     @GetMapping(value = ["/{id}"])
     fun getInfo(@PathVariable("id") id: String): AjaxResult {
         return AjaxResult.success(ctAgentActivity1RuleService.selectCtAgentActivity1RuleById(id))
     }
 
-    /**
-     * 新增代理活动1规则
-     */
+    @Operation(summary = "新增代理活动1规则")
     @PreAuthorize("@ss.hasPermi('agent:activity1_rule:add')")
     @Log(title = "代理活动1规则", businessType = BusinessType.INSERT)
     @PostMapping
@@ -70,9 +65,7 @@ class CtAgentActivity1RuleController : BaseController() {
         return toAjax(ctAgentActivity1RuleService.insertCtAgentActivity1Rule(ctAgentActivity1Rule))
     }
 
-    /**
-     * 修改代理活动1规则
-     */
+    @Operation(summary = "修改代理活动1规则")
     @PreAuthorize("@ss.hasPermi('agent:activity1_rule:edit')")
     @Log(title = "代理活动1规则", businessType = BusinessType.UPDATE)
     @PutMapping
@@ -80,9 +73,7 @@ class CtAgentActivity1RuleController : BaseController() {
         return toAjax(ctAgentActivity1RuleService.updateCtAgentActivity1Rule(ctAgentActivity1Rule))
     }
 
-    /**
-     * 删除代理活动1规则
-     */
+    @Operation(summary = "删除代理活动1规则")
     @PreAuthorize("@ss.hasPermi('agent:activity1_rule:remove')")
     @Log(title = "代理活动1规则", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
