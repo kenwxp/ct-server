@@ -1,4 +1,4 @@
-package com.cloudtimes.app.mq;
+package com.cloudtimes.mq.service;
 
 import com.cloudtimes.cache.CtDoorStateCache;
 import com.cloudtimes.common.enums.ChannelType;

@@ -1,6 +1,6 @@
 package com.cloudtimes.app.manager;
 
-import com.cloudtimes.app.mq.CtDoorMessageService;
+import com.cloudtimes.mq.service.CtDoorMessageService;
 import com.cloudtimes.common.utils.StringUtils;
 import com.cloudtimes.common.utils.spring.SpringUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
