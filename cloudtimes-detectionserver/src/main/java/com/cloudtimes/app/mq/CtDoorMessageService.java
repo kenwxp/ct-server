@@ -1,12 +1,11 @@
-package com.cloudtimes.mq.service;
+package com.cloudtimes.app.mq;
 
 import com.cloudtimes.cache.CtDoorStateCache;
 import com.cloudtimes.common.enums.ChannelType;
-import com.cloudtimes.common.mq.DoorMessageMqData;
+import com.cloudtimes.common.enums.OpenDoorOption;
 import com.cloudtimes.common.redislock.RedissonLock;
 import com.cloudtimes.common.utils.DateUtils;
 import com.cloudtimes.common.utils.StringUtils;
-import com.cloudtimes.common.enums.OpenDoorOption;
 import com.cloudtimes.hardwaredevice.domain.CtDevice;
 import com.cloudtimes.hardwaredevice.domain.CtOpenDoorLogs;
 import com.cloudtimes.hardwaredevice.mapper.CtDeviceMapper;
@@ -32,16 +31,15 @@ public class CtDoorMessageService {
     @Autowired
     private RedissonLock redissonLock;
 
-    public void handleStateMessage(DoorMessageMqData data) {
-//        log.info("处理门禁状态报文：门禁序列号：{}", data.getDeviceSerial());
+    public void handleStateMessage(int deviceSerial, String updateTime) {
         // 处理门禁状态
-        doorStateCache.put(data.getDeviceSerial(), DateUtils.parseDateTime(data.getUpdateTime()));
+        doorStateCache.put(deviceSerial, DateUtils.parseDateTime(updateTime));
     }
 
-    public void handleTriggerMessage(DoorMessageMqData data) {
-        log.info("处理红外开门报文：门禁序列号：{}", data.getDeviceSerial());
+    public void handleTriggerMessage(int deviceSerial, String updateTime) {
+        log.info("处理红外开门报文：门禁序列号：{}", deviceSerial);
         // 处理触发开门逻辑状态
-        CtDevice ctDevice = deviceMapper.selectCtDeviceByDeviceSerial(String.valueOf(data.getDeviceSerial()));
+        CtDevice ctDevice = deviceMapper.selectCtDeviceByDeviceSerial(String.valueOf(deviceSerial));
         if (ctDevice == null) {
             log.error("无法获取门禁设备");
             return;
@@ -60,7 +58,7 @@ public class CtDoorMessageService {
         ctOpenDoorLogs.setState("0");
         ctOpenDoorLogs.setDelFlag("0");
         ctOpenDoorLogs.setDate(new Date());
-        ctOpenDoorLogs.setCreateTime(DateUtils.parseDateTime(data.getUpdateTime()));
+        ctOpenDoorLogs.setCreateTime(DateUtils.parseDateTime(updateTime));
         ctOpenDoorLogs.setUpdateTime(new Date());
         ctOpenDoorLogs.setRemark("红外开门");
         if (doorLogsMapper.insertCtOpenDoorLogs(ctOpenDoorLogs) < 1) {
@@ -68,13 +66,7 @@ public class CtDoorMessageService {
             return;
         }
         String storeId = ctDevice.getStoreId();
-        if (redissonLock.lock(storeId, 10)) {
-            try {
-                // 任务调度
-                taskInnerService.distributeTask(storeId, ctOpenDoorLogs.getId());
-            } finally {
-                redissonLock.release(storeId);
-            }
-        }
+        // 任务调度
+        taskInnerService.distributeTask(storeId, ctOpenDoorLogs.getId());
     }
 }

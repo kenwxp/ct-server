@@ -1,8 +1,6 @@
 package com.cloudtimes.app.manager;
 
-import com.cloudtimes.common.constant.RocketMQConstants;
-import com.cloudtimes.common.mq.CtRocketMqProducer;
-import com.cloudtimes.common.mq.DoorMessageMqData;
+import com.cloudtimes.app.mq.CtDoorMessageService;
 import com.cloudtimes.common.utils.StringUtils;
 import com.cloudtimes.common.utils.spring.SpringUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -17,12 +15,11 @@ import java.util.Iterator;
 
 @Slf4j
 public class CtWebSocketClient extends WebSocketClient {
-    private CtRocketMqProducer producer;
-
+    private CtDoorMessageService doorMessageService;
 
     public CtWebSocketClient(URI serverUri) throws InterruptedException {
         super(serverUri);
-        producer = SpringUtils.getBean(CtRocketMqProducer.class);
+        doorMessageService = SpringUtils.getBean(CtDoorMessageService.class);
     }
 
     @Override
@@ -45,14 +42,11 @@ public class CtWebSocketClient extends WebSocketClient {
                 if (node.get("SN") != null) {
                     int serial = node.get("SN").asInt();
                     if (node.get("刷新时间") != null) {
-                        //发送消息
-                        log.debug("====>发送mq消息：" + node.toString());
-                        producer.send(RocketMQConstants.CT_DOOR_MESSAGE, new DoorMessageMqData(0, serial, node.get("刷新时间").asText()));
+                        doorMessageService.handleStateMessage(serial, node.get("刷新时间").asText());
                         return;
                     }
                     if (node.get("描述") != null && StringUtils.equals(node.get("描述").asText(), "按钮开门")) {
-                        log.debug("====>发送mq消息：" + node.toString());
-                        producer.send(RocketMQConstants.CT_DOOR_MESSAGE, new DoorMessageMqData(1, serial, node.get("时间").asText()));
+                        doorMessageService.handleTriggerMessage(serial, node.get("时间").asText());
                         return;
                     }
                 }
@@ -72,6 +66,5 @@ public class CtWebSocketClient extends WebSocketClient {
         e.printStackTrace();
         log.error("发生异常", e.getMessage());
     }
-
 
 }
