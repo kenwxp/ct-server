@@ -1,14 +1,13 @@
 package com.cloudtimes.station.domain;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
-@ApiModel(description = "返回参数")
+@Schema(description = "返回参数")
 @Data
 @Slf4j
 public class HandoverTaskReq {
-    @ApiModelProperty(value = "任务编号", required = true)
+    @Schema(description = "任务编号", required = true)
     private String taskId;
 }

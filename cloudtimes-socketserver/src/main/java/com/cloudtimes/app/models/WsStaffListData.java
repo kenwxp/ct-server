@@ -1,32 +1,31 @@
 package com.cloudtimes.app.models;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data
-@ApiModel(value = "WsStaffListData")
+@Schema(description = "WsStaffListData")
 public class WsStaffListData {
-    @ApiModelProperty("客服id")
+    @Schema(description = "客服id")
     private String staffId;
-    @ApiModelProperty("客服名")
+    @Schema(description = "客服名")
     private String staffName;
-    @ApiModelProperty("当前任务量")
+    @Schema(description = "当前任务量")
     private String currentTaskCount;
-    @ApiModelProperty("超额任务量")
+    @Schema(description = "超额任务量")
     private String overflowTaskCount;
-    @ApiModelProperty("超时任务量")
+    @Schema(description = "超时任务量")
     private String overdueTaskCount;
-    @ApiModelProperty("当前门店数")
+    @Schema(description = "当前门店数")
     private String storeCount;
-    @ApiModelProperty("当前视频数")
+    @Schema(description = "当前视频数")
     private String videoCount;
-    @ApiModelProperty("当前订单量")
+    @Schema(description = "当前订单量")
     private String currentOrderCount;
-    @ApiModelProperty("进行中订单量")
+    @Schema(description = "进行中订单量")
     private String inProgressOrderCount;
-    @ApiModelProperty("未处理订单量")
+    @Schema(description = "未处理订单量")
     private String unHandleOrderCount;
-    @ApiModelProperty("接单状态 0-开始接单 1-暂停接单 2-结束接单")
+    @Schema(description = "接单状态 0-开始接单 1-暂停接单 2-结束接单")
     private String acceptState;
 }

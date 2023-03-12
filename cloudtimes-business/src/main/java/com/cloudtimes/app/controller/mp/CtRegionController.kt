@@ -6,8 +6,8 @@ import com.cloudtimes.common.core.domain.RestPageResult
 import com.cloudtimes.resources.domain.CtRegion
 import com.cloudtimes.resources.dto.response.CtRegionResponse
 import com.cloudtimes.resources.service.ICtRegionService
-import io.swagger.annotations.Api
-import io.swagger.annotations.ApiOperation
+import io.swagger.v3.oas.annotations.tags.Tag
+import io.swagger.v3.oas.annotations.Operation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -20,13 +20,13 @@ class RegionTreeListResponse: RestPageResult<CtRegionResponse>()
 
 @RestController
 @RequestMapping(PrefixPathConstants.WX_OFFICIAL_PATH_PREFIX + "/region")
-@Api(tags = ["代理-区域"])
+@Tag(name = "代理-区域")
 class CtRegionController {
     @Autowired
     private lateinit var ctRegionService: ICtRegionService
 
     @PostMapping("/list")
-    @ApiOperation("查询地区信息列表")
+    @Operation(summary = "查询地区信息列表")
     fun list(@Valid @RequestBody request: CtRegionRequest): RegionListResponse {
         val region = CtRegion()
         region.regionLevel = request.regionLevel
@@ -38,7 +38,7 @@ class CtRegionController {
     }
 
     @PostMapping("/tree")
-    @ApiOperation("查询地区树")
+    @Operation(summary = "查询地区树")
     fun tree(): RegionTreeListResponse {
         val regions: List<CtRegionResponse> = ctRegionService.selectCtRegionTree()
 

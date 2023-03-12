@@ -26,8 +26,8 @@ import com.cloudtimes.partner.pay.shouqianba.domain.PayOrderData;
 import com.cloudtimes.partner.pay.shouqianba.service.ICtShouqianbaApiService;
 import com.cloudtimes.partner.weixin.ICtWeixinFaceApiService;
 import com.cloudtimes.partner.weixin.ICtWeixinOfficialApiService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import me.zhyd.oauth.model.AuthCallback;
 import me.zhyd.oauth.model.AuthResponse;
 import org.slf4j.Logger;
@@ -49,7 +49,7 @@ import java.util.List;
  * @author wangxp
  * @date 2023-02-02
  */
-@Api(tags = "测试接口")
+@Tag(name = "测试接口")
 @RestController
 @RequestMapping("/test")
 public class TestController extends BaseController {
@@ -77,7 +77,7 @@ public class TestController extends BaseController {
 
     private static Logger log = LoggerFactory.getLogger(TestController.class);
 
-    @ApiOperation("获取hik token")
+    @Operation(summary = "获取hik token")
     @PostMapping("/hik/token/get")
     public AjaxResult hikToken() {
         String result = hikApiService.getAccessToken();
@@ -85,7 +85,7 @@ public class TestController extends BaseController {
         return AjaxResult.success(result);
     }
 
-    @ApiOperation("查询设备信息")
+    @Operation(summary = "查询设备信息")
     @PostMapping("/hik/device/info")
     public AjaxResult login() {
         DeviceInfoData result = hikApiService.getDeviceInfo("G28019093");
@@ -93,14 +93,14 @@ public class TestController extends BaseController {
         return AjaxResult.success(result);
     }
 
-    @ApiOperation("获取jwt")
+    @Operation(summary = "获取jwt")
     @GetMapping(value = "/token/get/{id}")
     public AjaxResult getInfo(@PathVariable("id") String id) {
         String token = jwtManager.createToken(new AuthUser(id, ChannelType.WEB));
         return AjaxResult.success(token);
     }
 
-    @ApiOperation("新增用户测试")
+    @Operation(summary = "新增用户测试")
     @GetMapping(value = "/user/insert")
     public AjaxResult insertUser() {
         CtUser ctUser = new CtUser();
@@ -112,21 +112,21 @@ public class TestController extends BaseController {
         return AjaxResult.success(ctUsers);
     }
 
-    @ApiOperation("测试门禁密码mapper")
+    @Operation(summary = "测试门禁密码mapper")
     @GetMapping(value = "/select/door")
     public AjaxResult selectDoorList() {
         List<CtDeviceDoor> ctDeviceDoors = ctDeviceDoorMapper.selectCtDeviceDoorListByStoreId(new CtDevice());
         return AjaxResult.success(ctDeviceDoors);
     }
 
-    @ApiOperation("测试发送mq")
+    @Operation(summary = "测试发送mq")
     @GetMapping(value = "/send/mq")
     public AjaxResult sendMQ() {
         cashMqSender.notifyCashDutyStatus("199976cb-a786-11ed-8957-0242ac110003", "1");
         return AjaxResult.success();
     }
 
-    @ApiOperation("测试xml解析")
+    @Operation(summary = "测试xml解析")
     @GetMapping(value = "/xml")
     public AjaxResult testXML() {
         CallDoData callDoData = new CallDoData();
@@ -139,7 +139,7 @@ public class TestController extends BaseController {
     }
 
 
-    @ApiOperation("获取刷脸凭证")
+    @Operation(summary = "获取刷脸凭证")
     @PostMapping(value = "/face/auth")
     public AjaxResult testFaceAuthInfo(@RequestBody FaceAuthInfoReq info) {
 //        WxpayfaceAuthInfoResp wxpayfaceAuthInfo = faceApiService.getWxpayfaceAuthInfo("199976cb-a786-11ed-8957-0242ac110003", "测试店", "ZDXLVP75870772", info.getRawdata());
@@ -150,7 +150,7 @@ public class TestController extends BaseController {
         return AjaxResult.success();
     }
 
-    @ApiOperation("获取刷脸unionid")
+    @Operation(summary = "获取刷脸unionid")
     @PostMapping(value = "/face/unionid")
     public AjaxResult testFaceUnionId(@RequestBody FaceAuthInfoReq info) {
         String userUnionId = faceApiService.getWxpayfaceUserUnionId(info.getToken());
@@ -158,7 +158,7 @@ public class TestController extends BaseController {
         return AjaxResult.success(userUnionId);
     }
 
-    @ApiOperation("测试读取pem")
+    @Operation(summary = "测试读取pem")
     @PostMapping(value = "/read/auth")
     public AjaxResult testReadPem() {
         RSAPrivateKey rsaPrivateKey = null;
@@ -181,7 +181,7 @@ public class TestController extends BaseController {
     }
 
 
-    @ApiOperation("微信公众号授权登录")
+    @Operation(summary = "微信公众号授权登录")
     @GetMapping(value = "/official/auth")
     public AjaxResult testOfficialAuth(AuthCallback callback) {
         System.out.println(JSONObject.toJSONString(callback));
@@ -199,7 +199,7 @@ public class TestController extends BaseController {
     }
 
 
-    @ApiOperation("微信公众号授权登录")
+    @Operation(summary = "微信公众号授权登录")
     @GetMapping(value = "/official/wxAuth")
     public void testOfficialAuth(HttpServletResponse response) {
         String url = weixinOfficialApiService.getWXAuthURL(null, null);
@@ -211,7 +211,7 @@ public class TestController extends BaseController {
     }
 
 
-    @ApiOperation("微信公众号授权登录-微信服务回调")
+    @Operation(summary = "微信公众号授权登录-微信服务回调")
     @GetMapping(value = "/official/callback")
     public void testOfficialCallback(AuthCallback callback, HttpServletResponse response) throws IOException {
         AuthResponse ds = weixinOfficialApiService.login(callback);
@@ -225,7 +225,7 @@ public class TestController extends BaseController {
 
     }
 
-    @ApiOperation("收钱吧设备激活")
+    @Operation(summary = "收钱吧设备激活")
     @PostMapping(value = "/device/active")
     public AjaxResult testActiveDevice() {
         PayOrderData order = shouqianbaApiService.queryPayOrder("7895282218633583", "", "100051020027440980", "aeee41ee3f908d9d1f9bb5a0dcae03e7");

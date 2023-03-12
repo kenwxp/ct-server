@@ -19,8 +19,8 @@ import com.cloudtimes.hardwaredevice.domain.CtDevice;
 import com.cloudtimes.hardwaredevice.domain.CtStore;
 import com.cloudtimes.hardwaredevice.mapper.CtDeviceMapper;
 import com.cloudtimes.hardwaredevice.mapper.CtStoreMapper;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -31,7 +31,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 @Component
 @Slf4j
-@Api(tags = "收银设备长链接")
+@Tag(name = "收银设备长链接")
 public class CashWebSocketHandler extends TextWebSocketHandler {
     @Autowired
     private CashWsSessionManager sessionManager;
@@ -88,7 +88,7 @@ public class CashWebSocketHandler extends TextWebSocketHandler {
      * @throws Exception
      */
     @Override
-    @ApiOperation("接受消息处理")
+    @Operation(summary = "接受消息处理")
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         AuthUser authUser = (AuthUser) session.getAttributes().get(JWTManager.AUTH_USER);
         try { // 获得客户端传来的消息

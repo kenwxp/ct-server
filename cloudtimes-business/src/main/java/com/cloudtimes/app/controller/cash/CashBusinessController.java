@@ -11,8 +11,8 @@ import com.cloudtimes.partner.pay.shouqianba.domain.AuthInfoData;
 import com.cloudtimes.serving.cash.service.ICtCashBusinessService;
 import com.cloudtimes.serving.cash.service.ICtCashLoginService;
 import com.cloudtimes.serving.cash.service.domain.*;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Api(tags = "收银机业务相关接口")
+@Tag(name = "收银机业务相关接口")
 @RestController
 @RequestMapping(PrefixPathConstants.CASH_PATH_PREFIX + "/business")
 public class CashBusinessController {
@@ -32,7 +32,7 @@ public class CashBusinessController {
     @Autowired
     private ICtCashBusinessService cashBusinessService;
 
-    @ApiOperation("获取刷脸凭证")
+    @Operation(summary = "获取刷脸凭证")
     @PostMapping(value = "/face/authinfo")
     public ApiResult<AuthInfoData> getFaceAuthInfo(@RequestBody GetFaceAuthInfoReq info) {
         AuthUser authUser = AuthUtils.getObject();
@@ -40,7 +40,7 @@ public class CashBusinessController {
         return new ApiResult().success(faceAuthInfo);
     }
 
-    @ApiOperation("根据刷脸token获取订单号")
+    @Operation(summary = "根据刷脸token获取订单号")
     @PostMapping(value = "/face/order")
     public ApiResult<GetOrderIdResp> getOrderId(@RequestBody GetOrderIdReq info) {
         AuthUser authUser = AuthUtils.getObject();
@@ -48,7 +48,7 @@ public class CashBusinessController {
         return new ApiResult().success(resp);
     }
 
-    @ApiOperation("拉取商品列表")
+    @Operation(summary = "拉取商品列表")
     @PostMapping(value = "/product/fetch")
     public ApiResult<List<GetProductListResp>> getProductList() {
         AuthUser authUser = AuthUtils.getObject();
@@ -56,7 +56,7 @@ public class CashBusinessController {
         return new ApiResult().success(productList);
     }
 
-    @ApiOperation("获取语音token")
+    @Operation(summary = "获取语音token")
     @PostMapping(value = "/voice/token")
     public ApiResult<GetVoiceTokenResp> getVoiceToken() {
         AuthUser authUser = AuthUtils.getObject();
@@ -64,7 +64,7 @@ public class CashBusinessController {
         return new ApiResult().success(resp);
     }
 
-    @ApiOperation("订单加商品")
+    @Operation(summary = "订单加商品")
     @PostMapping(value = "/order/item/add")
     public ApiResult<OrderItemResp> addOrderItem(@RequestBody OrderItemAddReq info) {
         AuthUser authUser = AuthUtils.getObject();
@@ -72,7 +72,7 @@ public class CashBusinessController {
         return new ApiResult().success(orderItemResp);
     }
 
-    @ApiOperation("订单减商品")
+    @Operation(summary = "订单减商品")
     @PostMapping(value = "/order/item/delete")
     public ApiResult<OrderItemResp> deleteOrderItem(@RequestBody OrderItemDeleteReq info) {
         AuthUser authUser = AuthUtils.getObject();
@@ -80,7 +80,7 @@ public class CashBusinessController {
         return new ApiResult().success(new OrderItemResp(info.getOrderId()));
     }
 
-    @ApiOperation("取消订单")
+    @Operation(summary = "取消订单")
     @PostMapping(value = "/order/cancel")
     public ApiResult<OrderItemResp> cancelOrder(@RequestBody OrderItemCancelReq info) {
         AuthUser authUser = AuthUtils.getObject();
@@ -88,7 +88,7 @@ public class CashBusinessController {
         return new ApiResult().success(new OrderItemResp(info.getOrderId()));
     }
 
-    @ApiOperation("订单支付")
+    @Operation(summary = "订单支付")
     @PostMapping(value = "/order/pay")
     public ApiResult payOrder(@RequestBody OrderPayReq info) {
         AuthUser authUser = AuthUtils.getObject();
@@ -100,7 +100,7 @@ public class CashBusinessController {
         }
     }
 
-    @ApiOperation("查询订单状态")
+    @Operation(summary = "查询订单状态")
     @PostMapping(value = "/order/status")
     public ApiResult<OrderPayStatusResp> payOrderStatus(@RequestBody OrderPayStatusReq info) {
         AuthUser authUser = AuthUtils.getObject();

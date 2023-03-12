@@ -2,8 +2,7 @@ package com.cloudtimes.common.core.domain;
 
 import com.cloudtimes.common.constant.HttpStatus;
 import com.cloudtimes.common.utils.StringUtils;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -15,7 +14,7 @@ import java.io.Serializable;
  *
  * @author tank
  */
-@ApiModel(value = "ApiResult", description = "接口统一响应结构体")
+@Schema(description = "接口统一响应结构体")
 @Data
 @Builder
 @Accessors(chain = true)
@@ -26,23 +25,23 @@ public class ApiResult<T> implements Serializable {
     /**
      * 状态码
      */
-    @ApiModelProperty("状态码")
+    @Schema(description = "状态码")
     public int code;
 
     /**
      * 返回内容
      */
-    @ApiModelProperty("状态消息")
+    @Schema(description = "状态消息")
     public String msg = "";
     /**
      * 总数（列表查询时返回）
      */
-    @ApiModelProperty("总数（列表查询时返回）")
+    @Schema(description = "总数（列表查询时返回）")
     public long total = 0L;
     /**
      * 数据对象
      */
-    @ApiModelProperty("响应参数结构体")
+    @Schema(description = "响应参数结构体")
     public T data;
 
     /**

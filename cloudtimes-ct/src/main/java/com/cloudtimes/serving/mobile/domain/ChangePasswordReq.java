@@ -1,20 +1,19 @@
 package com.cloudtimes.serving.mobile.domain;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.validation.constraints.NotEmpty;
 
-@ApiModel(description = "请求参数")
+@Schema(description = "请求参数")
 @Data
 @Slf4j
 public class ChangePasswordReq {
     @NotEmpty
-    @ApiModelProperty(value = "新密码", required = true)
+    @Schema(description = "新密码", required = true)
     private String passwordNew;
     @NotEmpty
-    @ApiModelProperty(value = "旧密码", required = true)
+    @Schema(description = "旧密码", required = true)
     private String passwordOld;
 }

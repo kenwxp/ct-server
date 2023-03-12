@@ -13,7 +13,7 @@ server:
   port: 9090
   servlet:
     # 应用的访问路径
-    context-path: /api
+    context-path: /bing-api
   # undertow 配置
   undertow:
     # HTTP post内容的最大大小。当值为-1时，默认值为大小是无限的
@@ -30,19 +30,6 @@ server:
       worker: 256
     session:
       timeout: 30000
-
-knife4j:
-  enable: true
-  setting:
-     enableOpenApi: false
-     enableFooter: false
-  # 开启Swagger的Basic认证功能,默认是false
-  basic:
-    enable: true
-    # Basic认证用户名
-    username: admin
-    # Basic认证密码
-    password: hty@dev
 
 # 用户配置
 user:

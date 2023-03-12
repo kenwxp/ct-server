@@ -1,15 +1,14 @@
 package com.cloudtimes.serving.mobile.domain;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 
-@ApiModel(description = "返回参数")
+@Schema(description = "返回参数")
 @Data
 public class GetShopRankResp {
-    @ApiModelProperty("门店名")
+    @Schema(description = "门店名")
     private String shopName;
-    @ApiModelProperty("在店人数")
+    @Schema(description = "在店人数")
     private String visitNum;
 }

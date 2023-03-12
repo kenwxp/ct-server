@@ -12,8 +12,8 @@ import com.cloudtimes.common.enums.ChannelType;
 import com.cloudtimes.common.utils.JWTManager;
 import com.cloudtimes.common.utils.ip.IpUtils;
 import com.cloudtimes.serving.wechat.service.ICtCustomerLoginService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 
-@Api(tags = "小程序登录相关接口")
+@Tag(name = "小程序登录相关接口")
 @RestController
 @RequestMapping(PrefixPathConstants.WX_MP_PATH_PREFIX + "/login")
 public class CustomerLoginController {
@@ -38,7 +38,7 @@ public class CustomerLoginController {
      * @param param
      * @return
      */
-    @ApiOperation("小程序用户登录校验")
+    @Operation(summary = "小程序用户登录校验")
     @PostMapping("/check")
     public ApiResult<MpLoginCheckResp> loginCheck(@RequestBody MpLoginCheckReq param) {
         MpLoginCheckResp loginCheckResp = loginService.checkCustomerNew(param.getLoginCode());
@@ -51,7 +51,7 @@ public class CustomerLoginController {
      * @param param
      * @return
      */
-    @ApiOperation("小程序用户登录接口")
+    @Operation(summary = "小程序用户登录接口")
     @PostMapping("")
     public ApiResult<MpLoginResp> login(@RequestBody MpLoginReq param, HttpServletRequest request) {
         String loginIp = IpUtils.getIpAddr(request);

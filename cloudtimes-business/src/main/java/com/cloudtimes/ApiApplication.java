@@ -4,8 +4,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
-import springfox.documentation.oas.annotations.EnableOpenApi;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
  * 启动程序

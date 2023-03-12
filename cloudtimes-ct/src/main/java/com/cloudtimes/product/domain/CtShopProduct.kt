@@ -4,8 +4,7 @@ import com.cloudtimes.common.annotation.Excel
 import com.cloudtimes.common.core.domain.BaseEntity
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonIgnore
-import io.swagger.annotations.ApiModel
-import io.swagger.annotations.ApiModelProperty
+import io.swagger.v3.oas.annotations.media.Schema
 import lombok.Data
 import java.util.*
 
@@ -16,88 +15,88 @@ import java.util.*
  * @date 2023-02-15
  */
 @Data
-@ApiModel(value = "CtShopProduct", description = "店铺商品")
+@Schema(description = "店铺商品")
 class CtShopProduct : BaseEntity() {
-    @ApiModelProperty(value = "店铺商品编号")
+    @Schema(description = "店铺商品编号")
     var id: String? = null
 
-    @ApiModelProperty(value = "店铺编号")
+    @Schema(description = "店铺编号")
     @Excel(name = "店铺编号")
     var shopNo: String? = null
 
-    @ApiModelProperty(value = "商品分类编码（冗余）")
+    @Schema(description = "商品分类编码（冗余）")
     @Excel(name = "商品分类编码（冗余")
     var categoryCode: String? = null
 
-    @ApiModelProperty(value = "商品条形码")
+    @Schema(description = "商品条形码")
     @Excel(name = "商品条形码")
     var barcode: String? = null
 
-    @ApiModelProperty(value = "商品名称")
+    @Schema(description = "商品名称")
     @Excel(name = "商品名称")
     var productName: String? = null
 
-    @ApiModelProperty(value = "商品英文名称")
+    @Schema(description = "商品英文名称")
     @Excel(name = "商品英文名称")
     var englishName: String? = null
 
-    @ApiModelProperty(value = "品牌名称")
+    @Schema(description = "品牌名称")
     @Excel(name = "品牌名称")
     var brand: String? = null
 
-    @ApiModelProperty(value = "标签")
+    @Schema(description = "标签")
     @Excel(name = "标签")
     var label: String? = null
 
-    @ApiModelProperty(value = "供货商编号")
+    @Schema(description = "供货商编号")
     @Excel(name = "供货商编号")
     var supplierId: String? = null
 
-    @ApiModelProperty(value = "供货商")
+    @Schema(description = "供货商")
     @Excel(name = "供货商")
     var supplier: String? = null
 
-    @ApiModelProperty(value = "规格")
+    @Schema(description = "规格")
     @Excel(name = "规格")
     var specification: String? = null
 
-    @ApiModelProperty(value = "单位")
+    @Schema(description = "单位")
     @Excel(name = "单位")
     var unit: String? = null
 
-    @ApiModelProperty(value = "重量/净含量")
+    @Schema(description = "重量/净含量")
     @Excel(name = "重量/净含量")
     var weight: String? = null
 
-    @ApiModelProperty(value = "颜色")
+    @Schema(description = "颜色")
     @Excel(name = "颜色")
     var color: String? = null
 
-    @ApiModelProperty(value = "尺寸")
+    @Schema(description = "尺寸")
     @Excel(name = "尺寸")
     var size: String? = null
 
-    @ApiModelProperty(value = "样式/款式")
+    @Schema(description = "样式/款式")
     @Excel(name = "样式/款式")
     var style: String? = null
 
-    @ApiModelProperty(value = "进货价")
+    @Schema(description = "进货价")
     @Excel(name = "进货价")
     var purchasePrice: Long? = null
 
-    @ApiModelProperty(value = "零售价")
+    @Schema(description = "零售价")
     @Excel(name = "零售价")
     var retailPrice: Long? = null
 
-    @ApiModelProperty(value = "批发价")
+    @Schema(description = "批发价")
     @Excel(name = "批发价")
     var wholesalePrice: Long? = null
 
-    @ApiModelProperty(value = "会员价")
+    @Schema(description = "会员价")
     @Excel(name = "会员价")
     var vipPrice: Long? = null
 
-    @ApiModelProperty(value = "库存")
+    @Schema(description = "库存")
     @Excel(name = "库存")
     var stock: Long? = null
 
@@ -105,58 +104,58 @@ class CtShopProduct : BaseEntity() {
     @JsonIgnore
     var stockDelta: Long = 0
 
-    @ApiModelProperty(value = "库存上限")
+    @Schema(description = "库存上限")
     @Excel(name = "库存上限")
     var maxStock: Long? = null
 
-    @ApiModelProperty(value = "库存下限")
+    @Schema(description = "库存下限")
     @Excel(name = "库存下限")
     var minStock: Long? = null
 
-    @ApiModelProperty(value = "累计售出")
+    @Schema(description = "累计售出")
     @Excel(name = "累计售出")
     var totalSold: Long? = null
 
-    @ApiModelProperty(value = "累计供货")
+    @Schema(description = "累计供货")
     @Excel(name = "累计供货")
     var totalSupplied: Long? = null
 
-    @ApiModelProperty(value = "商品图片地址")
+    @Schema(description = "商品图片地址")
     @Excel(name = "商品图片地址")
     var pictureUrl: String? = null
 
-    @ApiModelProperty(value = "生产日期")
+    @Schema(description = "生产日期")
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "生产日期", width = 30.0, dateFormat = "yyyy-MM-dd")
     var productionDate: Date? = null
 
-    @ApiModelProperty(value = "保质期")
+    @Schema(description = "保质期")
     @Excel(name = "保质期")
     var qualityPeriod: String? = null
 
-    @ApiModelProperty(value = "备注")
+    @Schema(description = "备注")
     @Excel(name = "备注")
     var remarks: String? = null
 
-    @ApiModelProperty(value = "商品是否启用")
+    @Schema(description = "商品是否启用")
     @Excel(name = "商品是否启用")
     @get:JvmName("getIsEnable")
     @set:JvmName("setIsEnable")
     var isEnable: String? = null
 
-    @ApiModelProperty(value = "是否启用会员")
+    @Schema(description = "是否启用会员")
     @Excel(name = "是否启用会员")
     @get:JvmName("getIsEnableVipPrice")
     @set:JvmName("setIsEnableVipPrice")
     var isEnableVipPrice: String? = null
 
-    @ApiModelProperty(value = "是否积分商品")
+    @Schema(description = "是否积分商品")
     @Excel(name = "是否积分商品")
     @get:JvmName("getIsEnablePoints")
     @set:JvmName("setIsEnablePoints")
     var isEnablePoints: String? = null
 
-    @ApiModelProperty(value = "是否已删除")
+    @Schema(description = "是否已删除")
     @Excel(name = "是否已删除")
     @get:JvmName("getIsDeleted")
     @set:JvmName("setIsDeleted")

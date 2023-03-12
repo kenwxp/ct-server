@@ -1,16 +1,15 @@
 package com.cloudtimes.serving.mobile.domain;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
-@ApiModel(description = "返回参数")
+@Schema(description = "返回参数")
 @Data
 @Slf4j
 public class ShopStatChartResp {
-    @ApiModelProperty("标签")
+    @Schema(description = "标签")
     private String label;
-    @ApiModelProperty("值")
+    @Schema(description = "值")
     private String value;
 }

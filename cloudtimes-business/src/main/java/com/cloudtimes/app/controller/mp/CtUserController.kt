@@ -15,8 +15,8 @@ import com.cloudtimes.common.core.domain.RestResult
 import com.cloudtimes.common.core.domain.entity.AuthUser
 import com.cloudtimes.common.enums.ChannelType
 import com.cloudtimes.common.utils.JWTManager
-import io.swagger.annotations.Api
-import io.swagger.annotations.ApiOperation
+import io.swagger.v3.oas.annotations.tags.Tag
+import io.swagger.v3.oas.annotations.Operation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
@@ -35,7 +35,7 @@ class InviteStoreResponse : RestResult<InviteResponse>()
  */
 @RestController
 @RequestMapping(PrefixPathConstants.WX_OFFICIAL_PATH_PREFIX + "/user")
-@Api(tags = ["代理-用户"])
+@Tag(name = "代理-用户")
 class CtUserController : BaseController() {
     @Autowired
     private lateinit var userService: ICtUserService
@@ -50,7 +50,7 @@ class CtUserController : BaseController() {
      * 获取用户详细信息
      */
     @PostMapping(value = ["/detail"])
-    @ApiOperation("获取用户详细信息")
+    @Operation(summary = "获取用户详细信息")
     fun getInfo(@Valid @RequestBody request: QueryByUserIdRequest): UserDetailResponse {
         val user = userService.selectCtUserById(request.userId)
         return UserDetailResponse().apply {
@@ -58,7 +58,7 @@ class CtUserController : BaseController() {
         }
     }
 
-    @ApiOperation("实名认证")
+    @Operation(summary = "实名认证")
     @PostMapping(value = ["/verify_real_name"])
     fun verifyRealName(@Valid @RequestBody request: VerifyRealNameRequest): AjaxResult {
         val existUser = userService.selectCtUserBySsn(request.ssn!!)
@@ -75,7 +75,7 @@ class CtUserController : BaseController() {
      * 获取用户详细信息
      */
     @PostMapping(value = ["/h5_login"])
-    @ApiOperation("H5手机用户登陆，测试用")
+    @Operation(summary = "H5手机用户登陆，测试用")
     fun h5Login(@Valid @RequestBody request: H5LoginRequest): UserDetailResponse {
         val user = userService.selectCtUserByAccount(request.mobile!!)
             ?: return UserDetailResponse().apply {
@@ -95,7 +95,7 @@ class CtUserController : BaseController() {
 
 
     @PostMapping(value = ["/register"])
-    @ApiOperation("代理用户注册")
+    @Operation(summary = "代理用户注册")
     fun register(@Valid @RequestBody request: AgentRegisterRequest): UserDetailResponse {
         // Step 1. 校验手机验证码
         smsController.validateSMS(request.mobile, request.verifyCode, request.verifyUUID)

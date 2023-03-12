@@ -1,20 +1,19 @@
 package com.cloudtimes.station.domain;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
-@ApiModel(description = "返回参数")
+@Schema(description = "返回参数")
 @Data
 @Slf4j
 public class JoinAudioResp {
-    @ApiModelProperty(value = "appid", required = true)
+    @Schema(description = "appid", required = true)
     private String appId;
-    @ApiModelProperty(value = "语音token", required = true)
+    @Schema(description = "语音token", required = true)
     private String voiceToken;
-    @ApiModelProperty(value = "频道名", required = true)
+    @Schema(description = "频道名", required = true)
     private String channelName;
-    @ApiModelProperty(value = "用户uid", required = true)
+    @Schema(description = "用户uid", required = true)
     private int uid;
 }

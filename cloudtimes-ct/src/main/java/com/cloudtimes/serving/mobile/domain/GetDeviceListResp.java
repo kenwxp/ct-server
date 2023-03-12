@@ -1,27 +1,26 @@
 package com.cloudtimes.serving.mobile.domain;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 
-@ApiModel(description = "返回参数")
+@Schema(description = "返回参数")
 @Data
 public class GetDeviceListResp {
-    @ApiModelProperty("设备名")
+    @Schema(description = "设备名")
     private String deviceName;
-    @ApiModelProperty("设备序列号")
+    @Schema(description = "设备序列号")
     private String deviceSerial;
-    @ApiModelProperty("设备位置")
+    @Schema(description = "设备位置")
     private String devicePosition;
-    @ApiModelProperty("设备状态")
+    @Schema(description = "设备状态")
     private String deviceStatus;
-    @ApiModelProperty("状态更新时间")
+    @Schema(description = "状态更新时间")
     private String updateTime;
-    @ApiModelProperty("视频播放token")
+    @Schema(description = "视频播放token")
     private String token;
-    @ApiModelProperty("视频链接")
+    @Schema(description = "视频链接")
     private String videoUrl;
-    @ApiModelProperty("当前截图")
+    @Schema(description = "当前截图")
     private String imageUrl;
 }

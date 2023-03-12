@@ -7,8 +7,8 @@ import com.cloudtimes.common.core.page.TableDataInfo;
 import com.cloudtimes.common.utils.StringUtils;
 import com.cloudtimes.system.service.ISysDictDataService;
 import com.cloudtimes.system.service.ISysDictTypeService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,7 +23,7 @@ import java.util.List;
  *
  * @author tank
  */
-@Api(tags = "数据字典信息")
+@Tag(name = "数据字典信息")
 @RestController
 @RequestMapping("/system/dict/data")
 public class SysDictDataController extends BaseController {
@@ -33,7 +33,7 @@ public class SysDictDataController extends BaseController {
     @Autowired
     private ISysDictTypeService dictTypeService;
 
-    @ApiOperation("查询数据字典信息列表")
+    @Operation(summary = "查询数据字典信息列表")
     @GetMapping("/list")
     public TableDataInfo list(SysDictData dictData) {
         startPage();
@@ -44,7 +44,7 @@ public class SysDictDataController extends BaseController {
     /**
      * 查询字典数据详细
      */
-    @ApiOperation("查询字典数据详细")
+    @Operation(summary = "查询字典数据详细")
     @GetMapping(value = "/{dictCode}")
     public AjaxResult getInfo(@PathVariable Long dictCode) {
         return AjaxResult.success(dictDataService.selectDictDataById(dictCode));
@@ -53,7 +53,7 @@ public class SysDictDataController extends BaseController {
     /**
      * 根据字典类型查询字典数据信息
      */
-    @ApiOperation("根据字典类型查询字典数据信息")
+    @Operation(summary = "根据字典类型查询字典数据信息")
     @GetMapping(value = "/type/{dictType}")
     public AjaxResult dictType(@PathVariable String dictType) {
         List<SysDictData> data = dictTypeService.selectDictDataByType(dictType);

@@ -9,8 +9,8 @@ import com.cloudtimes.common.exception.ServiceException
 import com.cloudtimes.promotion.domain.CtLuckyDrawRule
 import com.cloudtimes.promotion.service.ICtLuckyDrawRuleService
 import com.cloudtimes.system.service.ISysConfigService
-import io.swagger.annotations.Api
-import io.swagger.annotations.ApiOperation
+import io.swagger.v3.oas.annotations.tags.Tag
+import io.swagger.v3.oas.annotations.Operation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
@@ -18,7 +18,7 @@ class DrawRuleListResponse() : RestPageResult<CtLuckyDrawRule>()
 
 @RestController
 @RequestMapping(PrefixPathConstants.WX_OFFICIAL_PATH_PREFIX + "/customer/draw")
-@Api(tags = ["客户-抽奖"])
+@Tag(name = "客户-抽奖")
 class CtCustomerDrawController : BaseController() {
     @Autowired
     private lateinit var ruleService: ICtLuckyDrawRuleService
@@ -29,7 +29,7 @@ class CtCustomerDrawController : BaseController() {
     @Autowired
     private lateinit var configService: ISysConfigService
     @PostMapping("/rules")
-    @ApiOperation("查询抽奖规则配置")
+    @Operation(summary = "查询抽奖规则配置")
     fun rules( request: QueryByUserIdRequest): DrawRuleListResponse {
         val activityId: String? = configService.selectConfigByKey("lucky_draw_activity_id")
         if (activityId.isNullOrEmpty()) {

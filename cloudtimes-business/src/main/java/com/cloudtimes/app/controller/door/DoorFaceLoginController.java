@@ -12,15 +12,15 @@ import com.cloudtimes.common.enums.ChannelType;
 import com.cloudtimes.common.utils.StringUtils;
 import com.cloudtimes.hardwaredevice.domain.CtDevice;
 import com.cloudtimes.serving.door.service.ICtDoorFaceLoginService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Api(tags = "门禁刷脸登录相关接口")
+@Tag(name = "门禁刷脸登录相关接口")
 @RestController
 @RequestMapping(PrefixPathConstants.DOOR_FACE_PATH_PREFIX + "/login")
 public class DoorFaceLoginController {
@@ -35,7 +35,7 @@ public class DoorFaceLoginController {
      * @param param
      * @return
      */
-    @ApiOperation("门禁刷脸登录校验接口")
+    @Operation(summary = "门禁刷脸登录校验接口")
     @PostMapping("/check")
     public AjaxResult loginCheck(@RequestBody DoorFaceLoginCheckReq param) {
         if (StringUtils.isEmpty(param.getDeviceSerial())) {
@@ -53,7 +53,7 @@ public class DoorFaceLoginController {
      * @param param
      * @return
      */
-    @ApiOperation("门禁刷脸登录接口")
+    @Operation(summary = "门禁刷脸登录接口")
     @PostMapping("")
     public AjaxResult login(@RequestBody DoorFaceLoginReq param) {
         if (StringUtils.isEmpty(param.getDeviceSerial())) {

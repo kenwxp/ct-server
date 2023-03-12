@@ -4,8 +4,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import com.cloudtimes.common.core.domain.ApiResult;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,7 +33,7 @@ import com.cloudtimes.common.core.page.TableDataInfo;
  */
 @RestController
 @RequestMapping("/supervise/service")
-@Api("客服特性参数相关接口")
+@Tag(name = "客服特性参数相关接口")
 public class CtCustomerServiceController extends BaseController
 {
     @Autowired
@@ -109,7 +109,7 @@ public class CtCustomerServiceController extends BaseController
     /**
      * 同步客服参数特性
      */
-    @ApiOperation(value = "同步客服参数特性")
+    @Operation(summary = "同步客服参数特性")
     @PreAuthorize("@ss.hasPermi('supervise:service:sync')")
     @Log(title = "客服特性参数", businessType = BusinessType.OTHER)
     @GetMapping("/sync")

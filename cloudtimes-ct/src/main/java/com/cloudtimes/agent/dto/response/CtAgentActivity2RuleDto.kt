@@ -3,8 +3,7 @@ package com.cloudtimes.agent.dto.response
 import com.cloudtimes.common.annotation.Excel
 import com.cloudtimes.common.core.domain.BaseEntity
 import com.fasterxml.jackson.annotation.JsonFormat
-import io.swagger.annotations.ApiModel
-import io.swagger.annotations.ApiModelProperty
+import io.swagger.v3.oas.annotations.media.Schema
 import org.apache.commons.lang3.builder.ToStringBuilder
 import org.apache.commons.lang3.builder.ToStringStyle
 import java.math.BigDecimal
@@ -16,70 +15,70 @@ import java.util.*
  * @author 沈兵
  * @date 2023-02-17
  */
-@ApiModel(value = "CtAgentActivity2Rule", description = "代理活动2规则")
+@Schema(description = "代理活动2规则")
 open class CtAgentActivity2RuleDto : BaseEntity() {
-    @ApiModelProperty(value = "编号")
+    @Schema(description = "编号")
     var id: String? = null
 
-    @ApiModelProperty(value = "活动编号")
+    @Schema(description = "活动编号")
     @Excel(name = "活动编号")
     var activityId: String? = null
 
-    @ApiModelProperty(value = "活动规则标题")
+    @Schema(description = "活动规则标题")
     @Excel(name = "活动规则标题")
     var title: String? = null
 
-    @ApiModelProperty(value = "活动规则内容")
+    @Schema(description = "活动规则内容")
     @Excel(name = "活动规则内容")
     var content: String? = null
 
-    @ApiModelProperty(value = "活动类型")
+    @Schema(description = "活动类型")
     @Excel(name = "活动类型")
     var activityType: String? = null
 
-    @ApiModelProperty(value = "活动地区码")
+    @Schema(description = "活动地区码")
     @Excel(name = "活动地区码")
     var regionCode: String? = null
 
-    @ApiModelProperty(value = "活动地区名称")
+    @Schema(description = "活动地区名称")
     @Excel(name = "活动地区名称")
     var regionName: String? = null
 
-    @ApiModelProperty(value = "奖励门店数")
+    @Schema(description = "奖励门店数")
     @Excel(name = "奖励门店数")
     var storeCount: Long? = null
 
-    @ApiModelProperty(value = "已奖励门店数")
+    @Schema(description = "已奖励门店数")
     @Excel(name = "已奖励门店数")
     var usedStoreCount: Long? = null
 
-    @ApiModelProperty(value = "手续费费率")
+    @Schema(description = "手续费费率")
     @Excel(name = "手续费费率")
     var taxRatio: BigDecimal? = null
 
-    @ApiModelProperty(value = "操作管理员")
+    @Schema(description = "操作管理员")
     @Excel(name = "操作管理员")
     var operator: String? = null
 
-    @ApiModelProperty(value = "是否启用")
+    @Schema(description = "是否启用")
     @Excel(name = "是否启用")
     @get:JvmName("getIsEnabled")
     @set:JvmName("setIsEnabled")
     var isEnabled: String? = null
 
-    @ApiModelProperty(value = "活动状态")
+    @Schema(description = "活动状态")
     @Excel(name = "活动状态")
     var state: String? = null
 
-    @ApiModelProperty(value = "是否删除")
+    @Schema(description = "是否删除")
     var delFlag: String? = null
 
-    @ApiModelProperty(value = "开始时间")
+    @Schema(description = "开始时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Excel(name = "开始时间", width = 30.0, dateFormat = "yyyy-MM-dd HH:mm:ss")
     var startTime: Date? = null
 
-    @ApiModelProperty(value = "结束时间")
+    @Schema(description = "结束时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Excel(name = "结束时间", width = 30.0, dateFormat = "yyyy-MM-dd HH:mm:ss")
     var endTime: Date? = null

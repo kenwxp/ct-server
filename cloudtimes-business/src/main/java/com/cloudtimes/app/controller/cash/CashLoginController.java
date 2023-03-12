@@ -11,15 +11,15 @@ import com.cloudtimes.serving.cash.service.ICtCashLoginService;
 import com.cloudtimes.serving.cash.service.domain.CashLoginCheckResp;
 import com.cloudtimes.serving.cash.service.domain.CashLoginReq;
 import com.cloudtimes.serving.cash.service.domain.CashLoginResp;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Api(tags = "收银机登录相关接口")
+@Tag(name = "收银机登录相关接口")
 @RestController
 @RequestMapping(PrefixPathConstants.CASH_PATH_PREFIX + "/login")
 public class CashLoginController {
@@ -37,7 +37,7 @@ public class CashLoginController {
      * @param param
      * @return
      */
-    @ApiOperation("收银机登录校验接口")
+    @Operation(summary = "收银机登录校验接口")
     @PostMapping("/check")
     public ApiResult<CashLoginCheckResp> loginCheck(@RequestBody CashLoginReq param) {
         if (StringUtils.isEmpty(param.getDeviceSerial())) {
@@ -53,7 +53,7 @@ public class CashLoginController {
      * @param param
      * @return
      */
-    @ApiOperation("收银机登录接口")
+    @Operation(summary = "收银机登录接口")
     @PostMapping("")
     public ApiResult<CashLoginResp> login(@RequestBody CashLoginReq param) {
         if (StringUtils.isEmpty(param.getDeviceSerial())) {

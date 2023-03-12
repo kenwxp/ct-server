@@ -4,42 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.cloudtimes.product.mapper.CtShopProductMapper">
     <sql id="selectCtShopProductVo">
-        select id,
-        shop_no,
-        category_code,
-        barcode,
-        product_name,
-        english_name,
-        brand,
-        label,
-        supplier_id,
-        supplier,
-        specification,
-        unit,
-        weight,
-        color,
-        size,
-        style,
-        purchase_price,
-        retail_price,
-        wholesale_price,
-        vip_price,
-        stock,
-        max_stock,
-        min_stock,
-        total_sold,
-        total_supplied,
-        picture_url,
-        production_date,
-        quality_period,
-        remarks,
-        is_enable,
-        is_enable_vip_price,
-        is_enable_points,
-        is_deleted,
-        create_time,
-        update_time
-        from ct_shop_product
+        select * from ct_shop_product
     </sql>
 
     <select id="selectCtShopProductList" parameterType="CtShopProduct" resultType="CtShopProduct">

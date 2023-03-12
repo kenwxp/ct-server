@@ -4,8 +4,7 @@ import com.alibaba.fastjson.annotation.JSONField
 import com.cloudtimes.common.annotation.Excel
 import com.cloudtimes.common.core.domain.BaseEntity
 import com.fasterxml.jackson.annotation.JsonFormat
-import io.swagger.annotations.ApiModel
-import io.swagger.annotations.ApiModelProperty
+import io.swagger.v3.oas.annotations.media.Schema
 import org.apache.commons.lang3.builder.ToStringBuilder
 import org.apache.commons.lang3.builder.ToStringStyle
 import java.math.BigDecimal
@@ -17,46 +16,46 @@ import java.util.*
  * @author 沈兵
  * @date 2023-02-03
  */
-@ApiModel(value = "CtAgentDividend", description = "分润配置")
+@Schema(description = "分润配置")
 class CtAgentDividend : BaseEntity() {
-    @ApiModelProperty(value = "编号")
+    @Schema(description = "编号")
     var id: String? = null
 
-    @ApiModelProperty(value = "代理用户编号")
+    @Schema(description = "代理用户编号")
     @Excel(name = "代理用户编号")
     var userId: String? = null
 
-    @ApiModelProperty(value = "上级代理用户编号")
+    @Schema(description = "上级代理用户编号")
     @Excel(name = "上级代理用户编号")
     var parentUserId: String? = null
 
-    @ApiModelProperty(value = "比较类型")
+    @Schema(description = "比较类型")
     @Excel(name = "比较类型")
     var compareType: String? = null
 
-    @ApiModelProperty(value = "营收金额")
+    @Schema(description = "营收金额")
     @Excel(name = "营收金额")
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     var billAmount: BigDecimal? = null
 
-    @ApiModelProperty(value = "提成比例")
+    @Schema(description = "提成比例")
     @Excel(name = "提成比例")
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     var dividendRatio: BigDecimal? = null
 
-    @ApiModelProperty(value = "手续费费率")
+    @Schema(description = "手续费费率")
     @Excel(name = "手续费费率")
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     var taxRatio: BigDecimal? = null
 
-    @ApiModelProperty(value = "操作管理员")
+    @Schema(description = "操作管理员")
     @Excel(name = "操作管理员")
     var operator: String? = null
 
-    @ApiModelProperty(value = "是否删除")
+    @Schema(description = "是否删除")
     var delFlag: String? = null
 
-    @ApiModelProperty(value = "创建日期")
+    @Schema(description = "创建日期")
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "创建日期", width = 30.0, dateFormat = "yyyy-MM-dd")
     var createDate: Date? = null

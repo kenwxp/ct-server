@@ -17,8 +17,8 @@ import com.cloudtimes.common.core.controller.BaseController
 import com.cloudtimes.common.core.domain.AjaxResult
 import com.cloudtimes.common.core.domain.RestPageResult
 import com.cloudtimes.common.core.domain.RestResult
-import io.swagger.annotations.Api
-import io.swagger.annotations.ApiOperation
+import io.swagger.v3.oas.annotations.tags.Tag
+import io.swagger.v3.oas.annotations.Operation
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -44,7 +44,7 @@ class ActivityStoreListResponse() : RestPageResult<AgentStoreDetail>()
  */
 @RestController
 @RequestMapping(PrefixPathConstants.WX_OFFICIAL_PATH_PREFIX + "/activity")
-@Api(value = "活动", tags = ["代理-活动"])
+@Tag(name = "代理-活动")
 class CtAgentActivityController : BaseController() {
 
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
@@ -62,7 +62,7 @@ class CtAgentActivityController : BaseController() {
     private lateinit var settlementService: ICtAgentActivitySettlementService
 
     @PostMapping(value = ["/list"])
-    @ApiOperation(value = "查询代理参加的全部活动")
+    @Operation(summary = "查询代理参加的全部活动")
     fun listActivities(@Valid @RequestBody request: ActivityListRequest): AgentActivityListResponse {
         return AgentActivityListResponse().apply {
             data = activityService.selectAgentActivity(request)
@@ -70,7 +70,7 @@ class CtAgentActivityController : BaseController() {
     }
 
     @PostMapping(value = ["/detail"])
-    @ApiOperation(value = "查询活动详情")
+    @Operation(summary = "查询活动详情")
     fun activityDetail(@Valid @RequestBody request: ActivityDetailRequest): AgentActivityResponse {
         return AgentActivityResponse().apply {
             data = activityService.selectActivityById(request.activityId!!)
@@ -78,7 +78,7 @@ class CtAgentActivityController : BaseController() {
     }
 
     @PostMapping(value = ["/list_activity1"])
-    @ApiOperation(value = "查询活动1规则完成情况")
+    @Operation(summary = "查询活动1规则完成情况")
     fun listActivity1(@Valid @RequestBody request: ActivityDetailRequest): AgentActivity1ListResponse {
         return AgentActivity1ListResponse().apply {
             data = activity1RuleService.listAgentActivityDetail(request)
@@ -86,14 +86,14 @@ class CtAgentActivityController : BaseController() {
     }
 
     @PostMapping(value = ["/confirm_activity1"])
-    @ApiOperation(value = "代理确认活动1规则达成")
+    @Operation(summary = "代理确认活动1规则达成")
     fun confirmActivity1(@Valid @RequestBody request: ActivityRuleRequest): AjaxResult {
         settlementService.agentConfirm(request)
         return AjaxResult.success()
     }
 
     @PostMapping(value = ["/list_activity2"])
-    @ApiOperation(value = "查询活动2规则完成情况")
+    @Operation(summary = "查询活动2规则完成情况")
     fun listActivity2(@Valid @RequestBody request: ActivityDetailRequest): AgentActivity2ListResponse {
         return AgentActivity2ListResponse().apply {
             data = activity2RuleService.listAgentActivityDetail(request)
@@ -101,7 +101,7 @@ class CtAgentActivityController : BaseController() {
     }
 
     @PostMapping(value = ["/list_activity_store"])
-    @ApiOperation(value = "查询满足活动规则的店铺")
+    @Operation(summary = "查询满足活动规则的店铺")
     fun listActivityStore(@Valid @RequestBody request: ActivityStoreRequest) : ActivityStoreListResponse {
         logger.info("list_activity_store: pageNum ${request.pageNum}, pageSize ${request.pageSize}")
         startPage(request.pageNum, request.pageSize)

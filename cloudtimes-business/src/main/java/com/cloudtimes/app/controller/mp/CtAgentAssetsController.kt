@@ -23,8 +23,8 @@ import com.cloudtimes.common.core.domain.RestPageResult
 import com.cloudtimes.common.core.domain.RestResult
 import com.cloudtimes.common.enums.BusinessType
 import com.cloudtimes.common.exception.ServiceException
-import io.swagger.annotations.Api
-import io.swagger.annotations.ApiOperation
+import io.swagger.v3.oas.annotations.tags.Tag
+import io.swagger.v3.oas.annotations.Operation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -47,7 +47,7 @@ class AssetsBookPage() : RestPageResult<QueryAssetsBookResponse>()
  */
 @RestController
 @RequestMapping(PrefixPathConstants.WX_OFFICIAL_PATH_PREFIX + "/assets")
-@Api(tags = ["代理-资产"])
+@Tag(name = "代理-资产")
 class CtAgentAssetsController : BaseController() {
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
@@ -71,7 +71,7 @@ class CtAgentAssetsController : BaseController() {
 
     /** 获取代理资产详细信息 */
     @PostMapping()
-    @ApiOperation(value = "获取代理资产详细信息", response = CtUserAgent::class)
+    @Operation(summary = "获取代理资产详细信息")
     fun listAssetsByUserId(@Valid @RequestBody request: QueryByUserIdRequest): AgentAssetsResponse {
         val assets = agentService.selectAgentAssets(request.userId)
         return if (assets == null) {
@@ -86,14 +86,14 @@ class CtAgentAssetsController : BaseController() {
 
     @Log(title = "代理提现", businessType = BusinessType.UPDATE)
     @PostMapping("/withdrawal")
-    @ApiOperation("代理提现")
+    @Operation(summary = "代理提现")
     fun withdrawCash(@Valid @RequestBody request: WithdrawCashRequest): AjaxResult {
         return AjaxResult.success(agentService.withdrawCash(request))
     }
 
     @Log(title = "代理转账", businessType = BusinessType.UPDATE)
     @PostMapping("/transfer")
-    @ApiOperation("代理转账")
+    @Operation(summary = "代理转账")
     fun transferCash(@Valid @RequestBody request: TransferCashRequest): AjaxResult {
         // Step 1. 校验手机验证码
         val payer = userService.selectCtUserById(request.payerUserId!!) ?:
@@ -106,7 +106,7 @@ class CtAgentAssetsController : BaseController() {
 
     @Log(title = "代理转账记录", businessType = BusinessType.UPDATE)
     @PostMapping("/list_transfer_records")
-    @ApiOperation("查询代理转账记录")
+    @Operation(summary = "查询代理转账记录")
     fun listTransferRecords(@Valid @RequestBody request: QueryByUserIdWithPageRequest): TransferRecordPage {
         startPage(request.pageNum, request.pageSize)
 
@@ -120,7 +120,7 @@ class CtAgentAssetsController : BaseController() {
 
     @Log(title = "查询代理账单", businessType = BusinessType.OTHER)
     @PostMapping("/list_assets_book")
-    @ApiOperation("查询代理账单")
+    @Operation(summary = "查询代理账单")
     fun listAssetsBook(@Valid @RequestBody request: QueryAssetsBookRequest): AssetsBookPage {
         startPage(request.pageNum, request.pageSize)
 
@@ -136,7 +136,7 @@ class CtAgentAssetsController : BaseController() {
 
     @Log(title = "代理提现记录", businessType = BusinessType.UPDATE)
     @PostMapping("/list_withdrawal_records")
-    @ApiOperation("查询代理提现记录")
+    @Operation(summary = "查询代理提现记录")
     fun listWithdrawalRecords(@Valid @RequestBody request: QueryAgentWithdrawalRequest): WithdrawalRecordPage {
         startPage(request.pageNum, request.pageSize)
 

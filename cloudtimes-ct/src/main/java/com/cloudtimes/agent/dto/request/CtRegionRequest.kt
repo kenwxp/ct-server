@@ -1,10 +1,9 @@
 package com.cloudtimes.agent.dto.request
 
-import io.swagger.annotations.ApiModel
-import io.swagger.annotations.ApiModelProperty
+import io.swagger.v3.oas.annotations.media.Schema
 
-@ApiModel(value = "CtRegionRequest", description = "查询地区列表请求体")
+@Schema(description = "查询地区列表请求体")
 class CtRegionRequest {
-    @ApiModelProperty(value = "地区级别")
+    @Schema(description = "地区级别")
     var regionLevel: String = ""
 }

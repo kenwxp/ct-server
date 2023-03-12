@@ -9,8 +9,8 @@ import com.cloudtimes.app.constant.PrefixPathConstants
 import com.cloudtimes.common.core.controller.BaseController
 import com.cloudtimes.common.core.domain.AjaxResult
 import com.cloudtimes.common.core.domain.RestPageResult
-import io.swagger.annotations.Api
-import io.swagger.annotations.ApiOperation
+import io.swagger.v3.oas.annotations.tags.Tag
+import io.swagger.v3.oas.annotations.Operation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
@@ -25,13 +25,13 @@ class AgentDividendPage() : RestPageResult<CtAgentDividend>()
  */
 @RestController
 @RequestMapping(PrefixPathConstants.WX_OFFICIAL_PATH_PREFIX + "/agent_dividend")
-@Api(tags = ["代理-分润配置"])
+@Tag(name = "代理-分润配置")
 class CtAgentDividendController : BaseController() {
     @Autowired
     private lateinit var ctAgentDividendService: ICtAgentDividendService
 
     @PostMapping("/list")
-    @ApiOperation("查询代理分润配置列表")
+    @Operation(summary = "查询代理分润配置列表")
     fun list(@Valid @RequestBody request: QueryByUserIdRequest): AgentDividendPage {
         val list = ctAgentDividendService.selectManyByUserId(request.userId)
         return AgentDividendPage().apply {
@@ -41,7 +41,7 @@ class CtAgentDividendController : BaseController() {
     }
 
     @PostMapping("/sub_user_list")
-    @ApiOperation("查询下级代理分润配置列表")
+    @Operation(summary = "查询下级代理分润配置列表")
     fun suerUserList(@Valid @RequestBody request: QueryBySubUserIdRequest): AgentDividendPage {
         val list = ctAgentDividendService.selectManyByUserId(request.subUserId)
         return AgentDividendPage().apply {
@@ -51,7 +51,7 @@ class CtAgentDividendController : BaseController() {
     }
 
     @PostMapping("/update_sub_agent_dividend")
-    @ApiOperation("更新下级代理分润配置")
+    @Operation(summary = "更新下级代理分润配置")
     fun updateSubAgentDividend(@Valid @RequestBody request: UpdateSubAgentDividendRequest): AjaxResult {
         ctAgentDividendService.updateSubAgentDividend(request)
         return AjaxResult.success()

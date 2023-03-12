@@ -8,8 +8,8 @@ import com.cloudtimes.common.core.controller.BaseController;
 import com.cloudtimes.common.core.domain.AjaxResult;
 import com.cloudtimes.common.core.page.TableDataInfo;
 import com.cloudtimes.common.enums.BusinessType;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +23,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(PrefixPathConstants.WX_OFFICIAL_PATH_PREFIX + "/withdrawal_book")
-@Api(tags = "代理-提现登记簿")
+@Tag(name = "代理-提现登记簿")
 public class CtWithdrawalBookController extends BaseController
 {
     @Autowired
@@ -33,7 +33,7 @@ public class CtWithdrawalBookController extends BaseController
      * 查询提现登记簿列表
      */
     @GetMapping("/list")
-    @ApiOperation("查询提现登记簿列表")
+    @Operation(summary = "查询提现登记簿列表")
     public TableDataInfo list(CtWithdrawalBook ctWithdrawalBook)
     {
         startPage();
@@ -44,7 +44,7 @@ public class CtWithdrawalBookController extends BaseController
     /**
      * 获取提现登记簿详细信息
      */
-    @ApiOperation("获取提现登记簿详细信息")
+    @Operation(summary = "获取提现登记簿详细信息")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") String id)
     {
@@ -56,7 +56,7 @@ public class CtWithdrawalBookController extends BaseController
      */
     @Log(title = "提现登记簿", businessType = BusinessType.INSERT)
     @PostMapping
-    @ApiOperation("新增提现")
+    @Operation(summary = "新增提现")
     public AjaxResult add(@RequestBody CtWithdrawalBook ctWithdrawalBook)
     {
         return toAjax(ctWithdrawalBookService.insertCtWithdrawalBook(ctWithdrawalBook));
@@ -67,7 +67,7 @@ public class CtWithdrawalBookController extends BaseController
      */
     @Log(title = "提现登记簿", businessType = BusinessType.UPDATE)
     @PutMapping
-    @ApiOperation("修改提现")
+    @Operation(summary = "修改提现")
     public AjaxResult edit(@RequestBody CtWithdrawalBook ctWithdrawalBook)
     {
         return toAjax(ctWithdrawalBookService.updateCtWithdrawalBook(ctWithdrawalBook));

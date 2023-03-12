@@ -1,22 +1,21 @@
 package com.cloudtimes.app.controller.door.model;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 
-@ApiModel(value = "DoorFaceLoginReq", description = "收银设备登录请求体")
+@Schema(description = "收银设备登录请求体")
 @Data
 @Slf4j
 public class DoorFaceLoginReq {
 
-    @ApiModelProperty(value = "设备序列号", required = true)
+    @Schema(description = "设备序列号", required = true)
     private String deviceSerial;
 
-    @ApiModelProperty(value = "门店编号")
+    @Schema(description = "门店编号")
     private String shopNo;
 
-    @ApiModelProperty(value = "设备名")
+    @Schema(description = "设备名")
     private String deviceName;
 }

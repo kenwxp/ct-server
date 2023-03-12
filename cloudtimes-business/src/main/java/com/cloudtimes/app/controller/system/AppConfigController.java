@@ -4,8 +4,8 @@ import com.cloudtimes.common.core.controller.BaseController;
 import com.cloudtimes.common.core.domain.AjaxResult;
 import com.cloudtimes.system.domain.SysConfig;
 import com.cloudtimes.system.service.ISysConfigService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,7 +19,7 @@ import java.util.List;
  *
  * @author tank
  */
-@Api(tags = "系统参数")
+@Tag(name = "系统参数")
 @RestController
 @RequestMapping("/system")
 public class AppConfigController extends BaseController {
@@ -29,7 +29,7 @@ public class AppConfigController extends BaseController {
     /**
      * 获取参数配置列表
      */
-    @ApiOperation("获取参数配置列表")
+    @Operation(summary = "获取参数配置列表")
     @GetMapping("/config")
     public AjaxResult list() {
         SysConfig config = new SysConfig();
@@ -38,7 +38,7 @@ public class AppConfigController extends BaseController {
         return AjaxResult.success(list);
     }
 
-    @ApiOperation("根据配置Key获取参数配置")
+    @Operation(summary = "根据配置Key获取参数配置")
     @GetMapping("/config/{key}")
     public AjaxResult getConfigByKey(@PathVariable("key") String key) {
         var config = configService.selectConfigByKey(key);

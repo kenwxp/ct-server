@@ -1,20 +1,19 @@
 package com.cloudtimes.app.models;
 
 import com.cloudtimes.common.constant.HttpStatus;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-@ApiModel(value = "SuperviseWsData", description = "管理端长链接统一返回体")
+@Schema(description = "管理端长链接统一返回体")
 @Data
 public class SuperviseWsData<T> {
-    @ApiModelProperty("指令类型")
+    @Schema(description = "指令类型")
     private String option;
-    @ApiModelProperty("状态码")
+    @Schema(description = "状态码")
     private int code;
-    @ApiModelProperty("状态消息")
+    @Schema(description = "状态消息")
     private String msg;
-    @ApiModelProperty("业务数据")
+    @Schema(description = "业务数据")
     private T data;
 
     public SuperviseWsData() {

@@ -3,7 +3,7 @@ package com.cloudtimes.resources.domain
 import com.cloudtimes.common.annotation.Excel
 import com.cloudtimes.common.core.domain.BaseEntity
 import com.cloudtimes.resources.dto.response.CtRegionResponse
-import io.swagger.annotations.ApiModel
+import io.swagger.v3.oas.annotations.media.Schema
 import org.apache.commons.lang3.builder.ToStringBuilder
 import org.apache.commons.lang3.builder.ToStringStyle
 
@@ -13,7 +13,7 @@ import org.apache.commons.lang3.builder.ToStringStyle
  * @author tank
  * @date 2023-01-17
  */
-@ApiModel(value = "CtRegion", description = "地区")
+@Schema(description = "地区")
 class CtRegion : BaseEntity() {
     /** 地区编码  */
     @Excel(name = "地区编码")

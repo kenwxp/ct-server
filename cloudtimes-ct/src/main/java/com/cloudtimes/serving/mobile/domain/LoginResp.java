@@ -1,21 +1,20 @@
 package com.cloudtimes.serving.mobile.domain;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 
-@ApiModel(description = "返回参数")
+@Schema(description = "返回参数")
 @Data
 @Slf4j
 public class LoginResp {
-    @ApiModelProperty("token")
+    @Schema(description = "token")
     private String token;
-    @ApiModelProperty("用户编号")
+    @Schema(description = "用户编号")
     private String id;
-    @ApiModelProperty("用户名")
+    @Schema(description = "用户名")
     private String name;
-    @ApiModelProperty("手机号")
+    @Schema(description = "手机号")
     private String phone;
 }

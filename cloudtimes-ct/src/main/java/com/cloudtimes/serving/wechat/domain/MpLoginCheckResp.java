@@ -1,7 +1,6 @@
 package com.cloudtimes.serving.wechat.domain;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
@@ -13,12 +12,12 @@ import lombok.experimental.Accessors;
 @Data
 @NoArgsConstructor
 @Accessors(chain = true)
-@ApiModel(description = "返回参数")
+@Schema(description = "返回参数")
 public class MpLoginCheckResp {
     /**
      * 是否新用户 0-否 1-是
      */
-    @ApiModelProperty("是否新用户 0-否 1-是")
+    @Schema(description = "是否新用户 0-否 1-是")
     private String isNew;
 
 }

@@ -4,8 +4,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import com.cloudtimes.common.utils.SecurityUtils;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,7 +31,7 @@ import com.cloudtimes.common.core.page.TableDataInfo;
  * @author tank
  * @date 2023-02-10
  */
-@Api(tags = "媒体")
+@Tag(name = "媒体")
 @RestController
 @RequestMapping("/resources/ctmedia")
 public class CtMediaController extends BaseController {
@@ -64,7 +64,7 @@ public class CtMediaController extends BaseController {
     /**
      * 获取媒体详细信息
      */
-    @ApiOperation(value = "获取媒体详情-resources:ctmedia:query")
+    @Operation(summary = "获取媒体详情-resources:ctmedia:query")
     @PreAuthorize("@ss.hasPermi('resources:ctmedia:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") String id) {

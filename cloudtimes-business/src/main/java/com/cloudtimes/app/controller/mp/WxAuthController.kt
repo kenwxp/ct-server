@@ -16,8 +16,8 @@ import com.cloudtimes.common.enums.YesNoState
 import com.cloudtimes.common.exception.ServiceException
 import com.cloudtimes.common.utils.JWTManager
 import com.cloudtimes.partner.weixin.ICtWeixinOfficialApiService
-import io.swagger.annotations.Api
-import io.swagger.annotations.ApiOperation
+import io.swagger.v3.oas.annotations.tags.Tag
+import io.swagger.v3.oas.annotations.Operation
 import me.zhyd.oauth.model.AuthCallback
 import me.zhyd.oauth.model.AuthResponse
 import org.slf4j.Logger
@@ -34,7 +34,7 @@ class WxLoginResponse(override var data: CtUser?) : RestResult<CtUser>(data)
 
 @RestController
 @RequestMapping(PrefixPathConstants.WX_OFFICIAL_PATH_PREFIX + "/wx_auth")
-@Api(tags = ["代理-微信登陆授权"])
+@Tag(name = "代理-微信登陆授权")
 class WxAuthController {
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
@@ -51,7 +51,7 @@ class WxAuthController {
     private lateinit var redisCache: RedisCache
 
     @GetMapping()
-    @ApiOperation(value = "微信授权")
+    @Operation(summary = "微信授权")
     fun mpAuth(
         @RequestParam(name = "ty") type: String?,
         @RequestParam(name = "ic") inviteCode: String?,
@@ -62,7 +62,7 @@ class WxAuthController {
     }
 
     @GetMapping("/autoLogin")
-    @ApiOperation(value = "自动登录接口")
+    @Operation(summary = "自动登录接口")
     fun autoLogin(
         @RequestParam(name = "token") token: String?,
         response: HttpServletResponse
@@ -81,7 +81,7 @@ class WxAuthController {
     }
 
     @PostMapping()
-    @ApiOperation(value = "微信登陆")
+    @Operation(summary = "微信登陆")
     fun wxLogin(@Valid @RequestBody request: WxLoginRequest): WxLoginResponse {
         val callback = AuthCallback()
         callback.code = request.code
@@ -122,7 +122,7 @@ class WxAuthController {
     }
 
     @GetMapping("/jsSign")
-    @ApiOperation(value = "微信JSSDK签发授权")
+    @Operation(summary = "微信JSSDK签发授权")
     fun wxJSSDKSign(url: String): AjaxResult {
         redisCache.deleteObject(CacheConstants.WX_ACCESS_TOKEN_KEY)
         var accessToken = ""

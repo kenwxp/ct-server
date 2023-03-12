@@ -14,8 +14,8 @@ import com.cloudtimes.common.utils.StringUtils;
 import com.cloudtimes.common.utils.uuid.IdUtils;
 import com.cloudtimes.common.utils.uuid.Seq;
 import com.cloudtimes.system.service.ISysConfigService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author ruoyi
  */
-@Api(tags = "短信验证码")
+@Tag(name = "短信验证码")
 @RestController
 public class SmsController extends BaseController {
 
@@ -44,7 +44,7 @@ public class SmsController extends BaseController {
      * 生成短信验证码
      */
     @RateLimiter(limitType = LimitType.IP, count = 10, time = 60)
-    @ApiOperation("短信验证码")
+    @Operation(summary = "短信验证码")
     @GetMapping("/sms/{mobile}")
     public AjaxResult getCode(@PathVariable(value = "mobile", required = true) String mobile) throws IOException {
         AjaxResult ajax = AjaxResult.success("短信已发送");

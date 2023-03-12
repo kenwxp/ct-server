@@ -1,6 +1,5 @@
 package com.cloudtimes.app.controller.mp
 
-import com.cloudtimes.agent.domain.CtUserAgent
 import com.cloudtimes.account.dto.request.ListMessageByTypeRequest
 import com.cloudtimes.account.dto.request.QueryByUserIdRequest
 import com.cloudtimes.app.constant.PrefixPathConstants
@@ -8,9 +7,9 @@ import com.cloudtimes.common.core.controller.BaseController
 import com.cloudtimes.common.core.domain.RestPageResult
 import com.cloudtimes.supervise.domain.CtEvents
 import com.cloudtimes.supervise.service.ICtEventsService
-import io.swagger.annotations.Api
-import io.swagger.annotations.ApiModel
-import io.swagger.annotations.ApiOperation
+import io.swagger.v3.oas.annotations.tags.Tag
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.media.Schema
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -21,7 +20,7 @@ import javax.validation.Valid
 // 泛型具体化
 class AgentMessagePage() : RestPageResult<CtEvents>()
 
-@ApiModel(value = "AgentMessageListRequest", description = "查询代理的消息列表请求体")
+@Schema(description = "查询代理的消息列表请求体")
 class AgentMessageListRequest(var pageNum: Int = 1, var pageSize: Int = 10) : QueryByUserIdRequest()
 
 /**
@@ -32,13 +31,13 @@ class AgentMessageListRequest(var pageNum: Int = 1, var pageSize: Int = 10) : Qu
  */
 @RestController
 @RequestMapping(PrefixPathConstants.WX_OFFICIAL_PATH_PREFIX + "/message")
-@Api(tags = ["代理-消息"])
+@Tag(name = "代理-消息")
 class CtAgentMessageController : BaseController() {
     @Autowired
     private lateinit var eventsService: ICtEventsService
 
     @PostMapping(value = ["/summary"])
-    @ApiOperation(value = "查询代理的消息摘要", response = CtUserAgent::class)
+    @Operation(summary = "查询代理的消息摘要")
     fun summary(@Valid @RequestBody request: AgentMessageListRequest): AgentMessagePage {
         val messages = eventsService.selectSummaryByReceiver(request.userId)
         return AgentMessagePage().apply {
@@ -48,7 +47,7 @@ class CtAgentMessageController : BaseController() {
     }
 
     @PostMapping(value = ["/list_by_type"])
-    @ApiOperation(value = "按消息类型查询代理消息列表", response = CtUserAgent::class)
+    @Operation(summary = "按消息类型查询代理消息列表")
     fun listMessageByType(@Valid @RequestBody request: ListMessageByTypeRequest): AgentMessagePage {
         startPage(request.pageNum, request.pageSize)
         val messages = eventsService.selectByReceiverAndMsgType(request.userId, request.msgType!!)
@@ -60,7 +59,7 @@ class CtAgentMessageController : BaseController() {
     }
 
     @PostMapping(value = ["/list"])
-    @ApiOperation(value = "查询代理的消息列表", response = CtUserAgent::class)
+    @Operation(summary = "查询代理的消息列表")
     fun listMessage(@Valid @RequestBody request: AgentMessageListRequest): AgentMessagePage {
         startPage(request.pageNum, request.pageSize)
         val messages = eventsService.selectByReceiver(request.userId)

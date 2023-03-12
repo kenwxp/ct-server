@@ -1,7 +1,6 @@
 package com.cloudtimes.serving.cash.service.domain;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
@@ -11,12 +10,12 @@ import lombok.extern.slf4j.Slf4j;
 
 @Data
 @Slf4j
-@ApiModel(description = "返回参数")
+@Schema(description = "返回参数")
 public class CashLoginCheckResp {
     /**
      * 是否新设备 0-否 1-是
      */
-    @ApiModelProperty("是否新设备 0-否 1-是")
+    @Schema(description = "是否新设备 0-否 1-是")
     private String isNew;
 
 }

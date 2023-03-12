@@ -1,9 +1,9 @@
 package com.cloudtimes.thirdpart.dto.response
 
 import com.cloudtimes.thirdpart.dto.request.RcygProductRecord
-import io.swagger.annotations.ApiModel
+import io.swagger.v3.oas.annotations.media.Schema
 
-@ApiModel(value = "YcygBatchProductSyncResponseData", description = "批量商品同步应答数据")
+@Schema(description = "批量商品同步应答数据")
 class YcygBatchProductSyncResponseData {
     var hasNextPage: Boolean = false
     var hasPreviousPage: Boolean = false
@@ -26,7 +26,7 @@ class YcygBatchProductSyncResponseData {
 
 }
 
-@ApiModel(value = "YcygBatchProductSyncResponse", description = "批量商品同步应答")
+@Schema(description = "批量商品同步应答")
 class YcygBatchProductSyncResponse {
     var code: Int = 0
     var msg: String = ""

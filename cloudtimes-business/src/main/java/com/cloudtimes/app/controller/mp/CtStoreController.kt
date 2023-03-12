@@ -21,8 +21,8 @@ import com.cloudtimes.hardwaredevice.dto.request.RegisterStoreRequest
 import com.cloudtimes.hardwaredevice.dto.request.QueryOrdersByMonth
 import com.cloudtimes.hardwaredevice.service.ICtStoreService
 import com.cloudtimes.supervise.service.ICtOrderService
-import io.swagger.annotations.Api
-import io.swagger.annotations.ApiOperation
+import io.swagger.v3.oas.annotations.tags.Tag
+import io.swagger.v3.oas.annotations.Operation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
@@ -44,7 +44,7 @@ class StoreProfitResponse() : RestResult<AgentStoreProfitStats>()
  */
 @RestController
 @RequestMapping(PrefixPathConstants.WX_OFFICIAL_PATH_PREFIX + "/store")
-@Api(tags = ["代理-门店"])
+@Tag(name = "代理-门店")
 class CtStoreController : BaseController() {
     @Autowired
     private lateinit var ctUserAgentService: ICtUserAgentService
@@ -61,9 +61,10 @@ class CtStoreController : BaseController() {
     /**
      * 查询代理门店
      */
-    @ApiOperation("查询代理门店列表")
+    @Operation(summary = "查询代理门店列表")
     @PostMapping("/list")
     fun list(@Valid @RequestBody request: AgentStoreListRequest): StoreAndCommissionPage {
+        logger.info("request: $request")
         startPage(request.pageNum, request.pageSize)
         val storeAndCommissionList = ctUserAgentService.selectCtAgentShopList(request)
         val pageData = getDataTable(storeAndCommissionList)
@@ -76,7 +77,7 @@ class CtStoreController : BaseController() {
     /**
      * 查询代理门店详情
      */
-    @ApiOperation("查询代理门店详情")
+    @Operation(summary = "查询代理门店详情")
     @PostMapping("/detail")
     fun detail(@Valid @RequestBody request: AgentStoreDetailRequest): StoreAndCommissionDetail {
         val detail = ctUserAgentService.selectCtAgentShopDetail(request)
@@ -88,7 +89,7 @@ class CtStoreController : BaseController() {
     /**
      * 查询代理门店没有订单统计
      */
-    @ApiOperation("查询代理门店每月订单统计")
+    @Operation(summary = "查询代理门店每月订单统计")
     @PostMapping("/monthly_order_stats")
     fun monthlyOrderStats(@Valid @RequestBody request: QueryOrdersByMonth): MonthlyOrderResponse {
         val list = ctOrderService.selectMonthlyOrderStats(request)
@@ -103,7 +104,7 @@ class CtStoreController : BaseController() {
     /**
      * 查询代理门店没有订单
      */
-    @ApiOperation("查询代理门店每日订单")
+    @Operation(summary = "查询代理门店每日订单")
     @PostMapping("/daily_orders")
     fun dailyOrder(@Valid @RequestBody request: QueryOrdersByDate): DailyOrderResponse {
         startPage(request.pageNum, request.pageSize)
@@ -120,7 +121,7 @@ class CtStoreController : BaseController() {
     /**
      * 查询代理门店上线统计
      */
-    @ApiOperation("查询代理门店上线统计")
+    @Operation(summary = "查询代理门店上线统计")
     @PostMapping("/online_stats")
     fun onlineStats(@Valid @RequestBody request: QueryByUserIdRequest): AgentShopStatsPage {
         val list = ctUserAgentService.selectCtAgentShopOnlineStats(request.userId)
@@ -133,7 +134,7 @@ class CtStoreController : BaseController() {
     /**
      * 查询代理门店收益统计
      */
-    @ApiOperation("查询代理门店收益统计")
+    @Operation(summary = "查询代理门店收益统计")
     @PostMapping("/profit_stats")
     fun profitStats(@Valid @RequestBody request: StoreProfitRequest): StoreProfitResponse {
         val profits = ctUserAgentService.selectCtAgentShopProfitStats(request)
@@ -142,7 +143,7 @@ class CtStoreController : BaseController() {
         }
     }
 
-    @ApiOperation("门店注册")
+    @Operation(summary = "门店注册")
     @PostMapping("/register")
     fun register(@Valid @RequestBody request: RegisterStoreRequest): AjaxResult {
         // Step 1. 校验手机验证码

@@ -3,8 +3,7 @@ package com.cloudtimes.agent.domain
 import com.cloudtimes.common.annotation.Excel
 import com.cloudtimes.common.core.domain.BaseEntity
 import com.fasterxml.jackson.annotation.JsonFormat
-import io.swagger.annotations.ApiModel
-import io.swagger.annotations.ApiModelProperty
+import io.swagger.v3.oas.annotations.media.Schema
 import org.apache.commons.lang3.builder.ToStringBuilder
 import org.apache.commons.lang3.builder.ToStringStyle
 import java.math.BigDecimal
@@ -16,63 +15,63 @@ import java.util.*
  * @author 沈兵
  * @date 2023-02-07
  */
-@ApiModel(value = "CtUserAgent", description = "代理详情")
+@Schema(description = "代理详情")
 open class CtUserAgent : BaseEntity() {
-    @ApiModelProperty(value = "用户编号")
+    @Schema(description = "用户编号")
     var userId: String? = null
 
-    @ApiModelProperty(value = "用户昵称")
+    @Schema(description = "用户昵称")
     @Excel(name = "用户昵称")
     var nickName: String? = null
 
-    @ApiModelProperty(value = "代理类型")
+    @Schema(description = "代理类型")
     @Excel(name = "代理类型")
     var agentType: String? = null
 
-    @ApiModelProperty(value = "上级代理编号")
+    @Schema(description = "上级代理编号")
     @Excel(name = "上级代理编号")
     var parentUserId: String? = null
 
-    @ApiModelProperty(value = "代理区域")
+    @Schema(description = "代理区域")
     @Excel(name = "代理区域")
     var agentArea: String? = null
 
-    @ApiModelProperty(value = "代理现金余额")
+    @Schema(description = "代理现金余额")
     @Excel(name = "代理现金余额")
     var cashAmount: BigDecimal? = null
 
-    @ApiModelProperty(value = "代理累计已提现")
+    @Schema(description = "代理累计已提现")
     @Excel(name = "代理累计已提现")
     var totalWithdrawal: BigDecimal? = null
 
-    @ApiModelProperty(value = "累计销售提成(累计产品销售佣金)")
+    @Schema(description = "累计销售提成(累计产品销售佣金)")
     @Excel(name = "累计销售提成(累计产品销售佣金)")
     var totalSalesReward: BigDecimal? = null
 
-    @ApiModelProperty(value = "累计分润提成(应收分成)")
+    @Schema(description = "累计分润提成(应收分成)")
     @Excel(name = "累计分润提成(应收分成)")
     var totalDividend: BigDecimal? = null
 
-    @ApiModelProperty(value = "累计活动提成(平台活动奖励)")
+    @Schema(description = "累计活动提成(平台活动奖励)")
     @Excel(name = "累计活动提成(平台活动奖励)")
     var totalActivityReward: BigDecimal? = null
 
-    @ApiModelProperty(value = "累计下级贡献提成")
+    @Schema(description = "累计下级贡献提成")
     @Excel(name = "累计下级贡献提成")
     var totalTributes: BigDecimal? = null
 
-    @ApiModelProperty(value = "累计下级贡献分润")
+    @Schema(description = "累计下级贡献分润")
     val totalTributesDividend: BigDecimal? = null
 
-    @ApiModelProperty(value = "累计下级贡献佣金")
+    @Schema(description = "累计下级贡献佣金")
     val totalTributesCommission: BigDecimal? = null
 
-    @ApiModelProperty(value = "创建日期")
+    @Schema(description = "创建日期")
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "创建日期", width = 30.0, dateFormat = "yyyy-MM-dd")
     var createDate: Date? = null
 
-    @ApiModelProperty(value = "是否删除")
+    @Schema(description = "是否删除")
     var delFlag: String? = null
     override fun toString(): String {
         return ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)

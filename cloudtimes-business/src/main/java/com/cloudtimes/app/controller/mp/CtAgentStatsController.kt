@@ -6,8 +6,8 @@ import com.cloudtimes.common.core.domain.AjaxResult
 import com.cloudtimes.common.core.page.TableDataInfo
 import com.cloudtimes.stats.domain.CtStatsMonthlySales
 import com.cloudtimes.stats.service.ICtAgentStatsService
-import io.swagger.annotations.Api
-import io.swagger.annotations.ApiOperation
+import io.swagger.v3.oas.annotations.tags.Tag
+import io.swagger.v3.oas.annotations.Operation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
@@ -20,7 +20,7 @@ import javax.validation.Valid
  */
 @RestController
 @RequestMapping(PrefixPathConstants.WX_OFFICIAL_PATH_PREFIX + "/stats")
-@Api(tags = ["代理-数据统计"])
+@Tag(name = "代理-数据统计")
 class CtAgentStatsController : BaseController() {
     @Autowired
     private lateinit var ctStatsMonthlySalesService: ICtAgentStatsService
@@ -29,7 +29,7 @@ class CtAgentStatsController : BaseController() {
      * 查询门店月销售统计列表
      */
     @GetMapping("/monthly_sales")
-    @ApiOperation("查询门店月销售统计列表")
+    @Operation(summary = "查询门店月销售统计列表")
     fun monthlySales(@Valid ctStatsMonthlySales: CtStatsMonthlySales): TableDataInfo {
         startPage()
         val list = ctStatsMonthlySalesService.selectCtStatsMonthlySalesList(ctStatsMonthlySales)
@@ -37,7 +37,7 @@ class CtAgentStatsController : BaseController() {
     }
 
     @GetMapping("/commission_and_dividend")
-    @ApiOperation("查询代理佣金和分润统计")
+    @Operation(summary = "查询代理佣金和分润统计")
     fun commissionAndDividend(): AjaxResult {
         // :TODO: 获取登陆用户ID
         val userId = "e4011707-a691-11ed-8957-0242ac110003"

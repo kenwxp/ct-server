@@ -17,6 +17,7 @@ public class AuthConfig implements WebMvcConfigurer {
                 .addPathPatterns("/**")
                 //放行
                 .excludePathPatterns(
+                        "/swagger-ui.html",
                         "/auth/device/test",
                         "/auth/device/login",
                         "/auth/user/**",
@@ -36,7 +37,7 @@ public class AuthConfig implements WebMvcConfigurer {
                         "/mp/wx_auth",
                         "/mp/user/h5_login",
                         "/mp/user/register",
-                        "/agent/store/register",
+                        "/mp/store/register",
                         "/rcyg/**",
                         "/mp/**"
                 )

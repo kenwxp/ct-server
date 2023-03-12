@@ -1,12 +1,12 @@
 package com.cloudtimes.resources.dto.response
 
 import com.cloudtimes.common.annotation.Excel
-import io.swagger.annotations.ApiModel
+import io.swagger.v3.oas.annotations.media.Schema
 import org.apache.commons.lang3.builder.ToStringBuilder
 import org.apache.commons.lang3.builder.ToStringStyle
 
 
-@ApiModel(value = "CtRegionResponse", description = "地区")
+@Schema(description = "地区")
 class CtRegionResponse {
     /** 地区编码  */
     @Excel(name = "地区编码")

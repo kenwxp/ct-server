@@ -1,11 +1,10 @@
 package com.cloudtimes.serving.cash.service.domain;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-@ApiModel(description = "返回参数")
+@Schema(description = "返回参数")
 @Data
 public class GetFaceAuthInfoResp {
-    @ApiModelProperty(value = "刷脸凭证authInfo", required = true)
+    @Schema(description = "刷脸凭证authInfo", required = true)
     private String authInfo;
 }

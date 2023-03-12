@@ -19,8 +19,8 @@ import com.cloudtimes.common.utils.SecurityUtils;
 import com.cloudtimes.common.utils.ServletUtils;
 import com.cloudtimes.common.utils.StringUtils;
 import com.cloudtimes.common.utils.ip.IpUtils;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +37,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author polo
  * @date 2022-1-30
  */
-@Api(tags = "用户登录和注册接口")
+@Tag(name = "用户登录和注册接口")
 @RestController
 @RequestMapping("/auth/user")
 public class UserLoginAndRegisterController extends BaseController {
@@ -58,7 +58,7 @@ public class UserLoginAndRegisterController extends BaseController {
      * @param loginBody 登录信息
      * @return 结果
      */
-    @ApiOperation("顾客用户登录")
+    @Operation(summary = "顾客用户登录")
     @PostMapping("/customerLogin")
     public AjaxResult login(@RequestBody LoginBody loginBody, HttpServletRequest request) {
         AjaxResult ajax = AjaxResult.success();
@@ -69,7 +69,7 @@ public class UserLoginAndRegisterController extends BaseController {
     }
 
     @RateLimiter(limitType = LimitType.IP, count = 10, time = 60)
-    @ApiOperation("顾客用户注册")
+    @Operation(summary = "顾客用户注册")
     @PostMapping("/register")
     public AjaxResult register(@RequestBody RegisterBody user) {
         String msg = runRegister(user);

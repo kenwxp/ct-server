@@ -1,15 +1,14 @@
 package com.cloudtimes.serving.wechat.domain;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 
-@ApiModel(description = "返回参数")
+@Schema(description = "返回参数")
 @Data
 public class ScanCodeResp {
-    @ApiModelProperty(value = "购物流水号")
+    @Schema(description = "购物流水号")
     private String shoppingId;
-    @ApiModelProperty(value = "是否云值守 0-否 1-是")
+    @Schema(description = "是否云值守 0-否 1-是")
     private String isSupervise;
 }

@@ -1,20 +1,19 @@
 package com.cloudtimes.agent.dto.response
 
 import com.cloudtimes.agent.domain.CtAgentActivity1Rule
-import io.swagger.annotations.ApiModel
-import io.swagger.annotations.ApiModelProperty
+import io.swagger.v3.oas.annotations.media.Schema
 
-@ApiModel(value = "AgentActivity1Detail", description = "代理活动1详情")
+@Schema(description = "代理活动1详情")
 class AgentActivity1Detail : CtAgentActivity1Rule() {
 
-    @ApiModelProperty(value = "是否已达成")
+    @Schema(description = "是否已达成")
     @get:JvmName("getIsFulfilled")
     @set:JvmName("setIsFulfilled")
     var isFulfilled: String? = null
 
-    @ApiModelProperty(value = "审核状态")
+    @Schema(description = "审核状态")
     var verifyState: String? = null
 
-    @ApiModelProperty(value = "结算状态")
+    @Schema(description = "结算状态")
     var settlementState: String? = null
 }

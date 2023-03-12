@@ -11,8 +11,8 @@ import com.cloudtimes.common.core.domain.entity.AuthUser;
 import com.cloudtimes.common.enums.ChannelType;
 import com.cloudtimes.common.utils.ip.IpUtils;
 import com.cloudtimes.serving.mobile.service.ICtShopBossLoginService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,7 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 
-@Api(tags = "店家app登录相关接口")
+//@Tag(name = "店家app登录相关接口")
+@Tag(name = "店家app登录相关接口")
 @RestController
 @RequestMapping(PrefixPathConstants.MOBILE_PATH_PREFIX + "/login")
 public class ShopBossLoginController {
@@ -30,14 +31,14 @@ public class ShopBossLoginController {
     @Autowired
     private JWTManager jwtManager;
 
-    @ApiOperation("用户注册")
+    @Operation(summary = "用户注册")
     @PostMapping("/register")
     public ApiResult register(@RequestBody RegisterReq param) {
         loginService.shopBossRegister(param);
         return new ApiResult().success();
     }
 
-    @ApiOperation("用户登录")
+    @Operation(summary = "用户登录")
     @PostMapping("")
     public ApiResult<LoginResp> login(@RequestBody LoginReq param, HttpServletRequest request) {
         LoginResp loginResp = loginService.shopBossLogin(param, IpUtils.getIpAddr(request));

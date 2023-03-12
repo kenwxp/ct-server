@@ -9,8 +9,8 @@ import com.cloudtimes.common.core.controller.BaseController
 import com.cloudtimes.common.core.domain.AjaxResult
 import com.cloudtimes.common.core.domain.RestPageResult
 import com.cloudtimes.common.core.domain.RestResult
-import io.swagger.annotations.Api
-import io.swagger.annotations.ApiOperation
+import io.swagger.v3.oas.annotations.tags.Tag
+import io.swagger.v3.oas.annotations.Operation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -30,13 +30,13 @@ class DividendDetail: RestResult<CtAgentDividendSettlement>()
  */
 @RestController
 @RequestMapping(PrefixPathConstants.WX_OFFICIAL_PATH_PREFIX + "/dividend_settlement")
-@Api(tags = ["代理-分润结算"])
+@Tag(name = "代理-分润结算")
 class CtAgentDividendSettlementController : BaseController() {
     @Autowired
     private lateinit var dividendSettlementService: ICtAgentDividendSettlementService
 
     @PostMapping("/list_store_dividend")
-    @ApiOperation("查询店铺分润列表")
+    @Operation(summary = "查询店铺分润列表")
     fun listStoreDividend(@Valid @RequestBody request: StoreDividendRequest): DividendSettlementPage {
         startPage(request.pageNum, request.pageSize)
         val list = dividendSettlementService.selectStoreDividendList(request)
@@ -48,7 +48,7 @@ class CtAgentDividendSettlementController : BaseController() {
     }
 
     @PostMapping("/detail")
-    @ApiOperation("查询店铺分润详情")
+    @Operation(summary = "查询店铺分润详情")
     fun detail(@Valid @RequestBody request: AgentDividendRequest): DividendDetail {
         val detail = dividendSettlementService.agentDividendDetail(request)
         return DividendDetail().apply {
@@ -57,7 +57,7 @@ class CtAgentDividendSettlementController : BaseController() {
     }
 
     @PostMapping("/agent_approve")
-    @ApiOperation("店铺分润代理确认")
+    @Operation(summary = "店铺分润代理确认")
     fun agentApprove(@Valid @RequestBody request: AgentDividendRequest): AjaxResult {
         dividendSettlementService.agentApproveDividend(request)
         return AjaxResult.success()

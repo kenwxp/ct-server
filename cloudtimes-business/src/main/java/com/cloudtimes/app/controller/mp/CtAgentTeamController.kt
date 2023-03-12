@@ -13,8 +13,8 @@ import com.cloudtimes.common.core.controller.BaseController
 import com.cloudtimes.common.core.domain.RestPageResult
 import com.cloudtimes.common.core.domain.RestResult
 
-import io.swagger.annotations.Api
-import io.swagger.annotations.ApiOperation
+import io.swagger.v3.oas.annotations.tags.Tag
+import io.swagger.v3.oas.annotations.Operation
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.PostMapping
@@ -34,7 +34,7 @@ class TeamMemberDetail() : RestResult<TeamMember>()
  */
 @RestController
 @RequestMapping(PrefixPathConstants.WX_OFFICIAL_PATH_PREFIX + "/team")
-@Api(tags = ["代理-团队"])
+@Tag(name = "代理-团队")
 class CtAgentTeamController : BaseController() {
     @Autowired
     private lateinit var agentService: ICtUserAgentService
@@ -43,7 +43,7 @@ class CtAgentTeamController : BaseController() {
     private lateinit var userService: ICtUserService
 
     @PostMapping(value = ["/list_members"])
-    @ApiOperation(value = "查询团队成员列表")
+    @Operation(summary = "查询团队成员列表")
     fun listMembers(@Valid @RequestBody request: QueryByUserIdWithPageRequest): TeamMemberPage {
         startPage(request.pageNum, request.pageSize)
         val members = agentService.selectTeamMembers(request.userId!!)
@@ -55,7 +55,7 @@ class CtAgentTeamController : BaseController() {
     }
 
     @PostMapping(value = ["/member_detail"])
-    @ApiOperation(value = "查询团队成员详情")
+    @Operation(summary = "查询团队成员详情")
     fun memberDetail(@Valid @RequestBody request: QueryBySubUserIdRequest): TeamMemberDetail {
         val member = agentService.selectTeamMember(request.subUserId)
         return TeamMemberDetail().apply {
@@ -64,7 +64,7 @@ class CtAgentTeamController : BaseController() {
     }
 
     @PostMapping(value = ["/invite_agent"])
-    @ApiOperation("获取团队拓展邀请码和邀请地址")
+    @Operation(summary = "获取团队拓展邀请码和邀请地址")
     fun inviteAgent(@Valid @RequestBody request: QueryByUserIdRequest): InviteAgentResponse {
         return InviteAgentResponse().apply {
             data = userService.inviteAgent(request)
@@ -72,7 +72,7 @@ class CtAgentTeamController : BaseController() {
     }
 
     @PostMapping(value = ["/invite_store"])
-    @ApiOperation("获取门店拓展邀请码和邀请地址")
+    @Operation(summary = "获取门店拓展邀请码和邀请地址")
     fun inviteStore(@Valid @RequestBody request: QueryByUserIdRequest): InviteStoreResponse {
         return InviteStoreResponse().apply {
             data = userService.inviteStore(request)
