@@ -48,10 +48,6 @@ class CtShopProduct : BaseEntity() {
     @Excel(name = "标签")
     var label: String? = null
 
-    @Schema(description = "供货商编号")
-    @Excel(name = "供货商编号")
-    var supplierId: String? = null
-
     @Schema(description = "供货商")
     @Excel(name = "供货商")
     var supplier: String? = null
@@ -166,6 +162,6 @@ class CtShopProduct : BaseEntity() {
     }
 
     override fun toString(): String {
-        return "CtShopProduct(id=$id, shopNo=$shopNo, categoryCode=$categoryCode, barcode=$barcode, productName=$productName, englishName=$englishName, brand=$brand, label=$label, supplierId=$supplierId, supplier=$supplier, specification=$specification, unit=$unit, weight=$weight, color=$color, size=$size, style=$style, purchasePrice=$purchasePrice, retailPrice=$retailPrice, wholesalePrice=$wholesalePrice, vipPrice=$vipPrice, stock=$stock, maxStock=$maxStock, minStock=$minStock, totalSold=$totalSold, totalSupplied=$totalSupplied, pictureUrl=$pictureUrl, productionDate=$productionDate, qualityPeriod=$qualityPeriod, remarks=$remarks)"
+        return "CtShopProduct(id=$id, shopNo=$shopNo, categoryCode=$categoryCode, barcode=$barcode, productName=$productName, englishName=$englishName, brand=$brand, label=$label, supplier=$supplier, specification=$specification, unit=$unit, weight=$weight, color=$color, size=$size, style=$style, purchasePrice=$purchasePrice, retailPrice=$retailPrice, wholesalePrice=$wholesalePrice, vipPrice=$vipPrice, stock=$stock, maxStock=$maxStock, minStock=$minStock, totalSold=$totalSold, totalSupplied=$totalSupplied, pictureUrl=$pictureUrl, productionDate=$productionDate, qualityPeriod=$qualityPeriod, remarks=$remarks)"
     }
 }

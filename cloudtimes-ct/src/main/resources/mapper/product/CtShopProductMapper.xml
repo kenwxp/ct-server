@@ -21,7 +21,6 @@
             </if>
             <if test="brand != null  and brand != ''">and brand = #{brand}</if>
             <if test="label != null  and label != ''">and label = #{label}</if>
-            <if test="supplierId != null  and supplierId != ''">and supplier_id = #{supplierId}</if>
             <if test="supplier != null  and supplier != ''">and supplier = #{supplier}</if>
             <if test="specification != null  and specification != ''">and specification = #{specification}</if>
             <if test="unit != null  and unit != ''">and unit = #{unit}</if>
@@ -67,7 +66,6 @@
             <if test="englishName != null">english_name,</if>
             <if test="brand != null">brand,</if>
             <if test="label != null">label,</if>
-            <if test="supplierId != null">supplier_id,</if>
             <if test="supplier != null">supplier,</if>
             <if test="specification != null">specification,</if>
             <if test="unit != null">unit,</if>
@@ -104,7 +102,6 @@
             <if test="englishName != null">#{englishName},</if>
             <if test="brand != null">#{brand},</if>
             <if test="label != null">#{label},</if>
-            <if test="supplierId != null">#{supplierId},</if>
             <if test="supplier != null">#{supplier},</if>
             <if test="specification != null">#{specification},</if>
             <if test="unit != null">#{unit},</if>
@@ -144,7 +141,6 @@
             <if test="englishName != null">english_name = #{englishName},</if>
             <if test="brand != null">brand = #{brand},</if>
             <if test="label != null">label = #{label},</if>
-            <if test="supplierId != null">supplier_id = #{supplierId},</if>
             <if test="supplier != null">supplier = #{supplier},</if>
             <if test="specification != null">specification = #{specification},</if>
             <if test="unit != null">unit = #{unit},</if>

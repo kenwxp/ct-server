@@ -22,8 +22,6 @@ class CtShopProductTable : AliasableSqlTable<CtShopProductTable>("ct_shop_produc
 
     val label = column<String>(name = "label", jdbcType = JDBCType.VARCHAR)
 
-    val supplierId = column<Object>(name = "supplier_id", jdbcType = JDBCType.OTHER)
-
     val supplier = column<String>(name = "supplier", jdbcType = JDBCType.VARCHAR)
 
     val specification = column<String>(name = "specification", jdbcType = JDBCType.VARCHAR)
