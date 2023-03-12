@@ -2,6 +2,8 @@ package com.cloudtimes.web.controller.hardwaredevice;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.cloudtimes.hardwaredevice.domain.dto.CtOpenDoorLogsDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,8 +31,7 @@ import com.cloudtimes.common.core.page.TableDataInfo;
  */
 @RestController
 @RequestMapping("/hardwaredevice/ctopendoorlogs")
-public class CtOpenDoorLogsController extends BaseController
-{
+public class CtOpenDoorLogsController extends BaseController {
     @Autowired
     private ICtOpenDoorLogsService ctOpenDoorLogsService;
 
@@ -39,10 +40,9 @@ public class CtOpenDoorLogsController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('hardwaredevice:ctopendoorlogs:list')")
     @GetMapping("/list")
-    public TableDataInfo list(CtOpenDoorLogs ctOpenDoorLogs)
-    {
+    public TableDataInfo list(CtOpenDoorLogs ctOpenDoorLogs) {
         startPage();
-        List<CtOpenDoorLogs> list = ctOpenDoorLogsService.selectCtOpenDoorLogsList(ctOpenDoorLogs);
+        List<CtOpenDoorLogsDto> list = ctOpenDoorLogsService.selectCtOpenDoorLogsListPlus(ctOpenDoorLogs);
         return getDataTable(list);
     }
 
@@ -52,8 +52,7 @@ public class CtOpenDoorLogsController extends BaseController
     @PreAuthorize("@ss.hasPermi('hardwaredevice:ctopendoorlogs:export')")
     @Log(title = "开门日志", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, CtOpenDoorLogs ctOpenDoorLogs)
-    {
+    public void export(HttpServletResponse response, CtOpenDoorLogs ctOpenDoorLogs) {
         List<CtOpenDoorLogs> list = ctOpenDoorLogsService.selectCtOpenDoorLogsList(ctOpenDoorLogs);
         ExcelUtil<CtOpenDoorLogs> util = new ExcelUtil<CtOpenDoorLogs>(CtOpenDoorLogs.class);
         util.exportExcel(response, list, "开门日志数据");
@@ -64,8 +63,7 @@ public class CtOpenDoorLogsController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('hardwaredevice:ctopendoorlogs:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") String id)
-    {
+    public AjaxResult getInfo(@PathVariable("id") String id) {
         return AjaxResult.success(ctOpenDoorLogsService.selectCtOpenDoorLogsById(id));
     }
 
@@ -75,8 +73,7 @@ public class CtOpenDoorLogsController extends BaseController
     @PreAuthorize("@ss.hasPermi('hardwaredevice:ctopendoorlogs:add')")
     @Log(title = "开门日志", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody CtOpenDoorLogs ctOpenDoorLogs)
-    {
+    public AjaxResult add(@RequestBody CtOpenDoorLogs ctOpenDoorLogs) {
         return toAjax(ctOpenDoorLogsService.insertCtOpenDoorLogs(ctOpenDoorLogs));
     }
 
@@ -86,8 +83,7 @@ public class CtOpenDoorLogsController extends BaseController
     @PreAuthorize("@ss.hasPermi('hardwaredevice:ctopendoorlogs:edit')")
     @Log(title = "开门日志", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody CtOpenDoorLogs ctOpenDoorLogs)
-    {
+    public AjaxResult edit(@RequestBody CtOpenDoorLogs ctOpenDoorLogs) {
         return toAjax(ctOpenDoorLogsService.updateCtOpenDoorLogs(ctOpenDoorLogs));
     }
 
@@ -97,8 +93,7 @@ public class CtOpenDoorLogsController extends BaseController
     @PreAuthorize("@ss.hasPermi('hardwaredevice:ctopendoorlogs:remove')")
     @Log(title = "开门日志", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable String[] ids)
-    {
+    public AjaxResult remove(@PathVariable String[] ids) {
         return toAjax(ctOpenDoorLogsService.deleteCtOpenDoorLogsByIds(ids));
     }
 }

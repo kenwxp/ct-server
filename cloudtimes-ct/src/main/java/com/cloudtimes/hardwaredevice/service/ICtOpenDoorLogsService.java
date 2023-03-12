@@ -3,6 +3,7 @@ package com.cloudtimes.hardwaredevice.service;
 import java.util.List;
 
 import com.cloudtimes.hardwaredevice.domain.CtOpenDoorLogs;
+import com.cloudtimes.hardwaredevice.domain.dto.CtOpenDoorLogsDto;
 
 /**
  * 开门日志Service接口
@@ -26,6 +27,8 @@ public interface ICtOpenDoorLogsService {
      * @return 开门日志集合
      */
     public List<CtOpenDoorLogs> selectCtOpenDoorLogsList(CtOpenDoorLogs ctOpenDoorLogs);
+
+    public List<CtOpenDoorLogsDto> selectCtOpenDoorLogsListPlus(CtOpenDoorLogs ctOpenDoorLogs);
 
     /**
      * 新增开门日志

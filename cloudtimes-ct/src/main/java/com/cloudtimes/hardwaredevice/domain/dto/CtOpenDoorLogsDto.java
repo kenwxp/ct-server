@@ -30,17 +30,24 @@ public class CtOpenDoorLogsDto extends BaseEntity {
     @Excel(name = "店铺编号")
     private String storeId;
 
+    private String storeName;
+
+
     /**
      * 设备编号
      */
     @Excel(name = "设备编号")
     private String deviceId;
 
+    private String deviceName;
+
     /**
      * 会员编号
      */
     @Excel(name = "会员编号")
     private String memberId;
+
+    private String memberName;
 
     /**
      * 操作渠道
