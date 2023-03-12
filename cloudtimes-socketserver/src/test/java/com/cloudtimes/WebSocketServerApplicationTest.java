@@ -1,7 +1,7 @@
 package com.cloudtimes;
 
 
-
+import com.cloudtimes.common.redislock.RedissonLock;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import com.alibaba.fastjson2.JSONObject;
@@ -20,6 +20,9 @@ public class WebSocketServerApplicationTest {
     RocketMQTemplate rocketMQTemplate;
     @Autowired
     JWTManager jwtManager;
+
+    @Autowired
+    RedissonLock redissonLock;
 
     //    @Test
     public void testMQ() {
@@ -45,5 +48,36 @@ public class WebSocketServerApplicationTest {
         System.out.println(s);
         AuthUser authUser1 = JSONObject.parseObject(s, AuthUser.class);
         System.out.println(authUser1);
+    }
+
+    @Test
+    public void testRedisLock() {
+
+        for (int i = 0; i < 10; i++) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    redissonLock.lock(Thread.currentThread().getName(), 10);
+                    for (int s = 0; s < 100; s++) {
+                        System.out.println("======" + s);
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                    redissonLock.release(Thread.currentThread().getName());
+                }
+            }).start();
+        }
+
+
+        while(true){
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }

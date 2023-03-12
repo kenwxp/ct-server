@@ -21,3 +21,11 @@ spring:
         max-active: 8
         # #连接池最大阻塞等待时间（使用负值表示没有限制）
         max-wait: -1ms
+
+redisson:
+  lock:
+    server:
+      address: 10.1.120.100:6379
+      type: standalone
+      # 密码
+      password: 123456
