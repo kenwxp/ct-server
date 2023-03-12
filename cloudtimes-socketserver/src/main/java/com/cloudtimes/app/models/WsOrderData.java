@@ -31,8 +31,10 @@ public class WsOrderData {
     private String paymentId;
     @Schema(description = "订单状态 0-未支付 1-支付中 2-支付完成 3-支付失败 4-已撤销")
     private String state;
-    @Schema(description = "创建日期 yyyy-mm-dd hh:mm:ss")
-    private String createDate;
+    @Schema(description = "创建时间 yyyy-mm-dd hh:mm:ss")
+    private String createTime;
+    @Schema(description = "更新时间 yyyy-mm-dd hh:mm:ss")
+    private String updateTime;
     // 订单清单物品
     @Schema(description = "物品编号")
     private List<WsOrderDetailData> detail;

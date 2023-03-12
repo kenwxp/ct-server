@@ -95,7 +95,8 @@ public class SuperviseOrderPolling {
                             data.setPaymentMode(rawOrder.getPaymentMode());
                             data.setPaymentId(rawOrder.getPaymentId());
                             data.setState(rawOrder.getState());
-                            data.setCreateDate(DateUtils.formatDateTime(rawOrder.getCreateDate()));
+                            data.setCreateTime(DateUtils.formatDateTime(rawOrder.getCreateTime()));
+                            data.setUpdateTime(DateUtils.formatDateTime(rawOrder.getUpdateTime()));
                             Map<String, CtOrderDetail> orderDetailsMap = taskCache.getCacheOrderDetails(rawOrder.getId());
                             List<WsOrderDetailData> orderDetailList = new ArrayList<>();
                             if (orderDetailsMap != null) {
