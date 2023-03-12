@@ -1,7 +1,7 @@
 rocketmq:
-  name-server: 10.1.120.100:9876
+  name-server: 10.1.120.101:9876;10.1.120.102:9876
   producer:
-    group: ct-producer-dev
+    group: ct-producer-prod
     send-message-timeout: 10000 # 消息发送超时时长，默认3s
     retry-times-when-send-failed: 3 # 同步发送消息失败重试次数，默认2
     retry-times-when-send-async-failed: 3 # 异步发送消息失败重试次数，默认2

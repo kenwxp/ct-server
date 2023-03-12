@@ -14,7 +14,7 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 public class DetectionServerApplication {
     public static void main(String[] args) {
-        // System.setProperty("spring.devtools.restart.enabled", "false");
+        System.setProperty("spring.devtools.restart.enabled", "false");
         SpringApplication.run(DetectionServerApplication.class, args);
         System.out.println("云时代检测服务启动成功");
     }

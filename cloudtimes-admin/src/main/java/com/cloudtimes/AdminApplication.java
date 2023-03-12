@@ -12,7 +12,7 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 public class AdminApplication {
     public static void main(String[] args) {
-        // System.setProperty("spring.devtools.restart.enabled", "false");
+        System.setProperty("spring.devtools.restart.enabled", "false");
         SpringApplication.run(AdminApplication.class, args);
         System.out.println("云时代管理平台启动成功");
     }

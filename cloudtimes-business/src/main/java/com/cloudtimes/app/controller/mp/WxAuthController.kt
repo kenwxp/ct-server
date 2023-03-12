@@ -132,7 +132,11 @@ class WxAuthController {
             val accessTokenResult = weixinOfficialApiService.getMPAccessToken()
             val wxResultObj = JSONObject.parseObject(accessTokenResult)
             accessToken = wxResultObj.getString("access_token")
-            redisCache.setCacheObject(CacheConstants.WX_ACCESS_TOKEN_KEY, accessToken, 7200, TimeUnit.SECONDS)
+            if (accessToken != null) {
+                redisCache.setCacheObject(CacheConstants.WX_ACCESS_TOKEN_KEY, accessToken, 7200, TimeUnit.SECONDS)
+            } else {
+                return AjaxResult.error(accessTokenResult);
+            }
         }
 
         var ticket = ""

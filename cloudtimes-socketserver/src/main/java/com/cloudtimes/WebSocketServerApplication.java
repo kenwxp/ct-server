@@ -13,7 +13,7 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class, SecurityAutoConfiguration.class})
 public class WebSocketServerApplication {
     public static void main(String[] args) {
-        // System.setProperty("spring.devtools.restart.enabled", "false");
+        System.setProperty("spring.devtools.restart.enabled", "false");
         SpringApplication.run(WebSocketServerApplication.class, args);
         System.out.println("云时代WebSocket服务启动成功");
     }
