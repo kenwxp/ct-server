@@ -4,10 +4,9 @@ import com.cloudtimes.common.core.domain.ApiResult;
 import com.cloudtimes.common.utils.SecurityUtils;
 import com.cloudtimes.station.domain.*;
 import com.cloudtimes.station.service.ICtSuperviseStationService;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -110,5 +109,15 @@ public class CtSuperviseStationController {
     public ApiResult finishTask(@RequestBody FinishTaskReq param) {
         superviseStationService.finishTask(SecurityUtils.getUserId(), param);
         return new ApiResult().success();
+    }
+
+
+    @Operation(summary = "结束任务接口", description = "station:supervise:localVideo")
+//    @PreAuthorize("@ss.hasPermi('station:supervise:finishTask')")
+    @PostMapping(value = "/localVideo")
+    public ApiResult<GetLocalVideoResp> getLocalVideo(@RequestBody GetLocalVideoReq param) {
+//        superviseStationService.finishTask(SecurityUtils.getUserId(), param);
+        GetLocalVideoResp localVideo = superviseStationService.getLocalVideo(SecurityUtils.getUserId(), param);
+        return new ApiResult().success(localVideo);
     }
 }

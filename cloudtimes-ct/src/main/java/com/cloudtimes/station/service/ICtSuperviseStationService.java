@@ -83,4 +83,13 @@ public interface ICtSuperviseStationService {
      * @return
      */
     public void finishTask(Long userId, FinishTaskReq param);
+
+    /**
+     * 获取播放链接
+     *
+     * @param userId
+     * @param param
+     * @return
+     */
+    public GetLocalVideoResp getLocalVideo(Long userId, GetLocalVideoReq param);
 }

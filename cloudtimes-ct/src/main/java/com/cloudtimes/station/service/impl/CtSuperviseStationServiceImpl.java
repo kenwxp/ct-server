@@ -19,6 +19,8 @@ import com.cloudtimes.mq.service.CtCashMqSenderService;
 import com.cloudtimes.mq.service.CtOpenDoorService;
 import com.cloudtimes.partner.agora.service.CtAgoraApiService;
 import com.cloudtimes.partner.config.PartnerConfig;
+import com.cloudtimes.partner.hik.domain.VideoData;
+import com.cloudtimes.partner.hik.service.ICtHikApiService;
 import com.cloudtimes.resources.domain.CtMediaTemplate;
 import com.cloudtimes.resources.mapper.CtMediaTemplateMapper;
 import com.cloudtimes.station.domain.*;
@@ -373,6 +375,9 @@ public class CtSuperviseStationServiceImpl implements ICtSuperviseStationService
         taskCache.deleteCacheTask(param.getTaskId());
     }
 
+    @Autowired
+    private ICtHikApiService hikApiService;
+
     /**
      * 获取播放链接
      *
@@ -382,7 +387,27 @@ public class CtSuperviseStationServiceImpl implements ICtSuperviseStationService
      */
     @Override
     public GetLocalVideoResp getLocalVideo(Long userId, GetLocalVideoReq param) {
-
-        return null;
+        String deviceId = param.getDeviceId();
+        String beginTime = param.getBeginTime();
+        String endTime = param.getEndTime();
+        CtDevice device = deviceMapper.selectCtDeviceById(deviceId);
+        if (device == null) {
+            throw new ServiceException("无法获取设备信息");
+        }
+        if (!StringUtils.equals(device.getDeviceType(), DeviceType.CAMERA.getCode()) && !StringUtils.equals(device.getDeviceType(), DeviceType.NVR_CAMERA.getCode())) {
+            throw new ServiceException("设备类型错误");
+        }
+        int channelNo = 1;
+        if (StringUtils.equals(device.getDeviceType(), DeviceType.NVR_CAMERA.getCode())) {
+            channelNo = device.getDeviceChannel();
+        }
+        VideoData playbackAddress = hikApiService.getPlaybackAddress(device.getDeviceSerial(), channelNo, "1", beginTime, endTime);
+        if (playbackAddress == null) {
+            throw new ServiceException("获取回放连接失败");
+        }
+        GetLocalVideoResp getLocalVideoResp = new GetLocalVideoResp();
+        getLocalVideoResp.setUrl(playbackAddress.getUrl());
+        getLocalVideoResp.setToken(playbackAddress.getToken());
+        return getLocalVideoResp;
     }
 }
