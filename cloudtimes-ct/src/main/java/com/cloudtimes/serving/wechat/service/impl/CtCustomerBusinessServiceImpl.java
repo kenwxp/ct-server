@@ -13,7 +13,7 @@ import com.cloudtimes.hardwaredevice.domain.CtStore;
 import com.cloudtimes.hardwaredevice.mapper.CtStoreMapper;
 import com.cloudtimes.mq.service.CtCashMqSenderService;
 import com.cloudtimes.serving.cash.service.ICtCashBusinessService;
-import com.cloudtimes.serving.common.CtTaskInnerService;
+import com.cloudtimes.serving.common.CtTaskDistributionService;
 import com.cloudtimes.serving.wechat.domain.ScanCodeReq;
 import com.cloudtimes.serving.wechat.domain.ScanCodeResp;
 import com.cloudtimes.serving.wechat.service.ICtCustomerBusinessService;
@@ -28,9 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @DataSource(DataSourceType.CT)
 @Service
@@ -46,7 +44,7 @@ public class CtCustomerBusinessServiceImpl implements ICtCustomerBusinessService
     @Autowired
     private CtOrderMapper orderMapper;
     @Autowired
-    private CtTaskInnerService taskInnerService;
+    private CtTaskDistributionService taskInnerService;
     @Autowired
     private CtTaskCache taskCache;
     @Autowired

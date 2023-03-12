@@ -1,6 +1,5 @@
 package com.cloudtimes.mq.service;
 
-import cn.hutool.core.date.DateUtil;
 import com.cloudtimes.cache.CtDoorStateCache;
 import com.cloudtimes.common.enums.ChannelType;
 import com.cloudtimes.common.mq.DoorMessageMqData;
@@ -11,11 +10,10 @@ import com.cloudtimes.hardwaredevice.domain.CtDevice;
 import com.cloudtimes.hardwaredevice.domain.CtOpenDoorLogs;
 import com.cloudtimes.hardwaredevice.mapper.CtDeviceMapper;
 import com.cloudtimes.hardwaredevice.mapper.CtOpenDoorLogsMapper;
-import com.cloudtimes.serving.common.CtTaskInnerService;
+import com.cloudtimes.serving.common.CtTaskDistributionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
@@ -29,7 +27,7 @@ public class CtDoorMessageService {
     @Autowired
     private CtOpenDoorLogsMapper doorLogsMapper;
     @Autowired
-    private CtTaskInnerService taskInnerService;
+    private CtTaskDistributionService taskInnerService;
 
     public void handleStateMessage(DoorMessageMqData data) {
 //        log.info("处理门禁状态报文：门禁序列号：{}", data.getDeviceSerial());

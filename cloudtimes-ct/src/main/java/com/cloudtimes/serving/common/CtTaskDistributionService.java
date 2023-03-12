@@ -5,6 +5,7 @@ import com.cloudtimes.cache.CtTaskCache;
 import com.cloudtimes.common.enums.AcceptTaskType;
 import com.cloudtimes.common.enums.OpenDoorOption;
 import com.cloudtimes.common.exception.ServiceException;
+import com.cloudtimes.common.redislock.RedissonLock;
 import com.cloudtimes.common.utils.StringUtils;
 import com.cloudtimes.hardwaredevice.domain.CtOpenDoorLogs;
 import com.cloudtimes.hardwaredevice.domain.CtStore;
@@ -29,7 +30,7 @@ import java.util.Map;
 
 @Service
 @Slf4j
-public class CtTaskInnerService {
+public class CtTaskDistributionService {
     @Autowired
     private CtStoreMapper storeMapper;
     @Autowired
@@ -44,6 +45,8 @@ public class CtTaskInnerService {
     private CtCustomerServiceCache customerServiceCache;
     @Autowired
     private CtSuperviseLogsMapper superviseLogsMapper;
+    @Autowired
+    RedissonLock redissonLock;
 
     /**
      * 门店分配任务
@@ -52,15 +55,14 @@ public class CtTaskInnerService {
      * @return
      */
     public CtTask distributeTask(String storeId, String doorLogId) {
-
-
         log.info("开始分配任务：门店编号：{}", storeId);
         CtStore dbStore = storeMapper.selectCtStoreById(storeId);
         if (dbStore == null) {
             throw new ServiceException("无法获取门店信息");
         }
         if (StringUtils.equals(dbStore.getIsSupervise(), "1")) {
-            synchronized (CtTaskInnerService.class) {
+            redissonLock.lock(storeId, 10);
+            try {
                 // 值守中分配新任务
                 Map<String, CtTask> dbTasks = taskCache.getAllTasksOfStore(dbStore.getId());
                 if (StringUtils.isEmpty(dbTasks)) {
@@ -129,6 +131,8 @@ public class CtTaskInnerService {
                         return task;
                     }
                 }
+            } finally {
+                redissonLock.release(storeId);
             }
         }
         return null;

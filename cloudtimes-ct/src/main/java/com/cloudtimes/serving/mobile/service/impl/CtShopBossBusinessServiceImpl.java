@@ -32,7 +32,7 @@ import com.cloudtimes.mq.service.CtWebMqSenderService;
 import com.cloudtimes.partner.hik.domain.VideoData;
 import com.cloudtimes.partner.hik.service.ICtHikApiService;
 import com.cloudtimes.resources.service.ICtRegionService;
-import com.cloudtimes.serving.common.CtTaskInnerService;
+import com.cloudtimes.serving.common.CtTaskDistributionService;
 import com.cloudtimes.serving.mobile.domain.*;
 import com.cloudtimes.serving.mobile.service.ICtShopBossBusinessService;
 import com.cloudtimes.supervise.domain.*;
@@ -75,7 +75,7 @@ public class CtShopBossBusinessServiceImpl implements ICtShopBossBusinessService
     private CtRocketMqProducer producer;
 
     @Autowired
-    private CtTaskInnerService taskInnerService;
+    private CtTaskDistributionService taskInnerService;
 
     @Autowired
     private CtTaskMapper taskMapper;

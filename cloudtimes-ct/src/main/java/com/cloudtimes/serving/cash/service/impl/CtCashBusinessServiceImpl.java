@@ -35,7 +35,7 @@ import com.cloudtimes.partner.weixin.domain.WxpayfaceAuthInfoResp;
 import com.cloudtimes.product.domain.CtShopProduct;
 import com.cloudtimes.product.mapper.CtShopProductMapper;
 import com.cloudtimes.serving.cash.service.ICtCashBusinessService;
-import com.cloudtimes.serving.common.CtTaskInnerService;
+import com.cloudtimes.serving.common.CtTaskDistributionService;
 import com.cloudtimes.supervise.domain.*;
 import com.cloudtimes.supervise.mapper.CtOrderDetailMapper;
 import com.cloudtimes.supervise.mapper.CtOrderMapper;
@@ -71,7 +71,7 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
     @Autowired
     private CtShopProductMapper shopProductMapper;
     @Autowired
-    private CtTaskInnerService taskInnerService;
+    private CtTaskDistributionService taskInnerService;
     @Autowired
     private CtShoppingMapper shoppingMapper;
     @Autowired
