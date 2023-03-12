@@ -85,10 +85,9 @@ public class CtTaskDistributionService {
                     // 开门日志获取
                     CtOpenDoorLogs openLog = openDoorLogsMapper.selectLatestOpenDoorLogByStore(storeId, OpenDoorOption.TRIGGER_OPEN_DOOR.getCode());
                     if (openLog != null) {
-                        doorLogId = openLog.getId();
+                        newTask.setDoorLogId(openLog.getId());
                     }
                 }
-                newTask.setDoorLogId(doorLogId);
                 newTask.setSuperviseArea("");
                 newTask.setState("0");
                 newTask.setDelFlag("0");
