@@ -5,6 +5,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.cloudtimes.agent.dto.response.CtAgentCommissionSettlementDto;
 import com.cloudtimes.common.utils.DateUtils;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,13 +34,12 @@ import com.cloudtimes.common.core.page.TableDataInfo;
  */
 @RestController
 @RequestMapping("/account/commission_settlement")
+@Tag(name = "销售佣金结算")
 public class CtAgentCommissionSettlementController extends BaseController {
     @Autowired
     private ICtAgentCommissionSettlementService ctAgentCommissionSettlementService;
 
-    /**
-     * 查询销售佣金结算列表
-     */
+    @Operation(summary = "查询销售佣金结算列表")
     @PreAuthorize("@ss.hasPermi('account:commission_settlement:list')")
     @GetMapping("/list")
     public TableDataInfo list(CtAgentCommissionSettlement ctAgentCommissionSettlement) {
@@ -47,9 +48,7 @@ public class CtAgentCommissionSettlementController extends BaseController {
         return getDataTable(list);
     }
 
-    /**
-     * 查询销售佣金结算列表
-     */
+    @Operation(summary = "查询销售佣金结算列表")
     @GetMapping("/commissionSettlementList")
     public TableDataInfo commissionSettlementList(CtAgentCommissionSettlement ctAgentCommissionSettlement) {
         startPage();
@@ -57,9 +56,7 @@ public class CtAgentCommissionSettlementController extends BaseController {
         return getDataTable(list);
     }
 
-    /**
-     * 导出销售佣金结算列表
-     */
+    @Operation(summary = "导出销售佣金结算列表")
     @PreAuthorize("@ss.hasPermi('account:commission_settlement:export')")
     @Log(title = "销售佣金结算", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
@@ -69,18 +66,14 @@ public class CtAgentCommissionSettlementController extends BaseController {
         util.exportExcel(response, list, "销售佣金结算数据");
     }
 
-    /**
-     * 获取销售佣金结算详细信息
-     */
+    @Operation(summary = "获取销售佣金结算详细信息")
     //@PreAuthorize("@ss.hasPermi('account:commission_settlement:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") String id) {
         return AjaxResult.success(ctAgentCommissionSettlementService.selectCtAgentCommissionSettlementById(id));
     }
 
-    /**
-     * 新增销售佣金结算
-     */
+    @Operation(summary = "新增销售佣金结算")
     @PreAuthorize("@ss.hasPermi('account:commission_settlement:add')")
     @Log(title = "销售佣金结算", businessType = BusinessType.INSERT)
     @PostMapping
@@ -88,9 +81,7 @@ public class CtAgentCommissionSettlementController extends BaseController {
         return toAjax(ctAgentCommissionSettlementService.insertCtAgentCommissionSettlement(ctAgentCommissionSettlement));
     }
 
-    /**
-     * 修改销售佣金结算
-     */
+    @Operation(summary = "修改销售佣金结算")
 //    @PreAuthorize("@ss.hasPermi('account:commission_settlement:edit')")
     @Log(title = "销售佣金结算", businessType = BusinessType.UPDATE)
     @PutMapping
@@ -99,9 +90,7 @@ public class CtAgentCommissionSettlementController extends BaseController {
         return toAjax(ctAgentCommissionSettlementService.updateCtAgentCommissionSettlement(ctAgentCommissionSettlement));
     }
 
-    /**
-     * 删除销售佣金结算
-     */
+    @Operation(summary = "删除销售佣金结算")
     @PreAuthorize("@ss.hasPermi('account:commission_settlement:remove')")
     @Log(title = "销售佣金结算", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")

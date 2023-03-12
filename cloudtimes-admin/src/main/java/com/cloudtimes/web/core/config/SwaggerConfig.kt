@@ -31,6 +31,22 @@ class SwaggerConfig {
     }
 
     @Bean
+    fun productGroup(): GroupedOpenApi {
+        return GroupedOpenApi.builder()
+            .group("库存API")
+            .pathsToMatch("/product/**")
+            .build()
+    }
+
+    @Bean
+    fun promotionGroup(): GroupedOpenApi {
+        return GroupedOpenApi.builder()
+            .group("营销API")
+            .pathsToMatch("/promotion/**")
+            .build()
+    }
+
+    @Bean
     fun springShopOpenAPI(): OpenAPI {
         return OpenAPI()
             .info(

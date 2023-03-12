@@ -8,6 +8,8 @@ import com.cloudtimes.common.core.domain.AjaxResult
 import com.cloudtimes.common.core.page.TableDataInfo
 import com.cloudtimes.common.enums.BusinessType
 import com.cloudtimes.common.utils.poi.ExcelUtil
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
@@ -21,13 +23,12 @@ import javax.servlet.http.HttpServletResponse
  */
 @RestController
 @RequestMapping("/agent/agent_activity")
+@Tag(name = "代理活动")
 class CtAgentActivityController : BaseController() {
     @Autowired
     private val ctAgentActivityService: ICtAgentActivityService? = null
 
-    /**
-     * 查询代理活动列表
-     */
+    @Operation(summary = "查询代理活动列表")
     @PreAuthorize("@ss.hasPermi('agent:agent_activity:list')")
     @GetMapping("/list")
     fun list(ctAgentActivity: CtAgentActivity?): TableDataInfo {
@@ -38,9 +39,7 @@ class CtAgentActivityController : BaseController() {
         return getDataTable(list)
     }
 
-    /**
-     * 导出代理活动列表
-     */
+    @Operation(summary = "导出代理活动列表")
     @PreAuthorize("@ss.hasPermi('agent:agent_activity:export')")
     @Log(title = "代理活动", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
@@ -52,18 +51,14 @@ class CtAgentActivityController : BaseController() {
         util.exportExcel(response, list, "代理活动数据")
     }
 
-    /**
-     * 获取代理活动详细信息
-     */
+    @Operation(summary = "获取代理活动详细信息")
     @PreAuthorize("@ss.hasPermi('agent:agent_activity:query')")
     @GetMapping(value = ["/{id}"])
     fun getInfo(@PathVariable("id") id: String): AjaxResult {
         return AjaxResult.success(ctAgentActivityService!!.selectActivityById(id))
     }
 
-    /**
-     * 新增代理活动
-     */
+    @Operation(summary = "新增代理活动")
     @PreAuthorize("@ss.hasPermi('agent:agent_activity:add')")
     @Log(title = "代理活动", businessType = BusinessType.INSERT)
     @PostMapping
@@ -71,9 +66,7 @@ class CtAgentActivityController : BaseController() {
         return toAjax(ctAgentActivityService!!.insertCtAgentActivity(ctAgentActivity!!))
     }
 
-    /**
-     * 修改代理活动
-     */
+    @Operation(summary = "修改代理活动")
     @PreAuthorize("@ss.hasPermi('agent:agent_activity:edit')")
     @Log(title = "代理活动", businessType = BusinessType.UPDATE)
     @PutMapping
@@ -81,9 +74,7 @@ class CtAgentActivityController : BaseController() {
         return toAjax(ctAgentActivityService!!.updateCtAgentActivity(ctAgentActivity!!))
     }
 
-    /**
-     * 删除代理活动
-     */
+    @Operation(summary = "删除代理活动")
     @PreAuthorize("@ss.hasPermi('agent:agent_activity:remove')")
     @Log(title = "代理活动", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")

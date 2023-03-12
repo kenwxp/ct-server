@@ -3,6 +3,7 @@ package com.cloudtimes.hardwaredevice.mapper;
 import java.util.List;
 
 import com.cloudtimes.hardwaredevice.domain.CtOpenDoorLogs;
+import com.cloudtimes.hardwaredevice.domain.dto.CtOpenDoorLogsDto;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -28,6 +29,8 @@ public interface CtOpenDoorLogsMapper {
      */
 
     public List<CtOpenDoorLogs> selectCtOpenDoorLogsList(CtOpenDoorLogs ctOpenDoorLogs);
+
+    public List<CtOpenDoorLogsDto> selectCtOpenDoorLogsListPlus(CtOpenDoorLogs ctOpenDoorLogs);
 
     /**
      * 查询最近的开门日志

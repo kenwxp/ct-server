@@ -4,6 +4,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import com.cloudtimes.agent.dto.response.CtAgentDividendSettlementDto;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,13 +33,12 @@ import com.cloudtimes.common.core.page.TableDataInfo;
  */
 @RestController
 @RequestMapping("/account/dividend_settlement")
+@Tag(name = "分润结算审核")
 public class CtAgentDividendSettlementController extends BaseController {
     @Autowired
     private ICtAgentDividendSettlementService ctAgentDividendSettlementService;
 
-    /**
-     * 查询分润结算审核列表
-     */
+    @Operation(summary = "查询分润结算审核列表")
     @PreAuthorize("@ss.hasPermi('account:dividend_settlement:list')")
     @GetMapping("/list")
     public TableDataInfo list(CtAgentDividendSettlement ctAgentDividendSettlement) {
@@ -46,9 +47,7 @@ public class CtAgentDividendSettlementController extends BaseController {
         return getDataTable(list);
     }
 
-    /**
-     * 导出分润结算审核列表
-     */
+    @Operation(summary = "导出分润结算审核列表")
     @PreAuthorize("@ss.hasPermi('account:dividend_settlement:export')")
     @Log(title = "分润结算审核", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
@@ -58,18 +57,14 @@ public class CtAgentDividendSettlementController extends BaseController {
         util.exportExcel(response, list, "分润结算审核数据");
     }
 
-    /**
-     * 获取分润结算审核详细信息
-     */
+    @Operation(summary = "获取分润结算审核详细信息")
     //  @PreAuthorize("@ss.hasPermi('account:dividend_settlement:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") String id) {
         return AjaxResult.success(ctAgentDividendSettlementService.selectCtAgentDividendSettlementById(id));
     }
 
-    /**
-     * 新增分润结算审核
-     */
+    @Operation(summary = "新增分润结算审核")
     @PreAuthorize("@ss.hasPermi('account:dividend_settlement:add')")
     @Log(title = "分润结算审核", businessType = BusinessType.INSERT)
     @PostMapping
@@ -77,9 +72,7 @@ public class CtAgentDividendSettlementController extends BaseController {
         return toAjax(ctAgentDividendSettlementService.insertCtAgentDividendSettlement(ctAgentDividendSettlement));
     }
 
-    /**
-     * 修改分润结算审核
-     */
+    @Operation(summary = "修改分润结算审核")
     //  @PreAuthorize("@ss.hasPermi('account:dividend_settlement:edit')")
     @Log(title = "分润结算审核", businessType = BusinessType.UPDATE)
     @PutMapping

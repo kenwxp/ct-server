@@ -44,13 +44,6 @@ public class CtCameraDeviceMonitorManager {
     @Autowired
     private CtRocketMqProducer mqProducer;
 
-    //读写锁
-    private final ReadWriteLock rwLock = new ReentrantReadWriteLock();
-    //获取写锁
-    private final Lock wLock = rwLock.writeLock();
-    //获取读锁
-    private final Lock rLock = rwLock.readLock();
-
     @Autowired
     private RedisCache redisCache;
 
@@ -83,43 +76,37 @@ public class CtCameraDeviceMonitorManager {
     }
 
     public void loadData() {
-        wLock.lock();
-        try {
-            if (!this.isLoadDataTime()) {
-                return;
-            }
-            log.info("当前监控中的摄头机设备数量：[" + getDeviceNumber() + "]");
-            CtDevice query = new CtDevice();
-            // 查询普通摄像头列表
-            query.setDeviceType(DeviceType.CAMERA.getCode());
-            List<CtDevice> devices = deviceService.selectCtDeviceList(query);
-            // 查询连接nvr的poe摄像头列表
-            query.setDeviceType(DeviceType.NVR_CAMERA.getCode());
-            devices.addAll(deviceService.selectCtDeviceList(query));
-            for (CtDevice ctDevice : devices) {
-                String cacheKey = getCacheKey(ctDevice);
-                if (redisCache.hasKey(cacheKey)) {
-                    if (ctDevice.getState().equals(DeviceState.Forbidden.getCode())) {
-                        redisCache.deleteObject(cacheKey);
-                    }
-                }
-                if (!ctDevice.getState().equals(DeviceState.Forbidden.getCode())) {
-                    if (!redisCache.hasKey(cacheKey)) {
-                        redisCache.setCacheObject(cacheKey, ctDevice);
-                        DetectionData detectionData = new DetectionData();
-                        detectionData.setOption(1);
-                        detectionData.setDevice(ctDevice);
-                        sendToMQ(detectionData, 6);//2min延迟发送
-                    }
-                }
-            }
-            DetectionData detectionData = new DetectionData();
-            detectionData.setOption(0);
-            sendToMQ(detectionData, 4);// 30s检查新设备
-
-        } finally {
-            wLock.unlock();
+        if (!this.isLoadDataTime()) {
+            return;
         }
+        log.info("当前监控中的摄头机设备数量：[" + getDeviceNumber() + "]");
+        CtDevice query = new CtDevice();
+        // 查询普通摄像头列表
+        query.setDeviceType(DeviceType.CAMERA.getCode());
+        List<CtDevice> devices = deviceService.selectCtDeviceList(query);
+        // 查询连接nvr的poe摄像头列表
+        query.setDeviceType(DeviceType.NVR_CAMERA.getCode());
+        devices.addAll(deviceService.selectCtDeviceList(query));
+        for (CtDevice ctDevice : devices) {
+            String cacheKey = getCacheKey(ctDevice);
+            if (redisCache.hasKey(cacheKey)) {
+                if (ctDevice.getState().equals(DeviceState.Forbidden.getCode())) {
+                    redisCache.deleteObject(cacheKey);
+                }
+            }
+            if (!ctDevice.getState().equals(DeviceState.Forbidden.getCode())) {
+                if (!redisCache.hasKey(cacheKey)) {
+                    redisCache.setCacheObject(cacheKey, ctDevice);
+                    DetectionData detectionData = new DetectionData();
+                    detectionData.setOption(1);
+                    detectionData.setDevice(ctDevice);
+                    sendToMQ(detectionData, 6);//2min延迟发送
+                }
+            }
+        }
+        DetectionData detectionData = new DetectionData();
+        detectionData.setOption(0);
+        sendToMQ(detectionData, 4);// 30s检查新设备
     }
 
     public void sendToMQ(DetectionData detectionData, int delayLevel) {

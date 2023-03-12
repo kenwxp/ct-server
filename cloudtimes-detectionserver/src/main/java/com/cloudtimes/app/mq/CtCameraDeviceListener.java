@@ -5,6 +5,7 @@ import com.cloudtimes.app.domain.DetectionData;
 import com.cloudtimes.app.manager.CtCameraDeviceMonitorManager;
 import com.cloudtimes.common.constant.RocketMQConstants;
 import com.cloudtimes.common.enums.DeviceState;
+import com.cloudtimes.common.redislock.RedissonLock;
 import com.cloudtimes.common.utils.StringUtils;
 import com.cloudtimes.enums.DeviceType;
 import com.cloudtimes.hardwaredevice.domain.CtDevice;
@@ -46,6 +47,11 @@ public class CtCameraDeviceListener implements RocketMQListener<DetectionData>, 
 
     @Autowired
     private CtCameraDeviceMonitorManager monitorManager;
+
+    @Autowired
+    private RedissonLock redissonLock;
+
+    private static final String OBJ_LOCK = "OBJ_LOCK";
 
     public void checkCamera(CtDevice ctDevice) {
         log.info("开始检测摄像头，设备序列号:{}", ctDevice.getDeviceSerial());
@@ -110,12 +116,28 @@ public class CtCameraDeviceListener implements RocketMQListener<DetectionData>, 
         if (!enabled) {
             return;
         }
+
+        if (data.getOption() == 1 && data.getDevice() != null) {
+            String redisLockKey = OBJ_LOCK + "_" + data.getDevice().getId();
+            if (redissonLock.lock(redisLockKey, 120)) {
+                try {
+                    log.info("正在检测摄像机状态:[DeviceSerial:" + data.getDevice().getDeviceSerial() + " name:" + data.getDevice().getName() + "] ");
+                    this.checkCamera(data.getDevice());
+                } finally {
+                    redissonLock.release(redisLockKey);
+                }
+            }
+        }
+
         if (data.getOption() == 0) {
-            // 获取新设备
-            monitorManager.loadData();
-        } else {
-            log.info("正在检测摄像机状态:[DeviceSerial:" + data.getDevice().getDeviceSerial() + " name:" + data.getDevice().getName() + "] ");
-            this.checkCamera(data.getDevice());
+            String redisLockKey = OBJ_LOCK + "_" + data.getOption();
+            if (redissonLock.lock(redisLockKey, 120)) {
+                try {
+                    monitorManager.loadData();
+                } finally {
+                    redissonLock.release(redisLockKey);
+                }
+            }
         }
     }
 

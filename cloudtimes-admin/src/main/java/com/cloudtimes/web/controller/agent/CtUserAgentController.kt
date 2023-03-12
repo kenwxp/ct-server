@@ -13,6 +13,8 @@ import com.cloudtimes.common.enums.AgentState
 import com.cloudtimes.common.enums.BusinessType
 import com.cloudtimes.common.utils.DateUtils
 import com.cloudtimes.common.utils.poi.ExcelUtil
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
@@ -26,6 +28,7 @@ import javax.servlet.http.HttpServletResponse
  */
 @RestController
 @RequestMapping("/agent/agent")
+@Tag(name = "代理用户")
 class CtUserAgentController : BaseController() {
     @Autowired
     private lateinit var userAgentService: ICtUserAgentService
@@ -33,9 +36,7 @@ class CtUserAgentController : BaseController() {
     @Autowired
     private lateinit var userService: ICtUserService
 
-    /**
-     * 查询用户列表
-     */
+    @Operation(summary = "查询用户列表")
     // @PreAuthorize("@ss.hasPermi('agent:agent:agentUserlist')")
     @GetMapping("/agentUserlist")
     fun listUser(ctUser: CtUser?): TableDataInfo? {
@@ -45,9 +46,7 @@ class CtUserAgentController : BaseController() {
     }
 
 
-    /**
-     * 获取代理详细信息
-     */
+    @Operation(summary = "获取代理详细信息")
 //    @PreAuthorize("@ss.hasPermi('agent:agent:query')")
     @GetMapping("/getAgentUser/{userId}")
     fun getAgentUser(@PathVariable("userId") userId: String): AjaxResult {
@@ -55,9 +54,7 @@ class CtUserAgentController : BaseController() {
     }
 
 
-    /**
-     * 导出代理列表
-     */
+    @Operation(summary = "导出代理列表")
     @PreAuthorize("@ss.hasPermi('agent:agent:export')")
     @Log(title = "代理", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
@@ -69,18 +66,14 @@ class CtUserAgentController : BaseController() {
         util.exportExcel(response, list, "代理数据")
     }
 
-    /**
-     * 获取代理详细信息
-     */
+    @Operation(summary = "获取代理详细信息")
     @PreAuthorize("@ss.hasPermi('agent:agent:query')")
     @GetMapping(value = ["/{userId}"])
     fun getInfo(@PathVariable("userId") userId: String): AjaxResult {
         return AjaxResult.success(userAgentService.selectCtUserAgentByUserId(userId))
     }
 
-    /**
-     * 新增代理
-     */
+    @Operation(summary = "新增代理")
     @PreAuthorize("@ss.hasPermi('agent:agent:add')")
     @Log(title = "代理", businessType = BusinessType.INSERT)
     @PostMapping
@@ -89,7 +82,6 @@ class CtUserAgentController : BaseController() {
     }
 
 
-    //  @PreAuthorize("@ss.hasPermi('agent:agent:edit')")
     @Log(title = "代理", businessType = BusinessType.UPDATE)
     @PutMapping("/updateAgentUser")
     fun updateAgentUser(@RequestBody ctUser: CtUser): AjaxResult? {

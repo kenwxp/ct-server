@@ -32,6 +32,28 @@
         </where>
     </select>
 
+    <select id="selectCtOpenDoorLogsListPlus" parameterType="CtOpenDoorLogs" resultType="CtOpenDoorLogsDto">
+        SELECT
+        dl.*,
+        s.`name` AS store_name,
+        d.`name` AS device_name,
+        u.account AS member_name
+        FROM
+        ct_open_door_logs dl
+        LEFT JOIN ct_device d ON d.id = dl.device_id
+        LEFT JOIN ct_store s ON s.id = dl.store_id
+        LEFT JOIN ct_user u ON u.id = dl.member_id
+        <where>
+            <if test="storeId != null  and storeId != ''">and dl.store_id = #{storeId}</if>
+            <if test="deviceId != null  and deviceId != ''">and dl.device_id = #{deviceId}</if>
+            <if test="memberId != null  and memberId != ''">and dl.member_id = #{memberId}</if>
+            <if test="optChannel != null  and optChannel != ''">and dl.opt_channel = #{optChannel}</if>
+            <if test="optType != null  and optType != ''">and dl.opt_type = #{optType}</if>
+            <if test="state != null  and state != ''">and dl.state = #{state}</if>
+            <if test="date != null ">and dl.date = #{date}</if>
+        </where>
+    </select>
+
     <select id="selectLatestOpenDoorLogByStore" resultType="CtOpenDoorLogs">
         <include refid="selectCtOpenDoorLogsVo"/>
         where  store_id = #{storeId}

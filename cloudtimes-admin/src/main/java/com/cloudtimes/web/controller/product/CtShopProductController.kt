@@ -8,6 +8,8 @@ import com.cloudtimes.common.enums.BusinessType
 import com.cloudtimes.common.utils.poi.ExcelUtil
 import com.cloudtimes.product.domain.CtShopProduct
 import com.cloudtimes.product.service.ICtShopProductService
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
@@ -21,6 +23,7 @@ import javax.servlet.http.HttpServletResponse
  */
 @RestController
 @RequestMapping("/product/shop_product")
+@Tag(name = "店铺商品")
 class CtShopProductController : BaseController() {
     @Autowired
     private lateinit var ctShopProductService: ICtShopProductService
@@ -30,6 +33,7 @@ class CtShopProductController : BaseController() {
      */
     @PreAuthorize("@ss.hasPermi('product:shop_product:list')")
     @GetMapping("/list")
+    @Operation(summary = "查询店铺商品列表")
     fun list(ctShopProduct: CtShopProduct): TableDataInfo {
         startPage()
         val list: List<CtShopProduct> = ctShopProductService.selectCtShopProductList(
@@ -44,6 +48,7 @@ class CtShopProductController : BaseController() {
     @PreAuthorize("@ss.hasPermi('product:shop_product:export')")
     @Log(title = "店铺商品", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
+    @Operation(summary = "导出店铺商品列表")
     fun export(response: HttpServletResponse, ctShopProduct: CtShopProduct) {
         val list = ctShopProductService.selectCtShopProductList(ctShopProduct)
         val util = ExcelUtil(
@@ -57,6 +62,7 @@ class CtShopProductController : BaseController() {
      */
     @PreAuthorize("@ss.hasPermi('product:shop_product:query')")
     @GetMapping(value = ["/{id}"])
+    @Operation(summary = "获取店铺商品详细信息")
     fun getInfo(@PathVariable("id") id: String): AjaxResult {
         return AjaxResult.success(ctShopProductService.selectCtShopProductById(id))
     }
@@ -67,6 +73,7 @@ class CtShopProductController : BaseController() {
     @PreAuthorize("@ss.hasPermi('product:shop_product:add')")
     @Log(title = "店铺商品", businessType = BusinessType.INSERT)
     @PostMapping
+    @Operation(summary = "新增店铺商品")
     fun add(@RequestBody ctShopProduct: CtShopProduct): AjaxResult {
         return toAjax(ctShopProductService.insertCtShopProduct(ctShopProduct))
     }
@@ -77,6 +84,7 @@ class CtShopProductController : BaseController() {
     @PreAuthorize("@ss.hasPermi('product:shop_product:edit')")
     @Log(title = "店铺商品", businessType = BusinessType.UPDATE)
     @PutMapping
+    @Operation(summary = "修改店铺商品")
     fun edit(@RequestBody ctShopProduct: CtShopProduct): AjaxResult {
         return toAjax(ctShopProductService.updateCtShopProduct(ctShopProduct))
     }

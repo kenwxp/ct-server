@@ -4,6 +4,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import com.cloudtimes.agent.dto.response.CtAgentCommissionDto;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,13 +33,12 @@ import com.cloudtimes.common.core.page.TableDataInfo;
  */
 @RestController
 @RequestMapping("/account/agent_commission")
+@Tag(name = "代理销售佣金设置")
 public class CtAgentCommissionController extends BaseController {
     @Autowired
     private ICtAgentCommissionService ctAgentCommissionService;
 
-    /**
-     * 查询代理销售佣金设置列表
-     */
+    @Operation(summary = "查询代理销售佣金设置列表")
     @PreAuthorize("@ss.hasPermi('account:agent_commission:list')")
     @GetMapping("/list")
     public TableDataInfo list(CtAgentCommission ctAgentCommission) {
@@ -46,9 +47,7 @@ public class CtAgentCommissionController extends BaseController {
         return getDataTable(list);
     }
 
-    /**
-     * 导出代理销售佣金设置列表
-     */
+    @Operation(summary = "导出代理销售佣金设置列表")
     @PreAuthorize("@ss.hasPermi('account:agent_commission:export')")
     @Log(title = "代理销售佣金设置", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
@@ -58,17 +57,13 @@ public class CtAgentCommissionController extends BaseController {
         util.exportExcel(response, list, "代理销售佣金设置数据");
     }
 
-    /**
-     * 获取代理销售佣金设置详细信息
-     */
+    @Operation(summary = "获取代理销售佣金设置详细信息")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") String id) {
         return AjaxResult.success(ctAgentCommissionService.selectCtAgentCommissionByPId(id));
     }
 
-    /**
-     * 新增代理销售佣金设置
-     */
+    @Operation(summary = "新增代理销售佣金设置")
     @PreAuthorize("@ss.hasPermi('account:agent_commission:add')")
     @Log(title = "代理销售佣金设置", businessType = BusinessType.INSERT)
     @PostMapping
@@ -78,9 +73,7 @@ public class CtAgentCommissionController extends BaseController {
         return toAjax(ctAgentCommissionService.insertCtAgentCommission(ctAgentCommission));
     }
 
-    /**
-     * 修改代理销售佣金设置
-     */
+    @Operation(summary = "修改代理销售佣金设置")
     //  @PreAuthorize("@ss.hasPermi('account:agent_commission:edit')")
     @Log(title = "代理销售佣金设置", businessType = BusinessType.UPDATE)
     @PutMapping
@@ -90,9 +83,7 @@ public class CtAgentCommissionController extends BaseController {
         return toAjax(ctAgentCommissionService.updateCtAgentCommission(ctAgentCommission));
     }
 
-    /**
-     * 删除代理销售佣金设置
-     */
+    @Operation(summary = "删除代理销售佣金设置")
     @PreAuthorize("@ss.hasPermi('account:agent_commission:remove')")
     @Log(title = "代理销售佣金设置", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")

@@ -3,6 +3,7 @@ package com.cloudtimes.hardwaredevice.service.impl;
 import java.util.List;
 
 import com.cloudtimes.common.utils.DateUtils;
+import com.cloudtimes.hardwaredevice.domain.dto.CtOpenDoorLogsDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.cloudtimes.common.annotation.DataSource;
@@ -43,6 +44,11 @@ public class CtOpenDoorLogsServiceImpl implements ICtOpenDoorLogsService {
     @Override
     public List<CtOpenDoorLogs> selectCtOpenDoorLogsList(CtOpenDoorLogs ctOpenDoorLogs) {
         return ctOpenDoorLogsMapper.selectCtOpenDoorLogsList(ctOpenDoorLogs);
+    }
+
+    @Override
+    public List<CtOpenDoorLogsDto> selectCtOpenDoorLogsListPlus(CtOpenDoorLogs ctOpenDoorLogs) {
+        return ctOpenDoorLogsMapper.selectCtOpenDoorLogsListPlus(ctOpenDoorLogs);
     }
 
     /**
