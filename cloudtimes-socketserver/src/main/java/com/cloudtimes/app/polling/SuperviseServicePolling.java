@@ -77,6 +77,7 @@ public class SuperviseServicePolling {
     }
 
     private void handle() {
+        log.info("客服订阅列表：{}",JSON.toJSONString(subscribers));
 //        log.info(JSON.toJSONString(subscribers));
         if (subscribers != null && !StringUtils.isEmpty(subscribers)) {
             for (Map.Entry<String, Set<String>> userEntry :

@@ -26,13 +26,7 @@ public class HeartReportEventProcess implements BaseEventProcess {
 
     @Override
     public String process(AuthUser authUser, Object object) {
-        log.info("收银机心跳包：设备编号：" + authUser.getId());
-        // 更新收银机状态
-        CtDevice device = new CtDevice();
-        device.setId(authUser.getId());
-        device.setState(DeviceState.Online.getCode());
-        device.setUpdateTime(DateUtils.getNowDate());
-        deviceMapper.updateCtDevice(device);
+//        log.info("心跳包：收银机编号：" + authUser.getId());
         return null;
     }
 }

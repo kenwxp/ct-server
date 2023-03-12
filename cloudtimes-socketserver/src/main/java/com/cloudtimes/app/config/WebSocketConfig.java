@@ -1,7 +1,7 @@
 package com.cloudtimes.app.config;
 
-import com.cloudtimes.app.interceptor.CashWebSocketHandler;
-import com.cloudtimes.app.interceptor.SuperviseWebSocketHandler;
+import com.cloudtimes.app.handler.CashWebSocketHandler;
+import com.cloudtimes.app.handler.SuperviseWebSocketHandler;
 import com.cloudtimes.app.interceptor.TokenInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;

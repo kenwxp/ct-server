@@ -1,4 +1,4 @@
-package com.cloudtimes.app.interceptor;
+package com.cloudtimes.app.handler;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -71,7 +71,7 @@ public class SuperviseWebSocketHandler extends TextWebSocketHandler {
                 throw new ServiceException("接受数据有误");
             }
             String option = receive.getOption();
-            log.info("收到指令 CMD:[" + option + "] UserId:[" + authUser.getId() + "],");
+            log.info("管理端收到指令 CMD:[" + option + "] UserId:[" + authUser.getId() + "],");
             // 处理指令
             if (StringUtils.equals(option, FETCH_TASK)) {
                 if (receive.getData() == null) {

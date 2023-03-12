@@ -72,7 +72,7 @@ public class SuperviseTaskPolling {
     }
 
     private void handle() {
-//        log.info(JSON.toJSONString(subscribers));
+        log.info("任务订阅列表：{}",JSON.toJSONString(subscribers));
 //        log.info("轮询任务列表开始");
         if (subscribers != null && !StringUtils.isEmpty(subscribers)) {
             for (Map.Entry<String, Set<String>> userEntry :

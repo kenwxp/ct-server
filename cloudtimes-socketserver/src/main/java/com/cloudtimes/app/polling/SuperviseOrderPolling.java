@@ -67,6 +67,7 @@ public class SuperviseOrderPolling {
 
     private void handle() {
 //        log.info(JSON.toJSONString(subscribers));
+        log.info("订单订阅列表：{}",JSON.toJSONString(subscribers));
 //        log.info("轮询订单列表开始");
         if (subscribers != null && !StringUtils.isEmpty(subscribers)) {
             for (Map.Entry<String, Map<String, Set<String>>> userEntry :

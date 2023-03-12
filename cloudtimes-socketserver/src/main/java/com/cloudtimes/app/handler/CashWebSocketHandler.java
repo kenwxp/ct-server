@@ -1,4 +1,4 @@
-package com.cloudtimes.app.interceptor;
+package com.cloudtimes.app.handler;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -75,6 +75,10 @@ public class CashWebSocketHandler extends TextWebSocketHandler {
             AfterConnectedData afterConnectedData = new AfterConnectedData(ctStore.getIsSupervise());
             cashWsData.setData(afterConnectedData);
             session.sendMessage(new TextMessage(JSONObject.toJSONString(cashWsData)));
+            // 更新设备状态 为在线
+            device.setState(DeviceState.Online.getCode());
+            device.setUpdateTime(DateUtils.getNowDate());
+            deviceMapper.updateCtDevice(device);
         } else {
             throw new RuntimeException("用户登录已经失效!");
         }
@@ -95,7 +99,7 @@ public class CashWebSocketHandler extends TextWebSocketHandler {
             String payload = message.getPayload();
             CashWsData receive = JSON.parseObject(payload, CashWsData.class);
             String options = receive.getOption();
-            log.info("CashWebSocketHandler receive CMD:[" + options + "] DeviceId:[" + authUser.getId() + "],");
+            log.info("收银端收到指令 CMD:[" + options + "] DeviceId:[" + authUser.getId() + "],");
             BaseEventProcess process = SpringUtils.getBean(options);
             if (process == null) {
                 CashWsData cashWsData = new CashWsData();
@@ -141,12 +145,11 @@ public class CashWebSocketHandler extends TextWebSocketHandler {
             sessionManager.remove(authUser.getId());
             // 设备设置离线
             // 更新收银机状态
-            CtDevice device = deviceMapper.selectCtDeviceById(authUser.getId());
-            if (device != null && StringUtils.equals(device.getState(), DeviceState.Online.getCode())) {
-                device.setState(DeviceState.Offline.getCode());
-                device.setUpdateTime(DateUtils.getNowDate());
-                deviceMapper.updateCtDevice(device);
-            }
+            CtDevice device = new CtDevice();
+            device.setId(authUser.getId());
+            device.setState(DeviceState.Offline.getCode());
+            device.setUpdateTime(DateUtils.getNowDate());
+            deviceMapper.updateCtDevice(device);
         }
     }
 
