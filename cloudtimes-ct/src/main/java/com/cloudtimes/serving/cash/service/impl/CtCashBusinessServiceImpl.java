@@ -411,9 +411,11 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
             throw new ServiceException("该订单不属于当前收银机");
         }
         if (StringUtils.equals(cacheOrder.getState(), PayState.READY_TO_PAY.getCode())) {
-            if (taskCache.deleteCacheOrder(orderId)) {
-                orderMapper.deleteCtOrderById(orderId);
-            }
+            orderMapper.deleteCtOrderById(cacheOrder.getId());
+            shoppingMapper.deleteCtShoppingById(cacheOrder.getShoppingId());
+
+            taskCache.deleteCacheOrder(cacheOrder.getId());
+            taskCache.deleteCacheShopping(cacheOrder.getShoppingId());
         }
     }
 
