@@ -14,7 +14,7 @@ import com.cloudtimes.hardwaredevice.domain.CtDevice;
 import com.cloudtimes.hardwaredevice.domain.dto.CtDeviceDoorDto;
 import com.cloudtimes.hardwaredevice.service.ICtDeviceService;
 import com.cloudtimes.hardwaredevice.service.ICtStoreService;
-import com.cloudtimes.mq.service.CtOpenDoorService;
+import com.cloudtimes.mq.CtOpenDoorService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

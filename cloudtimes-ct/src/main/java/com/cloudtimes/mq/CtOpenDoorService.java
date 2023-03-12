@@ -1,4 +1,4 @@
-package com.cloudtimes.mq.service;
+package com.cloudtimes.mq;
 
 import com.alibaba.fastjson.JSON;
 import com.cloudtimes.cache.CtTaskCache;

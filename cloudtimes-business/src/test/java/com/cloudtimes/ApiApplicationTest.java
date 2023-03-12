@@ -6,7 +6,7 @@ import com.cloudtimes.common.enums.ChannelType;
 import com.cloudtimes.common.utils.JWTManager;
 import com.cloudtimes.hardwaredevice.domain.DeviceActivateReq;
 import com.cloudtimes.hardwaredevice.service.ICtDeviceService;
-import com.cloudtimes.mq.service.CtDoorMessageService;
+import com.cloudtimes.mq.CtDoorMessageService;
 import com.cloudtimes.partner.hik.domain.NvrDeviceInfoData;
 import com.cloudtimes.partner.hik.service.ICtHikApiService;
 import lombok.extern.slf4j.Slf4j;

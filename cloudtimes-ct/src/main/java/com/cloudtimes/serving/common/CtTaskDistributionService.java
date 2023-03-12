@@ -12,7 +12,7 @@ import com.cloudtimes.hardwaredevice.domain.CtStore;
 import com.cloudtimes.hardwaredevice.mapper.CtOpenDoorLogsMapper;
 import com.cloudtimes.hardwaredevice.mapper.CtStoreMapper;
 import com.cloudtimes.hardwaredevice.mapper.CtSuperviseLogsMapper;
-import com.cloudtimes.mq.service.CtWebMqSenderService;
+import com.cloudtimes.mq.CtWebMqSenderService;
 import com.cloudtimes.supervise.domain.CtCustomerService;
 import com.cloudtimes.supervise.domain.CtEvents;
 import com.cloudtimes.supervise.domain.CtOrder;
@@ -45,7 +45,8 @@ public class CtTaskDistributionService {
     private CtCustomerServiceCache customerServiceCache;
     @Autowired
     private CtSuperviseLogsMapper superviseLogsMapper;
-
+    @Autowired
+    private RedissonLock redissonLock;
 
     /**
      * 门店分配任务
@@ -60,74 +61,80 @@ public class CtTaskDistributionService {
             throw new ServiceException("无法获取门店信息");
         }
         if (StringUtils.equals(dbStore.getIsSupervise(), "1")) {
-            // 值守中分配新任务
-            Map<String, CtTask> dbTasks = taskCache.getAllTasksOfStore(dbStore.getId());
-            if (StringUtils.isEmpty(dbTasks)) {
-                CtTask newTask = new CtTask();
-                newTask.setStoreId(storeId);
-                newTask.setStoreName(dbStore.getName());
-                newTask.setContactName(dbStore.getContactName());
-                newTask.setContactPhone(dbStore.getContactPhone());
-                // 分配客服
-                String staffCode = distributeStaff();
-                if (StringUtils.isEmpty(staffCode)) {
-                    throw new ServiceException("当前无值守员在岗");
-                }
-                log.info("分配客服编号：{}", staffCode);
-                newTask.setStaffCode(staffCode);
-                newTask.setTaskType("0");
-                newTask.setDescText("门禁触发产生任务");
-                newTask.setStartTime(new Date());
-                newTask.setEndTime(new Date());
-                newTask.setIsExceptional("0");
-                if (StringUtils.isEmpty(doorLogId)) {
-                    newTask.setDescText("顾客扫码或扫脸生产任务");
-                    // 开门日志获取
-                    CtOpenDoorLogs openLog = openDoorLogsMapper.selectLatestOpenDoorLogByStore(storeId, OpenDoorOption.TRIGGER_OPEN_DOOR.getCode());
-                    if (openLog != null) {
-                        newTask.setDoorLogId(openLog.getId());
+            try {
+                if (redissonLock.lock(storeId, 10)) {
+                    // 值守中分配新任务
+                    Map<String, CtTask> dbTasks = taskCache.getAllTasksOfStore(dbStore.getId());
+                    if (StringUtils.isEmpty(dbTasks)) {
+                        CtTask newTask = new CtTask();
+                        newTask.setStoreId(storeId);
+                        newTask.setStoreName(dbStore.getName());
+                        newTask.setContactName(dbStore.getContactName());
+                        newTask.setContactPhone(dbStore.getContactPhone());
+                        // 分配客服
+                        String staffCode = distributeStaff();
+                        if (StringUtils.isEmpty(staffCode)) {
+                            throw new ServiceException("当前无值守员在岗");
+                        }
+                        log.info("分配客服编号：{}", staffCode);
+                        newTask.setStaffCode(staffCode);
+                        newTask.setTaskType("0");
+                        newTask.setDescText("门禁触发产生任务");
+                        newTask.setStartTime(new Date());
+                        newTask.setEndTime(new Date());
+                        newTask.setIsExceptional("0");
+                        if (StringUtils.isEmpty(doorLogId)) {
+                            newTask.setDescText("顾客扫码或扫脸生产任务");
+                            // 开门日志获取
+                            CtOpenDoorLogs openLog = openDoorLogsMapper.selectLatestOpenDoorLogByStore(storeId, OpenDoorOption.TRIGGER_OPEN_DOOR.getCode());
+                            if (openLog != null) {
+                                newTask.setDoorLogId(openLog.getId());
+                            }
+                        }
+                        newTask.setSuperviseArea("");
+                        newTask.setState("0");
+                        newTask.setDelFlag("0");
+                        newTask.setCreateTime(new Date());
+                        newTask.setUpdateTime(new Date());
+                        newTask.setCreateTime(new Date());
+                        newTask.setUpdateTime(new Date());
+                        // 设置任务锁
+                        newTask.setOpenLock(false);
+                        if (taskMapper.insertCtTask(newTask) < 1) {
+                            throw new ServiceException("新增任务失败");
+                        }
+                        // 放入内存
+                        taskCache.setCacheTask(newTask);
+                        //发送新任务提醒给客服
+                        CtEvents newEvent = new CtEvents();
+                        newEvent.setEventName("新任务提醒");
+                        newEvent.setContent("你有新的值守任务，请留意值守门店：" + dbStore.getName());
+                        newEvent.setReceiver(staffCode);
+                        newEvent.setTaskId(newTask.getId());
+                        mqSenderService.sendCustomerServiceMessage(newEvent);
+                        return newTask;
+                    } else {
+                        CtTask task = null;
+                        Iterator<CtTask> iterator = dbTasks.values().iterator();
+                        if (iterator.hasNext()) {
+                            task = iterator.next();
+                        }
+                        if (task != null) {
+                            // 发送进客提醒给客服
+                            CtEvents newEvent = new CtEvents();
+                            newEvent.setEventName("新任务提醒");
+                            newEvent.setContent(dbStore.getName() + "有人进店，请留意值守");
+                            newEvent.setReceiver(task.getStaffCode());
+                            newEvent.setTaskId(task.getId());
+                            mqSenderService.sendCustomerServiceMessage(newEvent);
+                            return task;
+                        }
                     }
-                }
-                newTask.setSuperviseArea("");
-                newTask.setState("0");
-                newTask.setDelFlag("0");
-                newTask.setCreateTime(new Date());
-                newTask.setUpdateTime(new Date());
-                newTask.setCreateTime(new Date());
-                newTask.setUpdateTime(new Date());
-                // 设置任务锁
-                newTask.setOpenLock(false);
-                if (taskMapper.insertCtTask(newTask) < 1) {
-                    throw new ServiceException("新增任务失败");
-                }
-                // 放入内存
-                taskCache.setCacheTask(newTask);
-                //发送新任务提醒给客服
-                CtEvents newEvent = new CtEvents();
-                newEvent.setEventName("新任务提醒");
-                newEvent.setContent("你有新的值守任务，请留意值守门店：" + dbStore.getName());
-                newEvent.setReceiver(staffCode);
-                newEvent.setTaskId(newTask.getId());
-                mqSenderService.sendCustomerServiceMessage(newEvent);
-                return newTask;
-            } else {
-                CtTask task = null;
-                Iterator<CtTask> iterator = dbTasks.values().iterator();
-                if (iterator.hasNext()) {
-                    task = iterator.next();
-                }
-                if (task != null) {
-                    // 发送进客提醒给客服
-                    CtEvents newEvent = new CtEvents();
-                    newEvent.setEventName("新任务提醒");
-                    newEvent.setContent(dbStore.getName() + "有人进店，请留意值守");
-                    newEvent.setReceiver(task.getStaffCode());
-                    newEvent.setTaskId(task.getId());
-                    mqSenderService.sendCustomerServiceMessage(newEvent);
-                    return task;
-                }
-            }
 
+                }
+            } finally {
+                redissonLock.release(storeId);
+            }
         }
         return null;
     }

@@ -3,7 +3,7 @@ package com.cloudtimes.app.mq.listener;
 import com.cloudtimes.common.constant.RocketMQConstants;
 import com.cloudtimes.common.enums.PayOrderOption;
 import com.cloudtimes.common.mq.PayOrderMqData;
-import com.cloudtimes.mq.service.CtMqPayOrderService;
+import com.cloudtimes.mq.CtMqPayOrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.spring.annotation.MessageModel;

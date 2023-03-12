@@ -11,7 +11,7 @@ import com.cloudtimes.common.enums.DataSourceType;
 import com.cloudtimes.common.exception.ServiceException;
 import com.cloudtimes.hardwaredevice.domain.CtStore;
 import com.cloudtimes.hardwaredevice.mapper.CtStoreMapper;
-import com.cloudtimes.mq.service.CtCashMqSenderService;
+import com.cloudtimes.mq.CtCashMqSenderService;
 import com.cloudtimes.serving.cash.service.ICtCashBusinessService;
 import com.cloudtimes.serving.common.CtTaskDistributionService;
 import com.cloudtimes.serving.wechat.domain.ScanCodeReq;

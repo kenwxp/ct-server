@@ -17,7 +17,7 @@ import com.cloudtimes.common.utils.sign.Base64;
 import com.cloudtimes.hardwaredevice.domain.CtDevice;
 import com.cloudtimes.hardwaredevice.domain.CtDeviceDoor;
 import com.cloudtimes.hardwaredevice.mapper.CtDeviceDoorMapper;
-import com.cloudtimes.mq.service.CtCashMqSenderService;
+import com.cloudtimes.mq.CtCashMqSenderService;
 import com.cloudtimes.partner.config.PartnerConfig;
 import com.cloudtimes.partner.hik.domain.DeviceInfoData;
 import com.cloudtimes.partner.hik.service.ICtHikApiService;

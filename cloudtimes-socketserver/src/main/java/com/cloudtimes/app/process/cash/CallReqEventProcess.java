@@ -7,7 +7,7 @@ import com.cloudtimes.hardwaredevice.domain.CtDevice;
 import com.cloudtimes.hardwaredevice.domain.CtStore;
 import com.cloudtimes.hardwaredevice.mapper.CtDeviceMapper;
 import com.cloudtimes.hardwaredevice.mapper.CtStoreMapper;
-import com.cloudtimes.mq.service.CtWebMqSenderService;
+import com.cloudtimes.mq.CtWebMqSenderService;
 import com.cloudtimes.supervise.domain.CtEvents;
 import com.cloudtimes.supervise.domain.CtTask;
 import com.cloudtimes.supervise.mapper.CtTaskMapper;

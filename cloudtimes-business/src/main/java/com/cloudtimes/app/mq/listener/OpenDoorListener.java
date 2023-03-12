@@ -3,7 +3,7 @@ package com.cloudtimes.app.mq.listener;
 import com.cloudtimes.common.enums.OpenDoorOption;
 import com.cloudtimes.common.mq.OpenDoorMqData;
 import com.cloudtimes.common.constant.RocketMQConstants;
-import com.cloudtimes.mq.service.CtOpenDoorService;
+import com.cloudtimes.mq.CtOpenDoorService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.spring.annotation.MessageModel;
