@@ -19,8 +19,7 @@
     <select id="selectCtDeviceDoorList" parameterType="CtDeviceDoor" resultType="CtDeviceDoor">
         <include refid="selectCtDeviceDoorVo"/>
         <where>
-            <if test="doorNo != null ">and door_no = #{doorNo}</if>
-            <if test="accessPassword != null  and accessPassword != ''">and access_password = #{accessPassword}</if>
+            <if test="deviceId != null  and deviceId != ''">and device_id = #{deviceId}</if>
         </where>
     </select>
 
