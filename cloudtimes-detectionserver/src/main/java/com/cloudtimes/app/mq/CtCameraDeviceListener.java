@@ -53,7 +53,7 @@ public class CtCameraDeviceListener implements RocketMQListener<DetectionData>, 
 
     private static final String OBJ_LOCK = "OBJ_LOCK";
 
-    private static final long MQ_DATA_GAP_TIME = 2 * 60L * 1000L;
+    private static final long MQ_DATA_GAP_TIME = 3 * 60L * 1000L;
 
     public void checkCamera(CtDevice ctDevice) {
         log.info("开始检测摄像头，设备序列号:{}", ctDevice.getDeviceSerial());
