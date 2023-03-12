@@ -194,7 +194,6 @@
         p.english_name ,
         p.brand ,
         p.label ,
-        p.supplier_id ,
         p.supplier ,
         p.specification ,
         p.unit ,
