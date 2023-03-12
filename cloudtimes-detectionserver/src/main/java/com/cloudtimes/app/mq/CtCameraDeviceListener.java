@@ -53,6 +53,8 @@ public class CtCameraDeviceListener implements RocketMQListener<DetectionData>, 
 
     private static final String OBJ_LOCK = "OBJ_LOCK";
 
+    private static final long MQ_DATA_GAP_TIME = 2 * 60L * 1000L;
+
     public void checkCamera(CtDevice ctDevice) {
         log.info("开始检测摄像头，设备序列号:{}", ctDevice.getDeviceSerial());
         try {
@@ -117,6 +119,11 @@ public class CtCameraDeviceListener implements RocketMQListener<DetectionData>, 
             return;
         }
 
+        if (checkMQMessageTimeout(data)) {
+            log.info("已丢掉驻留的老消息数据:" + JSONObject.toJSONString(data));
+            return; //丢掉
+        }
+
         if (data.getOption() == 1 && data.getDevice() != null) {
             String redisLockKey = OBJ_LOCK + "_" + data.getDevice().getId();
             if (redissonLock.lock(redisLockKey, 120)) {
@@ -138,6 +145,16 @@ public class CtCameraDeviceListener implements RocketMQListener<DetectionData>, 
                     redissonLock.release(redisLockKey);
                 }
             }
+        }
+    }
+
+    public boolean checkMQMessageTimeout(DetectionData data) {
+        long now = System.currentTimeMillis();
+        if (data.getLastTime() == null || now - data.getLastTime() > MQ_DATA_GAP_TIME) {
+            //丢掉驻留在MQ内的老数据消息
+            return true;
+        } else {
+            return false;
         }
     }
 

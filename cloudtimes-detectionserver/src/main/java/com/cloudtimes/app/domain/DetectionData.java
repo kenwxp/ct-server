@@ -7,4 +7,6 @@ import lombok.Data;
 public class DetectionData {
     private int option;  // 0-loadData 1-device
     private CtDevice device;
+
+    private Long lastTime;
 }

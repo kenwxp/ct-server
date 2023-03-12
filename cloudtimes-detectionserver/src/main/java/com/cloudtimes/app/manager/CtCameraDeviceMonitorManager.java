@@ -76,9 +76,9 @@ public class CtCameraDeviceMonitorManager {
     }
 
     public void loadData() {
-        if (!this.isLoadDataTime()) {
-            return;
-        }
+//        if (!this.isLoadDataTime()) {
+//            return;
+//        }
         log.info("当前监控中的摄头机设备数量：[" + getDeviceNumber() + "]");
         CtDevice query = new CtDevice();
         // 查询普通摄像头列表
@@ -100,12 +100,14 @@ public class CtCameraDeviceMonitorManager {
                     DetectionData detectionData = new DetectionData();
                     detectionData.setOption(1);
                     detectionData.setDevice(ctDevice);
+                    detectionData.setLastTime(System.currentTimeMillis());
                     sendToMQ(detectionData, 6);//2min延迟发送
                 }
             }
         }
         DetectionData detectionData = new DetectionData();
         detectionData.setOption(0);
+        detectionData.setLastTime(System.currentTimeMillis());
         sendToMQ(detectionData, 4);// 30s检查新设备
     }
 
