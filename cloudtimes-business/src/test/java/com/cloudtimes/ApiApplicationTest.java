@@ -3,7 +3,6 @@ package com.cloudtimes;
 import com.alibaba.fastjson2.JSONObject;
 import com.cloudtimes.common.core.domain.entity.AuthUser;
 import com.cloudtimes.common.enums.ChannelType;
-import com.cloudtimes.common.mq.DoorMessageMqData;
 import com.cloudtimes.common.utils.JWTManager;
 import com.cloudtimes.hardwaredevice.domain.DeviceActivateReq;
 import com.cloudtimes.hardwaredevice.service.ICtDeviceService;
@@ -12,9 +11,8 @@ import com.cloudtimes.partner.hik.domain.NvrDeviceInfoData;
 import com.cloudtimes.partner.hik.service.ICtHikApiService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
@@ -45,7 +43,7 @@ public class ApiApplicationTest {
 
     @Test
     public void testTrigger() {
-        doorMessageService.handleTriggerMessage(new DoorMessageMqData(1, 153204320, "2023-02-24 12:01:11"));
+        doorMessageService.handleTriggerMessage(153204320, "2023-02-24 12:01:11");
     }
 
     @Test
@@ -53,6 +51,7 @@ public class ApiApplicationTest {
         NvrDeviceInfoData data = hikApiService.getNvrChannelStatus("K93279101");
         log.info(data.toString());
     }
+
     @Test
     public void testActivateCtDevice() {
         DeviceActivateReq query = new DeviceActivateReq();
