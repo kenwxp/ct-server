@@ -65,9 +65,9 @@ public class CtCustomerLoginServiceImpl implements ICtCustomerLoginService {
         }
         String openId = StringUtils.getStringFromObjectMap(userSession, "openid");
         String unionId = StringUtils.getStringFromObjectMap(userSession, "unionid");
-        CtUser user = userMapper.selectCtUserByWxOpenId(openId);
+        CtUser wxUser = userMapper.selectCtUserByWxOpenId(openId);
         MpLoginResp loginResp = new MpLoginResp();
-        if (user == null) {
+        if (wxUser == null) {
             //新用户流程,获取手机号
             Map<String, Object> userPhoneInfo = weixinApiService.getUserPhoneInfo(phoneCode);
             String errCode = StringUtils.getStringFromObjectMap(userPhoneInfo, "errcode");
@@ -76,7 +76,21 @@ public class CtCustomerLoginServiceImpl implements ICtCustomerLoginService {
             }
             Map<String, String> phoneInfo = (Map<String, String>) userPhoneInfo.get("phone_info");
             String phoneNumber = phoneInfo.get("purePhoneNumber");
-            CtUser dbUser = userMapper.selectCtUserByWxUnionId(unionId);
+            // 校验店家端用户是否存在
+            CtUser userByMobile = userMapper.selectCtUserByMobile(phoneNumber);
+            // 校验代理端用户是否存在
+            CtUser userByUnionId = userMapper.selectCtUserByWxUnionId(unionId);
+            CtUser dbUser = null;
+            if (userByMobile != null) {
+                dbUser = userByMobile;
+                dbUser.setWxOpenId(openId);
+                dbUser.setWxUnionId(unionId);
+            } else {
+                if (userByUnionId != null){
+                    dbUser = userByUnionId;
+                    dbUser.setWxOpenId(openId);
+                }
+            }
             if (dbUser == null) {
                 CtUser newUser = new CtUser();
                 newUser.setWxOpenId(openId);
@@ -104,13 +118,12 @@ public class CtCustomerLoginServiceImpl implements ICtCustomerLoginService {
                     throw new ServiceException("新增用户资产失败");
                 }
                 loginResp.setUserId(newUser.getId());
-                return loginResp;
             } else {
                 //此流程为，当前unionId在本系统已有其它身份，现在增加顾客身份
-                dbUser.setId(dbUser.getId());
-                dbUser.setWxOpenId(openId);
-                dbUser.setWxUnionId(unionId);
-                dbUser.setMobile(phoneNumber);
+//                dbUser.setId(dbUser.getId());
+//                dbUser.setWxOpenId(openId);
+//                dbUser.setWxUnionId(unionId);
+//                dbUser.setMobile(phoneNumber);
                 dbUser.setCustomerState("0");
                 if (userMapper.updateCtUser(dbUser) < 1) {
                     throw new ServiceException("更新用户失败");
@@ -129,13 +142,13 @@ public class CtCustomerLoginServiceImpl implements ICtCustomerLoginService {
                     }
                 }
                 loginResp.setUserId(dbUser.getId());
-                return loginResp;
             }
+            return loginResp;
         } else {
-            if ("2".equals(user.getCustomerState())) {
+            if ("2".equals(wxUser.getCustomerState())) {
                 throw new ServiceException("当前用户已被禁用");
             }
-            loginResp.setUserId(user.getId());
+            loginResp.setUserId(wxUser.getId());
             return loginResp;
         }
     }

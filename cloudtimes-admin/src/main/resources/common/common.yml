@@ -93,5 +93,4 @@ cache_switch:
   customer_service: true
   #门店视频链接
   store_video: true
-  #值守任务
-  supervise_task: true
+

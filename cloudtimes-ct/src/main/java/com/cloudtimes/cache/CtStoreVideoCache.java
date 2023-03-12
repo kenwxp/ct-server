@@ -63,23 +63,13 @@ public class CtStoreVideoCache {
                 cacheVideoData.setDeviceId(device.getId());
                 cacheVideoData.setDeviceSerial(device.getDeviceSerial());
                 cacheVideoData.setDeviceType(device.getDeviceType());
-                VideoData liveAddress = null;
-                if (StringUtils.equals(device.getDeviceType(), DeviceType.CAMERA.getCode())) {
-                    liveAddress = hikApiService.getLiveAddress(device.getDeviceSerial(), "1", "2", String.valueOf(videoTimeoutSec));
-                } else if (StringUtils.equals(device.getDeviceType(), DeviceType.NVR_CAMERA.getCode())) {
-                    // nvr摄像头需要带通道号
-                    liveAddress = hikApiService.getLiveAddress(device.getDeviceSerial(), device.getDeviceChannel(), "1", "2", String.valueOf(videoTimeoutSec));
-                }
-                if (liveAddress != null) {
-                    cacheVideoData.setUrl(liveAddress.getUrl());
-                    cacheVideoData.setExpireTime(DateUtils.parseDateTime(liveAddress.getExpireTime()));
-                    cacheVideoData.setToken(liveAddress.getToken());
-                }
+//                 获取url
+//                setAddressUrl(device, cacheVideoData);
                 setCacheVideo(cacheVideoData);
             }
         }
-
     }
+
 
     public CacheVideoData getCacheVideo(String storeId, String deviceId) {
         rLock.lock();
@@ -104,8 +94,8 @@ public class CtStoreVideoCache {
             String cacheKey = getCacheKey(STORE_VIDEO_REL_CACHE, deviceId);
             if (!StringUtils.isEmpty(cacheKey)) {
                 CacheVideoData videoData = redisCache.getCacheMapValue(cacheKey, deviceId);
-                if (videoData != null) {
-                    //前比后，负数，前面小于后面，0相等，正数 前面大于后面
+                if (videoData != null && videoData.getExpireTime() != null) {
+                    // 前比后，负数，前面小于后面，0相等，正数 前面大于后面
                     // 未过期直接返回
                     if (DateUtil.compare(videoData.getExpireTime(), DateUtils.getNowDate()) > 0) {
                         return videoData;
@@ -142,23 +132,30 @@ public class CtStoreVideoCache {
         if (dbDevice == null) {
             return null;
         }
-        VideoData liveAddress = null;
-        if (StringUtils.equals(dbDevice.getDeviceType(), DeviceType.CAMERA.getCode())) {
-            liveAddress = hikApiService.getLiveAddress(dbDevice.getDeviceSerial(), "1", "2", String.valueOf(videoTimeoutSec));
-        } else if (StringUtils.equals(dbDevice.getDeviceType(), DeviceType.NVR_CAMERA.getCode())) {
-            liveAddress = hikApiService.getLiveAddress(dbDevice.getDeviceSerial(), dbDevice.getDeviceChannel(), "1", "2", String.valueOf(videoTimeoutSec));
-        }
         CacheVideoData newDevice = new CacheVideoData();
-        if (liveAddress != null) {
-            newDevice.setStoreId(dbDevice.getStoreId());
-            newDevice.setDeviceId(dbDevice.getId());
-            newDevice.setDeviceSerial(dbDevice.getDeviceSerial());
-            newDevice.setUrl(liveAddress.getUrl());
-            newDevice.setExpireTime(DateUtils.parseDateTime(liveAddress.getExpireTime()));
-            newDevice.setToken(liveAddress.getToken());
-        }
+        newDevice.setStoreId(dbDevice.getStoreId());
+        newDevice.setDeviceId(dbDevice.getId());
+        newDevice.setDeviceSerial(dbDevice.getDeviceSerial());
+        newDevice.setDeviceType(dbDevice.getDeviceType());
+        setAddressUrl(dbDevice, newDevice);
         setCacheVideo(newDevice);
         return newDevice;
+    }
+
+    private void setAddressUrl(CtDevice device, CacheVideoData cacheVideoData) {
+        int channelNo = 0;
+        if (StringUtils.equals(device.getDeviceType(), DeviceType.NVR_CAMERA.getCode())) {
+            // nvr摄像头需要带通道号
+            channelNo = device.getDeviceChannel();
+        } else if (StringUtils.equals(device.getDeviceType(), DeviceType.CAMERA.getCode())) {
+            channelNo = 1;
+        }
+        VideoData liveAddress = hikApiService.getLiveAddress(device.getDeviceSerial(), channelNo, "1", "2", String.valueOf(videoTimeoutSec));
+        if (liveAddress != null) {
+            cacheVideoData.setUrl(liveAddress.getUrl());
+            cacheVideoData.setExpireTime(DateUtils.parseDateTime(liveAddress.getExpireTime()));
+            cacheVideoData.setToken(liveAddress.getToken());
+        }
     }
 
     public boolean deleteCacheVideo(String deviceId) {

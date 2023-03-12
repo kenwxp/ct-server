@@ -32,8 +32,6 @@ public class CtTaskCache {
     private static final String TASK_ORDER_REL_CACHE = "task_order:";//任务订单关联
     private static final String ORDER_DETAIL_CACHE = "order_detail:";//订单详情关联
     private static final String OUT_SUPERVISE_TASK_ID = "out_supervise_task_orders"; //无任务ID
-    @Value("${cache_switch.supervise_task}")
-    private boolean enabled;
 
     //读写锁
     private final ReadWriteLock rwLock = new ReentrantReadWriteLock();
@@ -52,38 +50,38 @@ public class CtTaskCache {
     @Autowired
     private CtOrderDetailMapper orderDetailMapper;
 
-    @PostConstruct
-    public void initTask() {
-        if (!enabled) {
-            return;
-        }
-        log.info("初始化加载进行中的任务....");
-        CtTask query = new CtTask();
-        query.setState("0");
-        List<CtTask> taskList = taskMapper.selectCtTaskList(query);
-        log.info("taskList：" + JSON.toJSONString(taskList));
-        for (CtTask task : taskList) {
-            setCacheTask(task);
-        }
-        //初始化加载进行中的任务的订单
-        log.info("初始化加载进行中的任务的订单....");
-        List<CtOrder> ctOrders = orderMapper.selectCtOrderListByTask("", "0");
-        for (CtOrder order : ctOrders) {
-            setCacheOrder(order);
-        }
-        //初始化加载进行中的任务的购物
-        log.info("初始化加载进行中的任务的购物....");
-        List<CtShopping> ctShoppingList = shoppingMapper.selectCtShoppingListByTask("", "0");
-        for (CtShopping shopping : ctShoppingList) {
-            setCacheShopping(shopping);
-        }
-        //初始化加载进行中的任务的物品清单
-        log.info("初始化加载进行中的物品清单....");
-        List<CtOrderDetail> ctOrderDetails = orderDetailMapper.selectCtOrderDetailListByTaskOrOrder("", "0");
-        for (CtOrderDetail orderDetail : ctOrderDetails) {
-            setCacheOrderDetail(orderDetail);
-        }
-    }
+//    @PostConstruct
+//    public void initTask() {
+//        if (!enabled) {
+//            return;
+//        }
+//        log.info("初始化加载进行中的任务....");
+//        CtTask query = new CtTask();
+//        query.setState("0");
+//        List<CtTask> taskList = taskMapper.selectCtTaskList(query);
+//        log.info("taskList：" + JSON.toJSONString(taskList));
+//        for (CtTask task : taskList) {
+//            setCacheTask(task);
+//        }
+//        //初始化加载进行中的任务的订单
+//        log.info("初始化加载进行中的任务的订单....");
+//        List<CtOrder> ctOrders = orderMapper.selectCtOrderListByTask("", "0");
+//        for (CtOrder order : ctOrders) {
+//            setCacheOrder(order);
+//        }
+//        //初始化加载进行中的任务的购物
+//        log.info("初始化加载进行中的任务的购物....");
+//        List<CtShopping> ctShoppingList = shoppingMapper.selectCtShoppingListByTask("", "0");
+//        for (CtShopping shopping : ctShoppingList) {
+//            setCacheShopping(shopping);
+//        }
+//        //初始化加载进行中的任务的物品清单
+//        log.info("初始化加载进行中的物品清单....");
+//        List<CtOrderDetail> ctOrderDetails = orderDetailMapper.selectCtOrderDetailListByTaskOrOrder("", "0");
+//        for (CtOrderDetail orderDetail : ctOrderDetails) {
+//            setCacheOrderDetail(orderDetail);
+//        }
+//    }
 
     public CtOrder getCacheTaskOfStaff(String staffCode, String taskId) {
         rLock.lock();
