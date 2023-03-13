@@ -1,10 +1,13 @@
 package com.cloudtimes.app.mq;
 
+import cn.hutool.core.date.DateUnit;
+import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.cloudtimes.app.manager.CashWsSessionManager;
 import com.cloudtimes.app.models.CashWsData;
 import com.cloudtimes.common.constant.RocketMQConstants;
 import com.cloudtimes.common.mq.CashMqData;
+import com.cloudtimes.common.utils.DateUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.spring.annotation.MessageModel;
@@ -30,17 +33,23 @@ public class CashListenerHandler implements RocketMQListener<CashMqData>, Rocket
     @Autowired
     private CashWsSessionManager wsSessionManager;
 
+    private final long VALID_PERIOD_SECOND = 20;
+
     @Override
     public void onMessage(CashMqData cashMqData) {
         log.info("接收MQ消息,并发送到收银端：" + JSONObject.toJSONString(cashMqData));
-        String option = cashMqData.getOption();
+        if (DateUtil.between(cashMqData.getSendTime(), DateUtils.getNowDate(), DateUnit.SECOND, true) > VALID_PERIOD_SECOND) {
+            log.info("发送收银机消息超时，略过");
+            return;
+        }
         try {
+            String option = cashMqData.getOption();
             CashWsData cashWsData = new CashWsData();
             cashWsData.setOption(option);
             cashWsData.setData(cashMqData.getData());
             wsSessionManager.sendSuccess(cashMqData.getDeviceId(), cashWsData);
         } catch (Exception ex) {
-            log.error("执行指令[" + option + "]异常：" + ex.getMessage());
+            log.error("发送收银端异常：", ex);
         }
     }
 

@@ -2,11 +2,12 @@ package com.cloudtimes.common.mq;
 
 import com.cloudtimes.common.enums.ChannelType;
 import com.cloudtimes.common.enums.OpenDoorOption;
+import com.cloudtimes.common.utils.DateUtils;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+
+import java.util.Date;
 
 @Data
-@NoArgsConstructor
 public class OpenDoorMqData {
     private OpenDoorOption option; // 操作类型
     private String storeId; //门店编号
@@ -17,6 +18,11 @@ public class OpenDoorMqData {
     private String beginTime; // 生效时间 操作类型未设置密码时必填
     private String endTime;// 失效时间 操作类型未设置密码时必填
     private boolean reset = true;  // 是否取消旧密码，操作类型未设置密码时选填
+    private Date sendTime;
+
+    public OpenDoorMqData() {
+        this.sendTime = DateUtils.getNowDate();
+    }
 
     public OpenDoorMqData(OpenDoorOption option) {
         this.option = option;
@@ -27,6 +33,7 @@ public class OpenDoorMqData {
         this.storeId = storeId;
         this.userId = userId;
         this.channelType = channelType;
+        this.sendTime = DateUtils.getNowDate();
     }
 
     public OpenDoorMqData(OpenDoorOption option, String storeId, String deviceId, String userId, ChannelType channelType) {
@@ -35,5 +42,6 @@ public class OpenDoorMqData {
         this.deviceId = deviceId;
         this.userId = userId;
         this.channelType = channelType;
+        this.sendTime = DateUtils.getNowDate();
     }
 }

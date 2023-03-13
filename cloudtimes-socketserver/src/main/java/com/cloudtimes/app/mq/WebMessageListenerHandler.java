@@ -34,7 +34,7 @@ public class WebMessageListenerHandler implements RocketMQListener<SendWebMsgMqD
         try {
             wsSessionManager.batchSendSuccess(data.getUserId(), "MESSAGE_DATA", data);
         } catch (Exception ex) {
-            log.info("发送mq消息异常：" + JSONObject.toJSONString(data));
+            log.error("发送管理端异常：", ex);
         }
     }
 

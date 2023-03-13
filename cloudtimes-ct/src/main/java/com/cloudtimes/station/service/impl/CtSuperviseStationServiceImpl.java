@@ -178,12 +178,7 @@ public class CtSuperviseStationServiceImpl implements ICtSuperviseStationService
      */
     @Override
     public void openDoor(Long userId, OpenDoorReq param) {
-        OpenDoorMqData mqData = new OpenDoorMqData();
-        mqData.setOption(OpenDoorOption.EMERGENCY_OPEN_DOOR);
-        mqData.setStoreId(param.getShopId());
-        mqData.setUserId(String.valueOf(userId));
-        mqData.setChannelType(ChannelType.WEB);
-        producer.send(RocketMQConstants.CT_OPEN_DOOR, mqData);
+        producer.send(RocketMQConstants.CT_OPEN_DOOR, new OpenDoorMqData(OpenDoorOption.EMERGENCY_OPEN_DOOR, param.getShopId(), String.valueOf(userId), ChannelType.WEB));
     }
 
     /**
