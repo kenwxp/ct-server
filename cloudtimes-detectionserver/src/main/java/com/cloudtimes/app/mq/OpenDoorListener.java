@@ -1,4 +1,4 @@
-package com.cloudtimes.app.mq.listener;
+package com.cloudtimes.app.mq;
 
 import com.cloudtimes.common.enums.OpenDoorOption;
 import com.cloudtimes.common.mq.OpenDoorMqData;
