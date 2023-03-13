@@ -418,7 +418,9 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
             shoppingMapper.deleteCtShoppingById(cacheOrder.getShoppingId());
 
             taskCache.deleteCacheOrder(cacheOrder.getId());
-            taskCache.deleteCacheShopping(cacheOrder.getShoppingId());
+            if (StringUtils.isNotEmpty(cacheOrder.getShoppingId())) {
+                taskCache.deleteCacheShopping(cacheOrder.getShoppingId());
+            }
         }
     }
 
