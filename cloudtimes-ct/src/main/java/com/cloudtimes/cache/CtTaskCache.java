@@ -105,7 +105,7 @@ public class CtTaskCache {
         rLock.lock();
         try {
             String cacheKey = getCacheKey(STAFF_TASK_REL_CACHE, taskId);
-            if (!StringUtils.isEmpty(cacheKey)) {
+            if (StringUtils.isNotEmpty(cacheKey)) {
                 return redisCache.getCacheMapValue(cacheKey, taskId);
             }
         } finally {
@@ -117,11 +117,11 @@ public class CtTaskCache {
     public void setCacheTask(CtTask task) {
         wLock.lock();
         try {
-            if (!StringUtils.isEmpty(task.getStaffCode())) {
+            if (StringUtils.isNotEmpty(task.getStaffCode())) {
                 redisCache.setCacheMapValue(STAFF_TASK_REL_CACHE + task.getStaffCode(), task.getId(), task);
 
             }
-            if (!StringUtils.isEmpty(task.getStoreId())) {
+            if (StringUtils.isNotEmpty(task.getStoreId())) {
                 redisCache.setCacheMapValue(STORE_TASK_REL_CACHE + task.getStoreId(), task.getId(), task);
             }
         } finally {
@@ -133,11 +133,11 @@ public class CtTaskCache {
         wLock.lock();
         try {
             String cacheKey = getCacheKey(STAFF_TASK_REL_CACHE, taskId);
-            if (!StringUtils.isEmpty(cacheKey)) {
+            if (StringUtils.isNotEmpty(cacheKey)) {
                 redisCache.deleteCacheMapValue(cacheKey, taskId);
             }
             String cacheKey2 = getCacheKey(STORE_TASK_REL_CACHE, taskId);
-            if (!StringUtils.isEmpty(cacheKey2)) {
+            if (StringUtils.isNotEmpty(cacheKey2)) {
                 redisCache.deleteCacheMapValue(cacheKey2, taskId);
             }
             // 删除关联交易
@@ -163,7 +163,7 @@ public class CtTaskCache {
         rLock.lock();
         try {
             String cacheKey = getCacheKey(TASK_ORDER_REL_CACHE, orderId);
-            if (!StringUtils.isEmpty(cacheKey)) {
+            if (StringUtils.isNotEmpty(cacheKey)) {
                 return redisCache.getCacheMapValue(cacheKey, orderId);
             }
         } finally {
@@ -194,7 +194,7 @@ public class CtTaskCache {
         try {
             //从任务订单关联表中删除订单
             String cacheKey = getCacheKey(TASK_ORDER_REL_CACHE, orderId);
-            if (!StringUtils.isEmpty(cacheKey)) {
+            if (StringUtils.isNotEmpty(cacheKey)) {
                 if (redisCache.deleteCacheMapValue(cacheKey, orderId)) {
                     //删除物品清单
                     return redisCache.deleteObject(ORDER_DETAIL_CACHE + orderId);
@@ -221,7 +221,7 @@ public class CtTaskCache {
         rLock.lock();
         try {
             String cacheKey = getCacheKey(TASK_SHOPPING_REL_CACHE, shoppingId);
-            if (!StringUtils.isEmpty(cacheKey)) {
+            if (StringUtils.isNotEmpty(cacheKey)) {
                 return redisCache.getCacheMapValue(cacheKey, shoppingId);
             }
         } finally {
@@ -251,7 +251,7 @@ public class CtTaskCache {
         try {
             String cacheKey = getCacheKey(TASK_SHOPPING_REL_CACHE, shoppingId);
             log.info("查找key：{}，购物编号：{}", cacheKey, shoppingId);
-            if (!StringUtils.isEmpty(cacheKey)) {
+            if (StringUtils.isNotEmpty(cacheKey)) {
                 log.info("删除购物：key：{}，购物编号：{}", cacheKey, shoppingId);
                 return redisCache.deleteCacheMapValue(cacheKey, shoppingId);
             }
@@ -266,7 +266,7 @@ public class CtTaskCache {
         rLock.lock();
         try {
             String cacheKey = getCacheKey(ORDER_DETAIL_CACHE, itemId);
-            if (!StringUtils.isEmpty(cacheKey)) {
+            if (StringUtils.isNotEmpty(cacheKey)) {
                 return redisCache.getCacheMapValue(cacheKey, itemId);
             }
         } finally {
@@ -296,7 +296,7 @@ public class CtTaskCache {
     public void setCacheOrderDetail(CtOrderDetail orderDetail) {
         wLock.lock();
         try {
-            if (!StringUtils.isEmpty(orderDetail.getOrderId())) {
+            if (StringUtils.isNotEmpty(orderDetail.getOrderId())) {
                 // 非值守订单
                 redisCache.setCacheMapValue(ORDER_DETAIL_CACHE + orderDetail.getOrderId(), orderDetail.getItemId(), orderDetail);
             }
@@ -309,7 +309,7 @@ public class CtTaskCache {
         wLock.lock();
         try {
             String cacheKey = getCacheKey(ORDER_DETAIL_CACHE, itemId);
-            if (!StringUtils.isEmpty(cacheKey)) {
+            if (StringUtils.isNotEmpty(cacheKey)) {
                 return redisCache.deleteCacheMapValue(cacheKey, itemId);
             }
         } finally {

@@ -25,15 +25,17 @@ public class OpenDoorListener implements RocketMQListener<OpenDoorMqData>, Rocke
     public void onMessage(OpenDoorMqData data) {
         log.info("接受mq消息，开始处理开门请求，门店编号:{}", data.getStoreId());
         if (data.getOption() == OpenDoorOption.TRANS_OPEN_DOOR) {
-            openDoorService.transOpen(data.getStoreId(), data.getUserId(), data.getChannelType());
+            openDoorService.transOpen(data);
         } else if (data.getOption() == OpenDoorOption.EMERGENCY_OPEN_DOOR) {
-            openDoorService.emergentOpen(data.getStoreId(), data.getUserId());
+            openDoorService.emergentOpen(data);
         } else if (data.getOption() == OpenDoorOption.OWNER_OPEN_DOOR) {
-            openDoorService.ownerOpen(data.getStoreId(), data.getUserId());
+            openDoorService.ownerOpen(data);
         } else if (data.getOption() == OpenDoorOption.FORCE_LOCK_DOOR) {
-            openDoorService.forceLock(data.getStoreId(), data.getUserId(), data.getChannelType());
+            openDoorService.forceLock(data);
         } else if (data.getOption() == OpenDoorOption.UNLOCK_DOOR) {
-            openDoorService.unlock(data.getStoreId(), data.getUserId(), data.getChannelType());
+            openDoorService.unlock(data);
+        } else if (data.getOption() == OpenDoorOption.SETTING_DOOR_ACCESS) {
+            openDoorService.setDoorAccess(data);
         }
     }
 

@@ -79,7 +79,7 @@ public class SuperviseServicePolling {
     private void handle() {
         log.info("客服订阅列表：{}",JSON.toJSONString(subscribers));
 //        log.info(JSON.toJSONString(subscribers));
-        if (subscribers != null && !StringUtils.isEmpty(subscribers)) {
+        if (subscribers != null && StringUtils.isNotEmpty(subscribers)) {
             for (Map.Entry<String, Set<String>> userEntry :
                     subscribers.entrySet()) {
                 String superiorId = userEntry.getKey();
@@ -97,7 +97,7 @@ public class SuperviseServicePolling {
                     int inProgressOrderCount = 0;
                     int unHandleOrderCount = 0;
                     Map<String, CtTask> taskMap = taskCache.getAllTasksOfStaff(String.valueOf(customerService.getServiceId()));
-                    if (taskMap != null && !StringUtils.isEmpty(taskMap)) {
+                    if (taskMap != null && StringUtils.isNotEmpty(taskMap)) {
                         currentTaskCount = taskMap.size();
                         // 统计超额任务量
                         Long maxAcceptTaskCount = customerServiceCache.getMaxAcceptTask(String.valueOf(customerService.getServiceId()));
@@ -118,7 +118,7 @@ public class SuperviseServicePolling {
                                 videoCount = videoCount + videoMap.size();
                             }
                             Map<String, CtOrder> ordersMap = taskCache.getOrdersByTask(rawTask.getId());
-                            if (!StringUtils.isEmpty(ordersMap)) {
+                            if (StringUtils.isNotEmpty(ordersMap)) {
                                 currentOrderCount = currentOrderCount + ordersMap.size();
                                 for (CtOrder order :
                                         ordersMap.values()) {

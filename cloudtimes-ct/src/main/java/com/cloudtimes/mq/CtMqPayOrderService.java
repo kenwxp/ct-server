@@ -62,12 +62,7 @@ public class CtMqPayOrderService {
             data.setOption(PayOrderOption.MAINTAIN_STOCK);
             mqProducer.send(RocketMQConstants.CT_PAY_ORDER, data);
             // 支付成功，发起交易开门
-            OpenDoorMqData mqData = new OpenDoorMqData();
-            mqData.setOption(OpenDoorOption.TRANS_OPEN_DOOR);
-            mqData.setStoreId(cacheOrder.getStoreId());
-            mqData.setUserId(cacheOrder.getUserId());
-            mqData.setChannelType(ChannelType.CASH);
-            producer.send(RocketMQConstants.CT_OPEN_DOOR, mqData);
+            producer.send(RocketMQConstants.CT_OPEN_DOOR, new OpenDoorMqData(OpenDoorOption.TRANS_OPEN_DOOR, cacheOrder.getStoreId(), cacheOrder.getUserId(), ChannelType.CASH));
             return;
         }
         // 未获取终态，则校验超时时间

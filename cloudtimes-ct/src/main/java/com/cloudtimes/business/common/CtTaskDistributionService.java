@@ -165,7 +165,7 @@ public class CtTaskDistributionService {
                 for (CtTask task :
                         taskMap.values()) {
                     Map<String, CtOrder> ordersByTask = taskCache.getOrdersByTask(task.getId());
-                    if (!StringUtils.isEmpty(ordersByTask)) {
+                    if (StringUtils.isNotEmpty(ordersByTask)) {
                         orderCount = orderCount + ordersByTask.size();
                     }
                 }

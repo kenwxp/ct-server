@@ -69,7 +69,7 @@ public class SuperviseOrderPolling {
 //        log.info(JSON.toJSONString(subscribers));
         log.info("订单订阅列表：{}",JSON.toJSONString(subscribers));
 //        log.info("轮询订单列表开始");
-        if (subscribers != null && !StringUtils.isEmpty(subscribers)) {
+        if (subscribers != null && StringUtils.isNotEmpty(subscribers)) {
             for (Map.Entry<String, Map<String, Set<String>>> userEntry :
                     subscribers.entrySet()) {
                 String userId = userEntry.getKey();
@@ -80,7 +80,7 @@ public class SuperviseOrderPolling {
                     Set<String> sessionSet = taskEntry.getValue();
                     List<WsOrderData> orderList = new ArrayList<>();
                     Map<String, CtOrder> orders = taskCache.getOrdersByTask(taskId);
-                    if (orders != null && !StringUtils.isEmpty(orders)) {
+                    if (orders != null && StringUtils.isNotEmpty(orders)) {
                         for (CtOrder rawOrder :
                                 orders.values()) {
                             WsOrderData data = new WsOrderData();

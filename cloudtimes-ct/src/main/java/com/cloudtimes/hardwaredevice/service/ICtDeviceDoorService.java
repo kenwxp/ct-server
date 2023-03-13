@@ -61,4 +61,19 @@ public interface ICtDeviceDoorService {
      * @return 结果
      */
     public int deleteCtDeviceDoorById(String id);
+
+    /**
+     * 设置门禁密码
+     *
+     * @return
+     */
+    public int emergencyOpenDoor(Long userId, String deviceId);
+
+    /**
+     * 设置门禁密码
+     *
+     * @return
+     */
+    public int setDoorAccess(Long userId, String deviceId);
+
 }

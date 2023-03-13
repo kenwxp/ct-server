@@ -98,7 +98,7 @@ public class CtCustomerBusinessServiceImpl implements ICtCustomerBusinessService
             }
 
         }
-        if (!StringUtils.isEmpty(dynamicCode)) {
+        if (StringUtils.isNotEmpty(dynamicCode)) {
             // 若为动态码，则校验内存中动态码是否一致，不一致则产生新的二维码，推送收银机，一致流程继续
             if (!StringUtils.equals(deviceCache.get(deviceId), dynamicCode)) {
                 String newUrl = cashBusinessService.genDynamicQrCodeUrl(deviceId, dbStore.getStoreNo());
@@ -120,7 +120,7 @@ public class CtCustomerBusinessServiceImpl implements ICtCustomerBusinessService
         if (shoppingMapper.insertCtShopping(newShopping) < 1) {
             throw new ServiceException("新增购物失败");
         }
-        if (!StringUtils.isEmpty(dynamicCode)) {
+        if (StringUtils.isNotEmpty(dynamicCode)) {
             //扫动态码流程，新增订单
             //新增购物记录，开始时间设置成任务开始时间
             CtOrder newOrder = OrderUtil.getInitCtOrder();

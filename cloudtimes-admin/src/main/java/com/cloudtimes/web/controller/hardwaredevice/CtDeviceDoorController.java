@@ -10,6 +10,7 @@ import com.cloudtimes.common.enums.OpenDoorOption;
 import com.cloudtimes.common.mq.CtRocketMqProducer;
 import com.cloudtimes.common.mq.OpenDoorMqData;
 import com.cloudtimes.common.utils.DateUtils;
+import com.cloudtimes.common.utils.SecurityUtils;
 import com.cloudtimes.hardwaredevice.domain.CtDevice;
 import com.cloudtimes.hardwaredevice.domain.dto.CtDeviceDoorDto;
 import com.cloudtimes.hardwaredevice.service.ICtDeviceService;
@@ -54,9 +55,6 @@ public class CtDeviceDoorController extends BaseController {
 
     @Autowired
     private ICtDeviceService deviceService;
-
-    @Autowired
-    private CtRocketMqProducer producer;
 
 
     /**
@@ -135,28 +133,12 @@ public class CtDeviceDoorController extends BaseController {
 
     @GetMapping(value = "/emergencyOpenDoor/{id}")
     public AjaxResult emergencyOpenDoor(@PathVariable("id") String id) {
-        CtDevice ctDevice = deviceService.selectCtDeviceById(id);
-        OpenDoorMqData mqData = new OpenDoorMqData();
-        mqData.setOption(OpenDoorOption.EMERGENCY_OPEN_DOOR);
-        mqData.setStoreId(ctDevice.getStoreId());
-        mqData.setUserId(getUserId().toString());
-        mqData.setChannelType(ChannelType.WEB);
-        producer.send(RocketMQConstants.CT_OPEN_DOOR, mqData);
-        return AjaxResult.success("操作成功");
+        return toAjax(ctDeviceDoorService.emergencyOpenDoor(SecurityUtils.getUserId(), id));
     }
 
     @GetMapping(value = "/setDoorAccess/{id}")
     public AjaxResult setDoorAccess(@PathVariable("id") String id) {
-        CtDeviceDoor deviceDoor = ctDeviceDoorService.selectCtDeviceDoorById(id);
-        CtDevice ctDevice = deviceService.selectCtDeviceById(deviceDoor.getDeviceId());
-        Date now = DateUtils.getNowDate();
-        String startTime = DateUtils.formatDateTime(DateUtils.getNowDate());
-        String endTime = DateUtils.formatDateTime(DateUtils.addDays(now, 9999));
-
-        String accessPassword = openDoorService.setDoorAccessPasswrd(ctDevice.getStoreId(), getUserId().toString(), ChannelType.WEB, false, startTime, endTime);
-        deviceDoor.setAccessPassword(accessPassword);
-        ctDeviceDoorService.updateCtDeviceDoor(deviceDoor);
-        return AjaxResult.success("操作成功");
+        return toAjax(ctDeviceDoorService.setDoorAccess(SecurityUtils.getUserId(), id));
     }
 
 

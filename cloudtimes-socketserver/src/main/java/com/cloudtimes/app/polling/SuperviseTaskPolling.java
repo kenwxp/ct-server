@@ -74,7 +74,7 @@ public class SuperviseTaskPolling {
     private void handle() {
         log.info("任务订阅列表：{}",JSON.toJSONString(subscribers));
 //        log.info("轮询任务列表开始");
-        if (subscribers != null && !StringUtils.isEmpty(subscribers)) {
+        if (subscribers != null && StringUtils.isNotEmpty(subscribers)) {
             for (Map.Entry<String, Set<String>> userEntry :
                     subscribers.entrySet()) {
                 String userId = userEntry.getKey();
@@ -85,7 +85,7 @@ public class SuperviseTaskPolling {
                 int overflowTaskCount = 0;
                 int overdueTaskCount = 0;
                 int currentOrderCount = 0;
-                if (taskMap != null && !StringUtils.isEmpty(taskMap)) {
+                if (taskMap != null && StringUtils.isNotEmpty(taskMap)) {
                     currentTaskCount = taskMap.size();
                     // 统计超额任务量
                     Long maxAcceptTaskCount = customerServiceCache.getMaxAcceptTask(userId);
@@ -111,7 +111,7 @@ public class SuperviseTaskPolling {
                         data.setState(rawTask.getState());
                         data.setOpenLock(rawTask.isOpenLock());
                         Map<String, CtOrder> ordersMap = taskCache.getOrdersByTask(rawTask.getId());
-                        if (!StringUtils.isEmpty(ordersMap)) {
+                        if (StringUtils.isNotEmpty(ordersMap)) {
                             currentOrderCount = currentOrderCount + ordersMap.size();
                         }
                         taskList.add(data);

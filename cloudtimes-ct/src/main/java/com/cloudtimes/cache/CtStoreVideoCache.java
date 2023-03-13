@@ -57,7 +57,7 @@ public class CtStoreVideoCache {
         List<CtDevice> nvrCameraList = deviceMapper.selectCtDeviceList(query);
         deviceList.addAll(nvrCameraList);
         for (CtDevice device : deviceList) {
-            if (!StringUtils.isEmpty(device.getStoreId()) && !StringUtils.equals(device.getState(), DeviceState.Forbidden.getCode())) {
+            if (StringUtils.isNotEmpty(device.getStoreId()) && !StringUtils.equals(device.getState(), DeviceState.Forbidden.getCode())) {
                 CacheVideoData cacheVideoData = new CacheVideoData();
                 cacheVideoData.setStoreId(device.getStoreId());
                 cacheVideoData.setDeviceId(device.getId());
@@ -92,7 +92,7 @@ public class CtStoreVideoCache {
         rLock.lock();
         try {
             String cacheKey = getCacheKey(STORE_VIDEO_REL_CACHE, deviceId);
-            if (!StringUtils.isEmpty(cacheKey)) {
+            if (StringUtils.isNotEmpty(cacheKey)) {
                 CacheVideoData videoData = redisCache.getCacheMapValue(cacheKey, deviceId);
                 if (videoData != null && videoData.getExpireTime() != null) {
                     // 前比后，负数，前面小于后面，0相等，正数 前面大于后面
@@ -162,7 +162,7 @@ public class CtStoreVideoCache {
         wLock.lock();
         try {
             String cacheKey = getCacheKey(STORE_VIDEO_REL_CACHE, deviceId);
-            if (!StringUtils.isEmpty(cacheKey)) {
+            if (StringUtils.isNotEmpty(cacheKey)) {
                 return redisCache.deleteCacheMapValue(cacheKey, deviceId);
             }
         } finally {

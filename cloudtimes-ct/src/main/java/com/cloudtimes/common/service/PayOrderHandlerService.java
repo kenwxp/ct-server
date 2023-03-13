@@ -82,7 +82,7 @@ public class PayOrderHandlerService {
             }
             taskCache.setCacheOrder(cacheOrder);
             //更新 购物结束时间
-            if (!StringUtils.isEmpty(cacheOrder.getShoppingId())) {
+            if (StringUtils.isNotEmpty(cacheOrder.getShoppingId())) {
                 CtShopping cacheShopping = taskCache.getCacheShopping(cacheOrder.getShoppingId());
                 cacheShopping.setEndTime(DateUtils.getNowDate());
                 cacheShopping.setState("2");

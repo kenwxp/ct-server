@@ -151,9 +151,9 @@ public class CtDeviceServiceImpl implements ICtDeviceService {
         if (!StringUtils.equals(device.getDeviceType(), DeviceType.CASH.getCode())) {
             throw new ServiceException("设备类型必须是收银机");
         }
-        if (StringUtils.equals(device.getIsActivated(), YesNoState.Yes.getCode())) {
-            throw new ServiceException("当前收银机已激活，请勿重复激活");
-        }
+//        if (StringUtils.equals(device.getIsActivated(), YesNoState.Yes.getCode())) {
+//            throw new ServiceException("当前收银机已激活，请勿重复激活");
+//        }
         String deviceNo = NoUtils.genDeviceCode();
         ActivateResponse activateResponse = shouqianbaApiService.activateTerminal(deviceNo, param.getCode());
         if (activateResponse == null) {

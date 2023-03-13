@@ -54,7 +54,7 @@ public class CtWebMqSenderService {
         sendWebMsgMqData.setContent(newEvent.getContent());
         sendWebMsgMqData.setCreateTime(DateUtils.getNowDate());
         mqProducer.send(RocketMQConstants.WS_WEB_MESSAGE, sendWebMsgMqData);
-        log.info("发送消息到值守端: 客服编号：" + newEvent.getSender());
+        log.info("发送消息到值守端: 客服编号：" + newEvent.getReceiver());
     }
 
     /**
@@ -79,6 +79,7 @@ public class CtWebMqSenderService {
         newEvent.setUpdateTime(DateUtils.getNowDate());
         // 新增事件
         eventsMapper.insertCtEvents(newEvent);
+        log.info("发送消息到值守端: 客服编号：" + newEvent.getReceiver());
     }
 
 }

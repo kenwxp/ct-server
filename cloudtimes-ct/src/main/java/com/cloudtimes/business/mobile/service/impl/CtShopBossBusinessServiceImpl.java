@@ -300,13 +300,7 @@ public class CtShopBossBusinessServiceImpl implements ICtShopBossBusinessService
      */
     @Override
     public void getShopOpenDoor(String userId, GetShopDetailReq param) {
-        OpenDoorMqData mqData = new OpenDoorMqData();
-        mqData.setOption(OpenDoorOption.OWNER_OPEN_DOOR);
-        mqData.setStoreId(param.getShopId());
-        mqData.setUserId(String.valueOf(userId));
-        mqData.setChannelType(ChannelType.MOBILE);
-
-        producer.send(RocketMQConstants.CT_OPEN_DOOR, mqData);
+        producer.send(RocketMQConstants.CT_OPEN_DOOR, new OpenDoorMqData(OpenDoorOption.OWNER_OPEN_DOOR, param.getShopId(), String.valueOf(userId), ChannelType.MOBILE));
     }
 
     @Autowired

@@ -521,7 +521,7 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
                     //输入密码超时
                     return "输入密码确认超时";
                 } else {
-                    if (!StringUtils.isEmpty(bizResponse.getErrorMessage())) {
+                    if (StringUtils.isNotEmpty(bizResponse.getErrorMessage())) {
                         return bizResponse.getErrorMessage();
                     }
                     if (bizResponse.getData() != null) {
@@ -534,12 +534,7 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
                             mqData.setOrderId(orderId);
                             mqProducer.send(RocketMQConstants.CT_PAY_ORDER, mqData);
                             // 支付成功，发起交易开门
-                            OpenDoorMqData openDoorMqData = new OpenDoorMqData();
-                            openDoorMqData.setOption(OpenDoorOption.TRANS_OPEN_DOOR);
-                            openDoorMqData.setStoreId(cacheOrder.getStoreId());
-                            openDoorMqData.setUserId(cacheOrder.getUserId());
-                            openDoorMqData.setChannelType(ChannelType.CASH);
-                            mqProducer.send(RocketMQConstants.CT_OPEN_DOOR, openDoorMqData);
+                            mqProducer.send(RocketMQConstants.CT_OPEN_DOOR, new OpenDoorMqData(OpenDoorOption.TRANS_OPEN_DOOR, cacheOrder.getStoreId(), cacheOrder.getUserId(), ChannelType.CASH));
                         }
                     }
                 }
