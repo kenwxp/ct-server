@@ -61,9 +61,9 @@ class CtUserDrawRelController : BaseController() {
      * 获取用户中奖详细信息
      */
     @PreAuthorize("@ss.hasPermi('promotion:user_draw:query')")
-    @GetMapping(value = ["/{userId}"])
+    @GetMapping(value = ["/{activityId}/{userId}"])
     @Operation(summary = "获取用户中奖详细信息")
-    fun getInfo(@PathVariable("userId") userId: String): AjaxResult {
-        return AjaxResult.success(ctUserDrawRelService.selectCtUserDrawRelByUserId(userId))
+    fun getInfo(@PathVariable("activityId") activityId: String, @PathVariable("userId") userId: String): AjaxResult {
+        return AjaxResult.success(ctUserDrawRelService.selectCtUserDrawRelById(activityId, userId))
     }
 }

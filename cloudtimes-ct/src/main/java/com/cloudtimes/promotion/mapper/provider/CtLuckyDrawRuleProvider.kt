@@ -13,6 +13,7 @@ object CtLuckyDrawRuleProvider {
             where {
                 ruleTable.activityId isEqualTo activityId
             }
+            orderBy(ruleTable.seqno)
         }
     }
 }

@@ -26,41 +26,4 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectCtUserDrawRelVo"/>
         where user_id = #{userId}
     </select>
-        
-    <insert id="insertCtUserDrawRel" parameterType="CtUserDrawRel">
-        insert into ct_user_draw_rel
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="userId != null">user_id,</if>
-            <if test="drawRuleId != null and drawRuleId != ''">draw_rule_id,</if>
-            <if test="createTime != null">create_time,</if>
-            <if test="updateTime != null">update_time,</if>
-         </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="userId != null">#{userId},</if>
-            <if test="drawRuleId != null and drawRuleId != ''">#{drawRuleId},</if>
-            <if test="createTime != null">#{createTime},</if>
-            <if test="updateTime != null">#{updateTime},</if>
-         </trim>
-    </insert>
-
-    <update id="updateCtUserDrawRel" parameterType="CtUserDrawRel">
-        update ct_user_draw_rel
-        <trim prefix="SET" suffixOverrides=",">
-            <if test="drawRuleId != null and drawRuleId != ''">draw_rule_id = #{drawRuleId},</if>
-            <if test="createTime != null">create_time = #{createTime},</if>
-            <if test="updateTime != null">update_time = #{updateTime},</if>
-        </trim>
-        where user_id = #{userId}
-    </update>
-
-    <delete id="deleteCtUserDrawRelByUserId" parameterType="String">
-        delete from ct_user_draw_rel where user_id = #{userId}
-    </delete>
-
-    <delete id="deleteCtUserDrawRelByUserIds" parameterType="String">
-        delete from ct_user_draw_rel where user_id in 
-        <foreach item="userId" collection="array" open="(" separator="," close=")">
-            #{userId}
-        </foreach>
-    </delete>
 </mapper>

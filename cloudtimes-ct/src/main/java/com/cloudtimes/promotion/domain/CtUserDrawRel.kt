@@ -15,12 +15,22 @@ class CtUserDrawRel : BaseEntity() {
     /** 用户编号  */
     var userId: String? = null
 
+    /** 活动编号  */
+    @Excel(name = "活动编号")
+    var activityId: String? = null
+
     /** 中奖规则编号  */
     @Excel(name = "中奖规则编号")
     var drawRuleId: String? = null
+
+    /** 奖金兑换状态  */
+    @Excel(name = "奖金兑换状态")
+    var exchangeState: String? = null
+
     override fun toString(): String {
         return ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
             .append("userId", userId)
+            .append("activityId", activityId)
             .append("drawRuleId", drawRuleId)
             .append("createTime", createTime)
             .append("updateTime", updateTime)
