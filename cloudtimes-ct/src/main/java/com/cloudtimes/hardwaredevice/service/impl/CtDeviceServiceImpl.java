@@ -217,19 +217,19 @@ public class CtDeviceServiceImpl implements ICtDeviceService {
                 // 已上线则忽略
                 throw new ServiceException("上线失败: " + hikCommonResp.getMsg());
             }
+            //解密设备
+            hikCommonResp = hikApiService.setDeviceEncrypt(device.getDeviceSerial(), device.getValidateCode(), false);
+            if (hikCommonResp == null) {
+                throw new ServiceException("调用解密接口失败");
+            }
+            if (!StringUtils.equals(hikCommonResp.getCode(), HikCodeEnum.CODE200.getCode())
+                    && !StringUtils.equals(hikCommonResp.getCode(), HikCodeEnum.CODE60016.getCode())) {
+                // 未加密则忽略
+                throw new ServiceException("调用解密接口: " + hikCommonResp.getMsg());
+            }
             // 上线操作
             if (StringUtils.equals(device.getDeviceType(), DeviceType.CAMERA.getCode())) {
                 //普通摄像头逻辑
-                //解密设备
-                hikCommonResp = hikApiService.setDeviceEncrypt(device.getDeviceSerial(), device.getValidateCode(), false);
-                if (hikCommonResp == null) {
-                    throw new ServiceException("调用解密接口失败");
-                }
-                if (!StringUtils.equals(hikCommonResp.getCode(), HikCodeEnum.CODE200.getCode())
-                        && !StringUtils.equals(hikCommonResp.getCode(), HikCodeEnum.CODE60016.getCode())) {
-                    // 未加密则忽略
-                    throw new ServiceException("调用解密接口: " + hikCommonResp.getMsg());
-                }
                 device.setIsOnline(YesNoState.Yes.getCode());
                 device.setLastOnlineTime(DateUtils.getNowDate());
                 ctDeviceMapper.updateCtDevice(device);
