@@ -47,6 +47,8 @@ public class CtCameraDeviceMonitorManager {
     @Autowired
     private RedisCache redisCache;
 
+    private static final long CACHE_TIME = 4 * 60L * 1000L;
+
     @PostConstruct
     public void init() {
         if (!enabled) {
@@ -61,7 +63,8 @@ public class CtCameraDeviceMonitorManager {
     }
 
     public int getDeviceNumber() {
-        return redisCache.keys(CAMERQ_DEVICE_MONITOR + ":*").size();
+        String redisKeys = CAMERQ_DEVICE_MONITOR + "*";
+        return redisCache.keys(redisKeys).size();
     }
 
     public boolean isLoadDataTime() {
@@ -69,6 +72,15 @@ public class CtCameraDeviceMonitorManager {
         long nextLoadTime = lastLoadDataTime + loadGapTime * 60L * 1000L;
         if (now >= nextLoadTime) {
             lastLoadDataTime = now;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean isLastCacheTime(DetectionData data) {
+        long nowTime = System.currentTimeMillis();
+        if (data.getLastTime() == null || nowTime - data.getLastTime() > CACHE_TIME) {
             return true;
         } else {
             return false;
@@ -92,16 +104,24 @@ public class CtCameraDeviceMonitorManager {
             if (redisCache.hasKey(cacheKey)) {
                 if (ctDevice.getState().equals(DeviceState.Forbidden.getCode())) {
                     redisCache.deleteObject(cacheKey);
+                } else {
+                    DetectionData data = redisCache.getCacheObject(cacheKey);
+                    if (isLastCacheTime(data)) {
+                        redisCache.deleteObject(cacheKey);
+                        data.setLastTime(System.currentTimeMillis());
+                        sendToMQ(data, 6);//2min延迟发送
+                        redisCache.setCacheObject(cacheKey, data);
+                    }
                 }
             }
             if (!ctDevice.getState().equals(DeviceState.Forbidden.getCode())) {
                 if (!redisCache.hasKey(cacheKey)) {
-                    redisCache.setCacheObject(cacheKey, ctDevice);
                     DetectionData detectionData = new DetectionData();
                     detectionData.setOption(1);
                     detectionData.setDevice(ctDevice);
                     detectionData.setLastTime(System.currentTimeMillis());
                     sendToMQ(detectionData, 6);//2min延迟发送
+                    redisCache.setCacheObject(cacheKey, detectionData);
                 }
             }
         }
