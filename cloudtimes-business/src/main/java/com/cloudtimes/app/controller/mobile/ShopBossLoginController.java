@@ -1,16 +1,15 @@
 package com.cloudtimes.app.controller.mobile;
 
-import com.cloudtimes.account.domain.CtUser;
 import com.cloudtimes.app.constant.PrefixPathConstants;
-import com.cloudtimes.serving.mobile.domain.LoginReq;
-import com.cloudtimes.serving.mobile.domain.LoginResp;
-import com.cloudtimes.serving.mobile.domain.RegisterReq;
+import com.cloudtimes.business.mobile.domain.LoginReq;
+import com.cloudtimes.business.mobile.domain.LoginResp;
+import com.cloudtimes.business.mobile.domain.RegisterReq;
 import com.cloudtimes.common.core.domain.ApiResult;
 import com.cloudtimes.common.utils.JWTManager;
 import com.cloudtimes.common.core.domain.entity.AuthUser;
 import com.cloudtimes.common.enums.ChannelType;
 import com.cloudtimes.common.utils.ip.IpUtils;
-import com.cloudtimes.serving.mobile.service.ICtShopBossLoginService;
+import com.cloudtimes.business.mobile.service.ICtShopBossLoginService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;

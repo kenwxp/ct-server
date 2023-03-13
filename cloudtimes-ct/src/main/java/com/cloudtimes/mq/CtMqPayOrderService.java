@@ -2,10 +2,13 @@ package com.cloudtimes.mq;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.cloudtimes.cache.CtTaskCache;
-import com.cloudtimes.common.PayOrderUtils;
+import com.cloudtimes.common.service.PayOrderHandlerService;
 import com.cloudtimes.common.constant.RocketMQConstants;
+import com.cloudtimes.common.enums.ChannelType;
+import com.cloudtimes.common.enums.OpenDoorOption;
 import com.cloudtimes.common.enums.PayOrderOption;
 import com.cloudtimes.common.mq.CtRocketMqProducer;
+import com.cloudtimes.common.mq.OpenDoorMqData;
 import com.cloudtimes.common.mq.PayOrderMqData;
 import com.cloudtimes.common.utils.DateUtils;
 import com.cloudtimes.common.utils.StringUtils;
@@ -32,7 +35,7 @@ public class CtMqPayOrderService {
     @Autowired
     private CtShouqianbaApiServiceImpl shouqianbaApiService;
     @Autowired
-    private PayOrderUtils payOrderUtils;
+    private PayOrderHandlerService handlePayOrder;
     @Autowired
     private CtRocketMqProducer mqProducer;
     private final int loopQueryPayOrderTimeOut = 50;
@@ -42,14 +45,29 @@ public class CtMqPayOrderService {
     private CtOrderMapper orderMapper;
     @Autowired
     private CtShopProductMapper shopProductMapper;
+    @Autowired
+    private CtRocketMqProducer producer;
 
     public void queryPayOrderService(PayOrderMqData data) {
         log.info("查询订单，订单编号:{}", data.getOrderId());
+        CtOrder cacheOrder = taskCache.getCacheOrder(data.getOrderId());
+        if (cacheOrder == null) {
+            log.info("无法获取订单信息，订单编号:{}", data.getOrderId());
+            return;
+        }
         PayOrderData payOrderData = shouqianbaApiService.queryPayOrder(data.getPaySn(), "", data.getTerminalSN(), data.getTerminalKey());
-        if (payOrderData != null && payOrderUtils.handlePayOrder(payOrderData) == 1) {
+        if (payOrderData != null && handlePayOrder.handlePayOrder(payOrderData)
+                == PayOrderHandlerService.CONFIRM_SUCCESS) {
             // 发起订单库存维护
             data.setOption(PayOrderOption.MAINTAIN_STOCK);
             mqProducer.send(RocketMQConstants.CT_PAY_ORDER, data);
+            // 支付成功，发起交易开门
+            OpenDoorMqData mqData = new OpenDoorMqData();
+            mqData.setOption(OpenDoorOption.TRANS_OPEN_DOOR);
+            mqData.setStoreId(cacheOrder.getStoreId());
+            mqData.setUserId(cacheOrder.getUserId());
+            mqData.setChannelType(ChannelType.CASH);
+            producer.send(RocketMQConstants.CT_OPEN_DOOR, mqData);
             return;
         }
         // 未获取终态，则校验超时时间

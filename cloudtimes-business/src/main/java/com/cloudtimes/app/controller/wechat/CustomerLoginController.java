@@ -2,16 +2,16 @@ package com.cloudtimes.app.controller.wechat;
 
 
 import com.cloudtimes.app.constant.PrefixPathConstants;
-import com.cloudtimes.serving.wechat.domain.MpLoginCheckReq;
-import com.cloudtimes.serving.wechat.domain.MpLoginCheckResp;
-import com.cloudtimes.serving.wechat.domain.MpLoginReq;
-import com.cloudtimes.serving.wechat.domain.MpLoginResp;
+import com.cloudtimes.business.wechat.domain.MpLoginCheckReq;
+import com.cloudtimes.business.wechat.domain.MpLoginCheckResp;
+import com.cloudtimes.business.wechat.domain.MpLoginReq;
+import com.cloudtimes.business.wechat.domain.MpLoginResp;
 import com.cloudtimes.common.core.domain.ApiResult;
 import com.cloudtimes.common.core.domain.entity.AuthUser;
 import com.cloudtimes.common.enums.ChannelType;
 import com.cloudtimes.common.utils.JWTManager;
 import com.cloudtimes.common.utils.ip.IpUtils;
-import com.cloudtimes.serving.wechat.service.ICtCustomerLoginService;
+import com.cloudtimes.business.wechat.service.ICtCustomerLoginService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;

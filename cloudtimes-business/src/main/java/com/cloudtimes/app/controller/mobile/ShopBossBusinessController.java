@@ -1,14 +1,13 @@
 package com.cloudtimes.app.controller.mobile;
 
-import com.alibaba.druid.util.StringUtils;
 import com.cloudtimes.app.constant.PrefixPathConstants;
 import com.cloudtimes.common.core.controller.BaseController;
 import com.cloudtimes.common.core.domain.ApiResult;
 import com.cloudtimes.common.core.domain.entity.AuthUser;
 import com.cloudtimes.common.utils.AuthUtils;
 import com.cloudtimes.common.utils.PageUtils;
-import com.cloudtimes.serving.mobile.domain.*;
-import com.cloudtimes.serving.mobile.service.ICtShopBossBusinessService;
+import com.cloudtimes.business.mobile.domain.*;
+import com.cloudtimes.business.mobile.service.ICtShopBossBusinessService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Tag(name = "店家app业务相关接口")
