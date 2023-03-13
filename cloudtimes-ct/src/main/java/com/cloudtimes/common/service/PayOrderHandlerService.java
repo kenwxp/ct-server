@@ -95,10 +95,6 @@ public class PayOrderHandlerService {
                     cacheOrderDetails.values()) {
                 orderDetailMapper.insertCtOrderDetail(item);
             }
-            // 非值守订单，从内存中删除
-            if (StringUtils.isEmpty(cacheOrder.getTaskId())) {
-                taskCache.deleteCacheOrder(cacheOrder.getId());
-            }
         }
         return confirmFlag;
     }

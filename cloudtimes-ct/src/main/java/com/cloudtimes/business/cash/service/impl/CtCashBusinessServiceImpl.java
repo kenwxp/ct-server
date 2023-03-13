@@ -408,15 +408,16 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
         String orderId = info.getOrderId();
         CtOrder cacheOrder = taskCache.getCacheOrder(orderId);
         if (cacheOrder == null) {
-            throw new ServiceException("无法获取订单信息");
+            log.error("无法获取订单信息");
+            return;
         }
         if (!StringUtils.equals(cacheOrder.getDeviceCashId(), deviceId)) {
-            throw new ServiceException("该订单不属于当前收银机");
+            log.error("该订单不属于当前收银机");
+            return;
         }
         if (StringUtils.equals(cacheOrder.getState(), PayState.READY_TO_PAY.getCode())) {
             orderMapper.deleteCtOrderById(cacheOrder.getId());
             shoppingMapper.deleteCtShoppingById(cacheOrder.getShoppingId());
-
             taskCache.deleteCacheOrder(cacheOrder.getId());
             if (StringUtils.isNotEmpty(cacheOrder.getShoppingId())) {
                 taskCache.deleteCacheShopping(cacheOrder.getShoppingId());
@@ -562,7 +563,7 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
         Date start = DateUtils.getNowDate();
         while (true) {
             Date now = DateUtils.getNowDate();
-            if (DateUtil.between(now, start, DateUnit.SECOND) > 10) {
+            if (DateUtil.between(now, start, DateUnit.SECOND, true) > 10) {
                 return 0;
             }
             cacheOrder = taskCache.getCacheOrder(orderId);
@@ -571,8 +572,16 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
                     Threads.sleep(1000);
                     continue;
                 } else if (StringUtils.equals(cacheOrder.getState(), PayState.PAY_SUCCESS.getCode())) {
+                    // 非值守订单，从内存中删除
+                    if (StringUtils.isEmpty(cacheOrder.getShoppingId())) {
+                        taskCache.deleteCacheOrder(cacheOrder.getId());
+                    }
                     return 1;
                 } else if (StringUtils.equals(cacheOrder.getState(), PayState.PAY_FAIL.getCode())) {
+                    // 非值守订单，从内存中删除
+                    if (StringUtils.isEmpty(cacheOrder.getShoppingId())) {
+                        taskCache.deleteCacheOrder(cacheOrder.getId());
+                    }
                     return 2;
                 }
             }

@@ -173,7 +173,7 @@ public class CtTaskCache {
     }
 
     public void setCacheOrder(CtOrder order) {
-        log.info("设置新订单：购物编号：{}", order.getId());
+        log.info("设置新订单：订单编号：{}", order.getId());
         wLock.lock();
         try {
             if (StringUtils.isEmpty(order.getTaskId())) {
@@ -194,6 +194,7 @@ public class CtTaskCache {
         try {
             //从任务订单关联表中删除订单
             String cacheKey = getCacheKey(TASK_ORDER_REL_CACHE, orderId);
+            log.info("删除订单：查找key: {}，订单编号: {}", cacheKey, orderId);
             if (StringUtils.isNotEmpty(cacheKey)) {
                 if (redisCache.deleteCacheMapValue(cacheKey, orderId)) {
                     //删除物品清单
@@ -252,7 +253,6 @@ public class CtTaskCache {
             String cacheKey = getCacheKey(TASK_SHOPPING_REL_CACHE, shoppingId);
             log.info("查找key：{}，购物编号：{}", cacheKey, shoppingId);
             if (StringUtils.isNotEmpty(cacheKey)) {
-                log.info("删除购物：key：{}，购物编号：{}", cacheKey, shoppingId);
                 return redisCache.deleteCacheMapValue(cacheKey, shoppingId);
             }
         } finally {
