@@ -54,13 +54,14 @@ public class CtOpenDoorService {
      */
     public boolean transOpen(OpenDoorMqData param) {
         String storeId = param.getStoreId();
+        String deviceId = param.getDeviceId();
         String userId = param.getUserId();
         ChannelType channelType = param.getChannelType();
         log.info("准备交易开门，门店编号:{}，操作者：{}", storeId, userId);
         CtOpenDoorLogs initLog = initInsertLog(storeId, userId, channelType, OpenDoorOption.TRANS_OPEN_DOOR);
         CtStore dbStore = storeMapper.selectCtStoreById(storeId);
         if (dbStore == null) {
-            logFail(initLog, "", "无法获取门店信息");
+            logFail(initLog, deviceId, "无法获取门店信息");
             return false;
         }
         // 校验门店逻辑锁
@@ -68,7 +69,7 @@ public class CtOpenDoorService {
         for (CtTask task :
                 tasksOfStore.values()) {
             if (task.isOpenLock()) {
-                logFail(initLog, "", "任务已加锁，禁止开门");
+                logFail(initLog, deviceId, "任务已加锁，禁止开门");
                 return false;
             }
         }
@@ -79,38 +80,40 @@ public class CtOpenDoorService {
         queryDevice.setDelFlag("0");
         List<CtDevice> doorGuardList = deviceMapper.selectCtDeviceList(queryDevice);
         if (StringUtils.isEmpty(doorGuardList)) {
-            logFail(initLog, "", "无法获取门禁设备");
+            logFail(initLog, deviceId, "无法获取门禁设备");
             return false;
         }
         WiegandReturning ret;
         for (CtDevice doorGuard : doorGuardList) {
-            String deviceSerial = doorGuard.getDeviceSerial();
-            if (StringUtils.equals(dbStore.getIsSupervise(), "0")) {
-                //解强锁
-                ret = wiegandApiService.settingParams(deviceSerial, 0, 8);
-                if (!ret.isSuccess()) {
-                    logFail(initLog, doorGuard.getId(), ret.getMsg());
-                    return false;
+            if (StringUtils.isEmpty(deviceId) || StringUtils.equals(deviceId, doorGuard.getId())) {
+                String deviceSerial = doorGuard.getDeviceSerial();
+                if (StringUtils.equals(dbStore.getIsSupervise(), "0")) {
+                    //解强锁
+                    ret = wiegandApiService.settingParams(deviceSerial, 0, 8);
+                    if (!ret.isSuccess()) {
+                        logFail(initLog, doorGuard.getId(), ret.getMsg());
+                        return false;
+                    }
+                    //远程开门
+                    ret = wiegandApiService.remoteOpenDoor(deviceSerial);
+                    if (!ret.isSuccess()) {
+                        logFail(initLog, doorGuard.getId(), ret.getMsg());
+                        return false;
+                    }
+                } else {
+                    //远程开门
+                    ret = wiegandApiService.remoteOpenDoor(deviceSerial);
+                    if (!ret.isSuccess()) {
+                        logFail(initLog, doorGuard.getId(), ret.getMsg());
+                        return false;
+                    }
                 }
-                //远程开门
-                ret = wiegandApiService.remoteOpenDoor(deviceSerial);
-                if (!ret.isSuccess()) {
-                    logFail(initLog, doorGuard.getId(), ret.getMsg());
-                    return false;
-                }
-            } else {
-                //远程开门
-                ret = wiegandApiService.remoteOpenDoor(deviceSerial);
-                if (!ret.isSuccess()) {
-                    logFail(initLog, doorGuard.getId(), ret.getMsg());
-                    return false;
-                }
+                logOk(initLog, doorGuard.getId());
             }
-            logOk(initLog, doorGuard.getId());
         }
         // 延迟调用 锁门
         if (StringUtils.equals(dbStore.getIsSupervise(), "0")) {
-            OpenDoorMqData mqData = new OpenDoorMqData(OpenDoorOption.FORCE_LOCK_DOOR, storeId, userId, ChannelType.WEB);
+            OpenDoorMqData mqData = new OpenDoorMqData(OpenDoorOption.FORCE_LOCK_DOOR, storeId, deviceId, userId, ChannelType.WEB);
             producer.sendDelayMsg(RocketMQConstants.CT_OPEN_DOOR, JSON.toJSONString(mqData), 3);
         }
         return true;
@@ -124,6 +127,7 @@ public class CtOpenDoorService {
      */
     public boolean emergentOpen(OpenDoorMqData param) {
         String storeId = param.getStoreId();
+        String deviceId = param.getDeviceId();
         String userId = param.getUserId();
         ChannelType channelType = ChannelType.WEB;
         log.info("准备应急开门，门店编号:{}，操作员：{}", storeId, userId);
@@ -144,34 +148,36 @@ public class CtOpenDoorService {
         }
         WiegandReturning ret;
         for (CtDevice doorGuard : doorGuardList) {
-            String deviceSerial = doorGuard.getDeviceSerial();
-            if (StringUtils.equals(dbStore.getIsSupervise(), "0")) {
-                //解强锁
-                ret = wiegandApiService.settingParams(deviceSerial, 0, 8);
-                if (!ret.isSuccess()) {
-                    logFail(initLog, doorGuard.getId(), ret.getMsg());
-                    return false;
-                }
-                //远程开门
-                ret = wiegandApiService.remoteOpenDoor(deviceSerial);
-                if (!ret.isSuccess()) {
-                    logFail(initLog, doorGuard.getId(), ret.getMsg());
-                    return false;
-                }
+            if (StringUtils.isEmpty(deviceId) || StringUtils.equals(deviceId, doorGuard.getId())) {
+                String deviceSerial = doorGuard.getDeviceSerial();
+                if (StringUtils.equals(dbStore.getIsSupervise(), "0")) {
+                    //解强锁
+                    ret = wiegandApiService.settingParams(deviceSerial, 0, 8);
+                    if (!ret.isSuccess()) {
+                        logFail(initLog, doorGuard.getId(), ret.getMsg());
+                        return false;
+                    }
+                    //远程开门
+                    ret = wiegandApiService.remoteOpenDoor(deviceSerial);
+                    if (!ret.isSuccess()) {
+                        logFail(initLog, doorGuard.getId(), ret.getMsg());
+                        return false;
+                    }
 
-            } else {
-                //远程开门
-                ret = wiegandApiService.remoteOpenDoor(deviceSerial);
-                if (!ret.isSuccess()) {
-                    logFail(initLog, doorGuard.getId(), ret.getMsg());
-                    return false;
+                } else {
+                    //远程开门
+                    ret = wiegandApiService.remoteOpenDoor(deviceSerial);
+                    if (!ret.isSuccess()) {
+                        logFail(initLog, doorGuard.getId(), ret.getMsg());
+                        return false;
+                    }
                 }
+                logOk(initLog, doorGuard.getId());
             }
-            logOk(initLog, doorGuard.getId());
         }
         // 延迟调用 锁门
         if (StringUtils.equals(dbStore.getIsSupervise(), "0")) {
-            OpenDoorMqData mqData = new OpenDoorMqData(OpenDoorOption.FORCE_LOCK_DOOR, storeId, userId, channelType);
+            OpenDoorMqData mqData = new OpenDoorMqData(OpenDoorOption.FORCE_LOCK_DOOR, storeId, deviceId, userId, channelType);
             producer.sendDelayMsg(RocketMQConstants.CT_OPEN_DOOR, JSON.toJSONString(mqData), 3);
         }
         return true;
@@ -185,6 +191,7 @@ public class CtOpenDoorService {
      */
     public boolean ownerOpen(OpenDoorMqData param) {
         String storeId = param.getStoreId();
+        String deviceId = param.getDeviceId();
         String userId = param.getUserId();
         ChannelType channelType = ChannelType.MOBILE;
         log.info("准备店家开门，门店编号:{}，店家编号：{}", storeId, userId);
@@ -209,23 +216,25 @@ public class CtOpenDoorService {
         }
         WiegandReturning ret;
         for (CtDevice doorGuard : doorGuardList) {
-            String deviceSerial = doorGuard.getDeviceSerial();
-            //解强锁
-            ret = wiegandApiService.settingParams(deviceSerial, 0, 8);
-            if (!ret.isSuccess()) {
-                logFail(initLog, doorGuard.getId(), ret.getMsg());
-                return false;
+            if (StringUtils.isEmpty(deviceId) || StringUtils.equals(deviceId, doorGuard.getId())) {
+                String deviceSerial = doorGuard.getDeviceSerial();
+                //解强锁
+                ret = wiegandApiService.settingParams(deviceSerial, 0, 8);
+                if (!ret.isSuccess()) {
+                    logFail(initLog, doorGuard.getId(), ret.getMsg());
+                    return false;
+                }
+                //远程开门
+                ret = wiegandApiService.remoteOpenDoor(deviceSerial);
+                if (!ret.isSuccess()) {
+                    logFail(initLog, doorGuard.getId(), ret.getMsg());
+                    return false;
+                }
+                logOk(initLog, doorGuard.getId());
             }
-            //远程开门
-            ret = wiegandApiService.remoteOpenDoor(deviceSerial);
-            if (!ret.isSuccess()) {
-                logFail(initLog, doorGuard.getId(), ret.getMsg());
-                return false;
-            }
-            logOk(initLog, doorGuard.getId());
         }
         // 延迟调用 锁门
-        OpenDoorMqData mqData = new OpenDoorMqData(OpenDoorOption.FORCE_LOCK_DOOR, storeId, userId, channelType);
+        OpenDoorMqData mqData = new OpenDoorMqData(OpenDoorOption.FORCE_LOCK_DOOR, storeId, deviceId, userId, channelType);
         producer.sendDelayMsg(RocketMQConstants.CT_OPEN_DOOR, JSON.toJSONString(mqData), 3);
         return true;
     }
@@ -238,6 +247,7 @@ public class CtOpenDoorService {
      */
     public boolean forceLock(OpenDoorMqData param) {
         String storeId = param.getStoreId();
+        String deviceId = param.getDeviceId();
         String userId = param.getUserId();
         ChannelType channelType = param.getChannelType();
         log.info("开启强锁模式，门店编号:{}", storeId);
@@ -253,11 +263,13 @@ public class CtOpenDoorService {
         }
         WiegandReturning ret;
         for (CtDevice doorGuard : doorGuardList) {
-            //强锁
-            ret = wiegandApiService.settingParams(doorGuard.getDeviceSerial(), 2, 0);
-            if (!ret.isSuccess()) {
-                logError(initLog, doorGuard.getId(), ret.getMsg());
-                return false;
+            if (StringUtils.isEmpty(deviceId) || StringUtils.equals(deviceId, doorGuard.getId())) {
+                //强锁
+                ret = wiegandApiService.settingParams(doorGuard.getDeviceSerial(), 2, 0);
+                if (!ret.isSuccess()) {
+                    logError(initLog, doorGuard.getId(), ret.getMsg());
+                    return false;
+                }
             }
         }
         return true;
@@ -270,6 +282,7 @@ public class CtOpenDoorService {
      */
     public boolean unlock(OpenDoorMqData param) {
         String storeId = param.getStoreId();
+        String deviceId = param.getDeviceId();
         String userId = param.getUserId();
         ChannelType channelType = param.getChannelType();
         log.info("关闭强锁模式，门店编号:{}", storeId);
@@ -285,11 +298,13 @@ public class CtOpenDoorService {
         }
         WiegandReturning ret;
         for (CtDevice doorGuard : doorGuardList) {
-            //强锁
-            ret = wiegandApiService.settingParams(doorGuard.getDeviceSerial(), 0, 8);
-            if (!ret.isSuccess()) {
-                logError(initLog, doorGuard.getId(), ret.getMsg());
-                return false;
+            if (StringUtils.isEmpty(deviceId) || StringUtils.equals(deviceId, doorGuard.getId())) {
+                //强锁
+                ret = wiegandApiService.settingParams(doorGuard.getDeviceSerial(), 0, 8);
+                if (!ret.isSuccess()) {
+                    logError(initLog, doorGuard.getId(), ret.getMsg());
+                    return false;
+                }
             }
         }
         return false;
