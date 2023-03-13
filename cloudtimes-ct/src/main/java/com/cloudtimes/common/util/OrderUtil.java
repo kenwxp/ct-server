@@ -7,10 +7,12 @@ import com.cloudtimes.supervise.domain.CtShopping;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.UUID;
 
 public class OrderUtil {
     public static CtOrder getInitCtOrder() {
         CtOrder newOrder = new CtOrder();
+        newOrder.setId(UUID.randomUUID().toString());
         newOrder.setMoneyAmount(BigDecimal.valueOf(0));
         newOrder.setTotalAmount(BigDecimal.valueOf(0));
         newOrder.setDiscountAmount(BigDecimal.valueOf(0));
@@ -29,6 +31,7 @@ public class OrderUtil {
 
     public static CtShopping getInitCtShopping() {
         CtShopping newShopping = new CtShopping();
+        newShopping.setId(UUID.randomUUID().toString());
 //        newShopping.setExceptionalState("0");
 //        newShopping.setIsApprove("0");
 //        newShopping.setIsLeadApprove("0");

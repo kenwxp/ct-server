@@ -441,15 +441,6 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
             log.info("cache:totalAmount={},totalCount={} : req: totalAmount={},totalCount={}", cacheOrder.getTotalAmount().intValue(), cacheOrder.getItemCount().intValue(), totalAmount, totalNum);
             throw new ServiceException("订单总额不一致");
         }
-
-        // 设置内存订单状态
-        cacheOrder.setIsCompose("0");//非组合支付
-        cacheOrder.setPaymentCode(paymentParam.getId());//支付渠道编号
-        cacheOrder.setState(PayState.PAID_THEN_CONFIRM.getCode());
-        cacheOrder.setPaymentAction(String.valueOf(payType));
-        cacheOrder.setUpdateTime(DateUtils.getNowDate());
-        taskCache.setCacheOrder(cacheOrder);
-
         // 准备支付参数
         CtStore ctStore = storeMapper.selectCtStoreById(cacheOrder.getStoreId());
         if (ctStore == null) {
@@ -487,6 +478,17 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
         if (StringUtils.equals(commonResp.getResultCode(), ShouqianbaConstant.response200)) {
             BuzResponse bizResponse = JacksonUtils.convertObject(commonResp.getBizResponse(), BuzResponse.class);
             if (bizResponse != null) {
+                if (StringUtils.equals(bizResponse.getErrorCodeStandard(), "EP104")) {
+                    //输入密码超时
+                    return "输入密码确认超时";
+                }
+                // 设置内存订单状态为支付中
+                cacheOrder.setIsCompose("0");//非组合支付
+                cacheOrder.setPaymentCode(paymentParam.getId());//支付渠道编号
+                cacheOrder.setState(PayState.PAID_THEN_CONFIRM.getCode());
+                cacheOrder.setPaymentAction(String.valueOf(payType));
+                cacheOrder.setUpdateTime(DateUtils.getNowDate());
+                taskCache.setCacheOrder(cacheOrder);
                 if (StringUtils.equals(bizResponse.getResultCode(), ShouqianbaConstant.busiPayInProgress)) {
                     //发起订单查询轮询
                     String payOrderSerial = "";
@@ -503,9 +505,6 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
                     mqData.setCreateTime(DateUtils.getNowDate());
                     mqData.setCancelFlag(false);
                     mqProducer.send(RocketMQConstants.CT_PAY_ORDER, mqData);
-                } else if (StringUtils.equals(bizResponse.getErrorCodeStandard(), "EP104")) {
-                    //输入密码超时
-                    return "输入密码确认超时";
                 } else {
                     if (StringUtils.isNotEmpty(bizResponse.getErrorMessage())) {
                         return bizResponse.getErrorMessage();

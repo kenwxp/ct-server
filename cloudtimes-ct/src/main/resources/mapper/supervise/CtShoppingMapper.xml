@@ -49,9 +49,9 @@
     </select>
 
     <insert id="insertCtShopping" parameterType="CtShopping">
-        <selectKey keyProperty="id" order="BEFORE" resultType="String">
-            select uuid() from dual
-        </selectKey>
+<!--        <selectKey keyProperty="id" order="BEFORE" resultType="String">-->
+<!--            select uuid() from dual-->
+<!--        </selectKey>-->
         insert into ct_shopping
         <trim prefix="(" suffix=")" suffixOverrides=",">
             id,
