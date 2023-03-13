@@ -215,45 +215,45 @@ public class CtSuperviseStationServiceImpl implements ICtSuperviseStationService
     @Override
     @Transactional
     public void approveOrder(Long userId, String userName, ApproveOrderReq param) {
-        CtOrder dbOrder = orderMapper.selectCtOrderById(param.getOrderId());
-        if (dbOrder == null) {
+        CtOrder cacheOrder = taskCache.getCacheOrder(param.getOrderId());
+        if (cacheOrder == null) {
             throw new ServiceException("无法获取任务信息");
         }
-        if (StringUtils.isEmpty(dbOrder.getShoppingId())) {
+        if (StringUtils.isEmpty(cacheOrder.getShoppingId())) {
             throw new ServiceException("当前订单未绑定购物");
         }
-        CtShopping shopping = shoppingMapper.selectCtShoppingById(dbOrder.getShoppingId());
-        if (shopping == null) {
+        CtShopping cacheShopping = taskCache.getCacheShopping(cacheOrder.getShoppingId());
+        if (cacheShopping == null) {
             throw new ServiceException("无法获取购物信息");
         }
-        if (StringUtils.equals(dbOrder.getState(), PayState.PAY_FAIL.getCode())) {
+        if (StringUtils.equals(cacheOrder.getState(), PayState.PAY_FAIL.getCode())) {
             // 失败订单更新结束时间和状态
-            shopping.setEndTime(DateUtils.getNowDate());
-            shopping.setState("1");
+            cacheShopping.setEndTime(DateUtils.getNowDate());
+            cacheShopping.setState("1");
         }
         if (StringUtils.equals(param.getOption(), "1")) {
-            if (!StringUtils.equals(dbOrder.getState(), PayState.PAY_SUCCESS.getCode()) &&
-                    !StringUtils.equals(dbOrder.getState(), PayState.PAY_FAIL.getCode())) {
+            if (!StringUtils.equals(cacheOrder.getState(), PayState.PAY_SUCCESS.getCode()) &&
+                    !StringUtils.equals(cacheOrder.getState(), PayState.PAY_FAIL.getCode())) {
                 throw new ServiceException("当前订单状态非最终态无法审核");
             }
             // 审核通过
-            shopping.setExceptionalState("0");
-            shopping.setIsApprove("0");
-            shopping.setUpdateTime(DateUtils.getNowDate());
-            shoppingMapper.updateCtShopping(shopping);
+            cacheShopping.setExceptionalState("0");
+            cacheShopping.setIsApprove("0");
+            cacheShopping.setUpdateTime(DateUtils.getNowDate());
+            shoppingMapper.updateCtShopping(cacheShopping);
         } else if (StringUtils.equals(param.getOption(), "2")) {
-            if (!StringUtils.equals(dbOrder.getState(), PayState.PAY_SUCCESS.getCode()) &&
-                    !StringUtils.equals(dbOrder.getState(), PayState.PAY_FAIL.getCode())) {
+            if (!StringUtils.equals(cacheOrder.getState(), PayState.PAY_SUCCESS.getCode()) &&
+                    !StringUtils.equals(cacheOrder.getState(), PayState.PAY_FAIL.getCode())) {
                 throw new ServiceException("当前订单状态非最终态无法审核");
             }
             // 审核拒绝
-            dbOrder.setIsExceptional("1");
-            orderMapper.updateCtOrder(dbOrder);
-            shopping.setExceptionalState("1");
-            shopping.setIsApprove("1");
-            shopping.setRemark(param.getRemark());
-            shopping.setUpdateTime(DateUtils.getNowDate());
-            shoppingMapper.updateCtShopping(shopping);
+            cacheOrder.setIsExceptional("1");
+            orderMapper.updateCtOrder(cacheOrder);
+            cacheShopping.setExceptionalState("1");
+            cacheShopping.setIsApprove("1");
+            cacheShopping.setRemark(param.getRemark());
+            cacheShopping.setUpdateTime(DateUtils.getNowDate());
+            shoppingMapper.updateCtShopping(cacheShopping);
             //新增事件
             CtEvents ctEvents = new CtEvents();
             ctEvents.setEventType(EventType.StealingMessage.getCode());
@@ -261,8 +261,8 @@ public class CtSuperviseStationServiceImpl implements ICtSuperviseStationService
             ctEvents.setContent(param.getRemark());
             ctEvents.setSender(String.valueOf(userId));
             ctEvents.setSenderName(userName);
-            ctEvents.setTaskId(dbOrder.getTaskId());
-            ctEvents.setShoppingId(dbOrder.getShoppingId());
+            ctEvents.setTaskId(cacheOrder.getTaskId());
+            ctEvents.setShoppingId(cacheOrder.getShoppingId());
             ctEvents.setUserType(UserType.Service.getCode());
             ctEvents.setSourceType(ChannelType.WEB.getCode());
             ctEvents.setStopped("0");
@@ -272,15 +272,13 @@ public class CtSuperviseStationServiceImpl implements ICtSuperviseStationService
             ctEvents.setUpdateTime(DateUtils.getNowDate());
             eventsMapper.insertCtEvents(ctEvents);
         } else if (StringUtils.equals(param.getOption(), "3")) {
-            if (!StringUtils.equals(dbOrder.getState(), PayState.READY_TO_PAY.getCode())) {
+            if (!StringUtils.equals(cacheOrder.getState(), PayState.READY_TO_PAY.getCode())) {
                 throw new ServiceException("当前订单不可取消");
             }
-            orderMapper.deleteCtOrderById(dbOrder.getId());
-            shoppingMapper.deleteCtShoppingById(shopping.getId());
         }
         //内存删除订单和购物数据
-        taskCache.deleteCacheShopping(shopping.getId());
-        taskCache.deleteCacheOrder(dbOrder.getId());
+        taskCache.deleteCacheShopping(cacheShopping.getId());
+        taskCache.deleteCacheOrder(cacheOrder.getId());
     }
 
     /**

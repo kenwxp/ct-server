@@ -43,7 +43,6 @@ public class PayOrderHandlerService {
      * @return
      */
     public int handlePayOrder(PayOrderData data) {
-//        String orderId = NoUtils.parseOrderNo(data.getClientSn());
         String orderId = data.getReflect();// 通过反射
         if (StringUtils.isEmpty(orderId)) {
             throw new ServiceException("订单号异常");
@@ -56,6 +55,7 @@ public class PayOrderHandlerService {
         if (StringUtils.equals(data.getOrderStatus(), ShouqianbaConstant.orderPaid)) {
             //最终成功状态
             cacheOrder.setState(PayState.PAY_SUCCESS.getCode());
+            cacheOrder.setRemark("支付成功");
             confirmFlag = CONFIRM_SUCCESS;
         } else if (StringUtils.equals(data.getOrderStatus(), ShouqianbaConstant.orderPayCanceled) ||
                 StringUtils.equals(data.getOrderStatus(), ShouqianbaConstant.orderCanceled) ||
@@ -63,6 +63,7 @@ public class PayOrderHandlerService {
                 StringUtils.equals(data.getOrderStatus(), ShouqianbaConstant.orderPartialRefunded)
         ) {
             cacheOrder.setState(PayState.PAY_FAIL.getCode());
+            cacheOrder.setRemark("支付失败");
             confirmFlag = CONFIRM_FAIL;
         }
         //处理最终态
@@ -77,17 +78,18 @@ public class PayOrderHandlerService {
             }
             cacheOrder.setPaymentId(data.getSn());
             cacheOrder.setUpdateTime(new Date(Long.parseLong(data.getFinishTime())));
-            if (orderMapper.updateCtOrder(cacheOrder) < 1) {
-                throw new ServiceException("更新订单信息失败");
-            }
             taskCache.setCacheOrder(cacheOrder);
+            //持久化订单
+            orderMapper.insertCtOrder(cacheOrder);
+
             //更新 购物结束时间
             if (StringUtils.isNotEmpty(cacheOrder.getShoppingId())) {
                 CtShopping cacheShopping = taskCache.getCacheShopping(cacheOrder.getShoppingId());
                 cacheShopping.setEndTime(DateUtils.getNowDate());
                 cacheShopping.setState("2");
-                shoppingMapper.updateCtShopping(cacheShopping);
                 taskCache.setCacheShopping(cacheShopping);
+                //持久化购物
+                shoppingMapper.insertCtShopping(cacheShopping);
             }
             //持久化物品清单
             Map<String, CtOrderDetail> cacheOrderDetails = taskCache.getCacheOrderDetails(orderId);

@@ -191,9 +191,7 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
         newShopping.setUserId(ctUser.getId());
         newShopping.setStoreId(dbStore.getId());
         newShopping.setDescText("刷脸购物");
-        if (shoppingMapper.insertCtShopping(newShopping) < 1) {
-            throw new ServiceException("新增购物失败");
-        }
+        taskCache.setCacheShopping(newShopping);
         //新增购物记录，开始时间设置成任务开始时间
         CtOrder newOrder = OrderUtil.getInitCtOrder();
         if (task != null) {
@@ -211,12 +209,7 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
         newOrder.setUserPhone(ctUser.getMobile());
         newOrder.setDeviceCashId(deviceId);
         newOrder.setDescText("刷脸订单");
-        //新增订单，并推送单号，顾客信息，新动态随机数到收银机
-        if (orderMapper.insertCtOrder(newOrder) < 1) {
-            throw new ServiceException("新增订单失败");
-        }
         //加入内存
-        taskCache.setCacheShopping(newShopping);
         taskCache.setCacheOrder(newOrder);
         GetOrderIdResp resp = new GetOrderIdResp();
         resp.setCustomerPhone(NumberUtils.getHiddenPhone(ctUser.getMobile()));
@@ -307,23 +300,15 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
             }
             //有人模式下直接扫码，则产生新订单
             CtOrder newOrder = OrderUtil.getInitCtOrder();
-//            newOrder.setTaskId(null);
             newOrder.setStoreId(dbStore.getId());
             newOrder.setStoreName(dbStore.getName());
             newOrder.setStoreProvince(dbStore.getRegionCode());
             newOrder.setStoreCity(dbStore.getRegionCode());
             newOrder.setAgentId(dbStore.getAgentId());
             newOrder.setBossUserId(dbStore.getBossId());
-//            newOrder.setShoppingId(null);
             newOrder.setStaffCode("");
-//            newOrder.setUserId(null);
             newOrder.setDeviceCashId(deviceId);
             newOrder.setDescText("直接扫商品");
-
-            //新增订单，并推送单号，顾客信息，新动态随机数到收银机
-            if (orderMapper.insertCtOrder(newOrder) < 1) {
-                throw new ServiceException("新增订单失败");
-            }
             taskCache.setCacheOrder(newOrder);
             orderId = newOrder.getId();
             log.info("产生新订单号：" + orderId);
@@ -416,8 +401,6 @@ public class CtCashBusinessServiceImpl implements ICtCashBusinessService {
             return;
         }
         if (StringUtils.equals(cacheOrder.getState(), PayState.READY_TO_PAY.getCode())) {
-            orderMapper.deleteCtOrderById(cacheOrder.getId());
-            shoppingMapper.deleteCtShoppingById(cacheOrder.getShoppingId());
             taskCache.deleteCacheOrder(cacheOrder.getId());
             if (StringUtils.isNotEmpty(cacheOrder.getShoppingId())) {
                 taskCache.deleteCacheShopping(cacheOrder.getShoppingId());

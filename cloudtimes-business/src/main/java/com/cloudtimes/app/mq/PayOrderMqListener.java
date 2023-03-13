@@ -25,7 +25,7 @@ public class PayOrderMqListener implements RocketMQListener<PayOrderMqData>, Roc
     public void onMessage(PayOrderMqData data) {
         log.info("接受mq消息，开始处理订单消息：" + data);
         if (data.getOption() == PayOrderOption.QUERY_PAY_ORDER) {
-            mqPayOrderService.queryPayOrderService(data);
+            mqPayOrderService.queryPayOrder(data);
         } else if (data.getOption() == PayOrderOption.CANCEL_PAY_ORDER) {
             mqPayOrderService.cancelPayOrder(data);
         } else if (data.getOption() == PayOrderOption.MAINTAIN_STOCK) {

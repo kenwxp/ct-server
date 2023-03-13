@@ -1,8 +1,9 @@
 package com.cloudtimes.mq;
 
+import cn.hutool.core.date.DateUnit;
+import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson2.JSONObject;
 import com.cloudtimes.cache.CtTaskCache;
-import com.cloudtimes.common.service.PayOrderHandlerService;
 import com.cloudtimes.common.constant.RocketMQConstants;
 import com.cloudtimes.common.enums.ChannelType;
 import com.cloudtimes.common.enums.OpenDoorOption;
@@ -10,6 +11,7 @@ import com.cloudtimes.common.enums.PayOrderOption;
 import com.cloudtimes.common.mq.CtRocketMqProducer;
 import com.cloudtimes.common.mq.OpenDoorMqData;
 import com.cloudtimes.common.mq.PayOrderMqData;
+import com.cloudtimes.common.service.PayOrderHandlerService;
 import com.cloudtimes.common.utils.DateUtils;
 import com.cloudtimes.common.utils.StringUtils;
 import com.cloudtimes.enums.PayState;
@@ -26,7 +28,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Calendar;
 import java.util.Map;
 
 @Service
@@ -48,7 +49,7 @@ public class CtMqPayOrderService {
     @Autowired
     private CtRocketMqProducer producer;
 
-    public void queryPayOrderService(PayOrderMqData data) {
+    public void queryPayOrder(PayOrderMqData data) {
         log.info("查询订单，订单编号:{}", data.getOrderId());
         CtOrder cacheOrder = taskCache.getCacheOrder(data.getOrderId());
         if (cacheOrder == null) {
@@ -66,10 +67,7 @@ public class CtMqPayOrderService {
             return;
         }
         // 未获取终态，则校验超时时间
-        Calendar instance = Calendar.getInstance();
-        instance.setTime(data.getCreateTime());
-        instance.add(Calendar.SECOND, loopQueryPayOrderTimeOut);
-        if (DateUtils.getNowDate().after(instance.getTime())) {
+        if (DateUtil.between(DateUtils.getNowDate(), data.getCreateTime(), DateUnit.SECOND, true) > loopQueryPayOrderTimeOut) {
             //超时未获取最终态，则发起撤单
             if (!data.isCancelFlag()) {
                 data.setCancelFlag(true);
@@ -92,11 +90,11 @@ public class CtMqPayOrderService {
                 data.setOption(PayOrderOption.QUERY_PAY_ORDER);
                 mqProducer.send(RocketMQConstants.CT_PAY_ORDER, data);
             } else if (StringUtils.equals(buzResponse.getResultCode(), ShouqianbaConstant.busiCancelSuccess)) {
-//                String orderId = NoUtils.parseOrderNo(data.getOrderId());
                 // 更新订单状态
                 CtOrder cacheOrder = taskCache.getCacheOrder(data.getOrderId());
                 cacheOrder.setState(PayState.PAY_FAIL.getCode());
                 cacheOrder.setUpdateTime(DateUtils.getNowDate());
+                cacheOrder.setRemark("支付失败，已撤单");
                 taskCache.setCacheOrder(cacheOrder);
                 orderMapper.updateCtOrder(cacheOrder);
             }
